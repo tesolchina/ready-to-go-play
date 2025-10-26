@@ -79,6 +79,28 @@ const Index = () => {
     }
   };
 
+  const handleFollowUp = async (message: string, conversationHistory: any[]) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('provide-feedback', {
+        body: { 
+          userPrompt: message,
+          conversationHistory 
+        }
+      });
+
+      if (error) throw error;
+      return data.feedback;
+    } catch (error) {
+      console.error('Error in follow-up:', error);
+      toast({
+        title: "Error",
+        description: "Failed to get AI response",
+        variant: "destructive",
+      });
+      throw error;
+    }
+  };
+
   const nextTab = () => {
     const currentIndex = parseInt(activeTab);
     if (currentIndex < tabs.length - 1) {
@@ -444,7 +466,12 @@ const Index = () => {
               </div>
             </div>
             
-            <PromptBuilder onSubmit={handlePromptSubmit} isSubmitting={isSubmittingPrompt} feedback={promptFeedback} />
+            <PromptBuilder 
+              onSubmit={handlePromptSubmit} 
+              isSubmitting={isSubmittingPrompt} 
+              feedback={promptFeedback}
+              onFollowUp={handleFollowUp}
+            />
             
             <div className="mt-8 flex gap-4">
               <Button

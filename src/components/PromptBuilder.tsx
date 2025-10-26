@@ -1,19 +1,29 @@
 import { useState } from "react";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, Send } from "lucide-react";
+import { Input } from "./ui/input";
+
+interface Message {
+  role: "user" | "assistant";
+  content: string;
+}
 
 interface PromptBuilderProps {
   onSubmit: (prompt: string) => Promise<void>;
   isSubmitting: boolean;
   feedback: string | null;
+  onFollowUp: (message: string, conversationHistory: Message[]) => Promise<string>;
 }
 
-export const PromptBuilder = ({ onSubmit, isSubmitting, feedback }: PromptBuilderProps) => {
+export const PromptBuilder = ({ onSubmit, isSubmitting, feedback, onFollowUp }: PromptBuilderProps) => {
   const [context, setContext] = useState("");
   const [task, setTask] = useState("");
   const [constraints, setConstraints] = useState("");
   const [examples, setExamples] = useState("");
+  const [conversation, setConversation] = useState<Message[]>([]);
+  const [followUpMessage, setFollowUpMessage] = useState("");
+  const [isFollowUpSubmitting, setIsFollowUpSubmitting] = useState(false);
 
   const generatedPrompt = `${context ? `CONTEXT:\n${context}\n\n` : ""}${
     task ? `TASK:\n${task}\n\n` : ""
@@ -21,9 +31,30 @@ export const PromptBuilder = ({ onSubmit, isSubmitting, feedback }: PromptBuilde
     examples ? `EXAMPLES:\n${examples}` : ""
   }`.trim();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (generatedPrompt.trim()) {
-      onSubmit(generatedPrompt);
+      setConversation([]);
+      await onSubmit(generatedPrompt);
+    }
+  };
+
+  const handleFollowUpSubmit = async () => {
+    if (!followUpMessage.trim()) return;
+    
+    const userMessage: Message = { role: "user", content: followUpMessage };
+    const updatedConversation = [...conversation, userMessage];
+    setConversation(updatedConversation);
+    setFollowUpMessage("");
+    setIsFollowUpSubmitting(true);
+
+    try {
+      const response = await onFollowUp(followUpMessage, conversation);
+      const assistantMessage: Message = { role: "assistant", content: response };
+      setConversation([...updatedConversation, assistantMessage]);
+    } catch (error) {
+      console.error("Error in follow-up:", error);
+    } finally {
+      setIsFollowUpSubmitting(false);
     }
   };
 
@@ -126,12 +157,63 @@ export const PromptBuilder = ({ onSubmit, isSubmitting, feedback }: PromptBuilde
           </Button>
 
           {feedback && (
-            <div className="mt-4 p-4 rounded-lg bg-success/10 border-2 border-success/30">
-              <h4 className="font-semibold mb-2 flex items-center gap-2 text-success-foreground">
-                <span className="text-xl">🤖</span>
-                AI Feedback
-              </h4>
-              <p className="text-sm text-foreground/90 whitespace-pre-wrap">{feedback}</p>
+            <div className="mt-4 space-y-4">
+              <div className="p-4 rounded-lg bg-success/10 border-2 border-success/30">
+                <h4 className="font-semibold mb-2 flex items-center gap-2 text-success-foreground">
+                  <span className="text-xl">🤖</span>
+                  AI Feedback
+                </h4>
+                <p className="text-sm text-foreground/90 whitespace-pre-wrap">{feedback}</p>
+              </div>
+
+              {/* Conversation Thread */}
+              {conversation.length > 0 && (
+                <div className="space-y-3">
+                  {conversation.map((message, index) => (
+                    <div
+                      key={index}
+                      className={`p-3 rounded-lg ${
+                        message.role === "user"
+                          ? "bg-primary/10 border border-primary/30 ml-8"
+                          : "bg-muted border border-border mr-8"
+                      }`}
+                    >
+                      <p className="text-sm font-semibold mb-1">
+                        {message.role === "user" ? "You" : "AI"}
+                      </p>
+                      <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Follow-up Input */}
+              <div className="flex gap-2">
+                <Input
+                  value={followUpMessage}
+                  onChange={(e) => setFollowUpMessage(e.target.value)}
+                  placeholder="Ask a follow-up question..."
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleFollowUpSubmit();
+                    }
+                  }}
+                  disabled={isFollowUpSubmitting}
+                  className="flex-1"
+                />
+                <Button
+                  onClick={handleFollowUpSubmit}
+                  disabled={isFollowUpSubmitting || !followUpMessage.trim()}
+                  size="icon"
+                >
+                  {isFollowUpSubmitting ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Send className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
             </div>
           )}
         </div>

@@ -11,12 +11,36 @@ serve(async (req) => {
   }
 
   try {
-    const { userPrompt } = await req.json();
+    const { userPrompt, conversationHistory } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
+
+    // Build messages array based on whether it's initial feedback or follow-up
+    const messages = conversationHistory && conversationHistory.length > 0
+      ? [
+          {
+            role: "system",
+            content: "You are an expert educator helping users improve their AI prompts. Answer follow-up questions clearly and provide additional guidance as needed."
+          },
+          ...conversationHistory,
+          {
+            role: "user",
+            content: userPrompt
+          }
+        ]
+      : [
+          {
+            role: "system",
+            content: "You are an expert educator providing feedback on AI prompts for educational content generation. Evaluate the prompt based on: 1) Clarity of context, 2) Specificity of task, 3) Appropriate constraints, 4) Quality of examples. Provide constructive feedback with specific suggestions for improvement. Keep feedback concise (3-4 sentences) and actionable."
+          },
+          {
+            role: "user",
+            content: `Please provide feedback on this educational prompt:\n\n${userPrompt}`
+          }
+        ];
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -26,16 +50,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: "google/gemini-2.5-flash",
-        messages: [
-          {
-            role: "system",
-            content: "You are an expert educator providing feedback on AI prompts for educational content generation. Evaluate the prompt based on: 1) Clarity of context, 2) Specificity of task, 3) Appropriate constraints, 4) Quality of examples. Provide constructive feedback with specific suggestions for improvement. Keep feedback concise (3-4 sentences) and actionable."
-          },
-          {
-            role: "user",
-            content: `Please provide feedback on this educational prompt:\n\n${userPrompt}`
-          }
-        ],
+        messages,
       }),
     });
 
