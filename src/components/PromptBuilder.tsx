@@ -1,8 +1,15 @@
 import { useState } from "react";
-import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
+import { Button } from "./ui/button";
+import { Loader2 } from "lucide-react";
 
-export const PromptBuilder = () => {
+interface PromptBuilderProps {
+  onSubmit: (prompt: string) => Promise<void>;
+  isSubmitting: boolean;
+  feedback: string | null;
+}
+
+export const PromptBuilder = ({ onSubmit, isSubmitting, feedback }: PromptBuilderProps) => {
   const [context, setContext] = useState("");
   const [task, setTask] = useState("");
   const [constraints, setConstraints] = useState("");
@@ -13,6 +20,12 @@ export const PromptBuilder = () => {
   }${constraints ? `CONSTRAINTS:\n${constraints}\n\n` : ""}${
     examples ? `EXAMPLES:\n${examples}` : ""
   }`.trim();
+
+  const handleSubmit = () => {
+    if (generatedPrompt.trim()) {
+      onSubmit(generatedPrompt);
+    }
+  };
 
   return (
     <div className="bg-gradient-to-br from-accent to-card rounded-2xl p-6 border-4 border-primary/30 my-6">
@@ -87,15 +100,40 @@ export const PromptBuilder = () => {
       </div>
 
       {generatedPrompt && (
-        <div className="mt-6 bg-gradient-to-r from-warning/20 to-warning/10 rounded-xl p-5 border-l-4 border-warning">
-          <h4 className="font-semibold text-warning-foreground mb-3">
-            ✨ Your Generated Prompt:
-          </h4>
-          <div className="bg-card p-4 rounded-lg">
-            <pre className="whitespace-pre-wrap font-mono text-sm text-foreground leading-relaxed max-h-96 overflow-y-auto">
-              {generatedPrompt}
-            </pre>
-          </div>
+        <div className="bg-accent/50 rounded-xl p-6 border-2 border-primary/30 mt-6">
+          <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+            <span className="text-2xl">✨</span>
+            Your Generated Prompt
+          </h3>
+          <pre className="whitespace-pre-wrap text-sm bg-card p-4 rounded-lg border border-border text-foreground mb-4">
+            {generatedPrompt}
+          </pre>
+          
+          <Button
+            onClick={handleSubmit}
+            disabled={isSubmitting || !generatedPrompt.trim()}
+            className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
+            size="lg"
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                Getting AI Feedback...
+              </>
+            ) : (
+              "Submit and Receive AI Feedback"
+            )}
+          </Button>
+
+          {feedback && (
+            <div className="mt-4 p-4 rounded-lg bg-success/10 border-2 border-success/30">
+              <h4 className="font-semibold mb-2 flex items-center gap-2 text-success-foreground">
+                <span className="text-xl">🤖</span>
+                AI Feedback
+              </h4>
+              <p className="text-sm text-foreground/90 whitespace-pre-wrap">{feedback}</p>
+            </div>
+          )}
         </div>
       )}
     </div>

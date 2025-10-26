@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 import { LessonHeader } from "@/components/LessonHeader";
 import { TabNavigation } from "@/components/TabNavigation";
 import { LessonSection } from "@/components/LessonSection";
@@ -9,12 +11,13 @@ import { PromptBuilder } from "@/components/PromptBuilder";
 import { QuizSection } from "@/components/QuizSection";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [activeTab, setActiveTab] = useState("0");
   const [completedTabs, setCompletedTabs] = useState<Set<string>>(new Set());
+  const [isSubmittingPrompt, setIsSubmittingPrompt] = useState(false);
+  const [promptFeedback, setPromptFeedback] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -43,6 +46,37 @@ const Index = () => {
       title: "Section Complete! ✅",
       description: "Great progress! Keep going.",
     });
+  };
+
+  const handlePromptSubmit = async (prompt: string) => {
+    setIsSubmittingPrompt(true);
+    setPromptFeedback(null);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('provide-feedback', {
+        body: { userPrompt: prompt }
+      });
+
+      if (error) throw error;
+
+      setPromptFeedback(data.feedback);
+      toast({
+        title: "Feedback Received!",
+        description: "AI has analyzed your prompt and provided feedback below.",
+      });
+      
+      // Mark practice as complete after receiving feedback
+      handleTabComplete("4");
+    } catch (error) {
+      console.error('Error getting feedback:', error);
+      toast({
+        title: "Error",
+        description: "Failed to get AI feedback. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmittingPrompt(false);
+    }
   };
 
   const nextTab = () => {
@@ -384,52 +418,49 @@ const Index = () => {
         {/* Tab 4: Practice */}
         {activeTab === "4" && (
           <LessonSection title="Practice: Build Your Own Prompt">
-            <p className="text-lg mb-6 leading-relaxed">
-              Now it's your turn! Use the interactive prompt builder below to create your own educational AI prompt. 
-              Fill in each component and watch your prompt come together.
-            </p>
-
-            <PromptBuilder />
-
-            <div className="mt-8 bg-primary/10 p-6 rounded-xl border-2 border-primary">
-              <h3 className="font-bold text-lg mb-3">💡 Tips for Success:</h3>
-              <ul className="list-disc list-inside space-y-2 ml-4">
-                <li>Be as specific as possible in each section</li>
-                <li>Think about your actual students and their needs</li>
-                <li>Don't be afraid to iterate - you can always refine your prompts</li>
-                <li>Test your prompts with real AI tools and adjust based on results</li>
-              </ul>
+            <div className="mb-6 space-y-4">
+              <p className="text-foreground/80">
+                Now it's your turn! Create a comprehensive educational prompt following these guidelines:
+              </p>
+              
+              <div className="bg-accent/30 rounded-lg p-4 space-y-3">
+                <h4 className="font-semibold flex items-center gap-2">
+                  <span>📋</span> Before You Start
+                </h4>
+                <ul className="space-y-2 text-sm text-foreground/80">
+                  <BulletPoint icon="🎯">
+                    Choose a specific subject and grade level (e.g., "5th grade mathematics - fractions")
+                  </BulletPoint>
+                  <BulletPoint icon="📝">
+                    Include learning objectives and desired outcomes
+                  </BulletPoint>
+                  <BulletPoint icon="⏱️">
+                    Specify time constraints and content length
+                  </BulletPoint>
+                  <BulletPoint icon="🎨">
+                    Define the teaching style and engagement level
+                  </BulletPoint>
+                </ul>
+              </div>
             </div>
-
-            <div className="mt-8 text-center">
-              <Button 
-                onClick={() => {
-                  handleTabComplete("4");
-                  toast({
-                    title: "Great Practice! 🎉",
-                    description: "You're ready for the final quiz!",
-                  });
-                }}
+            
+            <PromptBuilder onSubmit={handlePromptSubmit} isSubmitting={isSubmittingPrompt} feedback={promptFeedback} />
+            
+            <div className="mt-8 flex gap-4">
+              <Button
+                onClick={previousTab}
+                variant="outline"
                 size="lg"
-                className="bg-gradient-to-r from-success to-success/80 hover:from-success/90 hover:to-success/70"
+                className="flex-1"
               >
-                Mark Practice Complete
-              </Button>
-            </div>
-
-            <div className="flex justify-between mt-8">
-              <Button onClick={previousTab} variant="outline">
-                <ChevronLeft className="mr-2 h-4 w-4" />
+                <ChevronLeft className="mr-2 h-5 w-5" />
                 Previous
-              </Button>
-              <Button onClick={nextTab} className="bg-gradient-to-r from-primary to-primary/80">
-                Next
-                <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
           </LessonSection>
         )}
 
+        {/* Tab 5: Final Quiz */}
         {/* Tab 5: Final Quiz */}
         {activeTab === "5" && (
           <LessonSection title="Final Assessment Quiz">
