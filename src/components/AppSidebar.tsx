@@ -56,34 +56,55 @@ export function AppSidebar() {
   const isCollapsed = state === "collapsed";
 
   return (
-    <Sidebar collapsible="icon" className="border-r bg-gradient-to-b from-background to-accent/20">
-      <SidebarContent>
+    <Sidebar 
+      collapsible="icon" 
+      className="border-none"
+      style={{
+        background: 'linear-gradient(180deg, rgb(124, 58, 237) 0%, rgb(99, 102, 241) 100%)'
+      }}
+    >
+      <SidebarContent className="px-6 py-8">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-base font-semibold px-4 py-3 bg-primary/5 rounded-lg mx-2 mb-2">
-            AI Prompting Course
-          </SidebarGroupLabel>
+          {!isCollapsed && (
+            <h1 className="text-3xl font-bold text-white mb-8 drop-shadow-md">
+              AI Prompting Course
+            </h1>
+          )}
           <SidebarGroupContent>
-            <SidebarMenu className="gap-1 px-2">
+            <SidebarMenu className="gap-4">
               {lessons.map((lesson) => (
                 <SidebarMenuItem key={lesson.id}>
-                  <SidebarMenuButton asChild tooltip={lesson.title}>
+                  <SidebarMenuButton asChild tooltip={lesson.title} className="h-auto p-0">
                     <NavLink
                       to={lesson.url}
                       className={({ isActive }) =>
-                        isActive
-                          ? "bg-gradient-to-r from-primary to-primary/80 text-primary-foreground font-semibold shadow-md hover:shadow-lg transition-all duration-200 rounded-lg"
-                          : "hover:bg-gradient-to-r hover:from-accent hover:to-accent/80 hover:text-accent-foreground transition-all duration-200 rounded-lg hover:shadow-sm"
+                        `block rounded-2xl p-6 transition-all duration-300 ${
+                          isActive
+                            ? "bg-white shadow-[0_8px_16px_rgba(0,0,0,0.2)] transform"
+                            : "bg-white/95 shadow-[0_4px_6px_rgba(0,0,0,0.1)] hover:bg-white hover:shadow-[0_8px_12px_rgba(0,0,0,0.15)] hover:-translate-y-0.5"
+                        }`
                       }
                     >
-                      <lesson.icon className="h-5 w-5 flex-shrink-0" />
-                      {!isCollapsed && (
-                        <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                          <span className="text-sm font-medium truncate">{lesson.title}</span>
-                          <span className="text-xs opacity-80 truncate">
-                            {lesson.description}
-                          </span>
+                      <div className="flex items-start gap-4">
+                        <div 
+                          className="w-10 h-10 rounded-xl flex items-center justify-center text-white flex-shrink-0"
+                          style={{
+                            background: 'linear-gradient(135deg, rgb(124, 58, 237) 0%, rgb(99, 102, 241) 100%)'
+                          }}
+                        >
+                          <lesson.icon className="h-5 w-5" />
                         </div>
-                      )}
+                        {!isCollapsed && (
+                          <div className="flex flex-col gap-1 flex-1 min-w-0">
+                            <span className="text-lg font-bold text-gray-900">
+                              {lesson.title}
+                            </span>
+                            <span className="text-sm text-gray-600 leading-tight">
+                              {lesson.description}
+                            </span>
+                          </div>
+                        )}
+                      </div>
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
