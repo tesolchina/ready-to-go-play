@@ -55,12 +55,13 @@ Structure the lesson with exactly 6 tabs:
 2. "Common Behaviors" - Describe undesirable approaches with 4 bullet points, MC question, and examples
 3. "The Framework" - Present the new framework/solution with 4 bullet points, MC question, and structure explanation
 4. "How It Works" - Step-by-step demonstration with 4 bullet points, MC question, and practical examples
-5. "Practice" - This will use the PromptBuilder component (simple intro text only, no bullets needed)
-6. "Reflection" - Summary and next steps (will use FeedbackForm, simple intro only)
+5. "Practice" - Interactive practice (set type to 'prompt-builder' if AI/prompt-related, 'standard' otherwise)
+6. "Reflection" - Summary and custom reflection question
 
-For tabs 0-3: Include engaging bullet points with emojis, create relevant MC questions with 3 options, and add 2 collapsible sections for additional content.
-For tab 4 (Practice): Just provide intro text explaining what students will practice.
-For tab 5 (Reflection): Just provide a congratulatory intro text.
+CRITICAL: Ensure ALL bullet points have meaningful, non-empty text content. Never leave bullet text blank.
+For tabs 0-3: Include 4 engaging bullet points with emojis, create relevant MC questions with 3 options, and add 2 collapsible sections.
+For tab 4: Provide intro text and set practiceContent.type based on whether the lesson involves AI/prompts.
+For tab 5: Provide congratulatory intro and a custom reflection question in reflectionContent.question that relates specifically to THIS lesson's content.
 
 Make it engaging and pedagogically sound!`
           }
@@ -90,13 +91,14 @@ Make it engaging and pedagogically sound!`
                         intro: { type: "string", description: "Introduction paragraph" },
                         bulletPoints: {
                           type: "array",
-                          description: "4 key bullet points with icons",
+                          description: "4 key bullet points with icons - MUST have valid text",
                           items: {
                             type: "object",
                             properties: {
-                              icon: { type: "string", description: "Emoji icon" },
-                              text: { type: "string", description: "Bullet point text" }
-                            }
+                              icon: { type: "string", description: "Single emoji icon" },
+                              text: { type: "string", description: "Bullet point text - MUST NOT be empty" }
+                            },
+                            required: ["icon", "text"]
                           }
                         },
                         comprehensionCheck: {
@@ -123,8 +125,29 @@ Make it engaging and pedagogically sound!`
                             type: "object",
                             properties: {
                               title: { type: "string" },
-                              icon: { type: "string" },
+                              icon: { type: "string", description: "Single emoji" },
                               content: { type: "string" }
+                            }
+                          }
+                        },
+                        practiceContent: {
+                          type: "object",
+                          description: "Only for tab 4: Practice configuration",
+                          properties: {
+                            type: { 
+                              type: "string",
+                              enum: ["prompt-builder", "standard"],
+                              description: "Use 'prompt-builder' for AI/prompt practice, 'standard' for regular exercises"
+                            }
+                          }
+                        },
+                        reflectionContent: {
+                          type: "object",
+                          description: "Only for tab 5: Custom reflection question",
+                          properties: {
+                            question: {
+                              type: "string",
+                              description: "Reflection question aligned with this specific lesson's content"
                             }
                           }
                         }

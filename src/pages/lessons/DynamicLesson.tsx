@@ -29,6 +29,15 @@ interface AdditionalSection {
   content: string;
 }
 
+interface PracticeContent {
+  type?: 'prompt-builder' | 'standard';
+  content?: string;
+}
+
+interface ReflectionContent {
+  question?: string;
+}
+
 interface LessonTab {
   id: string;
   label: string;
@@ -37,6 +46,8 @@ interface LessonTab {
   bulletPoints?: BulletPoint[];
   comprehensionCheck?: ComprehensionCheckData;
   additionalSections?: AdditionalSection[];
+  practiceContent?: PracticeContent;
+  reflectionContent?: ReflectionContent;
 }
 
 interface LessonContent {
@@ -300,11 +311,13 @@ const DynamicLesson = () => {
 
                 {tab.bulletPoints && tab.bulletPoints.length > 0 && (
                   <ul className="space-y-4 mb-8">
-                    {tab.bulletPoints.map((bullet, i) => (
-                      <BulletPoint key={i} icon={bullet.icon}>
-                        {bullet.text}
-                      </BulletPoint>
-                    ))}
+                    {tab.bulletPoints
+                      .filter(bullet => bullet.text && bullet.text.trim() !== '')
+                      .map((bullet, i) => (
+                        <BulletPoint key={i} icon={bullet.icon || '•'}>
+                          {bullet.text}
+                        </BulletPoint>
+                      ))}
                   </ul>
                 )}
 
@@ -350,18 +363,54 @@ const DynamicLesson = () => {
 
           // Tab 4: Practice
           if (parseInt(tab.id) === 4) {
+            const usePromptBuilder = !tab.practiceContent?.type || tab.practiceContent.type === 'prompt-builder';
+            
             return (
               <LessonSection key={tab.id} title={tab.title}>
                 {tab.intro && (
                   <p className="leading-relaxed mb-6">{tab.intro}</p>
                 )}
 
-                <PromptBuilder 
-                  onSubmit={handlePromptSubmit} 
-                  isSubmitting={isSubmittingPrompt} 
-                  feedback={promptFeedback} 
-                  onFollowUp={handleFollowUp} 
-                />
+                {usePromptBuilder ? (
+                  <PromptBuilder 
+                    onSubmit={handlePromptSubmit} 
+                    isSubmitting={isSubmittingPrompt} 
+                    feedback={promptFeedback} 
+                    onFollowUp={handleFollowUp} 
+                  />
+                ) : (
+                  <>
+                    {tab.bulletPoints && tab.bulletPoints.length > 0 && (
+                      <ul className="space-y-4 mb-8">
+                        {tab.bulletPoints
+                          .filter(bullet => bullet.text && bullet.text.trim() !== '')
+                          .map((bullet, i) => (
+                            <BulletPoint key={i} icon={bullet.icon || '•'}>
+                              {bullet.text}
+                            </BulletPoint>
+                          ))}
+                      </ul>
+                    )}
+
+                    {tab.comprehensionCheck && (
+                      <ComprehensionCheck
+                        question={tab.comprehensionCheck.question}
+                        options={tab.comprehensionCheck.options}
+                        onComplete={() => handleTabComplete(tab.id)}
+                      />
+                    )}
+
+                    {tab.additionalSections && tab.additionalSections.length > 0 && (
+                      <div className="space-y-4 mt-8">
+                        {tab.additionalSections.map((section, i) => (
+                          <CollapsibleSection key={i} title={section.title} icon={section.icon}>
+                            <div className="whitespace-pre-wrap">{section.content}</div>
+                          </CollapsibleSection>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                )}
 
                 <div className="flex justify-between mt-8">
                   <Button onClick={previousTab} className="bg-gradient-to-r from-primary to-primary/80">
@@ -406,7 +455,10 @@ const DynamicLesson = () => {
 
                   <div>
                     <h3 className="font-bold text-xl mb-4">💭 Your Feedback Matters</h3>
-                    <FeedbackForm onComplete={() => handleTabComplete("5")} />
+                    <FeedbackForm 
+                      onComplete={() => handleTabComplete("5")} 
+                      reflectionQuestion={tab.reflectionContent?.question}
+                    />
                   </div>
                 </div>
 

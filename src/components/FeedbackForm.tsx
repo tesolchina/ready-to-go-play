@@ -8,9 +8,10 @@ import { CheckCircle2 } from "lucide-react";
 
 interface FeedbackFormProps {
   onComplete?: () => void;
+  reflectionQuestion?: string;
 }
 
-export const FeedbackForm = ({ onComplete }: FeedbackFormProps) => {
+export const FeedbackForm = ({ onComplete, reflectionQuestion }: FeedbackFormProps) => {
   const [openResponse, setOpenResponse] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [usefulness, setUsefulness] = useState("");
@@ -57,8 +58,7 @@ export const FeedbackForm = ({ onComplete }: FeedbackFormProps) => {
           Reflection Question
         </Label>
         <p className="text-muted-foreground mb-3">
-          How do you plan to apply the AI prompt engineering framework in your teaching practice?
-          What specific educational task will you tackle first?
+          {reflectionQuestion || "Reflect on what you've learned in this lesson. How will you apply these concepts in your practice?"}
         </p>
         <Textarea
           id="reflection"
