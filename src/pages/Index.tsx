@@ -18,7 +18,7 @@ const Index = () => {
           </p>
         </header>
 
-        <div className="grid gap-6">
+        <div className="grid gap-6 md:grid-cols-2">
           <Link to="/lesson/1" className="group">
             <Card className="transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-2 hover:border-primary/50">
               <CardHeader>
@@ -46,6 +46,39 @@ const Index = () => {
                   </span>
                   <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
                     AI Practice
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link to="/lesson-creator" className="group">
+            <Card className="transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-2 hover:border-primary/50">
+              <CardHeader>
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center flex-shrink-0">
+                    <GraduationCap className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <CardTitle className="text-2xl mb-2 group-hover:text-primary transition-colors">
+                      Lesson Creator
+                    </CardTitle>
+                    <CardDescription className="text-base">
+                      Create your own custom lesson using AI-powered tools and our educational framework
+                    </CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                    AI-Powered
+                  </span>
+                  <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                    Custom
+                  </span>
+                  <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                    Document Upload
                   </span>
                 </div>
               </CardContent>
