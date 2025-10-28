@@ -36,27 +36,7 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: `You are an expert educational content creator. Generate a comprehensive, engaging lesson based on the provided framework. 
-            
-Structure the lesson with:
-- A compelling title
-- Clear learning objectives
-- Detailed sections covering the problem, framework, demonstration, and practice
-- Interactive elements and examples
-- Reflection prompts
-
-Return a JSON object with this structure:
-{
-  "title": "string",
-  "description": "string",
-  "sections": [
-    {
-      "title": "string",
-      "content": "string (can include markdown)",
-      "type": "content" | "demo" | "practice"
-    }
-  ]
-}`
+            content: `You are an expert educational content creator. Generate a comprehensive, engaging lesson based on the provided framework.`
           },
           {
             role: 'user',
@@ -79,6 +59,39 @@ Reflection: ${lessonData.reflection}
 Generate a complete, engaging lesson that follows best practices in instructional design.`
           }
         ],
+        tools: [
+          {
+            type: "function",
+            function: {
+              name: "create_lesson",
+              description: "Create a structured educational lesson",
+              parameters: {
+                type: "object",
+                properties: {
+                  title: { type: "string", description: "A compelling lesson title" },
+                  subject: { type: "string", description: "The subject area (e.g., Education, Technology, Science)" },
+                  grade_level: { type: "string", description: "Target grade level or education level" },
+                  learning_objectives: { type: "string", description: "Clear learning objectives for this lesson" },
+                  sections: {
+                    type: "array",
+                    description: "Lesson sections with detailed content",
+                    items: {
+                      type: "object",
+                      properties: {
+                        title: { type: "string" },
+                        content: { type: "string" },
+                        type: { type: "string", enum: ["content", "demo", "practice", "reflection"] }
+                      },
+                      required: ["title", "content", "type"]
+                    }
+                  }
+                },
+                required: ["title", "subject", "grade_level", "learning_objectives", "sections"]
+              }
+            }
+          }
+        ],
+        tool_choice: { type: "function", function: { name: "create_lesson" } }
       }),
     });
 
@@ -87,17 +100,14 @@ Generate a complete, engaging lesson that follows best practices in instructiona
     }
 
     const aiData = await aiResponse.json();
-    const generatedLesson = aiData.choices[0].message.content;
     
-    // Parse the JSON response
-    let lessonStructure;
-    try {
-      const jsonMatch = generatedLesson.match(/\{[\s\S]*\}/);
-      lessonStructure = JSON.parse(jsonMatch ? jsonMatch[0] : generatedLesson);
-    } catch (e) {
-      console.error('Failed to parse AI response:', e);
-      throw new Error('Failed to generate lesson structure');
+    // Extract the tool call result
+    const toolCall = aiData.choices[0].message.tool_calls?.[0];
+    if (!toolCall || toolCall.function.name !== 'create_lesson') {
+      throw new Error('AI did not return expected tool call');
     }
+    
+    const lessonStructure = JSON.parse(toolCall.function.arguments);
 
     // Return the generated lesson (will be stored on the frontend)
     return new Response(

@@ -25,18 +25,35 @@ const LessonCreator = () => {
   const { toast } = useToast();
   const [inputMethod, setInputMethod] = useState<"manual" | "upload">("manual");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [lessonData, setLessonData] = useState<LessonData>({
-    problem: "",
-    audience: "",
-    undesirableSolutions: "",
-    framework: "",
-    howItWorks: "",
-    practice: "",
-    reflection: "",
+  
+  // Load saved draft from localStorage on mount
+  const [lessonData, setLessonData] = useState<LessonData>(() => {
+    const saved = localStorage.getItem('lessonCreatorDraft');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error('Failed to parse saved draft:', e);
+      }
+    }
+    return {
+      problem: "",
+      audience: "",
+      undesirableSolutions: "",
+      framework: "",
+      howItWorks: "",
+      practice: "",
+      reflection: "",
+    };
   });
 
   const handleInputChange = (field: keyof LessonData, value: string) => {
-    setLessonData((prev) => ({ ...prev, [field]: value }));
+    setLessonData((prev) => {
+      const updated = { ...prev, [field]: value };
+      // Auto-save to localStorage
+      localStorage.setItem('lessonCreatorDraft', JSON.stringify(updated));
+      return updated;
+    });
   };
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,10 +113,14 @@ const LessonCreator = () => {
       // Store the lesson in the database (type-cast until types are regenerated)
       const supabaseAny = supabase as any;
       const insertResult = await supabaseAny.from('lessons').insert({
+        teacher_id: (await supabase.auth.getUser()).data.user?.id,
         title: data.lesson.title,
-        description: data.lesson.description,
-        content: data.lesson,
-        source_data: data.sourceData,
+        subject: data.lesson.subject,
+        grade_level: data.lesson.grade_level,
+        learning_objectives: data.lesson.learning_objectives,
+        student_context: data.sourceData.audience,
+        challenges: data.sourceData.undesirableSolutions,
+        generated_content: data.lesson,
       }).select().single();
 
       const savedLesson = insertResult.data;
@@ -113,6 +134,9 @@ const LessonCreator = () => {
         title: "Lesson created!",
         description: "Your custom lesson has been generated successfully.",
       });
+
+      // Clear the saved draft
+      localStorage.removeItem('lessonCreatorDraft');
 
       // Navigate to the new lesson
       navigate(`/lesson/${savedLesson.id}`);
