@@ -8,7 +8,7 @@ import { BulletPoint } from "@/components/BulletPoint";
 import { ComprehensionCheck } from "@/components/ComprehensionCheck";
 import { CollapsibleSection } from "@/components/CollapsibleSection";
 import { PromptBuilder } from "@/components/PromptBuilder";
-import { QuizSection } from "@/components/QuizSection";
+import { FeedbackForm } from "@/components/FeedbackForm";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -34,8 +34,7 @@ const Lesson1 = () => {
     { id: "2", label: "The Framework", completed: completedTabs.has("2") },
     { id: "3", label: "How It Works", completed: completedTabs.has("3") },
     { id: "4", label: "Practice", completed: completedTabs.has("4") },
-    { id: "5", label: "Final Quiz", completed: completedTabs.has("5") },
-    { id: "6", label: "Reflection", completed: completedTabs.has("6") },
+    { id: "5", label: "Reflection", completed: completedTabs.has("5") },
   ];
 
   const progress = Math.round((completedTabs.size / tabs.length) * 100);
@@ -486,70 +485,57 @@ const Lesson1 = () => {
           </LessonSection>
         )}
 
-        {/* Tab 5: Final Quiz */}
+        {/* Tab 5: Reflection & Feedback */}
         {activeTab === "5" && (
-          <LessonSection title="Final Quiz: Test Your Knowledge">
-            <p className="leading-relaxed mb-6">
-              Test your knowledge of the AI Prompt Engineering Framework with this final quiz.
-              Answer the questions below to assess your understanding of the key concepts and principles.
-            </p>
-
-            <QuizSection
-              questions={[
-                {
-                  question: "What is the first step in the AI Prompt Engineering Framework?",
-                  options: [
-                    "Constructing the prompt",
-                    "Analyzing the desired outcome",
-                    "Testing the AI-generated content",
-                  ],
-                  correctIndex: 1,
-                },
-                {
-                  question: "Which of the following is NOT a common behavior of effective prompts?",
-                  options: [
-                    "Providing context",
-                    "Using vague language",
-                    "Setting constraints",
-                  ],
-                  correctIndex: 1,
-                },
-                {
-                  question: "What is the purpose of the AI Prompt Engineering Framework?",
-                  options: [
-                    "To confuse the AI",
-                    "To provide a structured approach to crafting effective prompts",
-                    "To limit the AI's creativity",
-                  ],
-                  correctIndex: 1,
-                },
-              ]}
-              onComplete={() => handleTabComplete("5")}
-            />
-
-            <div className="flex justify-between mt-8">
-              <Button onClick={previousTab} className="bg-gradient-to-r from-primary to-primary/80">
-                <ChevronLeft className="mr-2 h-4 w-4" />
-                Previous
-              </Button>
-              <Button onClick={nextTab} className="bg-gradient-to-r from-primary to-primary/80">
-                Next
-                <ChevronRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
-          </LessonSection>
-        )}
-
-        {/* Tab 6: Reflection */}
-        {activeTab === "6" && (
           <LessonSection title="Reflection & Next Steps">
-            <div className="space-y-6">
+            <div className="space-y-8">
               <div className="bg-accent/50 p-6 rounded-xl">
                 <h3 className="font-bold text-xl mb-4">🎓 Congratulations!</h3>
                 <p className="leading-relaxed mb-4">
                   You've completed the fundamentals of AI-assisted prompt engineering for educators. 
                   You now have the tools to create effective prompts that generate high-quality educational content.
                 </p>
+              </div>
+
+              <div className="bg-card p-6 rounded-xl border-2 border-primary/20">
+                <h3 className="font-bold text-xl mb-4">📋 What You've Learned</h3>
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">1️⃣</span>
+                    <div>
+                      <p className="font-semibold">The Problem</p>
+                      <p className="text-muted-foreground text-sm">Identified why generic prompts produce generic results and the need for structured approaches</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">2️⃣</span>
+                    <div>
+                      <p className="font-semibold">Common Behaviors</p>
+                      <p className="text-muted-foreground text-sm">Discovered the four key elements: Context, Task, Constraints, and Examples</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">3️⃣</span>
+                    <div>
+                      <p className="font-semibold">The Framework</p>
+                      <p className="text-muted-foreground text-sm">Learned the structured approach to building effective AI prompts</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">4️⃣</span>
+                    <div>
+                      <p className="font-semibold">How It Works</p>
+                      <p className="text-muted-foreground text-sm">Explored the analyze, construct, test, and refine process</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">5️⃣</span>
+                    <div>
+                      <p className="font-semibold">Practice</p>
+                      <p className="text-muted-foreground text-sm">Applied the framework hands-on with the Prompt Builder tool</p>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className="bg-primary/5 p-6 rounded-xl border-l-4 border-primary">
@@ -592,12 +578,10 @@ const Lesson1 = () => {
                 </ul>
               </div>
 
-              <Button 
-                onClick={() => handleTabComplete("6")}
-                className="w-full bg-gradient-to-r from-primary to-primary/80 text-lg py-6"
-              >
-                Complete Lesson 🎉
-              </Button>
+              <div>
+                <h3 className="font-bold text-xl mb-4">💭 Your Feedback Matters</h3>
+                <FeedbackForm onComplete={() => handleTabComplete("5")} />
+              </div>
             </div>
 
             <div className="flex justify-between mt-8">
