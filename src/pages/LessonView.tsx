@@ -193,6 +193,12 @@ const LessonView = () => {
 
           <TabsContent value="problem">
             <LessonSection title="The Problem">
+              {/* Handle old format - plain string */}
+              {typeof (content as any).problem === 'string' && (
+                <p className="text-lg text-foreground leading-relaxed mb-6">{(content as any).problem}</p>
+              )}
+              
+              {/* Handle new format */}
               {viewMode === "presentation" && content.problem?.keyPoints && (
                 <ul className="space-y-4 mb-6">
                   {content.problem.keyPoints.map((point, index) => (
@@ -228,6 +234,18 @@ const LessonView = () => {
 
           <TabsContent value="behaviors">
             <LessonSection title="Common Undesirable Behaviors">
+              {/* Handle old format - array of strings */}
+              {Array.isArray((content as any).commonBehaviors) && (
+                <ul className="space-y-4 mb-6">
+                  {((content as any).commonBehaviors as string[]).map((behavior, index) => (
+                    <BulletPoint key={index} icon="⚠️">
+                      {behavior}
+                    </BulletPoint>
+                  ))}
+                </ul>
+              )}
+              
+              {/* Handle new format */}
               {content.commonBehaviors?.items && (
                 <ul className="space-y-4 mb-6">
                   {content.commonBehaviors.items.map((behavior, index) => (
@@ -249,6 +267,18 @@ const LessonView = () => {
 
           <TabsContent value="framework">
             <LessonSection title="Theoretical Framework">
+              {/* Handle old format - plain string */}
+              {typeof (content as any).framework === 'string' && (
+                <div className="prose prose-lg max-w-none mb-6">
+                  {((content as any).framework as string).split('\n\n').map((paragraph, index) => (
+                    <p key={index} className="text-foreground leading-relaxed mb-4">
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              )}
+              
+              {/* Handle new format */}
               {viewMode === "presentation" && content.framework?.keyPoints && (
                 <ul className="space-y-4 mb-6">
                   {content.framework.keyPoints.map((point, index) => (
@@ -284,6 +314,18 @@ const LessonView = () => {
 
           <TabsContent value="demo">
             <LessonSection title="How It Works - Demonstration">
+              {/* Handle old format - plain string */}
+              {typeof (content as any).howItWorks === 'string' && (
+                <div className="prose prose-lg max-w-none mb-6">
+                  {((content as any).howItWorks as string).split('\n\n').map((paragraph, index) => (
+                    <p key={index} className="text-foreground leading-relaxed mb-4">
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              )}
+              
+              {/* Handle new format */}
               {viewMode === "presentation" && content.howItWorks?.keyPoints && (
                 <ul className="space-y-4 mb-6">
                   {content.howItWorks.keyPoints.map((point, index) => (
@@ -326,6 +368,27 @@ const LessonView = () => {
 
           <TabsContent value="practice">
             <LessonSection title="Practice Activities">
+              {/* Handle old format - array of strings or objects */}
+              {Array.isArray((content as any).practice) && (
+                <div className="space-y-6 mb-6">
+                  {((content as any).practice as any[]).map((activity, index) => {
+                    const isObject = typeof activity === 'object' && activity !== null;
+                    const title = isObject && 'title' in activity ? activity.title : `Activity ${index + 1}`;
+                    const instructions = isObject && 'instructions' in activity ? activity.instructions : String(activity);
+                    
+                    return (
+                      <Card key={index} className="p-6 bg-accent/10">
+                        <h3 className="text-xl font-bold text-foreground mb-3">
+                          {title}
+                        </h3>
+                        <p className="text-foreground leading-relaxed">{instructions}</p>
+                      </Card>
+                    );
+                  })}
+                </div>
+              )}
+              
+              {/* Handle new format */}
               {content.practice?.activities && (
                 <div className="space-y-6 mb-6">
                   {content.practice.activities.map((activity, index) => (
@@ -360,6 +423,21 @@ const LessonView = () => {
           <TabsContent value="reflection">
             <LessonSection title="Reflection & Feedback">
               <div className="space-y-8">
+                {/* Handle old format - array of strings */}
+                {Array.isArray((content as any).reflection) && (
+                  <div>
+                    <h3 className="text-2xl font-bold text-foreground mb-4">Reflection Prompts</h3>
+                    <ul className="space-y-4 mb-6">
+                      {((content as any).reflection as string[]).map((prompt, index) => (
+                        <BulletPoint key={index} icon="💭">
+                          {prompt}
+                        </BulletPoint>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                {/* Handle new format */}
                 {content.reflection?.prompts && (
                   <div>
                     <h3 className="text-2xl font-bold text-foreground mb-4">Reflection Prompts</h3>
