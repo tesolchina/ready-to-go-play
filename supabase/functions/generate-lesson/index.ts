@@ -1,5 +1,5 @@
+import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -20,15 +20,22 @@ serve(async (req) => {
     }
 
     const systemPrompt = `You are an expert educational content creator. Generate comprehensive lesson content based on teacher inputs. Structure your response as JSON with the following sections:
-- problem: Describe the educational challenge or topic (2-3 sentences)
-- commonBehaviors: List 3-4 undesirable student behaviors or misconceptions related to this topic
-- framework: Explain key theories, concepts, and pedagogical approaches (detailed, 4-5 paragraphs)
-- howItWorks: Provide a detailed demonstration or worked example showing the concept in action
-- practice: Create 3-4 hands-on practice activities with clear instructions
-- reflection: Include 3-4 reflection prompts for students to consolidate learning
-- feedback: Provide guidance on how teachers can assess student understanding
 
-Make content engaging, age-appropriate, and aligned with learning objectives.`;
+For EACH section (problem, commonBehaviors, framework, howItWorks, practice, reflection), include:
+- keyPoints: array of 3-5 concise bullet points for presentation
+- detailedContent: full paragraphs for additional reading
+- comprehensionCheck: object with { question: string, options: string[], correctAnswer: number (0-based index) }
+
+Additional fields:
+- problem: { keyPoints, detailedContent, comprehensionCheck, visualizationData?: { type: "bar"|"line"|"pie", data: array of {label: string, value: number} } }
+- commonBehaviors: { items: array of strings, comprehensionCheck }
+- framework: { keyPoints, detailedContent, comprehensionCheck, visualizationData?: same format }
+- howItWorks: { keyPoints, detailedContent, steps: array of {title: string, description: string}, comprehensionCheck }
+- practice: { activities: array of { title: string, instructions: string, isInteractive: boolean }, comprehensionCheck }
+- reflection: { prompts: array of strings, comprehensionCheck }
+- feedback: string (teacher guidance)
+
+Make content engaging, age-appropriate, and aligned with learning objectives. Include visualization data where it helps explain concepts.`;
 
     const userPrompt = `Create a lesson for:
 Title: ${title}
