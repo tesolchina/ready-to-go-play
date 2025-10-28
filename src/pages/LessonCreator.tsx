@@ -93,13 +93,29 @@ const LessonCreator = () => {
 
       if (error) throw error;
 
+      // Store the lesson in the database (type-cast until types are regenerated)
+      const supabaseAny = supabase as any;
+      const insertResult = await supabaseAny.from('lessons').insert({
+        title: data.lesson.title,
+        description: data.lesson.description,
+        content: data.lesson,
+        source_data: data.sourceData,
+      }).select().single();
+
+      const savedLesson = insertResult.data;
+      const dbError = insertResult.error;
+
+      if (dbError || !savedLesson) {
+        throw new Error(dbError?.message || 'Failed to save lesson');
+      }
+
       toast({
         title: "Lesson created!",
         description: "Your custom lesson has been generated successfully.",
       });
 
-      // Navigate to the new lesson (you'll need to implement dynamic lesson routing)
-      navigate(`/lesson/${data.lessonId}`);
+      // Navigate to the new lesson
+      navigate(`/lesson/${savedLesson.id}`);
     } catch (error) {
       console.error("Error generating lesson:", error);
       toast({

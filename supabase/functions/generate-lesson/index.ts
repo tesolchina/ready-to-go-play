@@ -1,6 +1,5 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -100,31 +99,11 @@ Generate a complete, engaging lesson that follows best practices in instructiona
       throw new Error('Failed to generate lesson structure');
     }
 
-    // Store the lesson in Supabase
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
-
-    const { data: lesson, error } = await supabase
-      .from('lessons')
-      .insert({
-        title: lessonStructure.title,
-        description: lessonStructure.description,
-        content: lessonStructure,
-        source_data: lessonData,
-      })
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Database error:', error);
-      throw new Error('Failed to save lesson to database');
-    }
-
+    // Return the generated lesson (will be stored on the frontend)
     return new Response(
       JSON.stringify({ 
-        lessonId: lesson.id,
-        lesson: lessonStructure 
+        lesson: lessonStructure,
+        sourceData: lessonData
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
