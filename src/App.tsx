@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Lesson1 from "./pages/lessons/Lesson1";
+import DynamicLesson from "./pages/lessons/DynamicLesson";
 import LessonCreator from "./pages/LessonCreator";
 import NotFound from "./pages/NotFound";
 
@@ -19,6 +20,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/lesson/1" element={<Lesson1 />} />
+          <Route path="/lesson/:lessonId" element={<DynamicLesson />} />
           <Route path="/lesson-creator" element={<LessonCreator />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
