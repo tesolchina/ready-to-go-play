@@ -9,12 +9,17 @@ import { useToast } from "@/hooks/use-toast";
 import { LessonSection } from "@/components/LessonSection";
 import { BulletPoint } from "@/components/BulletPoint";
 
+interface PracticeActivity {
+  title?: string;
+  instructions?: string;
+}
+
 interface LessonContent {
   problem: string;
   commonBehaviors: string[];
   framework: string;
   howItWorks: string;
-  practice: string[];
+  practice: (string | PracticeActivity)[];
   reflection: string[];
   feedback: string;
 }
@@ -154,14 +159,20 @@ const LessonView = () => {
           <TabsContent value="practice">
             <LessonSection title="Practice Activities">
               <div className="space-y-6">
-                {content.practice.map((activity, index) => (
-                  <Card key={index} className="p-6 bg-accent/10">
-                    <h3 className="text-xl font-bold text-foreground mb-3">
-                      Activity {index + 1}
-                    </h3>
-                    <p className="text-foreground leading-relaxed">{activity}</p>
-                  </Card>
-                ))}
+                {content.practice.map((activity, index) => {
+                  const isObject = typeof activity === 'object' && activity !== null;
+                  const title = isObject && 'title' in activity ? activity.title : `Activity ${index + 1}`;
+                  const instructions = isObject && 'instructions' in activity ? activity.instructions : String(activity);
+                  
+                  return (
+                    <Card key={index} className="p-6 bg-accent/10">
+                      <h3 className="text-xl font-bold text-foreground mb-3">
+                        {title}
+                      </h3>
+                      <p className="text-foreground leading-relaxed">{instructions}</p>
+                    </Card>
+                  );
+                })}
               </div>
             </LessonSection>
           </TabsContent>
