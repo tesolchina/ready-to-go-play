@@ -25,14 +25,14 @@ serve(async (req) => {
     // Use Lovable AI to generate a structured lesson
     const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
     
-    const aiResponse = await fetch('https://api.lovable.app/v1/ai/chat', {
+    const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${lovableApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'openai/gpt-5',
+        model: 'google/gemini-2.5-flash',
         messages: [
           {
             role: 'system',
