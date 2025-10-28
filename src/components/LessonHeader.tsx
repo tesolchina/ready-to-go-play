@@ -5,18 +5,20 @@ interface LessonHeaderProps {
   darkMode: boolean;
   toggleDarkMode: () => void;
   progress: number;
+  title?: string;
+  subtitle?: string;
 }
 
-export const LessonHeader = ({ darkMode, toggleDarkMode, progress }: LessonHeaderProps) => {
+export const LessonHeader = ({ darkMode, toggleDarkMode, progress, title, subtitle }: LessonHeaderProps) => {
   return (
     <header className="bg-card rounded-2xl p-6 md:p-8 shadow-[var(--shadow-elevated)] mb-6">
       <div className="flex justify-between items-start mb-4">
         <div className="flex-1">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-            AI Prompt Engineering for Educational Use
+            {title || "AI Prompt Engineering for Educational Use"}
           </h1>
           <p className="text-lg text-muted-foreground">
-            Master the art of crafting effective AI prompts for teaching
+            {subtitle || "Master the art of crafting effective AI prompts for teaching"}
           </p>
         </div>
         <Button

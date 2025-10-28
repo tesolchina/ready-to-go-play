@@ -40,23 +40,29 @@ serve(async (req) => {
           },
           {
             role: 'user',
-            content: `Create a lesson based on this information:
+            content: `Create a comprehensive 6-tab lesson based on this information:
 
 Problem & Context: ${lessonData.problem}
-
 Audience: ${lessonData.audience}
-
 Common Undesirable Solutions: ${lessonData.undesirableSolutions}
-
 Framework/Solution: ${lessonData.framework}
-
 How It Works: ${lessonData.howItWorks}
-
 Practice Activities: ${lessonData.practice}
-
 Reflection: ${lessonData.reflection}
 
-Generate a complete, engaging lesson that follows best practices in instructional design.`
+Structure the lesson with exactly 6 tabs:
+1. "The Problem" - Explain the problem in context with 4 bullet points, an MC question, and additional reading
+2. "Common Behaviors" - Describe undesirable approaches with 4 bullet points, MC question, and examples
+3. "The Framework" - Present the new framework/solution with 4 bullet points, MC question, and structure explanation
+4. "How It Works" - Step-by-step demonstration with 4 bullet points, MC question, and practical examples
+5. "Practice" - This will use the PromptBuilder component (simple intro text only, no bullets needed)
+6. "Reflection" - Summary and next steps (will use FeedbackForm, simple intro only)
+
+For tabs 0-3: Include engaging bullet points with emojis, create relevant MC questions with 3 options, and add 2 collapsible sections for additional content.
+For tab 4 (Practice): Just provide intro text explaining what students will practice.
+For tab 5 (Reflection): Just provide a congratulatory intro text.
+
+Make it engaging and pedagogically sound!`
           }
         ],
         tools: [
@@ -64,29 +70,69 @@ Generate a complete, engaging lesson that follows best practices in instructiona
             type: "function",
             function: {
               name: "create_lesson",
-              description: "Create a structured educational lesson",
+              description: "Create a structured educational lesson with 6 tabs",
               parameters: {
                 type: "object",
                 properties: {
                   title: { type: "string", description: "A compelling lesson title" },
-                  subject: { type: "string", description: "The subject area (e.g., Education, Technology, Science)" },
-                  grade_level: { type: "string", description: "Target grade level or education level" },
-                  learning_objectives: { type: "string", description: "Clear learning objectives for this lesson" },
-                  sections: {
+                  subject: { type: "string", description: "The subject area" },
+                  grade_level: { type: "string", description: "Target grade level" },
+                  learning_objectives: { type: "string", description: "Clear learning objectives" },
+                  tabs: {
                     type: "array",
-                    description: "Lesson sections with detailed content",
+                    description: "6 tabs for the lesson",
                     items: {
                       type: "object",
                       properties: {
-                        title: { type: "string" },
-                        content: { type: "string" },
-                        type: { type: "string", enum: ["content", "demo", "practice", "reflection"] }
-                      },
-                      required: ["title", "content", "type"]
+                        id: { type: "string", description: "Tab ID (0-5)" },
+                        label: { type: "string", description: "Tab label" },
+                        title: { type: "string", description: "Section title" },
+                        intro: { type: "string", description: "Introduction paragraph" },
+                        bulletPoints: {
+                          type: "array",
+                          description: "4 key bullet points with icons",
+                          items: {
+                            type: "object",
+                            properties: {
+                              icon: { type: "string", description: "Emoji icon" },
+                              text: { type: "string", description: "Bullet point text" }
+                            }
+                          }
+                        },
+                        comprehensionCheck: {
+                          type: "object",
+                          description: "MC question for this tab",
+                          properties: {
+                            question: { type: "string" },
+                            options: {
+                              type: "array",
+                              items: {
+                                type: "object",
+                                properties: {
+                                  text: { type: "string" },
+                                  correct: { type: "boolean" }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        additionalSections: {
+                          type: "array",
+                          description: "Collapsible sections for additional content",
+                          items: {
+                            type: "object",
+                            properties: {
+                              title: { type: "string" },
+                              icon: { type: "string" },
+                              content: { type: "string" }
+                            }
+                          }
+                        }
+                      }
                     }
                   }
                 },
-                required: ["title", "subject", "grade_level", "learning_objectives", "sections"]
+                required: ["title", "subject", "grade_level", "learning_objectives", "tabs"]
               }
             }
           }
