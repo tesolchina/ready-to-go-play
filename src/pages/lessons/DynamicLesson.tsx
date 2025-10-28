@@ -207,6 +207,52 @@ const DynamicLesson = () => {
     return null;
   }
 
+  // Handle legacy lesson format (with sections instead of tabs)
+  if (!lesson.tabs || !Array.isArray(lesson.tabs)) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-primary/5">
+        <div className="container max-w-4xl mx-auto px-4 py-8">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/")}
+            className="mb-6"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Dashboard
+          </Button>
+
+          <div className="bg-card rounded-2xl p-8 shadow-lg text-center">
+            <h2 className="text-2xl font-bold mb-4">Legacy Lesson Format</h2>
+            <p className="text-muted-foreground mb-6">
+              This lesson was created with an older format. Please create a new lesson using the Lesson Creator to experience the full interactive features including:
+            </p>
+            <ul className="text-left max-w-md mx-auto space-y-2 mb-6">
+              <li className="flex items-start gap-2">
+                <span>✅</span>
+                <span>6 structured tabs with guided learning</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span>✅</span>
+                <span>Interactive comprehension checks</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span>✅</span>
+                <span>AI-powered practice exercises</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span>✅</span>
+                <span>Reflection and feedback tools</span>
+              </li>
+            </ul>
+            <Button onClick={() => navigate("/lesson-creator")} className="bg-gradient-to-r from-primary to-primary/80">
+              Create New Lesson
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const tabs = lesson.tabs.map(tab => ({
     id: tab.id,
     label: tab.label,
