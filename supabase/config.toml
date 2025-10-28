@@ -2,9 +2,3 @@ project_id = "ucfgbubrgojodrkgayap"
 
 [functions.provide-feedback]
 verify_jwt = false
-
-[functions.generate-lesson]
-verify_jwt = false
-
-[functions.lesson-feedback]
-verify_jwt = false
