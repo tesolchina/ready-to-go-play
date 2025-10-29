@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { BookOpen, GraduationCap, Plus } from "lucide-react";
+import { BookOpen, GraduationCap, Plus, Sparkles, FileText, Brain, Zap } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -59,6 +59,62 @@ const Index = () => {
             Create and deliver interactive, AI-powered lessons in minutes
           </p>
         </header>
+
+        {/* Introduction Section */}
+        <section className="mb-16">
+          <div className="bg-card rounded-2xl p-8 md:p-12 shadow-lg border border-primary/10">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 text-center">
+              Transform Your Teaching with AI
+            </h2>
+            <p className="text-lg text-muted-foreground text-center max-w-3xl mx-auto mb-12">
+              Smart Lesson Builder empowers educators to create engaging, interactive lessons in minutes. 
+              Upload your content, let AI structure it pedagogically, and deliver comprehensive learning experiences.
+            </p>
+            
+            {/* Key Features Grid */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="text-center">
+                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mx-auto mb-4">
+                  <Sparkles className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="font-semibold text-foreground mb-2">AI-Powered Generation</h3>
+                <p className="text-sm text-muted-foreground">
+                  Upload documents and let AI create structured, engaging lessons automatically
+                </p>
+              </div>
+              
+              <div className="text-center">
+                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mx-auto mb-4">
+                  <FileText className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="font-semibold text-foreground mb-2">Structured Content</h3>
+                <p className="text-sm text-muted-foreground">
+                  Lessons organized into clear sections with learning objectives and assessments
+                </p>
+              </div>
+              
+              <div className="text-center">
+                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mx-auto mb-4">
+                  <Brain className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="font-semibold text-foreground mb-2">Interactive Learning</h3>
+                <p className="text-sm text-muted-foreground">
+                  Built-in comprehension checks and practice modes for active engagement
+                </p>
+              </div>
+              
+              <div className="text-center">
+                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mx-auto mb-4">
+                  <Zap className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="font-semibold text-foreground mb-2">Instant Feedback</h3>
+                <p className="text-sm text-muted-foreground">
+                  AI-powered feedback system provides personalized guidance to learners
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
 
         <div className="space-y-12">
           {/* Lesson Creator */}
