@@ -51,17 +51,20 @@ Practice Activities: ${lessonData.practice}
 Reflection: ${lessonData.reflection}
 
 Structure the lesson with exactly 6 tabs:
-1. "The Problem" - Explain the problem in context with 4 bullet points, an MC question, and additional reading
-2. "Common Behaviors" - Describe undesirable approaches with 4 bullet points, MC question, and examples
-3. "The Framework" - Present the new framework/solution with 4 bullet points, MC question, and structure explanation
-4. "How It Works" - Step-by-step demonstration with 4 bullet points, MC question, and practical examples
+1. "The Problem" - Explain the problem in context with 4 bullet points, ONE MC question (REQUIRED), and additional reading
+2. "Common Behaviors" - Describe undesirable approaches with 4 bullet points, ONE MC question (REQUIRED), and examples
+3. "The Framework" - Present the new framework/solution with 4 bullet points, ONE MC question (REQUIRED), and structure explanation
+4. "How It Works" - Step-by-step demonstration with 4 bullet points, ONE MC question (REQUIRED), and practical examples
 5. "Practice" - Interactive practice (set type to 'prompt-builder' if AI/prompt-related, 'standard' otherwise)
 6. "Reflection" - Summary and custom reflection question
 
-CRITICAL: Ensure ALL bullet points have meaningful, non-empty text content. Never leave bullet text blank.
-For tabs 0-3: Include 4 engaging bullet points with emojis, create relevant MC questions with 3 options, and add 2 collapsible sections.
-For tab 4: Provide intro text and set practiceContent.type based on whether the lesson involves AI/prompts.
-For tab 5: Provide congratulatory intro and a custom reflection question in reflectionContent.question that relates specifically to THIS lesson's content.
+CRITICAL REQUIREMENTS:
+1. Ensure ALL bullet points have meaningful, non-empty text content. Never leave bullet text blank.
+2. TABS 0-3 MUST HAVE EXACTLY ONE MULTIPLE CHOICE QUESTION EACH (comprehensionCheck field is REQUIRED)
+3. Each MC question must have 3-4 options with exactly one correct answer
+4. For tabs 0-3: Include 4 engaging bullet points with emojis, ONE MC question with 3 options (one correct), and 2 collapsible sections.
+5. For tab 4: Provide intro text and set practiceContent.type based on whether the lesson involves AI/prompts.
+6. For tab 5: Provide congratulatory intro and a custom reflection question in reflectionContent.question that relates specifically to THIS lesson's content.
 
 Make it engaging and pedagogically sound!`
           }
@@ -177,6 +180,21 @@ Make it engaging and pedagogically sound!`
     }
     
     const lessonStructure = JSON.parse(toolCall.function.arguments);
+
+    // Validate that first 4 tabs have comprehension checks
+    for (let i = 0; i < 4; i++) {
+      const tab = lessonStructure.tabs[i];
+      if (!tab.comprehensionCheck || !tab.comprehensionCheck.question || !tab.comprehensionCheck.options || tab.comprehensionCheck.options.length < 3) {
+        console.error(`Tab ${i} missing valid comprehension check:`, tab);
+        throw new Error(`Tab ${i} (${tab.label}) must have a comprehension check with at least 3 options`);
+      }
+      // Ensure at least one correct answer
+      const hasCorrectAnswer = tab.comprehensionCheck.options.some((opt: any) => opt.correct === true);
+      if (!hasCorrectAnswer) {
+        console.error(`Tab ${i} has no correct answer:`, tab.comprehensionCheck);
+        throw new Error(`Tab ${i} (${tab.label}) must have at least one correct answer in the comprehension check`);
+      }
+    }
 
     // Return the generated lesson (will be stored on the frontend)
     return new Response(
