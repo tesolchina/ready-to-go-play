@@ -23,6 +23,7 @@ export type Database = {
           id: string
           is_public: boolean
           learning_objectives: string
+          slug: string
           student_context: string | null
           subject: string
           teacher_id: string
@@ -37,6 +38,7 @@ export type Database = {
           id?: string
           is_public?: boolean
           learning_objectives: string
+          slug: string
           student_context?: string | null
           subject: string
           teacher_id: string
@@ -51,6 +53,7 @@ export type Database = {
           id?: string
           is_public?: boolean
           learning_objectives?: string
+          slug?: string
           student_context?: string | null
           subject?: string
           teacher_id?: string
@@ -64,7 +67,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_slug: { Args: { input_title: string }; Returns: string }
     }
     Enums: {
       [_ in never]: never

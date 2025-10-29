@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 
 interface Lesson {
   id: string;
+  slug: string;
   title: string;
   subject: string;
   grade_level: string;
@@ -25,7 +26,7 @@ const Index = () => {
         const supabaseAny = supabase as any;
         const { data, error } = await supabaseAny
           .from('lessons')
-          .select('id, title, subject, grade_level, learning_objectives, created_at')
+          .select('id, slug, title, subject, grade_level, learning_objectives, created_at')
           .order('created_at', { ascending: false });
 
         if (error) throw error;
@@ -140,7 +141,7 @@ const Index = () => {
               <h2 className="text-2xl font-bold text-foreground mb-4">Your Generated Lessons</h2>
               <div className="grid gap-6 md:grid-cols-2">
                 {lessons.map((lesson) => (
-                  <Link key={lesson.id} to={`/lesson/${lesson.id}`} className="group">
+                  <Link key={lesson.id} to={`/lesson/${lesson.slug}`} className="group">
                     <Card className="transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-2 hover:border-primary/50 h-full">
                       <CardHeader>
                         <CardTitle className="text-xl mb-2 group-hover:text-primary transition-colors">

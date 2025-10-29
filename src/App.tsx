@@ -20,7 +20,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/lesson/1" element={<Lesson1 />} />
-          <Route path="/lesson/:lessonId" element={<DynamicLesson />} />
+          <Route path="/lesson/:slug" element={<DynamicLesson />} />
           <Route path="/lesson-creator" element={<LessonCreator />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

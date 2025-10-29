@@ -138,8 +138,8 @@ const LessonCreator = () => {
       // Clear the saved draft
       localStorage.removeItem('lessonCreatorDraft');
 
-      // Navigate to the new lesson
-      navigate(`/lesson/${savedLesson.id}`);
+      // Navigate to the new lesson using slug
+      navigate(`/lesson/${savedLesson.slug}`);
     } catch (error) {
       console.error("Error generating lesson:", error);
       toast({

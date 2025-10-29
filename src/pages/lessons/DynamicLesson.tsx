@@ -59,7 +59,7 @@ interface LessonContent {
 }
 
 const DynamicLesson = () => {
-  const { lessonId } = useParams<{ lessonId: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [lesson, setLesson] = useState<LessonContent | null>(null);
@@ -80,10 +80,10 @@ const DynamicLesson = () => {
 
   useEffect(() => {
     const fetchLesson = async () => {
-      if (!lessonId) {
+      if (!slug) {
         toast({
           title: "Error",
-          description: "No lesson ID provided",
+          description: "No lesson slug provided",
           variant: "destructive",
         });
         navigate("/");
@@ -95,7 +95,7 @@ const DynamicLesson = () => {
         const { data, error } = await supabaseAny
           .from('lessons')
           .select('*')
-          .eq('id', lessonId)
+          .eq('slug', slug)
           .single();
 
         if (error) throw error;
@@ -125,7 +125,7 @@ const DynamicLesson = () => {
     };
 
     fetchLesson();
-  }, [lessonId, navigate, toast]);
+  }, [slug, navigate, toast]);
 
   const handleTabComplete = (tabId: string) => {
     setCompletedTabs(prev => new Set(prev).add(tabId));
