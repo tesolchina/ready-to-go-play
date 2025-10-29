@@ -47,42 +47,37 @@ const Lesson1 = () => {
     });
   };
 
-  const handlePromptSubmit = async (prompt: string) => {
-    setIsSubmittingPrompt(true);
-    setPromptFeedback(null);
-    
+  const handlePromptSubmit = async (userInputs: Record<string, string>, systemPrompt: string) => {
     try {
       const { data, error } = await supabase.functions.invoke('provide-feedback', {
-        body: { userPrompt: prompt }
+        body: { 
+          userInputs,
+          systemPrompt
+        }
       });
 
       if (error) throw error;
-
-      setPromptFeedback(data.feedback);
-      toast({
-        title: "Feedback Received!",
-        description: "AI has analyzed your prompt and provided feedback below.",
-      });
       
       handleTabComplete("4");
+      return data.feedback;
     } catch (error) {
       console.error('Error getting feedback:', error);
       toast({
         title: "Error",
-        description: "Failed to get AI feedback. Please try again.",
+        description: "Failed to get feedback. Please try again.",
         variant: "destructive",
       });
-    } finally {
-      setIsSubmittingPrompt(false);
+      throw error;
     }
   };
 
-  const handleFollowUp = async (message: string, conversationHistory: any[]) => {
+  const handleFollowUp = async (message: string, conversationHistory: any[], systemPrompt: string) => {
     try {
       const { data, error } = await supabase.functions.invoke('provide-feedback', {
         body: { 
           userPrompt: message,
-          conversationHistory 
+          conversationHistory,
+          systemPrompt
         }
       });
 
@@ -470,7 +465,17 @@ const Lesson1 = () => {
               Use the prompt builder below to create your own prompt for generating educational content.
             </p>
 
-            <PromptBuilder onSubmit={handlePromptSubmit} isSubmitting={isSubmittingPrompt} feedback={promptFeedback} onFollowUp={handleFollowUp} />
+            <PromptBuilder 
+              practiceFields={[
+                { label: "Context", placeholder: "Define the role and audience...", type: "textarea" },
+                { label: "Task", placeholder: "Specify what AI should create...", type: "textarea" },
+                { label: "Constraints", placeholder: "Define limitations and requirements...", type: "textarea" },
+                { label: "Examples", placeholder: "Show desired format or style...", type: "textarea" }
+              ]}
+              systemPrompt="You are an expert educator providing feedback on AI prompts for educational content generation. Evaluate the prompt based on: 1) Clarity of context, 2) Specificity of task, 3) Appropriate constraints, 4) Quality of examples. Provide constructive feedback with specific suggestions for improvement."
+              onSubmit={handlePromptSubmit}
+              onFollowUp={handleFollowUp}
+            />
 
             <div className="flex justify-between mt-8">
               <Button onClick={previousTab} className="bg-gradient-to-r from-primary to-primary/80">

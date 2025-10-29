@@ -29,9 +29,15 @@ interface AdditionalSection {
   content: string;
 }
 
+interface PracticeField {
+  label: string;
+  placeholder: string;
+  type: 'text' | 'textarea';
+}
+
 interface PracticeContent {
-  type?: 'prompt-builder' | 'standard';
-  content?: string;
+  systemPrompt: string;
+  practiceFields: PracticeField[];
 }
 
 interface ReflectionContent {
@@ -135,42 +141,37 @@ const DynamicLesson = () => {
     });
   };
 
-  const handlePromptSubmit = async (prompt: string) => {
-    setIsSubmittingPrompt(true);
-    setPromptFeedback(null);
-    
+  const handlePromptSubmit = async (userInputs: Record<string, string>, systemPrompt: string) => {
     try {
       const { data, error } = await supabase.functions.invoke('provide-feedback', {
-        body: { userPrompt: prompt }
+        body: { 
+          userInputs,
+          systemPrompt
+        }
       });
 
       if (error) throw error;
-
-      setPromptFeedback(data.feedback);
-      toast({
-        title: "Feedback Received!",
-        description: "AI has analyzed your prompt and provided feedback below.",
-      });
       
       handleTabComplete("4");
+      return data.feedback;
     } catch (error) {
       console.error('Error getting feedback:', error);
       toast({
         title: "Error",
-        description: "Failed to get AI feedback. Please try again.",
+        description: "Failed to get feedback. Please try again.",
         variant: "destructive",
       });
-    } finally {
-      setIsSubmittingPrompt(false);
+      throw error;
     }
   };
 
-  const handleFollowUp = async (message: string, conversationHistory: any[]) => {
+  const handleFollowUp = async (message: string, conversationHistory: any[], systemPrompt: string) => {
     try {
       const { data, error } = await supabase.functions.invoke('provide-feedback', {
         body: { 
           userPrompt: message,
-          conversationHistory 
+          conversationHistory,
+          systemPrompt
         }
       });
 
@@ -363,53 +364,19 @@ const DynamicLesson = () => {
 
           // Tab 4: Practice
           if (parseInt(tab.id) === 4) {
-            const usePromptBuilder = !tab.practiceContent?.type || tab.practiceContent.type === 'prompt-builder';
-            
             return (
               <LessonSection key={tab.id} title={tab.title}>
                 {tab.intro && (
                   <p className="leading-relaxed mb-6">{tab.intro}</p>
                 )}
 
-                {usePromptBuilder ? (
+                {tab.practiceContent && (
                   <PromptBuilder 
-                    onSubmit={handlePromptSubmit} 
-                    isSubmitting={isSubmittingPrompt} 
-                    feedback={promptFeedback} 
-                    onFollowUp={handleFollowUp} 
+                    practiceFields={tab.practiceContent.practiceFields}
+                    systemPrompt={tab.practiceContent.systemPrompt}
+                    onSubmit={handlePromptSubmit}
+                    onFollowUp={handleFollowUp}
                   />
-                ) : (
-                  <>
-                    {tab.bulletPoints && tab.bulletPoints.length > 0 && (
-                      <ul className="space-y-4 mb-8">
-                        {tab.bulletPoints
-                          .filter(bullet => bullet.text && bullet.text.trim() !== '')
-                          .map((bullet, i) => (
-                            <BulletPoint key={i} icon={bullet.icon || '•'}>
-                              {bullet.text}
-                            </BulletPoint>
-                          ))}
-                      </ul>
-                    )}
-
-                    {tab.comprehensionCheck && (
-                      <ComprehensionCheck
-                        question={tab.comprehensionCheck.question}
-                        options={tab.comprehensionCheck.options}
-                        onComplete={() => handleTabComplete(tab.id)}
-                      />
-                    )}
-
-                    {tab.additionalSections && tab.additionalSections.length > 0 && (
-                      <div className="space-y-4 mt-8">
-                        {tab.additionalSections.map((section, i) => (
-                          <CollapsibleSection key={i} title={section.title} icon={section.icon}>
-                            <div className="whitespace-pre-wrap">{section.content}</div>
-                          </CollapsibleSection>
-                        ))}
-                      </div>
-                    )}
-                  </>
                 )}
 
                 <div className="flex justify-between mt-8">

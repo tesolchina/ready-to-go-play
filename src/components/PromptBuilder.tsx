@@ -1,222 +1,240 @@
-import { useState } from "react";
-import { Textarea } from "./ui/textarea";
-import { Button } from "./ui/button";
-import { Loader2, Send } from "lucide-react";
-import { Input } from "./ui/input";
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Loader2, Send, MessageSquare } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
-interface Message {
-  role: "user" | "assistant";
-  content: string;
+interface PracticeField {
+  label: string;
+  placeholder: string;
+  type: 'text' | 'textarea';
 }
 
 interface PromptBuilderProps {
-  onSubmit: (prompt: string) => Promise<void>;
-  isSubmitting: boolean;
-  feedback: string | null;
-  onFollowUp: (message: string, conversationHistory: Message[]) => Promise<string>;
+  practiceFields: PracticeField[];
+  systemPrompt: string;
+  onSubmit: (userInputs: Record<string, string>, systemPrompt: string) => Promise<string>;
+  onFollowUp: (prompt: string, conversationHistory: any[], systemPrompt: string) => Promise<string>;
 }
 
-export const PromptBuilder = ({ onSubmit, isSubmitting, feedback, onFollowUp }: PromptBuilderProps) => {
-  const [context, setContext] = useState("");
-  const [task, setTask] = useState("");
-  const [constraints, setConstraints] = useState("");
-  const [examples, setExamples] = useState("");
-  const [conversation, setConversation] = useState<Message[]>([]);
-  const [followUpMessage, setFollowUpMessage] = useState("");
-  const [isFollowUpSubmitting, setIsFollowUpSubmitting] = useState(false);
-
-  const generatedPrompt = `${context ? `CONTEXT:\n${context}\n\n` : ""}${
-    task ? `TASK:\n${task}\n\n` : ""
-  }${constraints ? `CONSTRAINTS:\n${constraints}\n\n` : ""}${
-    examples ? `EXAMPLES:\n${examples}` : ""
-  }`.trim();
+export const PromptBuilder: React.FC<PromptBuilderProps> = ({ 
+  practiceFields, 
+  systemPrompt: initialSystemPrompt,
+  onSubmit, 
+  onFollowUp 
+}) => {
+  const [userInputs, setUserInputs] = useState<Record<string, string>>({});
+  const [systemPrompt, setSystemPrompt] = useState(initialSystemPrompt);
+  const [followUpPrompt, setFollowUpPrompt] = useState('');
+  const [feedback, setFeedback] = useState<string | null>(null);
+  const [conversationHistory, setConversationHistory] = useState<any[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isFollowingUp, setIsFollowingUp] = useState(false);
+  const { toast } = useToast();
 
   const handleSubmit = async () => {
-    if (generatedPrompt.trim()) {
-      setConversation([]);
-      await onSubmit(generatedPrompt);
+    const emptyFields = practiceFields.filter(field => !userInputs[field.label]?.trim());
+    
+    if (emptyFields.length > 0) {
+      toast({
+        title: "Missing inputs",
+        description: `Please fill in: ${emptyFields.map(f => f.label).join(', ')}`,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const result = await onSubmit(userInputs, systemPrompt);
+      setFeedback(result);
+      setConversationHistory([
+        { role: 'user', content: JSON.stringify(userInputs) },
+        { role: 'assistant', content: result }
+      ]);
+      toast({
+        title: "Feedback received!",
+        description: "Check the response below.",
+      });
+    } catch (error) {
+      // Error handling is done in the parent component
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleFollowUpSubmit = async () => {
-    if (!followUpMessage.trim()) return;
-    
-    const userMessage: Message = { role: "user", content: followUpMessage };
-    const updatedConversation = [...conversation, userMessage];
-    setConversation(updatedConversation);
-    setFollowUpMessage("");
-    setIsFollowUpSubmitting(true);
+    if (!followUpPrompt.trim()) {
+      toast({
+        title: "Empty message",
+        description: "Please enter a follow-up question.",
+        variant: "destructive",
+      });
+      return;
+    }
 
+    setIsFollowingUp(true);
     try {
-      const response = await onFollowUp(followUpMessage, conversation);
-      const assistantMessage: Message = { role: "assistant", content: response };
-      setConversation([...updatedConversation, assistantMessage]);
+      const result = await onFollowUp(followUpPrompt, conversationHistory, systemPrompt);
+      const updatedHistory = [
+        ...conversationHistory,
+        { role: 'user', content: followUpPrompt },
+        { role: 'assistant', content: result }
+      ];
+      setConversationHistory(updatedHistory);
+      setFeedback(result);
+      setFollowUpPrompt('');
+      toast({
+        title: "Follow-up response received!",
+      });
     } catch (error) {
-      console.error("Error in follow-up:", error);
+      // Error handling is done in the parent component
     } finally {
-      setIsFollowUpSubmitting(false);
+      setIsFollowingUp(false);
     }
   };
 
   return (
-    <div className="bg-gradient-to-br from-accent to-card rounded-2xl p-6 border-4 border-primary/30 my-6">
-      <h3 className="text-xl font-bold mb-6 text-foreground">
-        🛠️ Interactive Prompt Builder
-      </h3>
-      
-      <div className="grid gap-5">
-        <div className="bg-card rounded-xl p-5 shadow-sm">
-          <div className="flex items-center gap-3 mb-3 pb-2 border-b-2 border-primary">
-            <span className="text-3xl">📋</span>
-            <h4 className="font-semibold text-foreground">Context</h4>
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Practice Exercise</CardTitle>
+          <CardDescription>
+            Complete the fields below and get AI feedback
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-4">
+            {practiceFields.map((field, index) => (
+              <div key={index}>
+                <Label htmlFor={`field-${index}`}>{field.label}</Label>
+                {field.type === 'textarea' ? (
+                  <Textarea
+                    id={`field-${index}`}
+                    value={userInputs[field.label] || ''}
+                    onChange={(e) => setUserInputs(prev => ({
+                      ...prev,
+                      [field.label]: e.target.value
+                    }))}
+                    placeholder={field.placeholder}
+                    className="min-h-[100px] mt-2"
+                    disabled={isSubmitting}
+                  />
+                ) : (
+                  <Input
+                    id={`field-${index}`}
+                    value={userInputs[field.label] || ''}
+                    onChange={(e) => setUserInputs(prev => ({
+                      ...prev,
+                      [field.label]: e.target.value
+                    }))}
+                    placeholder={field.placeholder}
+                    className="mt-2"
+                    disabled={isSubmitting}
+                  />
+                )}
+              </div>
+            ))}
           </div>
-          <Textarea
-            value={context}
-            onChange={(e) => setContext(e.target.value)}
-            placeholder="Define the role and audience..."
-            className="min-h-[80px]"
-          />
-          <p className="mt-2 text-sm text-primary bg-primary/10 p-2 rounded">
-            Example: "You are an experienced biology professor creating content for first-year undergraduates"
-          </p>
-        </div>
 
-        <div className="bg-card rounded-xl p-5 shadow-sm">
-          <div className="flex items-center gap-3 mb-3 pb-2 border-b-2 border-primary">
-            <span className="text-3xl">✏️</span>
-            <h4 className="font-semibold text-foreground">Task</h4>
+          <div>
+            <Label htmlFor="system-prompt">System Prompt (Guides AI Feedback)</Label>
+            <Textarea
+              id="system-prompt"
+              value={systemPrompt}
+              onChange={(e) => setSystemPrompt(e.target.value)}
+              placeholder="Enter the system prompt for AI feedback..."
+              className="min-h-[100px] mt-2 font-mono text-sm"
+              disabled={isSubmitting}
+            />
           </div>
-          <Textarea
-            value={task}
-            onChange={(e) => setTask(e.target.value)}
-            placeholder="Specify what AI should create..."
-            className="min-h-[80px]"
-          />
-          <p className="mt-2 text-sm text-primary bg-primary/10 p-2 rounded">
-            Example: "Create a 10-question multiple-choice quiz about photosynthesis"
-          </p>
-        </div>
 
-        <div className="bg-card rounded-xl p-5 shadow-sm">
-          <div className="flex items-center gap-3 mb-3 pb-2 border-b-2 border-primary">
-            <span className="text-3xl">🔒</span>
-            <h4 className="font-semibold text-foreground">Constraints</h4>
-          </div>
-          <Textarea
-            value={constraints}
-            onChange={(e) => setConstraints(e.target.value)}
-            placeholder="Define limitations and requirements..."
-            className="min-h-[80px]"
-          />
-          <p className="mt-2 text-sm text-primary bg-primary/10 p-2 rounded">
-            Example: "Each question should have 4 options, difficulty should increase progressively"
-          </p>
-        </div>
-
-        <div className="bg-card rounded-xl p-5 shadow-sm">
-          <div className="flex items-center gap-3 mb-3 pb-2 border-b-2 border-primary">
-            <span className="text-3xl">💡</span>
-            <h4 className="font-semibold text-foreground">Examples</h4>
-          </div>
-          <Textarea
-            value={examples}
-            onChange={(e) => setExamples(e.target.value)}
-            placeholder="Show desired format or style..."
-            className="min-h-[80px]"
-          />
-          <p className="mt-2 text-sm text-primary bg-primary/10 p-2 rounded">
-            Example: "Format: Question text (A) option 1 (B) option 2 (C) option 3 (D) option 4"
-          </p>
-        </div>
-      </div>
-
-      {generatedPrompt && (
-        <div className="bg-accent/50 rounded-xl p-6 border-2 border-primary/30 mt-6">
-          <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-            <span className="text-2xl">✨</span>
-            Your Generated Prompt
-          </h3>
-          <pre className="whitespace-pre-wrap text-sm bg-card p-4 rounded-lg border border-border text-foreground mb-4">
-            {generatedPrompt}
-          </pre>
-          
-          <Button
-            onClick={handleSubmit}
-            disabled={isSubmitting || !generatedPrompt.trim()}
-            className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
-            size="lg"
+          <Button 
+            onClick={handleSubmit} 
+            disabled={isSubmitting}
+            className="w-full"
           >
             {isSubmitting ? (
               <>
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                Getting AI Feedback...
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Analyzing...
               </>
             ) : (
-              "Submit and Receive AI Feedback"
+              <>
+                <Send className="mr-2 h-4 w-4" />
+                Submit for Feedback
+              </>
             )}
           </Button>
+        </CardContent>
+      </Card>
 
-          {feedback && (
-            <div className="mt-4 space-y-4">
-              <div className="p-4 rounded-lg bg-success/10 border-2 border-success/30">
-                <h4 className="font-semibold mb-2 flex items-center gap-2 text-success-foreground">
-                  <span className="text-xl">🤖</span>
-                  AI Feedback
-                </h4>
-                <p className="text-sm text-foreground/90 whitespace-pre-wrap">{feedback}</p>
-              </div>
-
-              {/* Conversation Thread */}
-              {conversation.length > 0 && (
-                <div className="space-y-3">
-                  {conversation.map((message, index) => (
-                    <div
-                      key={index}
-                      className={`p-3 rounded-lg ${
-                        message.role === "user"
-                          ? "bg-primary/10 border border-primary/30 ml-8"
-                          : "bg-muted border border-border mr-8"
-                      }`}
-                    >
-                      <p className="text-sm font-semibold mb-1">
-                        {message.role === "user" ? "You" : "AI"}
-                      </p>
-                      <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Follow-up Input */}
-              <div className="flex gap-2">
-                <Input
-                  value={followUpMessage}
-                  onChange={(e) => setFollowUpMessage(e.target.value)}
-                  placeholder="Ask a follow-up question..."
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      handleFollowUpSubmit();
-                    }
-                  }}
-                  disabled={isFollowUpSubmitting}
-                  className="flex-1"
-                />
-                <Button
-                  onClick={handleFollowUpSubmit}
-                  disabled={isFollowUpSubmitting || !followUpMessage.trim()}
-                  size="icon"
-                >
-                  {isFollowUpSubmitting ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Send className="h-4 w-4" />
-                  )}
-                </Button>
-              </div>
+      {feedback && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <MessageSquare className="h-5 w-5" />
+              AI Feedback
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="p-4 rounded-lg bg-muted">
+              <p className="whitespace-pre-wrap">{feedback}</p>
             </div>
-          )}
-        </div>
+
+            {/* Conversation Thread */}
+            {conversationHistory.length > 2 && (
+              <div className="space-y-3 max-h-[400px] overflow-y-auto">
+                {conversationHistory.slice(2).map((message, index) => (
+                  <div
+                    key={index}
+                    className={`p-3 rounded-lg ${
+                      message.role === 'user'
+                        ? 'bg-primary/10 ml-8'
+                        : 'bg-muted mr-8'
+                    }`}
+                  >
+                    <p className="text-sm font-semibold mb-1">
+                      {message.role === 'user' ? 'You' : 'AI'}
+                    </p>
+                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Follow-up Input */}
+            <div className="flex gap-2">
+              <Input
+                value={followUpPrompt}
+                onChange={(e) => setFollowUpPrompt(e.target.value)}
+                placeholder="Ask a follow-up question..."
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleFollowUpSubmit();
+                  }
+                }}
+                disabled={isFollowingUp}
+                className="flex-1"
+              />
+              <Button
+                onClick={handleFollowUpSubmit}
+                disabled={isFollowingUp || !followUpPrompt.trim()}
+                size="icon"
+              >
+                {isFollowingUp ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Send className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   );

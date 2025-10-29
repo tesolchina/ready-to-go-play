@@ -55,7 +55,7 @@ Structure the lesson with exactly 6 tabs:
 2. "Common Behaviors" - Describe undesirable approaches with 4 bullet points, ONE MC question (REQUIRED), and examples
 3. "The Framework" - Present the new framework/solution with 4 bullet points, ONE MC question (REQUIRED), and structure explanation
 4. "How It Works" - Step-by-step demonstration with 4 bullet points, ONE MC question (REQUIRED), and practical examples
-5. "Practice" - Interactive practice (set type to 'prompt-builder' if AI/prompt-related, 'standard' otherwise)
+5. "Practice" - Interactive practice with 2-4 custom input fields and a system prompt for AI feedback
 6. "Reflection" - Summary and custom reflection question
 
 CRITICAL REQUIREMENTS:
@@ -63,7 +63,7 @@ CRITICAL REQUIREMENTS:
 2. TABS 0-3 MUST HAVE EXACTLY ONE MULTIPLE CHOICE QUESTION EACH (comprehensionCheck field is REQUIRED)
 3. Each MC question must have 3-4 options with exactly one correct answer
 4. For tabs 0-3: Include 4 engaging bullet points with emojis, ONE MC question with 3 options (one correct), and 2 collapsible sections.
-5. For tab 4: Provide intro text and set practiceContent.type based on whether the lesson involves AI/prompts.
+5. For tab 4: Provide intro text, create 2-4 practiceFields based on lesson content, and write a systemPrompt to guide AI feedback.
 6. For tab 5: Provide congratulatory intro and a custom reflection question in reflectionContent.question that relates specifically to THIS lesson's content.
 
 Make it engaging and pedagogically sound!`
@@ -135,12 +135,23 @@ Make it engaging and pedagogically sound!`
                         },
                         practiceContent: {
                           type: "object",
-                          description: "Only for tab 4: Practice configuration",
+                          description: "Only for tab 4: Practice configuration with custom inputs and AI feedback",
                           properties: {
-                            type: { 
+                            systemPrompt: {
                               type: "string",
-                              enum: ["prompt-builder", "standard"],
-                              description: "Use 'prompt-builder' for AI/prompt practice, 'standard' for regular exercises"
+                              description: "System prompt that guides the AI's feedback on user submissions"
+                            },
+                            practiceFields: {
+                              type: "array",
+                              description: "Custom input fields for practice exercises",
+                              items: {
+                                type: "object",
+                                properties: {
+                                  label: { type: "string", description: "Field label" },
+                                  placeholder: { type: "string", description: "Field placeholder text" },
+                                  type: { type: "string", enum: ["text", "textarea"], description: "Input type" }
+                                }
+                              }
                             }
                           }
                         },
