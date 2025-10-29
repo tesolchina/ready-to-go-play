@@ -14,7 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      lessons: {
+        Row: {
+          challenges: string | null
+          created_at: string
+          generated_content: Json | null
+          grade_level: string
+          id: string
+          is_public: boolean
+          learning_objectives: string
+          student_context: string | null
+          subject: string
+          teacher_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          challenges?: string | null
+          created_at?: string
+          generated_content?: Json | null
+          grade_level: string
+          id?: string
+          is_public?: boolean
+          learning_objectives: string
+          student_context?: string | null
+          subject: string
+          teacher_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          challenges?: string | null
+          created_at?: string
+          generated_content?: Json | null
+          grade_level?: string
+          id?: string
+          is_public?: boolean
+          learning_objectives?: string
+          student_context?: string | null
+          subject?: string
+          teacher_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
