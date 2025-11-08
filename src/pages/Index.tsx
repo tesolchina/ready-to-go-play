@@ -156,39 +156,74 @@ const Index = () => {
 
           {/* Sample Lessons */}
           <section>
-            <h2 className="text-2xl font-bold text-foreground mb-4">Sample Lesson</h2>
-            <Link to="/lesson/1" className="group block">
-              <Card className="transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-2 hover:border-primary/50">
-                <CardHeader>
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center flex-shrink-0">
-                      <BookOpen className="w-6 h-6 text-white" />
+            <h2 className="text-2xl font-bold text-foreground mb-4">Sample Lessons</h2>
+            <div className="grid gap-6 md:grid-cols-2">
+              <Link to="/lesson/1" className="group block">
+                <Card className="transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-2 hover:border-primary/50 h-full">
+                  <CardHeader>
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center flex-shrink-0">
+                        <BookOpen className="w-6 h-6 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <CardTitle className="text-xl mb-2 group-hover:text-primary transition-colors">
+                          AI Prompt Engineering Fundamentals
+                        </CardTitle>
+                        <CardDescription className="text-base">
+                          Learn the essential framework for crafting effective AI prompts tailored for educational content
+                        </CardDescription>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <CardTitle className="text-2xl mb-2 group-hover:text-primary transition-colors">
-                        AI Prompt Engineering Fundamentals
-                      </CardTitle>
-                      <CardDescription className="text-base">
-                        Learn the essential framework for crafting effective AI prompts tailored for educational content
-                      </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                      <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                        Interactive
+                      </span>
+                      <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                        7 Sections
+                      </span>
+                      <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                        AI Practice
+                      </span>
                     </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
-                      Interactive
-                    </span>
-                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
-                      7 Sections
-                    </span>
-                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
-                      AI Practice
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
+                  </CardContent>
+                </Card>
+              </Link>
+
+              <Link to="/lesson/6" className="group block">
+                <Card className="transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-2 hover:border-primary/50 h-full">
+                  <CardHeader>
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center flex-shrink-0">
+                        <BookOpen className="w-6 h-6 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <CardTitle className="text-xl mb-2 group-hover:text-primary transition-colors">
+                          GenAI Policies and Ethical Use in Academic Publishing
+                        </CardTitle>
+                        <CardDescription className="text-base">
+                          Understand publisher policies and ethical AI use in academic writing
+                        </CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                      <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                        Research Ethics
+                      </span>
+                      <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                        6 Sections
+                      </span>
+                      <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                        Graduate Level
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            </div>
           </section>
 
           {/* Generated Lessons */}
