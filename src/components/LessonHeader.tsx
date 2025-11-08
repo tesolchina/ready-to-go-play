@@ -1,5 +1,6 @@
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, Home } from "lucide-react";
 import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
 
 interface LessonHeaderProps {
   darkMode: boolean;
@@ -14,6 +15,13 @@ export const LessonHeader = ({ darkMode, toggleDarkMode, progress, title, subtit
     <header className="bg-card rounded-2xl p-6 md:p-8 shadow-[var(--shadow-elevated)] mb-6">
       <div className="flex justify-between items-start mb-4">
         <div className="flex-1">
+          <Link 
+            to="/" 
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-3"
+          >
+            <Home className="h-4 w-4" />
+            Back to Home
+          </Link>
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
             {title || "AI Prompt Engineering for Educational Use"}
           </h1>
