@@ -30,7 +30,7 @@ You specialize in:
 - Hedging and cautious language
 - Transitions and signposting
 
-Provide clear, contextual examples and explain when certain phrases are most appropriate. Always maintain an academic, professional tone.`;
+Provide clear, contextual examples and explain when certain phrases are most appropriate. Always maintain an academic, professional tone. Format your responses using markdown for better readability (use **bold** for emphasis, - for lists, etc.).`;
 
     // Enhance system prompt with category and discipline context
     if (category) {
@@ -45,7 +45,7 @@ Provide clear, contextual examples and explain when certain phrases are most app
       systemPrompt += `\n\nProvide examples relevant to the discipline of: ${discipline}`;
     }
 
-    console.log("Calling DeepSeek API with messages:", messages?.length || 0, "category:", category);
+    console.log("Calling DeepSeek API with streaming, messages:", messages?.length || 0, "category:", category);
 
     const response = await fetch("https://api.deepseek.com/v1/chat/completions", {
       method: "POST",
@@ -61,6 +61,7 @@ Provide clear, contextual examples and explain when certain phrases are most app
         ],
         temperature: 0.7,
         max_tokens: 2000,
+        stream: true,
       }),
     });
 
@@ -73,15 +74,62 @@ Provide clear, contextual examples and explain when certain phrases are most app
       );
     }
 
-    const data = await response.json();
-    const assistantMessage = data.choices?.[0]?.message?.content || "Unable to generate response";
+    // Create a readable stream to forward the response
+    const stream = new ReadableStream({
+      async start(controller) {
+        const reader = response.body?.getReader();
+        const decoder = new TextDecoder();
 
-    console.log("DeepSeek response received successfully");
+        if (!reader) {
+          controller.close();
+          return;
+        }
 
-    return new Response(
-      JSON.stringify({ message: assistantMessage }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            const chunk = decoder.decode(value, { stream: true });
+            const lines = chunk.split('\n');
+
+            for (const line of lines) {
+              if (line.startsWith('data: ')) {
+                const data = line.slice(6);
+                if (data === '[DONE]') {
+                  controller.close();
+                  return;
+                }
+
+                try {
+                  const json = JSON.parse(data);
+                  const content = json.choices?.[0]?.delta?.content || '';
+                  if (content) {
+                    controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify({ content })}\n\n`));
+                  }
+                } catch (e) {
+                  // Skip invalid JSON
+                }
+              }
+            }
+          }
+        } catch (error) {
+          console.error("Stream error:", error);
+          controller.error(error);
+        } finally {
+          controller.close();
+        }
+      },
+    });
+
+    return new Response(stream, {
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+      },
+    });
   } catch (error) {
     console.error("Error in academic-phrasebank-chat function:", error);
     const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";

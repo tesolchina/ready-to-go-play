@@ -16,6 +16,8 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Send, BookOpen, Sparkles } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface Message {
   role: "user" | "assistant";
@@ -151,6 +153,99 @@ const AcademicPhraseBank = () => {
     setSelectedSubcategory("__all__");
   }, [selectedCategory]);
 
+  // Streaming handler
+  const handleStreamingResponse = async (
+    requestBody: any,
+    userMessage: Message,
+    newMessages: Message[]
+  ) => {
+    setMessages(newMessages);
+    setInput("");
+    setIsLoading(true);
+
+    // Add placeholder assistant message
+    const assistantMessageIndex = newMessages.length;
+    setMessages([...newMessages, { role: "assistant", content: "" }]);
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+      const functionUrl = `${supabaseUrl}/functions/v1/academic-phrasebank-chat`;
+
+      const response = await fetch(functionUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.access_token || supabaseKey}`,
+          apikey: supabaseKey || "",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+
+      if (!reader) {
+        throw new Error("No response body");
+      }
+
+      let accumulatedContent = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split("\n");
+
+        for (const line of lines) {
+          if (line.startsWith("data: ")) {
+            const data = line.slice(6);
+            if (data === "[DONE]") {
+              break;
+            }
+
+            try {
+              const parsed = JSON.parse(data);
+              if (parsed.content) {
+                accumulatedContent += parsed.content;
+                // Update the assistant message with accumulated content
+                setMessages((prev) => {
+                  const updated = [...prev];
+                  updated[assistantMessageIndex] = {
+                    role: "assistant",
+                    content: accumulatedContent,
+                  };
+                  return updated;
+                });
+              }
+            } catch (e) {
+              // Skip invalid JSON
+            }
+          }
+        }
+      }
+
+      setShowDropdowns(false);
+    } catch (error) {
+      console.error("Error calling chatbot:", error);
+      toast({
+        title: "Error",
+        description: "Failed to get response. Please try again.",
+        variant: "destructive",
+      });
+      // Remove the placeholder message on error
+      setMessages(newMessages);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleGetExamples = async () => {
     if (!selectedCategory) {
       toast({
@@ -161,7 +256,6 @@ const AcademicPhraseBank = () => {
       return;
     }
 
-    setIsLoading(true);
     const finalDiscipline = discipline === "Other" ? customDiscipline : (discipline === "__none__" ? "" : discipline);
     const finalSubcategory = selectedSubcategory === "__all__" ? "" : selectedSubcategory;
 
@@ -175,37 +269,17 @@ const AcademicPhraseBank = () => {
 
     const userMessage: Message = { role: "user", content: query };
     const newMessages = [...messages, userMessage];
-    setMessages(newMessages);
-    setInput("");
 
-    try {
-      const { data, error } = await supabase.functions.invoke("academic-phrasebank-chat", {
-        body: { 
-          messages: newMessages,
-          category: selectedCategory,
-          subcategory: finalSubcategory || undefined,
-          discipline: finalDiscipline || undefined,
-        },
-      });
-
-      if (error) throw error;
-
-      const assistantMessage: Message = {
-        role: "assistant",
-        content: data.message || data.response || "Unable to generate response",
-      };
-      setMessages([...newMessages, assistantMessage]);
-      setShowDropdowns(false); // Hide dropdowns after first query
-    } catch (error) {
-      console.error("Error calling chatbot:", error);
-      toast({
-        title: "Error",
-        description: "Failed to get response. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    await handleStreamingResponse(
+      {
+        messages: newMessages,
+        category: selectedCategory,
+        subcategory: finalSubcategory || undefined,
+        discipline: finalDiscipline || undefined,
+      },
+      userMessage,
+      newMessages
+    );
   };
 
   const handleSend = async () => {
@@ -213,32 +287,12 @@ const AcademicPhraseBank = () => {
 
     const userMessage: Message = { role: "user", content: input };
     const newMessages = [...messages, userMessage];
-    setMessages(newMessages);
-    setInput("");
-    setIsLoading(true);
 
-    try {
-      const { data, error } = await supabase.functions.invoke("academic-phrasebank-chat", {
-        body: { messages: newMessages },
-      });
-
-      if (error) throw error;
-
-      const assistantMessage: Message = {
-        role: "assistant",
-        content: data.message || data.response || "Unable to generate response",
-      };
-      setMessages([...newMessages, assistantMessage]);
-    } catch (error) {
-      console.error("Error calling chatbot:", error);
-      toast({
-        title: "Error",
-        description: "Failed to get response. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    await handleStreamingResponse(
+      { messages: newMessages },
+      userMessage,
+      newMessages
+    );
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -414,7 +468,15 @@ const AcademicPhraseBank = () => {
                             : "bg-muted"
                         }`}
                       >
-                        <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                        {message.role === "assistant" ? (
+                          <div className="prose prose-sm max-w-none dark:prose-invert">
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                              {message.content}
+                            </ReactMarkdown>
+                          </div>
+                        ) : (
+                          <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                        )}
                       </div>
                     </div>
                   ))}
