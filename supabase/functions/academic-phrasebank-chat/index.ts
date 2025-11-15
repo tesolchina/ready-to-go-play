@@ -11,11 +11,17 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, category, subcategory, discipline } = await req.json();
+    const { messages, category, subcategory, discipline, model = "kimi" } = await req.json();
+    
     const KIMI_API_KEY = Deno.env.get("KIMI_API_KEY");
+    const ALIYUN_API_KEY = Deno.env.get("ALIYUN_API_KEY");
 
-    if (!KIMI_API_KEY) {
+    if (model === "kimi" && !KIMI_API_KEY) {
       throw new Error("KIMI_API_KEY is not configured");
+    }
+    
+    if (model === "aliyun" && !ALIYUN_API_KEY) {
+      throw new Error("ALIYUN_API_KEY is not configured");
     }
 
     // Build system prompt based on category and discipline
@@ -45,16 +51,31 @@ Provide clear, contextual examples and explain when certain phrases are most app
       systemPrompt += `\n\nProvide examples relevant to the discipline of: ${discipline}`;
     }
 
-    console.log("Calling Kimi API with streaming, messages:", messages?.length || 0, "category:", category);
+    // Configure API endpoint and parameters based on selected model
+    let apiUrl: string;
+    let apiKey: string;
+    let modelName: string;
+    
+    if (model === "aliyun") {
+      apiUrl = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions";
+      apiKey = ALIYUN_API_KEY!;
+      modelName = "qwen-plus";
+      console.log("Calling Aliyun API with streaming, messages:", messages?.length || 0, "category:", category);
+    } else {
+      apiUrl = "https://api.moonshot.cn/v1/chat/completions";
+      apiKey = KIMI_API_KEY!;
+      modelName = "moonshot-v1-8k";
+      console.log("Calling Kimi API with streaming, messages:", messages?.length || 0, "category:", category);
+    }
 
-    const response = await fetch("https://api.moonshot.cn/v1/chat/completions", {
+    const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${KIMI_API_KEY}`,
+        Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "moonshot-v1-8k",
+        model: modelName,
         messages: [
           { role: "system", content: systemPrompt },
           ...(messages || [])
@@ -67,9 +88,9 @@ Provide clear, contextual examples and explain when certain phrases are most app
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Kimi API error:", response.status, errorText);
+      console.error(`${model} API error:`, response.status, errorText);
       return new Response(
-        JSON.stringify({ error: "Failed to get response from Kimi API" }),
+        JSON.stringify({ error: `Failed to get response from ${model} API` }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
