@@ -8,6 +8,7 @@ import Lesson1 from "./pages/lessons/Lesson1";
 import Lesson6 from "./pages/lessons/Lesson6";
 import DynamicLesson from "./pages/lessons/DynamicLesson";
 import LessonCreator from "./pages/LessonCreator";
+import AcademicPhraseBank from "./pages/AcademicPhraseBank";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/lesson/6" element={<Lesson6 />} />
           <Route path="/lesson/:slug" element={<DynamicLesson />} />
           <Route path="/lesson-creator" element={<LessonCreator />} />
+          <Route path="/academic-phrasebank" element={<AcademicPhraseBank />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

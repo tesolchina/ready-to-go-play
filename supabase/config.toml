@@ -2,3 +2,6 @@ project_id = "ucfgbubrgojodrkgayap"
 
 [functions.provide-feedback]
 verify_jwt = false
+
+[functions.academic-phrasebank-chat]
+verify_jwt = false
