@@ -69,8 +69,8 @@ const AcademicPhraseBank = () => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
-  const [discipline, setDiscipline] = useState<string>("");
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string>("__all__");
+  const [discipline, setDiscipline] = useState<string>("__none__");
   const [customDiscipline, setCustomDiscipline] = useState<string>("");
   const [showDropdowns, setShowDropdowns] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -148,7 +148,7 @@ const AcademicPhraseBank = () => {
 
   // Reset subcategory when category changes
   useEffect(() => {
-    setSelectedSubcategory("");
+    setSelectedSubcategory("__all__");
   }, [selectedCategory]);
 
   const handleGetExamples = async () => {
@@ -162,12 +162,13 @@ const AcademicPhraseBank = () => {
     }
 
     setIsLoading(true);
-    const finalDiscipline = discipline === "Other" ? customDiscipline : discipline;
+    const finalDiscipline = discipline === "Other" ? customDiscipline : (discipline === "__none__" ? "" : discipline);
+    const finalSubcategory = selectedSubcategory === "__all__" ? "" : selectedSubcategory;
 
     // Build query based on selections
     let query = "";
-    if (selectedCategory && selectedSubcategory) {
-      query = `Provide examples of phrases for "${selectedSubcategory}" in the context of "${selectedCategory}"${finalDiscipline ? ` in the field of ${finalDiscipline}` : ''}. Include 5-10 example phrases with brief explanations of when to use them.`;
+    if (selectedCategory && finalSubcategory) {
+      query = `Provide examples of phrases for "${finalSubcategory}" in the context of "${selectedCategory}"${finalDiscipline ? ` in the field of ${finalDiscipline}` : ''}. Include 5-10 example phrases with brief explanations of when to use them.`;
     } else if (selectedCategory) {
       query = `Provide examples of phrases for "${selectedCategory}"${finalDiscipline ? ` in the field of ${finalDiscipline}` : ''}. Include 5-10 example phrases with brief explanations.`;
     }
@@ -182,7 +183,7 @@ const AcademicPhraseBank = () => {
         body: { 
           messages: newMessages,
           category: selectedCategory,
-          subcategory: selectedSubcategory || undefined,
+          subcategory: finalSubcategory || undefined,
           discipline: finalDiscipline || undefined,
         },
       });
@@ -294,7 +295,7 @@ const AcademicPhraseBank = () => {
                         <SelectValue placeholder="Select a subcategory (optional)" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All subcategories</SelectItem>
+                        <SelectItem value="__all__">All subcategories</SelectItem>
                         {subcategories.map((subcategory) => (
                           <SelectItem key={subcategory} value={subcategory}>
                             {subcategory}
@@ -312,7 +313,7 @@ const AcademicPhraseBank = () => {
                       <SelectValue placeholder="Select your discipline (optional)" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">No specific discipline</SelectItem>
+                      <SelectItem value="__none__">No specific discipline</SelectItem>
                       {COMMON_DISCIPLINES.map((disc) => (
                         <SelectItem key={disc} value={disc}>
                           {disc}
