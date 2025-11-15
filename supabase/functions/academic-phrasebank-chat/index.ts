@@ -12,10 +12,10 @@ serve(async (req) => {
 
   try {
     const { messages, category, subcategory, discipline } = await req.json();
-    const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
+    const KIMI_API_KEY = Deno.env.get("KIMI_API_KEY");
 
-    if (!DEEPSEEK_API_KEY) {
-      throw new Error("DEEPSEEK_API_KEY is not configured");
+    if (!KIMI_API_KEY) {
+      throw new Error("KIMI_API_KEY is not configured");
     }
 
     // Build system prompt based on category and discipline
@@ -45,16 +45,16 @@ Provide clear, contextual examples and explain when certain phrases are most app
       systemPrompt += `\n\nProvide examples relevant to the discipline of: ${discipline}`;
     }
 
-    console.log("Calling DeepSeek API with streaming, messages:", messages?.length || 0, "category:", category);
+    console.log("Calling Kimi API with streaming, messages:", messages?.length || 0, "category:", category);
 
-    const response = await fetch("https://api.deepseek.com/v1/chat/completions", {
+    const response = await fetch("https://api.moonshot.cn/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
+        Authorization: `Bearer ${KIMI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "deepseek-chat",
+        model: "moonshot-v1-8k",
         messages: [
           { role: "system", content: systemPrompt },
           ...(messages || [])
@@ -67,9 +67,9 @@ Provide clear, contextual examples and explain when certain phrases are most app
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("DeepSeek API error:", response.status, errorText);
+      console.error("Kimi API error:", response.status, errorText);
       return new Response(
-        JSON.stringify({ error: "Failed to get response from DeepSeek API" }),
+        JSON.stringify({ error: "Failed to get response from Kimi API" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
