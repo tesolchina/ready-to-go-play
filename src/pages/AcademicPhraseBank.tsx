@@ -18,6 +18,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Send, BookOpen, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import phrasebankData from "@/lib/phrasebank-data.json";
 
 interface Message {
   role: "user" | "assistant";
@@ -90,66 +91,22 @@ const AcademicPhraseBank = () => {
     }
   }, [messages]);
 
-  // Subcategories based on selected category
+  // Subcategories based on selected category - loaded from phrasebank-data.json
   const getSubcategories = (category: string): string[] => {
-    const subcategoryMap: Record<string, string[]> = {
-      "Introducing work": [
-        "Establishing the importance of the topic for the world or society",
-        "Establishing the importance of the topic for the discipline",
-        "Establishing the importance of the topic (time frame given)",
-        "Establishing the importance of the topic as a problem to be addressed",
-        "Referring to previous work to establish what is already known",
-        "Identifying a controversy within the field of study",
-        "Explaining the inadequacies of previous studies",
-        "Identifying the paucity or lack of previous research",
-        "Identifying a knowledge gap in the field of study",
-        "Stating the focus, aim, or argument of a short paper",
-        "Stating the purpose of the current research",
-        "Describing the research design and the methods used",
-      ],
-      "Reporting results": [
-        "Referring back to the research aims or procedures",
-        "Referring to data in a table or chart",
-        "Highlighting significant data in a table or chart",
-        "Stating a positive result",
-        "Stating a negative result",
-        "Reporting positive and negative reactions",
-        "Highlighting interesting or surprising results",
-      ],
-      "Discussing findings": [
-        "Stating a finding",
-        "Comparing results with the literature",
-        "Accounting for a finding or a result",
-        "Suggesting general hypotheses",
-        "Advising cautious interpretation",
-      ],
-      "Writing conclusions": [
-        "Restatement of aims",
-        "Summarising the findings",
-        "Suggesting implications",
-        "Signalling limitations",
-        "Evaluating the current study",
-        "Recommendations for further research work",
-      ],
-      "Being cautious": [
-        "Using introductory verbs",
-        "Using introductory phrases",
-        "Using modal verbs",
-        "Using tentative verbs",
-        "Using tentative noun phrases",
-        "Using tentative adverbials",
-      ],
-      "Signalling transition": [
-        "Previewing sections of text",
-        "Introducing a new topic",
-        "Reintroducing a topic",
-        "Moving from one section to the next",
-        "Summarising a section or chapter",
-        "Previewing a following chapter",
-      ],
-    };
+    const categoryData = (phrasebankData as Record<string, Record<string, string[]>>)[category];
+    if (categoryData) {
+      return Object.keys(categoryData);
+    }
+    return [];
+  };
 
-    return subcategoryMap[category] || [];
+  // Get examples for a specific category and subcategory
+  const getExamples = (category: string, subcategory: string): string[] => {
+    const categoryData = (phrasebankData as Record<string, Record<string, string[]>>)[category];
+    if (categoryData && categoryData[subcategory]) {
+      return categoryData[subcategory];
+    }
+    return [];
   };
 
   const subcategories = selectedCategory ? getSubcategories(selectedCategory) : [];

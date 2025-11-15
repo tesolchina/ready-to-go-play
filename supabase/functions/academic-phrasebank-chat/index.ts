@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, category, subcategory, discipline, model = "kimi" } = await req.json();
+    const { messages, category, subcategory, discipline, examples, model = "kimi" } = await req.json();
     
     const KIMI_API_KEY = Deno.env.get("KIMI_API_KEY");
     const ALIYUN_API_KEY = Deno.env.get("ALIYUN_API_KEY");
@@ -56,6 +56,12 @@ IMPORTANT: Keep your responses concise and focused. Limit each response to appro
 
     if (discipline) {
       systemPrompt += `\n\nProvide examples relevant to the discipline of: ${discipline}`;
+    }
+
+    // Include actual PhraseBank examples if provided
+    if (subcategory && examples && Array.isArray(examples) && examples.length > 0) {
+      const examplesText = examples.slice(0, 10).join('\n- ');
+      systemPrompt += `\n\nHere are example phrases from the Academic PhraseBank for "${subcategory}":\n- ${examplesText}\n\nUse these as reference and provide similar, contextually appropriate phrases.`;
     }
 
     // Configure API endpoint and parameters based on selected model
