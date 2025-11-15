@@ -513,32 +513,102 @@ const AcademicPhraseBank = () => {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {messages.map((message, index) => (
-                    <div
-                      key={index}
-                      className={`flex ${
-                        message.role === "user" ? "justify-end" : "justify-start"
-                      }`}
-                    >
-                      <div
-                        className={`max-w-[80%] rounded-lg px-4 py-2 ${
-                          message.role === "user"
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-muted"
-                        }`}
-                      >
-                        {message.role === "assistant" ? (
-                          <div className="prose prose-sm max-w-none dark:prose-invert">
-                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                              {message.content}
-                            </ReactMarkdown>
+                  {messages.map((message, index) => {
+                    const isLastAssistant = 
+                      message.role === "assistant" && 
+                      (index === messages.length - 1 || messages[index + 1]?.role === "user");
+                    
+                    // Generate suggested prompts for assistant messages
+                    const getSuggestedPrompts = (content: string, category?: string): string[] => {
+                      const suggestions: string[] = [];
+                      
+                      if (category) {
+                        if (category.includes("Introducing") || category.includes("work")) {
+                          suggestions.push("How do I introduce a research gap?");
+                          suggestions.push("What phrases can I use to state my research purpose?");
+                        } else if (category.includes("Results") || category.includes("Reporting")) {
+                          suggestions.push("How do I present statistical results?");
+                          suggestions.push("What phrases indicate negative results?");
+                        } else if (category.includes("Discussion") || category.includes("findings")) {
+                          suggestions.push("How do I compare my results with previous studies?");
+                          suggestions.push("What phrases suggest implications?");
+                        } else if (category.includes("Conclusion")) {
+                          suggestions.push("How do I summarize my findings?");
+                          suggestions.push("What phrases signal limitations?");
+                        } else if (category.includes("transition") || category.includes("Signalling")) {
+                          suggestions.push("What phrases connect different sections?");
+                          suggestions.push("How do I preview the next section?");
+                        } else if (category.includes("cautious") || category.includes("Being cautious")) {
+                          suggestions.push("How do I express uncertainty?");
+                          suggestions.push("What phrases show tentative conclusions?");
+                        }
+                      }
+                      
+                      // General suggestions
+                      if (suggestions.length < 2) {
+                        suggestions.push("Can you provide more examples?");
+                        suggestions.push("What are alternative phrases I can use?");
+                      }
+                      
+                      return suggestions.slice(0, 2); // Return max 2 suggestions
+                    };
+                    
+                    const suggestedPrompts = message.role === "assistant" && isLastAssistant
+                      ? getSuggestedPrompts(message.content, selectedCategory)
+                      : [];
+                    
+                    return (
+                      <div key={index} className="space-y-2">
+                        <div
+                          className={`flex ${
+                            message.role === "user" ? "justify-end" : "justify-start"
+                          }`}
+                        >
+                          <div
+                            className={`max-w-[80%] rounded-lg px-4 py-2 ${
+                              message.role === "user"
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-muted"
+                            }`}
+                          >
+                            {message.role === "assistant" ? (
+                              <div className="prose prose-sm max-w-none dark:prose-invert">
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                  {message.content}
+                                </ReactMarkdown>
+                              </div>
+                            ) : (
+                              <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                            )}
                           </div>
-                        ) : (
-                          <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                        </div>
+                        
+                        {/* Suggested prompts after assistant messages */}
+                        {suggestedPrompts.length > 0 && (
+                          <div className="flex flex-wrap gap-2 ml-0 pl-0">
+                            {suggestedPrompts.map((prompt, promptIndex) => (
+                              <Button
+                                key={promptIndex}
+                                variant="outline"
+                                size="sm"
+                                className="h-auto py-1.5 px-3 text-xs"
+                                onClick={() => {
+                                  setInput(prompt);
+                                  // Auto-scroll to input after a brief delay
+                                  setTimeout(() => {
+                                    const textarea = document.querySelector('textarea');
+                                    textarea?.focus();
+                                  }, 100);
+                                }}
+                              >
+                                {prompt}
+                              </Button>
+                            ))}
+                          </div>
                         )}
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                   {isLoading && (
                     <div className="flex justify-start">
                       <div className="max-w-[80%] rounded-lg px-4 py-2 bg-muted">

@@ -43,7 +43,7 @@ You specialize in:
 - Hedging and cautious language
 - Transitions and signposting
 
-Provide clear, contextual examples and explain when certain phrases are most appropriate. Always maintain an academic, professional tone. Format your responses using markdown for better readability (use **bold** for emphasis, - for lists, etc.).`;
+IMPORTANT: Keep your responses concise and focused. Limit each response to approximately 100 words maximum. Be direct and provide only the most relevant information. Format your responses using markdown for better readability (use **bold** for emphasis, - for lists, etc.).`;
 
     // Enhance system prompt with category and discipline context
     if (category) {
@@ -103,7 +103,7 @@ Provide clear, contextual examples and explain when certain phrases are most app
           ...(messages || [])
         ],
         temperature: 0.7,
-        max_tokens: 2000,
+        max_tokens: 150, // Limit to ~100 words (approximately 1.5 tokens per word)
         stream: true,
       }),
     });
