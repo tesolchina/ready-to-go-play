@@ -75,6 +75,7 @@ const AcademicPhraseBank = () => {
   const [discipline, setDiscipline] = useState<string>("__none__");
   const [customDiscipline, setCustomDiscipline] = useState<string>("");
   const [showDropdowns, setShowDropdowns] = useState(true);
+  const [selectedModel, setSelectedModel] = useState<string>("kimi");
   const scrollRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -276,6 +277,7 @@ const AcademicPhraseBank = () => {
         category: selectedCategory,
         subcategory: finalSubcategory || undefined,
         discipline: finalDiscipline || undefined,
+        model: selectedModel,
       },
       userMessage,
       newMessages
@@ -289,7 +291,7 @@ const AcademicPhraseBank = () => {
     const newMessages = [...messages, userMessage];
 
     await handleStreamingResponse(
-      { messages: newMessages },
+      { messages: newMessages, model: selectedModel },
       userMessage,
       newMessages
     );
@@ -307,10 +309,23 @@ const AcademicPhraseBank = () => {
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <Card className="h-[calc(100vh-12rem)]">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BookOpen className="h-6 w-6" />
-              Academic PhraseBank Assistant
-            </CardTitle>
+            <div className="flex items-center justify-between mb-2">
+              <CardTitle className="flex items-center gap-2">
+                <BookOpen className="h-6 w-6" />
+                Academic PhraseBank Assistant
+              </CardTitle>
+              <div className="w-36">
+                <Select value={selectedModel} onValueChange={setSelectedModel}>
+                  <SelectTrigger className="bg-background">
+                    <SelectValue placeholder="Model" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background z-50">
+                    <SelectItem value="kimi">Kimi</SelectItem>
+                    <SelectItem value="aliyun">Aliyun</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
             <CardDescription>
               Get help with academic writing phrases, sentence structures, and language patterns
             </CardDescription>
