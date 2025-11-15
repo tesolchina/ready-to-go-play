@@ -322,6 +322,7 @@ const AcademicPhraseBank = () => {
                   <SelectContent className="bg-background z-50">
                     <SelectItem value="kimi">Kimi</SelectItem>
                     <SelectItem value="aliyun">Aliyun</SelectItem>
+                    <SelectItem value="spark">Spark</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
