@@ -117,6 +117,43 @@ const Index = () => {
         </section>
 
         <div className="space-y-12">
+          {/* Academic PhraseBank */}
+          <section>
+            <h2 className="text-2xl font-bold text-foreground mb-4">Academic Writing Tools</h2>
+            <Link to="/academic-phrasebank" className="group block mb-6">
+              <Card className="transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-2 hover:border-primary/50 bg-gradient-to-br from-primary/5 to-primary/10">
+                <CardHeader>
+                  <div className="flex items-start gap-4">
+                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center flex-shrink-0">
+                      <BookOpen className="w-8 h-8 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <CardTitle className="text-2xl mb-2 group-hover:text-primary transition-colors">
+                        Academic PhraseBank
+                      </CardTitle>
+                      <CardDescription className="text-base">
+                        Find the right phrases for your academic writing. Browse by category and get discipline-specific examples.
+                      </CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                      Writing Assistant
+                    </span>
+                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                      Phrase Examples
+                    </span>
+                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                      Multi-Discipline
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          </section>
+
           {/* Lesson Creator */}
           <section>
             <h2 className="text-2xl font-bold text-foreground mb-4">Create New Lesson</h2>

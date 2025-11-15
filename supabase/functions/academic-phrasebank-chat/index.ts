@@ -11,14 +11,15 @@ serve(async (req) => {
   }
 
   try {
-    const { messages } = await req.json();
+    const { messages, category, subcategory, discipline } = await req.json();
     const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
 
     if (!DEEPSEEK_API_KEY) {
       throw new Error("DEEPSEEK_API_KEY is not configured");
     }
 
-    const systemPrompt = `You are an Academic PhraseBank assistant. Your role is to help students and researchers with academic writing by providing appropriate phrases, sentence structures, and language patterns commonly used in academic contexts.
+    // Build system prompt based on category and discipline
+    let systemPrompt = `You are an Academic PhraseBank assistant. Your role is to help students and researchers with academic writing by providing appropriate phrases, sentence structures, and language patterns commonly used in academic contexts.
 
 You specialize in:
 - Introducing ideas and research
@@ -31,7 +32,20 @@ You specialize in:
 
 Provide clear, contextual examples and explain when certain phrases are most appropriate. Always maintain an academic, professional tone.`;
 
-    console.log("Calling DeepSeek API with messages:", messages.length);
+    // Enhance system prompt with category and discipline context
+    if (category) {
+      systemPrompt += `\n\nFocus specifically on: ${category}`;
+    }
+
+    if (subcategory) {
+      systemPrompt += `\n\nWithin this category, emphasize: ${subcategory}`;
+    }
+
+    if (discipline) {
+      systemPrompt += `\n\nProvide examples relevant to the discipline of: ${discipline}`;
+    }
+
+    console.log("Calling DeepSeek API with messages:", messages?.length || 0, "category:", category);
 
     const response = await fetch("https://api.deepseek.com/v1/chat/completions", {
       method: "POST",
@@ -43,7 +57,7 @@ Provide clear, contextual examples and explain when certain phrases are most app
         model: "deepseek-chat",
         messages: [
           { role: "system", content: systemPrompt },
-          ...messages
+          ...(messages || [])
         ],
         temperature: 0.7,
         max_tokens: 2000,
