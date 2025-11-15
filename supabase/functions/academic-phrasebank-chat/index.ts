@@ -15,6 +15,9 @@ serve(async (req) => {
     
     const KIMI_API_KEY = Deno.env.get("KIMI_API_KEY");
     const ALIYUN_API_KEY = Deno.env.get("ALIYUN_API_KEY");
+    const SPARK_APPID = Deno.env.get("SPARK_APPID");
+    const SPARK_API_SECRET = Deno.env.get("SPARK_API_SECRET");
+    const SPARK_API_KEY = Deno.env.get("SPARK_API_KEY");
 
     if (model === "kimi" && !KIMI_API_KEY) {
       throw new Error("KIMI_API_KEY is not configured");
@@ -22,6 +25,10 @@ serve(async (req) => {
     
     if (model === "aliyun" && !ALIYUN_API_KEY) {
       throw new Error("ALIYUN_API_KEY is not configured");
+    }
+    
+    if (model === "spark" && (!SPARK_APPID || !SPARK_API_SECRET || !SPARK_API_KEY)) {
+      throw new Error("SPARK credentials are not configured");
     }
 
     // Build system prompt based on category and discipline
@@ -55,25 +62,40 @@ Provide clear, contextual examples and explain when certain phrases are most app
     let apiUrl: string;
     let apiKey: string;
     let modelName: string;
+    let headers: Record<string, string>;
     
     if (model === "aliyun") {
       apiUrl = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions";
       apiKey = ALIYUN_API_KEY!;
       modelName = "qwen-plus";
+      headers = {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      };
       console.log("Calling Aliyun API with streaming, messages:", messages?.length || 0, "category:", category);
+    } else if (model === "spark") {
+      apiUrl = "https://spark-api-open.xf-yun.com/v1/chat/completions";
+      apiKey = SPARK_API_KEY!;
+      modelName = "generalv3.5";
+      headers = {
+        Authorization: `Bearer ${SPARK_APPID}:${SPARK_API_SECRET}:${apiKey}`,
+        "Content-Type": "application/json",
+      };
+      console.log("Calling Spark API with streaming, messages:", messages?.length || 0, "category:", category);
     } else {
       apiUrl = "https://api.moonshot.cn/v1/chat/completions";
       apiKey = KIMI_API_KEY!;
       modelName = "moonshot-v1-8k";
+      headers = {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      };
       console.log("Calling Kimi API with streaming, messages:", messages?.length || 0, "category:", category);
     }
 
     const response = await fetch(apiUrl, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
+      headers,
       body: JSON.stringify({
         model: modelName,
         messages: [
