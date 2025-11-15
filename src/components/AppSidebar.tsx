@@ -1,4 +1,4 @@
-import { BookOpen, GraduationCap, Target, FileCheck, Lightbulb } from "lucide-react";
+import { BookOpen, GraduationCap, Target, FileCheck, Lightbulb, MessageSquare, Home, Plus } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 import {
@@ -12,6 +12,27 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+
+const tools = [
+  {
+    title: "Home",
+    url: "/",
+    icon: Home,
+    description: "Return to dashboard"
+  },
+  {
+    title: "Create Lesson",
+    url: "/lesson-creator",
+    icon: Plus,
+    description: "Build custom lessons"
+  },
+  {
+    title: "Academic PhraseBank",
+    url: "/academic-phrasebank",
+    icon: MessageSquare,
+    description: "AI writing assistant"
+  },
+];
 
 const lessons = [
   { 
@@ -70,6 +91,55 @@ export function AppSidebar() {
               AI Prompting Course
             </h1>
           )}
+          
+          <SidebarGroupLabel className="text-white/90 text-xs uppercase tracking-wider mb-3">
+            Tools
+          </SidebarGroupLabel>
+          <SidebarGroupContent className="mb-6">
+            <SidebarMenu className="gap-2">
+              {tools.map((tool, index) => (
+                <SidebarMenuItem key={index}>
+                  <SidebarMenuButton asChild tooltip={tool.title} className="h-auto p-0">
+                    <NavLink
+                      to={tool.url}
+                      className={({ isActive }) =>
+                        `block rounded-xl p-4 transition-all duration-300 ${
+                          isActive
+                            ? "bg-white shadow-[0_8px_16px_rgba(0,0,0,0.2)] transform"
+                            : "bg-white/95 shadow-[0_4px_6px_rgba(0,0,0,0.1)] hover:bg-white hover:shadow-[0_8px_12px_rgba(0,0,0,0.15)] hover:-translate-y-0.5"
+                        }`
+                      }
+                    >
+                      <div className="flex items-center gap-3">
+                        <div 
+                          className="w-8 h-8 rounded-lg flex items-center justify-center text-white flex-shrink-0"
+                          style={{
+                            background: 'linear-gradient(135deg, rgb(124, 58, 237) 0%, rgb(99, 102, 241) 100%)'
+                          }}
+                        >
+                          <tool.icon className="h-4 w-4" />
+                        </div>
+                        {!isCollapsed && (
+                          <div className="flex flex-col flex-1 min-w-0">
+                            <span className="text-sm font-semibold text-gray-900">
+                              {tool.title}
+                            </span>
+                            <span className="text-xs text-gray-600">
+                              {tool.description}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+
+          <SidebarGroupLabel className="text-white/90 text-xs uppercase tracking-wider mb-3">
+            Lessons
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="gap-4">
               {lessons.map((lesson) => (
