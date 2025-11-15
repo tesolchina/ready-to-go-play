@@ -24,16 +24,21 @@ interface Message {
   content: string;
 }
 
-// Main categories from PhraseBank
-const MAIN_CATEGORIES = [
+// Moves/Steps - Research paper structure
+const MOVES_STEPS = [
   "Introducing work",
   "Referring to sources",
   "Describing methods",
   "Reporting results",
   "Discussing findings",
   "Writing conclusions",
+];
+
+// General Language Functions
+const GENERAL_LANGUAGE_FUNCTIONS = [
   "Being cautious",
   "Being critical",
+  "Classifying and listing",
   "Compare and contrast",
   "Defining terms",
   "Describing trends",
@@ -42,7 +47,6 @@ const MAIN_CATEGORIES = [
   "Giving examples",
   "Signalling transition",
   "Writing about the past",
-  "Classifying and listing",
 ];
 
 // Common academic disciplines
@@ -70,6 +74,7 @@ const AcademicPhraseBank = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [categoryType, setCategoryType] = useState<"moves" | "general" | "">("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>("__all__");
   const [discipline, setDiscipline] = useState<string>("__none__");
@@ -149,10 +154,23 @@ const AcademicPhraseBank = () => {
 
   const subcategories = selectedCategory ? getSubcategories(selectedCategory) : [];
 
+  // Reset subcategory and category when category type changes
+  useEffect(() => {
+    setSelectedCategory("");
+    setSelectedSubcategory("__all__");
+  }, [categoryType]);
+
   // Reset subcategory when category changes
   useEffect(() => {
     setSelectedSubcategory("__all__");
   }, [selectedCategory]);
+
+  // Get available categories based on selected type
+  const getAvailableCategories = () => {
+    if (categoryType === "moves") return MOVES_STEPS;
+    if (categoryType === "general") return GENERAL_LANGUAGE_FUNCTIONS;
+    return [];
+  };
 
   // Streaming handler
   const handleStreamingResponse = async (
@@ -248,10 +266,10 @@ const AcademicPhraseBank = () => {
   };
 
   const handleGetExamples = async () => {
-    if (!selectedCategory) {
+    if (!categoryType || !selectedCategory) {
       toast({
-        title: "Category required",
-        description: "Please select a category first.",
+        title: "Selection required",
+        description: "Please select a category type and category first.",
         variant: "destructive",
       });
       return;
@@ -336,23 +354,48 @@ const AcademicPhraseBank = () => {
             {showDropdowns && messages.length === 0 && (
               <div className="mb-6 p-4 bg-muted/50 rounded-lg space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="category">Category *</Label>
+                  <Label htmlFor="category-type">Category Type *</Label>
                   <Select
-                    value={selectedCategory}
-                    onValueChange={setSelectedCategory}
+                    value={categoryType}
+                    onValueChange={(value) => setCategoryType(value as "moves" | "general" | "")}
                   >
-                    <SelectTrigger id="category">
-                      <SelectValue placeholder="Select a category" />
+                    <SelectTrigger id="category-type">
+                      <SelectValue placeholder="Select category type" />
                     </SelectTrigger>
                     <SelectContent>
-                      {MAIN_CATEGORIES.map((category) => (
-                        <SelectItem key={category} value={category}>
-                          {category}
-                        </SelectItem>
-                      ))}
+                      <SelectItem value="moves">Moves/Steps (Research Paper Structure)</SelectItem>
+                      <SelectItem value="general">General Language Functions</SelectItem>
                     </SelectContent>
                   </Select>
+                  <p className="text-xs text-muted-foreground">
+                    {categoryType === "moves" 
+                      ? "Select phrases for specific sections of a research paper"
+                      : categoryType === "general"
+                      ? "Select general language functions for academic writing"
+                      : "Choose a category type to begin"}
+                  </p>
                 </div>
+
+                {categoryType && (
+                  <div className="space-y-2">
+                    <Label htmlFor="category">Category *</Label>
+                    <Select
+                      value={selectedCategory}
+                      onValueChange={setSelectedCategory}
+                    >
+                      <SelectTrigger id="category">
+                        <SelectValue placeholder="Select a category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {getAvailableCategories().map((category) => (
+                          <SelectItem key={category} value={category}>
+                            {category}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
 
                 {selectedCategory && subcategories.length > 0 && (
                   <div className="space-y-2">
@@ -407,7 +450,7 @@ const AcademicPhraseBank = () => {
 
                 <Button
                   onClick={handleGetExamples}
-                  disabled={isLoading || !selectedCategory}
+                  disabled={isLoading || !categoryType || !selectedCategory}
                   className="w-full"
                   size="lg"
                 >
