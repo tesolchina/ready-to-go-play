@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -68,7 +67,7 @@ const AcademicPhraseBank = () => {
   };
 
   return (
-    <Layout>
+    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-primary/5">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <Card className="h-[calc(100vh-12rem)]">
           <CardHeader>
@@ -176,7 +175,7 @@ const AcademicPhraseBank = () => {
           </CardContent>
         </Card>
       </div>
-    </Layout>
+    </div>
   );
 };
 
