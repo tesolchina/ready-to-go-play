@@ -129,29 +129,71 @@ IMPORTANT: Keep your responses concise and focused. Limit each response to appro
         }
 
         try {
+          let buffer = '';
           while (true) {
             const { done, value } = await reader.read();
-            if (done) break;
+            if (done) {
+              // Process any remaining buffer
+              if (buffer) {
+                const lines = buffer.split('\n');
+                for (const line of lines) {
+                  if (line.startsWith('data: ')) {
+                    const data = line.slice(6).trim();
+                    if (data && data !== '[DONE]') {
+                      try {
+                        const json = JSON.parse(data);
+                        const content = json.choices?.[0]?.delta?.content || '';
+                        const finishReason = json.choices?.[0]?.finish_reason;
+                        if (content) {
+                          controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify({ content })}\n\n`));
+                        }
+                        if (finishReason) {
+                          controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify({ done: true })}\n\n`));
+                        }
+                      } catch (e) {
+                        // Skip invalid JSON
+                      }
+                    }
+                  }
+                }
+              }
+              controller.close();
+              break;
+            }
 
-            const chunk = decoder.decode(value, { stream: true });
-            const lines = chunk.split('\n');
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop() || ''; // Keep incomplete line in buffer
 
             for (const line of lines) {
               if (line.startsWith('data: ')) {
-                const data = line.slice(6);
+                const data = line.slice(6).trim();
                 if (data === '[DONE]') {
+                  controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify({ done: true })}\n\n`));
                   controller.close();
                   return;
                 }
 
-                try {
-                  const json = JSON.parse(data);
-                  const content = json.choices?.[0]?.delta?.content || '';
-                  if (content) {
-                    controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify({ content })}\n\n`));
+                if (data) {
+                  try {
+                    const json = JSON.parse(data);
+                    const content = json.choices?.[0]?.delta?.content || '';
+                    const finishReason = json.choices?.[0]?.finish_reason;
+                    
+                    if (content) {
+                      controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify({ content })}\n\n`));
+                    }
+                    
+                    // Handle finish_reason to properly close the stream
+                    if (finishReason) {
+                      controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify({ done: true })}\n\n`));
+                      controller.close();
+                      return;
+                    }
+                  } catch (e) {
+                    // Skip invalid JSON
+                    console.log("Skipping invalid JSON:", data);
                   }
-                } catch (e) {
-                  // Skip invalid JSON
                 }
               }
             }
@@ -160,7 +202,12 @@ IMPORTANT: Keep your responses concise and focused. Limit each response to appro
           console.error("Stream error:", error);
           controller.error(error);
         } finally {
-          controller.close();
+          // Ensure stream is closed
+          try {
+            controller.close();
+          } catch (e) {
+            // Already closed
+          }
         }
       },
     });
