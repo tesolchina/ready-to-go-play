@@ -284,12 +284,18 @@ const AcademicPhraseBank = () => {
     const userMessage: Message = { role: "user", content: query };
     const newMessages = [...messages, userMessage];
 
+    // Get examples for the selected subcategory
+    const examples = finalSubcategory 
+      ? getExamples(selectedCategory, finalSubcategory)
+      : [];
+
     await handleStreamingResponse(
       {
         messages: newMessages,
         category: selectedCategory,
         subcategory: finalSubcategory || undefined,
         discipline: finalDiscipline || undefined,
+        examples: examples.length > 0 ? examples : undefined,
         model: selectedModel,
       },
       userMessage,
