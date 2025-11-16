@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Layout } from "@/components/Layout";
+import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Upload, FileText, CheckCircle, XCircle, AlertCircle, Loader2 } from "lucide-react";
+import { Upload, FileText, CheckCircle, XCircle, AlertCircle, Loader2, ArrowLeft } from "lucide-react";
 
 interface ValidationResult {
   reference: string;
@@ -84,9 +84,15 @@ const ValidateReferences = () => {
   };
 
   return (
-    <Layout>
+    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-primary/5">
       <div className="container max-w-6xl mx-auto px-4 py-8">
         <div className="mb-8">
+          <Link to="/">
+            <Button variant="ghost" className="mb-4">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Home
+            </Button>
+          </Link>
           <h1 className="text-4xl font-bold text-foreground mb-2">Validate References</h1>
           <p className="text-muted-foreground">
             Check the validity of DOI links in your paper references
@@ -203,7 +209,7 @@ const ValidateReferences = () => {
           </Card>
         </div>
       </div>
-    </Layout>
+    </div>
   );
 };
 
