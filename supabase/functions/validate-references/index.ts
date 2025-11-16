@@ -411,105 +411,38 @@ serve(async (req) => {
             const displayLink = isDoi ? link.replace('https://doi.org/', '') : link;
             console.log(`Validating link: ${link}`);
 
-            // For DOIs, verify via web search instead of direct link
-            if (isDoi) {
-              const webVerification = await verifyViaWebSearch(reference);
-              if (webVerification.found) {
-                const result: ValidationResult = {
-                  reference,
-                  doi: displayLink,
-                  status: "valid",
-                  message: "DOI verified via web search",
-                  details: `Found in academic sources`,
-                };
-                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
-              } else {
-                const result: ValidationResult = {
-                  reference,
-                  doi: displayLink,
-                  status: "invalid",
-                  message: "DOI could not be verified",
-                };
-                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
-              }
-              continue;
-            }
-
-            // For non-DOI links, use standard fetch validation
             try {
+              // Simple fetch - just check if link is accessible
               const response = await fetch(link, {
-                method: 'HEAD',
+                method: 'GET',
                 redirect: 'follow',
-                signal: AbortSignal.timeout(10000),
+                headers: {
+                  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                },
+                signal: AbortSignal.timeout(15000),
               });
 
               if (response.ok) {
-                // Link resolves successfully - verify content
-                try {
-                  const contentResponse = await fetch(link, {
-                    headers: { 'Accept': 'text/html,application/xhtml+xml' },
-                  });
-
-                  if (contentResponse.ok) {
-                    const html = await contentResponse.text();
-                    const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
-                    const pageTitle = titleMatch ? titleMatch[1].trim() : '';
-
-                    const referenceWords = reference
-                      .toLowerCase()
-                      .replace(/[^a-z0-9\s]/g, '')
-                      .split(/\s+/)
-                      .filter((word: string) => word.length > 4);
-
-                    const pageContent = html.toLowerCase();
-                    const matchedWords = referenceWords.filter((word: string) => 
-                      pageContent.includes(word)
-                    ).length;
-
-                    const matchPercentage = (matchedWords / Math.max(referenceWords.length, 1)) * 100;
-                    console.log(`Link ${link}: ${matchPercentage.toFixed(0)}% word match`);
-
-                    const result: ValidationResult = matchPercentage > 30 ? {
-                      reference,
-                      status: "valid",
-                      message: "Link valid and content matches",
-                      details: pageTitle ? `Page title: ${pageTitle}` : undefined,
-                    } : {
-                      reference,
-                      status: "content_mismatch",
-                      message: "Link valid but content may not match",
-                      details: `Only ${matchPercentage.toFixed(0)}% word match. ${pageTitle ? `Page title: ${pageTitle}` : ''}`,
-                    };
-                    controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
-                  } else {
-                    const result: ValidationResult = {
-                      reference,
-                      status: "valid",
-                      message: "Link valid (content check unavailable)",
-                    };
-                    controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
-                  }
-                } catch (contentError) {
-                  console.error(`Error fetching content for ${link}:`, contentError);
-                  const result: ValidationResult = {
-                    reference,
-                    status: "valid",
-                    message: "Link valid (content verification failed)",
-                  };
-                  controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
-                }
+                const result: ValidationResult = {
+                  reference,
+                  doi: isDoi ? displayLink : undefined,
+                  status: "valid",
+                  message: "Link accessible",
+                };
+                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
               } else {
                 const result: ValidationResult = {
                   reference,
+                  doi: isDoi ? displayLink : undefined,
                   status: "invalid",
-                  message: `Link invalid (HTTP ${response.status})`,
+                  message: `Link returned HTTP ${response.status}`,
                 };
                 controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
               }
             } catch (error) {
-              console.error(`Error validating link ${link}:`, error);
               const result: ValidationResult = {
                 reference,
+                doi: isDoi ? displayLink : undefined,
                 status: "invalid",
                 message: "Link unreachable",
                 details: error instanceof Error ? error.message : "Network error",
