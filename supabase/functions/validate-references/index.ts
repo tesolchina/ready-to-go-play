@@ -411,8 +411,55 @@ serve(async (req) => {
             const displayLink = isDoi ? link.replace('https://doi.org/', '') : link;
             console.log(`Validating link: ${link}`);
 
+            // For DOIs, use Crossref API
+            if (isDoi) {
+              try {
+                const crossrefUrl = `https://api.crossref.org/works/${encodeURIComponent(displayLink)}`;
+                const response = await fetch(crossrefUrl, {
+                  headers: {
+                    'User-Agent': 'Mozilla/5.0 (compatible; ReferenceValidator/1.0)',
+                  },
+                  signal: AbortSignal.timeout(10000),
+                });
+
+                if (response.ok) {
+                  const data = await response.json();
+                  const work = data.message;
+                  const title = work?.title?.[0] || 'Unknown';
+                  const authors = work?.author?.map((a: any) => `${a.given || ''} ${a.family || ''}`).join(', ') || 'Unknown';
+                  
+                  const result: ValidationResult = {
+                    reference,
+                    doi: displayLink,
+                    status: "valid",
+                    message: "DOI validated via Crossref",
+                    details: `Title: ${title}\nAuthors: ${authors}`,
+                  };
+                  controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
+                } else {
+                  const result: ValidationResult = {
+                    reference,
+                    doi: displayLink,
+                    status: "invalid",
+                    message: "DOI not found in Crossref",
+                  };
+                  controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
+                }
+              } catch (error) {
+                const result: ValidationResult = {
+                  reference,
+                  doi: displayLink,
+                  status: "invalid",
+                  message: "Crossref API error",
+                  details: error instanceof Error ? error.message : "Network error",
+                };
+                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
+              }
+              continue;
+            }
+
+            // For non-DOI links, simple fetch
             try {
-              // Simple fetch - just check if link is accessible
               const response = await fetch(link, {
                 method: 'GET',
                 redirect: 'follow',
@@ -425,7 +472,6 @@ serve(async (req) => {
               if (response.ok) {
                 const result: ValidationResult = {
                   reference,
-                  doi: isDoi ? displayLink : undefined,
                   status: "valid",
                   message: "Link accessible",
                 };
@@ -433,7 +479,6 @@ serve(async (req) => {
               } else {
                 const result: ValidationResult = {
                   reference,
-                  doi: isDoi ? displayLink : undefined,
                   status: "invalid",
                   message: `Link returned HTTP ${response.status}`,
                 };
@@ -442,7 +487,6 @@ serve(async (req) => {
             } catch (error) {
               const result: ValidationResult = {
                 reference,
-                doi: isDoi ? displayLink : undefined,
                 status: "invalid",
                 message: "Link unreachable",
                 details: error instanceof Error ? error.message : "Network error",
