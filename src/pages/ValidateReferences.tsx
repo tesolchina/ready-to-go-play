@@ -14,6 +14,7 @@ interface ValidationResult {
   status: "no_links" | "valid" | "invalid" | "content_mismatch" | "searching" | "found_via_search" | "not_found";
   message: string;
   details?: string;
+  searchResults?: Array<{ title: string; link: string; snippet: string }>;
 }
 
 const ValidateReferences = () => {
@@ -441,6 +442,33 @@ const ValidateReferences = () => {
                                 <div>
                                   <span className="text-sm font-semibold">Details:</span>
                                   <p className="text-sm text-muted-foreground mt-1">{result.details}</p>
+                                </div>
+                              )}
+                              
+                              {result.searchResults && result.searchResults.length > 0 && (
+                                <div className="mt-3 space-y-2">
+                                  <span className="text-sm font-semibold">Search Results:</span>
+                                  <div className="space-y-2">
+                                    {result.searchResults.map((searchResult, idx) => (
+                                      <div key={idx} className="border-l-2 border-primary/30 pl-3 py-2">
+                                        <a 
+                                          href={searchResult.link}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="text-sm font-medium text-primary hover:underline flex items-start gap-2"
+                                        >
+                                          <ExternalLink className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                                          <span className="break-words">{searchResult.title}</span>
+                                        </a>
+                                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                                          {searchResult.snippet}
+                                        </p>
+                                        <p className="text-xs text-muted-foreground/70 mt-1 break-all">
+                                          {searchResult.link}
+                                        </p>
+                                      </div>
+                                    ))}
+                                  </div>
                                 </div>
                               )}
                             </div>
