@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Upload, FileText, CheckCircle, XCircle, AlertCircle, Loader2, ArrowLeft, Download, ExternalLink } from "lucide-react";
+import { Upload, FileText, CheckCircle, XCircle, AlertCircle, Loader2, ArrowLeft, Download, ExternalLink, Share2, Copy, Check } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ValidationResult {
@@ -21,6 +21,9 @@ const ValidateReferences = () => {
   const [isValidating, setIsValidating] = useState(false);
   const [results, setResults] = useState<ValidationResult[]>([]);
   const [progress, setProgress] = useState({ current: 0, total: 0, currentRef: "" });
+  const [isSharing, setIsSharing] = useState(false);
+  const [shareLink, setShareLink] = useState<string | null>(null);
+  const [isCopied, setIsCopied] = useState(false);
   const { toast } = useToast();
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -176,6 +179,68 @@ const ValidateReferences = () => {
     return { total, valid, invalid, noLinks };
   };
 
+  const handleShare = async () => {
+    if (!references.trim() || results.length === 0) {
+      toast({
+        title: "Nothing to share",
+        description: "Please validate references first before sharing.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSharing(true);
+    try {
+      const { data, error } = await supabase
+        .from("validation_reports")
+        .insert({
+          references_input: references,
+          validation_results: results as any,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      const link = `${window.location.origin}/report/${data.id}`;
+      setShareLink(link);
+      
+      toast({
+        title: "Share link created!",
+        description: "Copy the link to share this validation report.",
+      });
+    } catch (error) {
+      console.error("Error creating share link:", error);
+      toast({
+        title: "Error creating share link",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSharing(false);
+    }
+  };
+
+  const copyShareLink = async () => {
+    if (!shareLink) return;
+    
+    try {
+      await navigator.clipboard.writeText(shareLink);
+      setIsCopied(true);
+      toast({
+        title: "Link copied!",
+        description: "The share link has been copied to your clipboard.",
+      });
+      setTimeout(() => setIsCopied(false), 2000);
+    } catch (error) {
+      toast({
+        title: "Failed to copy",
+        description: "Please copy the link manually.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const downloadMarkdown = () => {
     const stats = getSummaryStats();
     let markdown = `# Reference Validation Report\n\n`;
@@ -286,10 +351,20 @@ const ValidateReferences = () => {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>Validation Summary</CardTitle>
-                  <Button onClick={downloadMarkdown} variant="outline" size="sm">
-                    <Download className="w-4 h-4 mr-2" />
-                    Download Report
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button onClick={handleShare} variant="outline" size="sm" disabled={isSharing}>
+                      {isSharing ? (
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      ) : (
+                        <Share2 className="w-4 h-4 mr-2" />
+                      )}
+                      Share Report
+                    </Button>
+                    <Button onClick={downloadMarkdown} variant="outline" size="sm">
+                      <Download className="w-4 h-4 mr-2" />
+                      Download Report
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>
@@ -378,6 +453,38 @@ const ValidateReferences = () => {
               </CardContent>
             </Card>
           </div>
+        )}
+
+        {/* Share Link Display */}
+        {shareLink && (
+          <Card className="border-primary bg-primary/5">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Share2 className="h-5 w-5" />
+                Share Link Created
+              </CardTitle>
+              <CardDescription>
+                Anyone with this link can view your validation report
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={shareLink}
+                  readOnly
+                  className="flex-1 px-3 py-2 text-sm border rounded-md bg-background"
+                />
+                <Button onClick={copyShareLink} variant="outline" size="icon">
+                  {isCopied ? (
+                    <Check className="h-4 w-4 text-green-600" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         )}
       </div>
     </div>

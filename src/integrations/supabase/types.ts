@@ -62,6 +62,27 @@ export type Database = {
         }
         Relationships: []
       }
+      validation_reports: {
+        Row: {
+          created_at: string
+          id: string
+          references_input: string
+          validation_results: Json
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          references_input: string
+          validation_results: Json
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          references_input?: string
+          validation_results?: Json
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
