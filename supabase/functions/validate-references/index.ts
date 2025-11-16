@@ -412,20 +412,33 @@ serve(async (req) => {
             console.log(`Validating link: ${link}`);
 
             try {
+              // Use GET for DOIs as some servers don't handle HEAD well
+              const method = isDoi ? 'GET' : 'HEAD';
               const response = await fetch(link, {
-                method: 'HEAD',
+                method: method,
                 redirect: 'follow',
+                headers: {
+                  'User-Agent': 'Mozilla/5.0 (compatible; ReferenceValidator/1.0)',
+                  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                },
+                signal: AbortSignal.timeout(10000), // 10 second timeout
               });
 
               if (response.ok) {
-                // Link resolves successfully - verify content
-                try {
-                  const contentResponse = await fetch(link, {
-                    headers: { 'Accept': 'text/html,application/xhtml+xml' },
-                  });
-
-                  if (contentResponse.ok) {
-                    const html = await contentResponse.text();
+                // Link resolves successfully
+                if (isDoi) {
+                  // For DOIs, just mark as valid
+                  const result: ValidationResult = {
+                    reference,
+                    doi: displayLink,
+                    status: "valid",
+                    message: "DOI valid and accessible",
+                  };
+                  controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
+                } else {
+                  // For non-DOI links, verify content match
+                  try {
+                    const html = await response.text();
                     const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
                     const pageTitle = titleMatch ? titleMatch[1].trim() : '';
 
@@ -445,38 +458,28 @@ serve(async (req) => {
 
                     const result: ValidationResult = matchPercentage > 30 ? {
                       reference,
-                      doi: isDoi ? displayLink : undefined,
                       status: "valid",
                       message: "Link valid and content matches",
                       details: pageTitle ? `Page title: ${pageTitle}` : undefined,
                     } : {
                       reference,
-                      doi: isDoi ? displayLink : undefined,
                       status: "content_mismatch",
                       message: "Link valid but content may not match",
                       details: `Only ${matchPercentage.toFixed(0)}% word match. ${pageTitle ? `Page title: ${pageTitle}` : ''}`,
                     };
                     controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
-                  } else {
+                  } catch (contentError) {
+                    console.error(`Error fetching content for ${link}:`, contentError);
                     const result: ValidationResult = {
                       reference,
-                      doi: isDoi ? displayLink : undefined,
                       status: "valid",
-                      message: "Link valid (content check unavailable)",
+                      message: "Link valid (content verification failed)",
                     };
                     controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
                   }
-                } catch (contentError) {
-                  console.error(`Error fetching content for ${link}:`, contentError);
-                  const result: ValidationResult = {
-                    reference,
-                    doi: isDoi ? displayLink : undefined,
-                    status: "valid",
-                    message: "Link valid (content verification failed)",
-                  };
-                  controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
                 }
               } else {
+                console.log(`Link ${link} returned status ${response.status}`);
                 const result: ValidationResult = {
                   reference,
                   doi: isDoi ? displayLink : undefined,
@@ -487,12 +490,44 @@ serve(async (req) => {
               }
             } catch (error) {
               console.error(`Error validating link ${link}:`, error);
+              const errorMessage = error instanceof Error ? error.message : 'Network error';
+              
+              // Retry once for timeouts
+              if (errorMessage.includes('timeout') || errorMessage.includes('aborted')) {
+                console.log(`Retrying ${link} after timeout...`);
+                try {
+                  await new Promise(resolve => setTimeout(resolve, 2000));
+                  const retryResponse = await fetch(link, {
+                    method: isDoi ? 'GET' : 'HEAD',
+                    redirect: 'follow',
+                    headers: {
+                      'User-Agent': 'Mozilla/5.0 (compatible; ReferenceValidator/1.0)',
+                      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                    },
+                    signal: AbortSignal.timeout(15000),
+                  });
+
+                  if (retryResponse.ok) {
+                    const result: ValidationResult = {
+                      reference,
+                      doi: isDoi ? displayLink : undefined,
+                      status: "valid",
+                      message: isDoi ? "DOI valid and accessible" : "Link valid",
+                    };
+                    controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
+                    continue;
+                  }
+                } catch (retryError) {
+                  console.error(`Retry failed for ${link}:`, retryError);
+                }
+              }
+              
               const result: ValidationResult = {
                 reference,
                 doi: isDoi ? displayLink : undefined,
                 status: "invalid",
                 message: "Link unreachable",
-                details: error instanceof Error ? error.message : "Network error",
+                details: errorMessage,
               };
               controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
             }
