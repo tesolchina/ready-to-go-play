@@ -154,7 +154,7 @@ const ValidateReferences = () => {
           </Link>
           <h1 className="text-4xl font-bold text-foreground mb-2">Validate References</h1>
           <p className="text-muted-foreground">
-            Check the validity of DOI links in your paper references
+            Check the validity of DOI and URL links in your paper references
           </p>
         </div>
 
