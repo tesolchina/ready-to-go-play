@@ -87,13 +87,13 @@ const ValidateReferences = () => {
   const getStatusText = (status: ValidationResult["status"]) => {
     switch (status) {
       case "valid":
-        return "Valid - DOI link is accessible and content matches";
+        return "Valid - Link is accessible and content matches";
       case "invalid":
-        return "Invalid - DOI link is not accessible or content does not match";
+        return "Invalid - Link is not accessible";
       case "content_mismatch":
-        return "Content Mismatch - DOI accessible but content may not match";
+        return "Content Mismatch - Link accessible but content may not match";
       case "no_doi":
-        return "No DOI - No DOI identifier found in this reference";
+        return "No Links - No links found in this reference";
     }
   };
 
@@ -121,7 +121,8 @@ const ValidateReferences = () => {
       markdown += `**Original Reference:**\n\n${result.reference}\n\n`;
       markdown += `**Status:** ${getStatusText(result.status)}\n\n`;
       if (result.doi) {
-        markdown += `**DOI:** [${result.doi}](https://doi.org/${result.doi})\n\n`;
+        const linkUrl = result.doi.startsWith('http') ? result.doi : `https://doi.org/${result.doi}`;
+        markdown += `**Link:** [${result.doi}](${linkUrl})\n\n`;
       }
       markdown += `**Message:** ${result.message}\n\n`;
       if (result.details) {
@@ -161,7 +162,7 @@ const ValidateReferences = () => {
           <CardHeader>
             <CardTitle>Input References</CardTitle>
             <CardDescription>
-              Paste your references or upload a text file. Each reference should be on a separate line.
+              Paste your references or upload a text file. Each reference should be on a separate line. All links (DOIs and URLs) will be validated.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -270,17 +271,17 @@ const ValidateReferences = () => {
                                 <span className="text-sm">{getStatusText(result.status)}</span>
                               </div>
                               
-                              {result.doi && (
+                               {result.doi && (
                                 <div className="flex items-center gap-2">
-                                  <span className="text-sm font-semibold">DOI:</span>
+                                  <span className="text-sm font-semibold">Link:</span>
                                   <a 
-                                    href={`https://doi.org/${result.doi}`}
+                                    href={result.doi.startsWith('http') ? result.doi : `https://doi.org/${result.doi}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-sm text-primary hover:underline flex items-center gap-1"
+                                    className="text-sm text-primary hover:underline flex items-center gap-1 break-all"
                                   >
                                     {result.doi}
-                                    <ExternalLink className="w-3 h-3" />
+                                    <ExternalLink className="w-3 h-3 flex-shrink-0" />
                                   </a>
                                 </div>
                               )}
