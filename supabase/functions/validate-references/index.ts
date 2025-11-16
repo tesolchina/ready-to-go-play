@@ -33,114 +33,130 @@ serve(async (req) => {
     const results: ValidationResult[] = [];
 
     for (const reference of referenceList) {
-      // Extract DOI using regex patterns
+      // Extract all links (DOIs and regular URLs)
       const doiPattern = /10\.\d{4,9}\/[-._;()/:A-Za-z0-9]+/g;
-      const doiMatch = reference.match(doiPattern);
+      const urlPattern = /https?:\/\/[^\s<>"{}|\\^`\[\]]+/g;
+      
+      const doiMatches = reference.match(doiPattern) || [];
+      const urlMatches = reference.match(urlPattern) || [];
+      
+      // Create a set of all unique links (DOIs as URLs + regular URLs)
+      const allLinks = new Set<string>();
+      doiMatches.forEach((doi: string) => allLinks.add(`https://doi.org/${doi}`));
+      urlMatches.forEach((url: string) => {
+        // Only add non-DOI URLs
+        if (!url.includes('doi.org')) {
+          allLinks.add(url);
+        }
+      });
 
-      if (!doiMatch || doiMatch.length === 0) {
+      if (allLinks.size === 0) {
         results.push({
           reference,
           status: "no_doi",
-          message: "No DOI found",
+          message: "No links found",
         });
         continue;
       }
 
-      const doi = doiMatch[0];
-      console.log(`Found DOI: ${doi}`);
+      // Validate each link found
+      for (const link of allLinks) {
+        const isDoi = link.includes('doi.org');
+        const displayLink = isDoi ? link.replace('https://doi.org/', '') : link;
+        console.log(`Validating link: ${link}`);
 
-      // Validate DOI by fetching the URL
-      try {
-        const doiUrl = `https://doi.org/${doi}`;
-        const response = await fetch(doiUrl, {
-          method: 'HEAD',
-          redirect: 'follow',
-        });
+        // Validate link by fetching the URL
+        try {
+          const response = await fetch(link, {
+            method: 'HEAD',
+            redirect: 'follow',
+          });
 
-        if (response.ok) {
-          // DOI resolves successfully
-          // Now fetch content to verify match
-          try {
-            const contentResponse = await fetch(doiUrl, {
-              headers: {
-                'Accept': 'text/html,application/xhtml+xml',
-              },
-            });
+          if (response.ok) {
+            // Link resolves successfully
+            // Now fetch content to verify match
+            try {
+              const contentResponse = await fetch(link, {
+                headers: {
+                  'Accept': 'text/html,application/xhtml+xml',
+                },
+              });
 
-            if (contentResponse.ok) {
-              const html = await contentResponse.text();
-              
-              // Extract title and basic metadata from HTML
-              const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
-              const pageTitle = titleMatch ? titleMatch[1].trim() : '';
+              if (contentResponse.ok) {
+                const html = await contentResponse.text();
+                
+                // Extract title and basic metadata from HTML
+                const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
+                const pageTitle = titleMatch ? titleMatch[1].trim() : '';
 
-              // Simple content matching - check if key words from reference appear in page
-              const referenceWords = reference
-                .toLowerCase()
-                .replace(/[^a-z0-9\s]/g, '')
-                .split(/\s+/)
-                .filter((word: string) => word.length > 4); // Only significant words
+                // Simple content matching - check if key words from reference appear in page
+                const referenceWords = reference
+                  .toLowerCase()
+                  .replace(/[^a-z0-9\s]/g, '')
+                  .split(/\s+/)
+                  .filter((word: string) => word.length > 4); // Only significant words
 
-              const pageContent = html.toLowerCase();
-              const matchedWords = referenceWords.filter((word: string) => 
-                pageContent.includes(word)
-              ).length;
+                const pageContent = html.toLowerCase();
+                const matchedWords = referenceWords.filter((word: string) => 
+                  pageContent.includes(word)
+                ).length;
 
-              const matchPercentage = (matchedWords / Math.max(referenceWords.length, 1)) * 100;
+                const matchPercentage = (matchedWords / Math.max(referenceWords.length, 1)) * 100;
 
-              console.log(`DOI ${doi}: ${matchPercentage.toFixed(0)}% word match`);
+                console.log(`Link ${link}: ${matchPercentage.toFixed(0)}% word match`);
 
-              if (matchPercentage > 30) {
-                results.push({
-                  reference,
-                  doi,
-                  status: "valid",
-                  message: "DOI valid and content matches",
-                  details: pageTitle ? `Page title: ${pageTitle}` : undefined,
-                });
+                if (matchPercentage > 30) {
+                  results.push({
+                    reference,
+                    doi: isDoi ? displayLink : undefined,
+                    status: "valid",
+                    message: "Link valid and content matches",
+                    details: pageTitle ? `Page title: ${pageTitle}` : undefined,
+                  });
+                } else {
+                  results.push({
+                    reference,
+                    doi: isDoi ? displayLink : undefined,
+                    status: "content_mismatch",
+                    message: "Link valid but content may not match",
+                    details: `Only ${matchPercentage.toFixed(0)}% word match. ${pageTitle ? `Page title: ${pageTitle}` : ''}`,
+                  });
+                }
               } else {
                 results.push({
                   reference,
-                  doi,
-                  status: "content_mismatch",
-                  message: "DOI valid but content may not match",
-                  details: `Only ${matchPercentage.toFixed(0)}% word match. ${pageTitle ? `Page title: ${pageTitle}` : ''}`,
+                  doi: isDoi ? displayLink : undefined,
+                  status: "valid",
+                  message: "Link valid (content check unavailable)",
                 });
               }
-            } else {
+            } catch (contentError) {
+              console.error(`Error fetching content for ${link}:`, contentError);
               results.push({
                 reference,
-                doi,
+                doi: isDoi ? displayLink : undefined,
                 status: "valid",
-                message: "DOI valid (content check unavailable)",
+                message: "Link valid (content verification failed)",
               });
             }
-          } catch (contentError) {
-            console.error(`Error fetching content for ${doi}:`, contentError);
+          } else {
             results.push({
               reference,
-              doi,
-              status: "valid",
-              message: "DOI valid (content verification failed)",
+              doi: isDoi ? displayLink : undefined,
+              status: "invalid",
+              message: `Link invalid (HTTP ${response.status})`,
             });
           }
-        } else {
+        } catch (error) {
+          console.error(`Error validating link ${link}:`, error);
           results.push({
             reference,
-            doi,
+            doi: isDoi ? displayLink : undefined,
             status: "invalid",
-            message: `DOI link invalid (HTTP ${response.status})`,
+            message: "Link unreachable",
+            details: error instanceof Error ? error.message : "Network error",
           });
         }
-      } catch (error) {
-        console.error(`Error validating DOI ${doi}:`, error);
-        results.push({
-          reference,
-          doi,
-          status: "invalid",
-          message: "DOI link unreachable",
-          details: error instanceof Error ? error.message : "Network error",
-        });
       }
     }
 
