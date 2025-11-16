@@ -8,9 +8,136 @@ const corsHeaders = {
 interface ValidationResult {
   reference: string;
   doi?: string;
-  status: "no_doi" | "valid" | "invalid" | "content_mismatch";
+  status: "no_links" | "valid" | "invalid" | "content_mismatch" | "searching" | "found_via_search" | "not_found";
   message: string;
   details?: string;
+}
+
+interface SemanticScholarPaper {
+  paperId: string;
+  title: string;
+  authors?: Array<{ name: string }>;
+  year?: number;
+  externalIds?: {
+    DOI?: string;
+    ArXiv?: string;
+  };
+  url?: string;
+}
+
+// Helper to calculate string similarity (Levenshtein distance based)
+function similarity(s1: string, s2: string): number {
+  const longer = s1.length > s2.length ? s1 : s2;
+  const shorter = s1.length > s2.length ? s2 : s1;
+  if (longer.length === 0) return 1.0;
+  const editDistance = levenshteinDistance(longer.toLowerCase(), shorter.toLowerCase());
+  return (longer.length - editDistance) / longer.length;
+}
+
+function levenshteinDistance(s1: string, s2: string): number {
+  const costs: number[] = [];
+  for (let i = 0; i <= s1.length; i++) {
+    let lastValue = i;
+    for (let j = 0; j <= s2.length; j++) {
+      if (i === 0) costs[j] = j;
+      else if (j > 0) {
+        let newValue = costs[j - 1];
+        if (s1.charAt(i - 1) !== s2.charAt(j - 1))
+          newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
+        costs[j - 1] = lastValue;
+        lastValue = newValue;
+      }
+    }
+    if (i > 0) costs[s2.length] = lastValue;
+  }
+  return costs[s2.length];
+}
+
+// Parse reference to extract title, authors, year
+function parseReference(reference: string): { title: string; authors: string[]; year?: number } {
+  // Extract year (4 digits)
+  const yearMatch = reference.match(/\b(19|20)\d{2}\b/);
+  const year = yearMatch ? parseInt(yearMatch[0]) : undefined;
+
+  // Remove URLs, DOIs, and year from reference to get title and authors
+  let cleanRef = reference
+    .replace(/https?:\/\/[^\s]+/g, '')
+    .replace(/10\.\d{4,9}\/[-._;()/:A-Za-z0-9]+/g, '')
+    .replace(/\b(19|20)\d{2}\b/g, '')
+    .trim();
+
+  // Try to extract title (usually after first period or in quotes)
+  const titleMatch = cleanRef.match(/[."""]([^."""]+)[."""]/);
+  const title = titleMatch ? titleMatch[1].trim() : cleanRef.split('.')[1]?.trim() || cleanRef;
+
+  // Extract potential author names (words before first period or comma)
+  const authorsPart = cleanRef.split(/[.]/)[0] || '';
+  const authors = authorsPart.split(/[,&]/).map(a => a.trim()).filter(a => a.length > 2);
+
+  return { title, authors, year };
+}
+
+// Search Semantic Scholar API
+let lastSemanticScholarCall = 0;
+async function searchSemanticScholar(query: string, apiKey: string): Promise<SemanticScholarPaper[]> {
+  const now = Date.now();
+  const timeSinceLastCall = now - lastSemanticScholarCall;
+  if (timeSinceLastCall < 1000) {
+    await new Promise(resolve => setTimeout(resolve, 1000 - timeSinceLastCall));
+  }
+  lastSemanticScholarCall = Date.now();
+
+  const encodedQuery = encodeURIComponent(query);
+  const url = `https://api.semanticscholar.org/graph/v1/paper/search?query=${encodedQuery}&fields=title,authors,year,externalIds,url&limit=5`;
+
+  const response = await fetch(url, {
+    headers: {
+      'x-api-key': apiKey,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Semantic Scholar API error: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data.data || [];
+}
+
+// Match reference with search results
+function findBestMatch(reference: string, papers: SemanticScholarPaper[]): SemanticScholarPaper | null {
+  const parsed = parseReference(reference);
+  let bestMatch: SemanticScholarPaper | null = null;
+  let bestScore = 0;
+
+  for (const paper of papers) {
+    let score = 0;
+
+    // Title similarity (most important)
+    const titleSim = similarity(parsed.title, paper.title || '');
+    score += titleSim * 0.7;
+
+    // Year match
+    if (parsed.year && paper.year && Math.abs(parsed.year - paper.year) <= 1) {
+      score += 0.2;
+    }
+
+    // Author match
+    if (parsed.authors.length > 0 && paper.authors) {
+      const paperAuthors = paper.authors.map(a => a.name.toLowerCase());
+      const matchingAuthors = parsed.authors.filter(a => 
+        paperAuthors.some(pa => pa.includes(a.toLowerCase()) || a.toLowerCase().includes(pa))
+      );
+      score += (matchingAuthors.length / parsed.authors.length) * 0.1;
+    }
+
+    if (score > bestScore && titleSim > 0.6) {
+      bestScore = score;
+      bestMatch = paper;
+    }
+  }
+
+  return bestScore > 0.6 ? bestMatch : null;
 }
 
 serve(async (req) => {
@@ -22,6 +149,8 @@ serve(async (req) => {
     const { references } = await req.json();
     console.log('Starting reference validation');
 
+    const SEMANTIC_SCHOLAR_API_KEY = Deno.env.get('SEMANTIC_SCHOLAR_API_KEY');
+
     // Split references by line and filter empty lines
     const referenceList = references
       .split('\n')
@@ -30,142 +159,237 @@ serve(async (req) => {
 
     console.log(`Processing ${referenceList.length} references`);
 
-    const results: ValidationResult[] = [];
+    // Create a text encoder for SSE
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream({
+      async start(controller) {
+        let processedCount = 0;
 
-    for (const reference of referenceList) {
-      // Extract all links (DOIs and regular URLs)
-      const doiPattern = /10\.\d{4,9}\/[-._;()/:A-Za-z0-9]+/g;
-      const urlPattern = /https?:\/\/[^\s<>"{}|\\^`\[\]]+/g;
-      
-      const doiMatches = reference.match(doiPattern) || [];
-      const urlMatches = reference.match(urlPattern) || [];
-      
-      // Create a set of all unique links (DOIs as URLs + regular URLs)
-      const allLinks = new Set<string>();
-      doiMatches.forEach((doi: string) => allLinks.add(`https://doi.org/${doi}`));
-      urlMatches.forEach((url: string) => {
-        // Only add non-DOI URLs
-        if (!url.includes('doi.org')) {
-          allLinks.add(url);
-        }
-      });
+        for (const reference of referenceList) {
+          processedCount++;
+          
+          // Send progress update
+          const progressMsg = `data: ${JSON.stringify({
+            type: 'progress',
+            current: processedCount,
+            total: referenceList.length,
+            reference: reference.substring(0, 100) + (reference.length > 100 ? '...' : '')
+          })}\n\n`;
+          controller.enqueue(encoder.encode(progressMsg));
 
-      if (allLinks.size === 0) {
-        results.push({
-          reference,
-          status: "no_doi",
-          message: "No links found",
-        });
-        continue;
-      }
-
-      // Validate each link found
-      for (const link of allLinks) {
-        const isDoi = link.includes('doi.org');
-        const displayLink = isDoi ? link.replace('https://doi.org/', '') : link;
-        console.log(`Validating link: ${link}`);
-
-        // Validate link by fetching the URL
-        try {
-          const response = await fetch(link, {
-            method: 'HEAD',
-            redirect: 'follow',
+          // Extract all links (DOIs and regular URLs)
+          const doiPattern = /10\.\d{4,9}\/[-._;()/:A-Za-z0-9]+/g;
+          const urlPattern = /https?:\/\/[^\s<>"{}|\\^`\[\]]+/g;
+          
+          const doiMatches = reference.match(doiPattern) || [];
+          const urlMatches = reference.match(urlPattern) || [];
+          
+          // Create a set of all unique links (DOIs as URLs + regular URLs)
+          const allLinks = new Set<string>();
+          doiMatches.forEach((doi: string) => allLinks.add(`https://doi.org/${doi}`));
+          urlMatches.forEach((url: string) => {
+            // Only add non-DOI URLs
+            if (!url.includes('doi.org')) {
+              allLinks.add(url);
+            }
           });
 
-          if (response.ok) {
-            // Link resolves successfully
-            // Now fetch content to verify match
+          if (allLinks.size === 0) {
+            // No links found - search Semantic Scholar
+            if (!SEMANTIC_SCHOLAR_API_KEY) {
+              const result: ValidationResult = {
+                reference,
+                status: "no_links",
+                message: "No links found (Semantic Scholar search unavailable)",
+              };
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
+              continue;
+            }
+
+            // Send searching status
+            const searchingResult: ValidationResult = {
+              reference,
+              status: "searching",
+              message: "Searching academic databases...",
+            };
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result: searchingResult })}\n\n`));
+
             try {
-              const contentResponse = await fetch(link, {
-                headers: {
-                  'Accept': 'text/html,application/xhtml+xml',
-                },
+              const parsed = parseReference(reference);
+              console.log(`Searching Semantic Scholar for: "${parsed.title}"`);
+              
+              const papers = await searchSemanticScholar(parsed.title, SEMANTIC_SCHOLAR_API_KEY);
+              const match = findBestMatch(reference, papers);
+
+              if (match && match.externalIds?.DOI) {
+                // Found a match with DOI - validate it
+                const doiUrl = `https://doi.org/${match.externalIds.DOI}`;
+                console.log(`Found match via Semantic Scholar: ${doiUrl}`);
+
+                try {
+                  const response = await fetch(doiUrl, { method: 'HEAD', redirect: 'follow' });
+                  
+                  const result: ValidationResult = {
+                    reference,
+                    doi: match.externalIds.DOI,
+                    status: response.ok ? "found_via_search" : "invalid",
+                    message: response.ok 
+                      ? "Found and validated via Semantic Scholar" 
+                      : `Found via search but DOI invalid (HTTP ${response.status})`,
+                    details: `Match: "${match.title}" (${match.year || 'N/A'})`,
+                  };
+                  controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
+                } catch (error) {
+                  const result: ValidationResult = {
+                    reference,
+                    doi: match.externalIds.DOI,
+                    status: "invalid",
+                    message: "Found via search but DOI unreachable",
+                    details: `Match: "${match.title}" - ${error instanceof Error ? error.message : 'Network error'}`,
+                  };
+                  controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
+                }
+              } else if (match && match.url) {
+                // Found a match with URL but no DOI
+                const result: ValidationResult = {
+                  reference,
+                  status: "found_via_search",
+                  message: "Found via Semantic Scholar (no DOI available)",
+                  details: `Match: "${match.title}" (${match.year || 'N/A'}) - ${match.url}`,
+                };
+                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
+              } else {
+                // No match found
+                const result: ValidationResult = {
+                  reference,
+                  status: "not_found",
+                  message: "No matching papers found in academic databases",
+                };
+                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
+              }
+            } catch (error) {
+              console.error(`Error searching Semantic Scholar:`, error);
+              const result: ValidationResult = {
+                reference,
+                status: "not_found",
+                message: "Search failed",
+                details: error instanceof Error ? error.message : "Unknown error",
+              };
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
+            }
+            continue;
+          }
+
+          // Validate each link found
+          for (const link of allLinks) {
+            const isDoi = link.includes('doi.org');
+            const displayLink = isDoi ? link.replace('https://doi.org/', '') : link;
+            console.log(`Validating link: ${link}`);
+
+            try {
+              const response = await fetch(link, {
+                method: 'HEAD',
+                redirect: 'follow',
               });
 
-              if (contentResponse.ok) {
-                const html = await contentResponse.text();
-                
-                // Extract title and basic metadata from HTML
-                const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
-                const pageTitle = titleMatch ? titleMatch[1].trim() : '';
+              if (response.ok) {
+                // Link resolves successfully - verify content
+                try {
+                  const contentResponse = await fetch(link, {
+                    headers: { 'Accept': 'text/html,application/xhtml+xml' },
+                  });
 
-                // Simple content matching - check if key words from reference appear in page
-                const referenceWords = reference
-                  .toLowerCase()
-                  .replace(/[^a-z0-9\s]/g, '')
-                  .split(/\s+/)
-                  .filter((word: string) => word.length > 4); // Only significant words
+                  if (contentResponse.ok) {
+                    const html = await contentResponse.text();
+                    const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
+                    const pageTitle = titleMatch ? titleMatch[1].trim() : '';
 
-                const pageContent = html.toLowerCase();
-                const matchedWords = referenceWords.filter((word: string) => 
-                  pageContent.includes(word)
-                ).length;
+                    const referenceWords = reference
+                      .toLowerCase()
+                      .replace(/[^a-z0-9\s]/g, '')
+                      .split(/\s+/)
+                      .filter((word: string) => word.length > 4);
 
-                const matchPercentage = (matchedWords / Math.max(referenceWords.length, 1)) * 100;
+                    const pageContent = html.toLowerCase();
+                    const matchedWords = referenceWords.filter((word: string) => 
+                      pageContent.includes(word)
+                    ).length;
 
-                console.log(`Link ${link}: ${matchPercentage.toFixed(0)}% word match`);
+                    const matchPercentage = (matchedWords / Math.max(referenceWords.length, 1)) * 100;
+                    console.log(`Link ${link}: ${matchPercentage.toFixed(0)}% word match`);
 
-                if (matchPercentage > 30) {
-                  results.push({
+                    const result: ValidationResult = matchPercentage > 30 ? {
+                      reference,
+                      doi: isDoi ? displayLink : undefined,
+                      status: "valid",
+                      message: "Link valid and content matches",
+                      details: pageTitle ? `Page title: ${pageTitle}` : undefined,
+                    } : {
+                      reference,
+                      doi: isDoi ? displayLink : undefined,
+                      status: "content_mismatch",
+                      message: "Link valid but content may not match",
+                      details: `Only ${matchPercentage.toFixed(0)}% word match. ${pageTitle ? `Page title: ${pageTitle}` : ''}`,
+                    };
+                    controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
+                  } else {
+                    const result: ValidationResult = {
+                      reference,
+                      doi: isDoi ? displayLink : undefined,
+                      status: "valid",
+                      message: "Link valid (content check unavailable)",
+                    };
+                    controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
+                  }
+                } catch (contentError) {
+                  console.error(`Error fetching content for ${link}:`, contentError);
+                  const result: ValidationResult = {
                     reference,
                     doi: isDoi ? displayLink : undefined,
                     status: "valid",
-                    message: "Link valid and content matches",
-                    details: pageTitle ? `Page title: ${pageTitle}` : undefined,
-                  });
-                } else {
-                  results.push({
-                    reference,
-                    doi: isDoi ? displayLink : undefined,
-                    status: "content_mismatch",
-                    message: "Link valid but content may not match",
-                    details: `Only ${matchPercentage.toFixed(0)}% word match. ${pageTitle ? `Page title: ${pageTitle}` : ''}`,
-                  });
+                    message: "Link valid (content verification failed)",
+                  };
+                  controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
                 }
               } else {
-                results.push({
+                const result: ValidationResult = {
                   reference,
                   doi: isDoi ? displayLink : undefined,
-                  status: "valid",
-                  message: "Link valid (content check unavailable)",
-                });
+                  status: "invalid",
+                  message: `Link invalid (HTTP ${response.status})`,
+                };
+                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
               }
-            } catch (contentError) {
-              console.error(`Error fetching content for ${link}:`, contentError);
-              results.push({
+            } catch (error) {
+              console.error(`Error validating link ${link}:`, error);
+              const result: ValidationResult = {
                 reference,
                 doi: isDoi ? displayLink : undefined,
-                status: "valid",
-                message: "Link valid (content verification failed)",
-              });
+                status: "invalid",
+                message: "Link unreachable",
+                details: error instanceof Error ? error.message : "Network error",
+              };
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
             }
-          } else {
-            results.push({
-              reference,
-              doi: isDoi ? displayLink : undefined,
-              status: "invalid",
-              message: `Link invalid (HTTP ${response.status})`,
-            });
           }
-        } catch (error) {
-          console.error(`Error validating link ${link}:`, error);
-          results.push({
-            reference,
-            doi: isDoi ? displayLink : undefined,
-            status: "invalid",
-            message: "Link unreachable",
-            details: error instanceof Error ? error.message : "Network error",
-          });
         }
-      }
-    }
 
-    console.log(`Validation complete. Processed ${results.length} references`);
+        console.log(`Validation complete. Processed ${referenceList.length} references`);
+        
+        // Send completion message
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'complete', total: referenceList.length })}\n\n`));
+        controller.close();
+      },
+    });
 
-    return new Response(
-      JSON.stringify({ results }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(stream, {
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+      },
+    });
   } catch (error) {
     console.error("Error in validate-references function:", error);
     const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
