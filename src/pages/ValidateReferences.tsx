@@ -11,7 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 interface ValidationResult {
   reference: string;
   doi?: string;
-  status: "no_doi" | "valid" | "invalid" | "content_mismatch";
+  status: "no_links" | "valid" | "invalid" | "content_mismatch" | "searching" | "found_via_search" | "not_found";
   message: string;
   details?: string;
 }
@@ -20,6 +20,7 @@ const ValidateReferences = () => {
   const [references, setReferences] = useState("");
   const [isValidating, setIsValidating] = useState(false);
   const [results, setResults] = useState<ValidationResult[]>([]);
+  const [progress, setProgress] = useState({ current: 0, total: 0, currentRef: "" });
   const { toast } = useToast();
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,19 +47,78 @@ const ValidateReferences = () => {
 
     setIsValidating(true);
     setResults([]);
+    setProgress({ current: 0, total: 0, currentRef: "" });
 
     try {
-      const { data, error } = await supabase.functions.invoke("validate-references", {
-        body: { references },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/validate-references`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ references }),
+        }
+      );
 
-      if (error) throw error;
+      if (!response.ok || !response.body) {
+        throw new Error("Failed to start validation");
+      }
 
-      setResults(data.results || []);
-      toast({
-        title: "Validation Complete",
-        description: `Validated ${data.results.length} references`,
-      });
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        
+        // Process line by line
+        let newlineIndex: number;
+        while ((newlineIndex = buffer.indexOf("\n")) !== -1) {
+          let line = buffer.slice(0, newlineIndex);
+          buffer = buffer.slice(newlineIndex + 1);
+
+          if (line.endsWith("\r")) line = line.slice(0, -1);
+          if (line.startsWith(":") || line.trim() === "") continue;
+          if (!line.startsWith("data: ")) continue;
+
+          const jsonStr = line.slice(6).trim();
+          
+          try {
+            const parsed = JSON.parse(jsonStr);
+            
+            if (parsed.type === "progress") {
+              setProgress({
+                current: parsed.current,
+                total: parsed.total,
+                currentRef: parsed.reference,
+              });
+            } else if (parsed.type === "result") {
+              setResults(prev => {
+                // Replace "searching" status with actual result, or append new result
+                const existingIndex = prev.findIndex(r => r.reference === parsed.result.reference);
+                if (existingIndex !== -1) {
+                  const updated = [...prev];
+                  updated[existingIndex] = parsed.result;
+                  return updated;
+                }
+                return [...prev, parsed.result];
+              });
+            } else if (parsed.type === "complete") {
+              toast({
+                title: "Validation Complete",
+                description: `Validated ${parsed.total} references`,
+              });
+            }
+          } catch {
+            // Ignore parse errors for partial JSON
+          }
+        }
+      }
     } catch (error) {
       console.error("Error validating references:", error);
       toast({
@@ -68,18 +128,23 @@ const ValidateReferences = () => {
       });
     } finally {
       setIsValidating(false);
+      setProgress({ current: 0, total: 0, currentRef: "" });
     }
   };
 
   const getStatusIcon = (status: ValidationResult["status"]) => {
     switch (status) {
       case "valid":
+      case "found_via_search":
         return <CheckCircle className="w-5 h-5 text-green-500" />;
       case "invalid":
+      case "not_found":
         return <XCircle className="w-5 h-5 text-red-500" />;
       case "content_mismatch":
         return <AlertCircle className="w-5 h-5 text-yellow-500" />;
-      case "no_doi":
+      case "searching":
+        return <Loader2 className="w-5 h-5 text-blue-500 animate-spin" />;
+      case "no_links":
         return <AlertCircle className="w-5 h-5 text-gray-500" />;
     }
   };
@@ -88,21 +153,27 @@ const ValidateReferences = () => {
     switch (status) {
       case "valid":
         return "Valid - Link is accessible and content matches";
+      case "found_via_search":
+        return "Found via Search - Located and validated through academic databases";
       case "invalid":
         return "Invalid - Link is not accessible";
+      case "not_found":
+        return "Not Found - No matching papers found in academic databases";
       case "content_mismatch":
         return "Content Mismatch - Link accessible but content may not match";
-      case "no_doi":
+      case "searching":
+        return "Searching - Looking for this reference in academic databases...";
+      case "no_links":
         return "No Links - No links found in this reference";
     }
   };
 
   const getSummaryStats = () => {
     const total = results.length;
-    const valid = results.filter(r => r.status === "valid").length;
-    const invalid = results.filter(r => r.status === "invalid" || r.status === "content_mismatch").length;
-    const noDoi = results.filter(r => r.status === "no_doi").length;
-    return { total, valid, invalid, noDoi };
+    const valid = results.filter(r => r.status === "valid" || r.status === "found_via_search").length;
+    const invalid = results.filter(r => r.status === "invalid" || r.status === "content_mismatch" || r.status === "not_found").length;
+    const noLinks = results.filter(r => r.status === "no_links" || r.status === "searching").length;
+    return { total, valid, invalid, noLinks };
   };
 
   const downloadMarkdown = () => {
@@ -112,7 +183,7 @@ const ValidateReferences = () => {
     markdown += `- **Total References Checked:** ${stats.total}\n`;
     markdown += `- **Valid References:** ${stats.valid}\n`;
     markdown += `- **Invalid References:** ${stats.invalid}\n`;
-    markdown += `- **References Without DOI:** ${stats.noDoi}\n\n`;
+    markdown += `- **References Without DOI:** ${stats.noLinks}\n\n`;
     markdown += `---\n\n`;
     markdown += `## Detailed Results\n\n`;
 
@@ -236,8 +307,8 @@ const ValidateReferences = () => {
                     <div className="text-sm text-muted-foreground">Invalid</div>
                   </div>
                   <div className="text-center p-4 bg-yellow-500/10 rounded-lg">
-                    <div className="text-3xl font-bold text-yellow-600">{getSummaryStats().noDoi}</div>
-                    <div className="text-sm text-muted-foreground">No DOI</div>
+                    <div className="text-3xl font-bold text-yellow-600">{getSummaryStats().noLinks}</div>
+                    <div className="text-sm text-muted-foreground">No Links</div>
                   </div>
                 </div>
               </CardContent>
