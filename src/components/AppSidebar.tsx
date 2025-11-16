@@ -1,4 +1,4 @@
-import { BookOpen, GraduationCap, Target, FileCheck, Lightbulb, MessageSquare, Home, Plus } from "lucide-react";
+import { BookOpen, GraduationCap, Target, FileCheck, Lightbulb, MessageSquare, Home, Plus, CheckSquare } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 import {
@@ -31,6 +31,12 @@ const tools = [
     url: "/academic-phrasebank",
     icon: MessageSquare,
     description: "AI writing assistant"
+  },
+  {
+    title: "Validate References",
+    url: "/validate-references",
+    icon: CheckSquare,
+    description: "Check DOI validity"
   },
 ];
 

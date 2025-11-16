@@ -9,6 +9,7 @@ import Lesson6 from "./pages/lessons/Lesson6";
 import DynamicLesson from "./pages/lessons/DynamicLesson";
 import LessonCreator from "./pages/LessonCreator";
 import AcademicPhraseBank from "./pages/AcademicPhraseBank";
+import ValidateReferences from "./pages/ValidateReferences";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/lesson/:slug" element={<DynamicLesson />} />
           <Route path="/lesson-creator" element={<LessonCreator />} />
           <Route path="/academic-phrasebank" element={<AcademicPhraseBank />} />
+          <Route path="/validate-references" element={<ValidateReferences />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
