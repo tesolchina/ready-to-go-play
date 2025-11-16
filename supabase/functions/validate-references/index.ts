@@ -412,10 +412,50 @@ serve(async (req) => {
             console.log(`Validating link: ${link}`);
 
             try {
-              const response = await fetch(link, {
+              // For DOIs, use GET with proper headers as many DOI servers block HEAD requests
+              // For regular URLs, HEAD is fine
+              const requestOptions: RequestInit = isDoi ? {
+                method: 'GET',
+                redirect: 'follow',
+                headers: {
+                  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                },
+                signal: AbortSignal.timeout(15000),
+              } : {
                 method: 'HEAD',
                 redirect: 'follow',
-              });
+                signal: AbortSignal.timeout(10000),
+              };
+
+              let response!: Response;
+              let retryCount = 0;
+              const maxRetries = 2;
+
+              // Retry logic for 403/timeout errors
+              while (retryCount <= maxRetries) {
+                try {
+                  response = await fetch(link, requestOptions);
+                  
+                  // If we get a 403 on first try for DOI, retry after a short delay
+                  if (response.status === 403 && isDoi && retryCount < maxRetries) {
+                    console.log(`Got 403 for ${link}, retrying (attempt ${retryCount + 1})...`);
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    retryCount++;
+                    continue;
+                  }
+                  
+                  break;
+                } catch (fetchError) {
+                  if (retryCount < maxRetries) {
+                    console.log(`Fetch error for ${link}, retrying (attempt ${retryCount + 1})...`);
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    retryCount++;
+                  } else {
+                    throw fetchError;
+                  }
+                }
+              }
 
               if (response.ok) {
                 // Link resolves successfully - verify content
