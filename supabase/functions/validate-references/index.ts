@@ -23,6 +23,7 @@ interface SemanticScholarPaper {
     ArXiv?: string;
   };
   url?: string;
+  doi?: string; // For PubMed results
 }
 
 // Helper to calculate string similarity (Levenshtein distance based)
@@ -102,6 +103,90 @@ async function searchSemanticScholar(query: string, apiKey: string): Promise<Sem
 
   const data = await response.json();
   return data.data || [];
+}
+
+// Search PubMed API
+async function searchPubMed(query: string): Promise<any[]> {
+  try {
+    // Search for articles
+    const searchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(query)}&retmode=json&retmax=5`;
+    const searchResponse = await fetch(searchUrl);
+    
+    if (!searchResponse.ok) {
+      throw new Error(`PubMed search error: ${searchResponse.status}`);
+    }
+
+    const searchData = await searchResponse.json();
+    const ids = searchData.esearchresult?.idlist || [];
+
+    if (ids.length === 0) return [];
+
+    // Fetch details for found articles
+    const detailsUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${ids.join(',')}&retmode=json`;
+    const detailsResponse = await fetch(detailsUrl);
+    
+    if (!detailsResponse.ok) {
+      throw new Error(`PubMed details error: ${detailsResponse.status}`);
+    }
+
+    const detailsData = await detailsResponse.json();
+    const results = [];
+
+    for (const id of ids) {
+      const article = detailsData.result?.[id];
+      if (article) {
+        results.push({
+          title: article.title || '',
+          authors: article.authors?.map((a: any) => ({ name: a.name })) || [],
+          year: parseInt(article.pubdate?.substring(0, 4)) || undefined,
+          url: `https://pubmed.ncbi.nlm.nih.gov/${id}/`,
+          doi: article.elocationid?.match(/10\.\d{4,9}\/[-._;()/:A-Za-z0-9]+/)?.[0]
+        });
+      }
+    }
+
+    return results;
+  } catch (error) {
+    console.error('PubMed search error:', error);
+    return [];
+  }
+}
+
+// Perform web search to verify article existence
+async function verifyViaWebSearch(reference: string): Promise<{ found: boolean; source?: string; url?: string }> {
+  try {
+    const parsed = parseReference(reference);
+    const searchQuery = `"${parsed.title}" ${parsed.authors[0] || ''} ${parsed.year || ''}`;
+    
+    // Simple web search to verify existence
+    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
+    const response = await fetch(searchUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+
+    if (response.ok) {
+      const html = await response.text();
+      // Check if we find academic sources in results
+      const hasScholarLink = html.includes('scholar.google.com') || 
+                            html.includes('doi.org') || 
+                            html.includes('pubmed') ||
+                            html.includes('jstor.org') ||
+                            html.includes('wiley.com') ||
+                            html.includes('springer.com') ||
+                            html.includes('sciencedirect.com');
+      
+      if (hasScholarLink) {
+        return { found: true, source: 'Web search', url: searchUrl };
+      }
+    }
+    
+    return { found: false };
+  } catch (error) {
+    console.error('Web search verification error:', error);
+    return { found: false };
+  }
 }
 
 // Match reference with search results
@@ -218,33 +303,68 @@ serve(async (req) => {
               const parsed = parseReference(reference);
               console.log(`Searching Semantic Scholar for: "${parsed.title}"`);
               
-              const papers = await searchSemanticScholar(parsed.title, SEMANTIC_SCHOLAR_API_KEY);
-              const match = findBestMatch(reference, papers);
+              let match = null;
+              let source = 'Semantic Scholar';
+              
+              // Try Semantic Scholar first
+              try {
+                const papers = await searchSemanticScholar(parsed.title, SEMANTIC_SCHOLAR_API_KEY);
+                match = findBestMatch(reference, papers);
+              } catch (ssError) {
+                console.log('Semantic Scholar search failed, trying PubMed...');
+              }
 
-              if (match && match.externalIds?.DOI) {
+              // If no match in Semantic Scholar, try PubMed
+              if (!match) {
+                console.log(`Searching PubMed for: "${parsed.title}"`);
+                const pubmedResults = await searchPubMed(parsed.title);
+                if (pubmedResults.length > 0) {
+                  match = findBestMatch(reference, pubmedResults);
+                  source = 'PubMed';
+                }
+              }
+
+              // If still no match, try web search verification
+              if (!match) {
+                console.log('Trying web search verification...');
+                const webResult = await verifyViaWebSearch(reference);
+                if (webResult.found) {
+                  const result: ValidationResult = {
+                    reference,
+                    status: "found_via_search",
+                    message: "Verified via web search",
+                    details: `Found in ${webResult.source}`,
+                  };
+                  controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
+                  continue;
+                }
+              }
+
+              if (match && (match.externalIds?.DOI || match.doi)) {
                 // Found a match with DOI - validate it
-                const doiUrl = `https://doi.org/${match.externalIds.DOI}`;
-                console.log(`Found match via Semantic Scholar: ${doiUrl}`);
+                const doi = match.externalIds?.DOI || match.doi;
+                const doiUrl = `https://doi.org/${doi}`;
+                console.log(`Found match via ${source}: ${doiUrl}`);
 
                 try {
                   const response = await fetch(doiUrl, { method: 'HEAD', redirect: 'follow' });
                   
                   const result: ValidationResult = {
                     reference,
-                    doi: match.externalIds.DOI,
+                    doi: doi,
                     status: response.ok ? "found_via_search" : "invalid",
                     message: response.ok 
-                      ? "Found and validated via Semantic Scholar" 
-                      : `Found via search but DOI invalid (HTTP ${response.status})`,
+                      ? `Found and validated via ${source}` 
+                      : `Found via ${source} but DOI invalid (HTTP ${response.status})`,
                     details: `Match: "${match.title}" (${match.year || 'N/A'})`,
                   };
                   controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
                 } catch (error) {
                   const result: ValidationResult = {
                     reference,
-                    doi: match.externalIds.DOI,
+                    doi: doi,
                     status: "invalid",
-                    message: "Found via search but DOI unreachable",
+                    message: `Found via ${source} but DOI unreachable`,
                     details: `Match: "${match.title}" - ${error instanceof Error ? error.message : 'Network error'}`,
                   };
                   controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
@@ -254,21 +374,21 @@ serve(async (req) => {
                 const result: ValidationResult = {
                   reference,
                   status: "found_via_search",
-                  message: "Found via Semantic Scholar (no DOI available)",
+                  message: `Found via ${source} (no DOI available)`,
                   details: `Match: "${match.title}" (${match.year || 'N/A'}) - ${match.url}`,
                 };
                 controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
               } else {
-                // No match found
+                // No match found anywhere
                 const result: ValidationResult = {
                   reference,
                   status: "not_found",
-                  message: "No matching papers found in academic databases",
+                  message: "No matching papers found in academic databases or web search",
                 };
                 controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
               }
             } catch (error) {
-              console.error(`Error searching Semantic Scholar:`, error);
+              console.error(`Error during search:`, error);
               const result: ValidationResult = {
                 reference,
                 status: "not_found",
