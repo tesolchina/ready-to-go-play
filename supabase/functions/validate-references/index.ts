@@ -269,13 +269,18 @@ serve(async (req) => {
           const doiMatches = reference.match(doiPattern) || [];
           const urlMatches = reference.match(urlPattern) || [];
           
+          // Helper to clean trailing punctuation from URLs
+          const cleanUrl = (url: string): string => {
+            return url.replace(/[.,;:!?)\]]+$/, '');
+          };
+          
           // Create a set of all unique links (DOIs as URLs + regular URLs)
           const allLinks = new Set<string>();
           doiMatches.forEach((doi: string) => allLinks.add(`https://doi.org/${doi}`));
           urlMatches.forEach((url: string) => {
-            // Only add non-DOI URLs
+            // Only add non-DOI URLs, and clean trailing punctuation
             if (!url.includes('doi.org')) {
-              allLinks.add(url);
+              allLinks.add(cleanUrl(url));
             }
           });
 
