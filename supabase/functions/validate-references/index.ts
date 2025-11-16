@@ -411,51 +411,37 @@ serve(async (req) => {
             const displayLink = isDoi ? link.replace('https://doi.org/', '') : link;
             console.log(`Validating link: ${link}`);
 
+            // For DOIs, verify via web search instead of direct link
+            if (isDoi) {
+              const webVerification = await verifyViaWebSearch(reference);
+              if (webVerification.found) {
+                const result: ValidationResult = {
+                  reference,
+                  doi: displayLink,
+                  status: "valid",
+                  message: "DOI verified via web search",
+                  details: `Found in academic sources`,
+                };
+                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
+              } else {
+                const result: ValidationResult = {
+                  reference,
+                  doi: displayLink,
+                  status: "invalid",
+                  message: "DOI could not be verified",
+                };
+                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
+              }
+              continue;
+            }
+
+            // For non-DOI links, use standard fetch validation
             try {
-              // For DOIs, use GET with proper headers as many DOI servers block HEAD requests
-              // For regular URLs, HEAD is fine
-              const requestOptions: RequestInit = isDoi ? {
-                method: 'GET',
-                redirect: 'follow',
-                headers: {
-                  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-                  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                },
-                signal: AbortSignal.timeout(15000),
-              } : {
+              const response = await fetch(link, {
                 method: 'HEAD',
                 redirect: 'follow',
                 signal: AbortSignal.timeout(10000),
-              };
-
-              let response!: Response;
-              let retryCount = 0;
-              const maxRetries = 2;
-
-              // Retry logic for 403/timeout errors
-              while (retryCount <= maxRetries) {
-                try {
-                  response = await fetch(link, requestOptions);
-                  
-                  // If we get a 403 on first try for DOI, retry after a short delay
-                  if (response.status === 403 && isDoi && retryCount < maxRetries) {
-                    console.log(`Got 403 for ${link}, retrying (attempt ${retryCount + 1})...`);
-                    await new Promise(resolve => setTimeout(resolve, 2000));
-                    retryCount++;
-                    continue;
-                  }
-                  
-                  break;
-                } catch (fetchError) {
-                  if (retryCount < maxRetries) {
-                    console.log(`Fetch error for ${link}, retrying (attempt ${retryCount + 1})...`);
-                    await new Promise(resolve => setTimeout(resolve, 2000));
-                    retryCount++;
-                  } else {
-                    throw fetchError;
-                  }
-                }
-              }
+              });
 
               if (response.ok) {
                 // Link resolves successfully - verify content
@@ -485,13 +471,11 @@ serve(async (req) => {
 
                     const result: ValidationResult = matchPercentage > 30 ? {
                       reference,
-                      doi: isDoi ? displayLink : undefined,
                       status: "valid",
                       message: "Link valid and content matches",
                       details: pageTitle ? `Page title: ${pageTitle}` : undefined,
                     } : {
                       reference,
-                      doi: isDoi ? displayLink : undefined,
                       status: "content_mismatch",
                       message: "Link valid but content may not match",
                       details: `Only ${matchPercentage.toFixed(0)}% word match. ${pageTitle ? `Page title: ${pageTitle}` : ''}`,
@@ -500,7 +484,6 @@ serve(async (req) => {
                   } else {
                     const result: ValidationResult = {
                       reference,
-                      doi: isDoi ? displayLink : undefined,
                       status: "valid",
                       message: "Link valid (content check unavailable)",
                     };
@@ -510,7 +493,6 @@ serve(async (req) => {
                   console.error(`Error fetching content for ${link}:`, contentError);
                   const result: ValidationResult = {
                     reference,
-                    doi: isDoi ? displayLink : undefined,
                     status: "valid",
                     message: "Link valid (content verification failed)",
                   };
@@ -519,7 +501,6 @@ serve(async (req) => {
               } else {
                 const result: ValidationResult = {
                   reference,
-                  doi: isDoi ? displayLink : undefined,
                   status: "invalid",
                   message: `Link invalid (HTTP ${response.status})`,
                 };
@@ -529,7 +510,6 @@ serve(async (req) => {
               console.error(`Error validating link ${link}:`, error);
               const result: ValidationResult = {
                 reference,
-                doi: isDoi ? displayLink : undefined,
                 status: "invalid",
                 message: "Link unreachable",
                 details: error instanceof Error ? error.message : "Network error",
