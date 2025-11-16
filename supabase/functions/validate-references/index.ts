@@ -11,6 +11,7 @@ interface ValidationResult {
   status: "no_links" | "valid" | "invalid" | "content_mismatch" | "searching" | "found_via_search" | "not_found";
   message: string;
   details?: string;
+  searchResults?: Array<{ title: string; link: string; snippet: string }>;
 }
 
 interface SemanticScholarPaper {
@@ -153,32 +154,54 @@ async function searchPubMed(query: string): Promise<any[]> {
 }
 
 // Perform web search to verify article existence
-async function verifyViaWebSearch(reference: string): Promise<{ found: boolean; source?: string; url?: string }> {
+async function verifyViaWebSearch(reference: string): Promise<{ found: boolean; source?: string; url?: string; searchResults?: Array<{ title: string; link: string; snippet: string }> }> {
   try {
+    const apiKey = Deno.env.get('GOOGLE_SEARCH_API_KEY');
+    const searchEngineId = Deno.env.get('GOOGLE_SEARCH_ENGINE_ID');
+    
+    if (!apiKey || !searchEngineId) {
+      console.error('Google Search API credentials not configured');
+      return { found: false };
+    }
+
     const parsed = parseReference(reference);
     const searchQuery = `"${parsed.title}" ${parsed.authors[0] || ''} ${parsed.year || ''}`;
     
-    // Simple web search to verify existence
-    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
+    const searchUrl = `https://www.googleapis.com/customsearch/v1?key=${apiKey}&cx=${searchEngineId}&q=${encodeURIComponent(searchQuery)}&num=5`;
+    
+    console.log(`Performing Google search for: "${searchQuery}"`);
+    
     const response = await fetch(searchUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-      }
+      signal: AbortSignal.timeout(10000),
     });
 
-    if (response.ok) {
-      const html = await response.text();
-      // Check if we find academic sources in results
-      const hasScholarLink = html.includes('scholar.google.com') || 
-                            html.includes('doi.org') || 
-                            html.includes('pubmed') ||
-                            html.includes('jstor.org') ||
-                            html.includes('wiley.com') ||
-                            html.includes('springer.com') ||
-                            html.includes('sciencedirect.com');
+    if (!response.ok) {
+      console.error(`Google Search API error: ${response.status}`);
+      return { found: false };
+    }
+
+    const data = await response.json();
+    
+    if (data.items && data.items.length > 0) {
+      const searchResults = data.items.map((item: any) => ({
+        title: item.title,
+        link: item.link,
+        snippet: item.snippet || '',
+      }));
       
-      if (hasScholarLink) {
-        return { found: true, source: 'Web search', url: searchUrl };
+      // Check if any result is from academic sources
+      const academicDomains = ['scholar.google', 'doi.org', 'pubmed', 'jstor.org', 'wiley.com', 'springer.com', 'sciencedirect.com', 'researchgate.net', 'arxiv.org', 'ncbi.nlm.nih.gov'];
+      const hasAcademicSource = searchResults.some((result: any) => 
+        academicDomains.some(domain => result.link.includes(domain))
+      );
+      
+      if (hasAcademicSource || searchResults.length > 0) {
+        return { 
+          found: true, 
+          source: 'Google Search', 
+          url: searchResults[0].link,
+          searchResults 
+        };
       }
     }
     
@@ -339,6 +362,7 @@ serve(async (req) => {
                     status: "found_via_search",
                     message: "Verified via web search",
                     details: `Found in ${webResult.source}`,
+                    searchResults: webResult.searchResults,
                   };
                   controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'result', result })}\n\n`));
                   continue;
