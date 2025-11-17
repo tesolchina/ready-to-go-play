@@ -139,6 +139,7 @@ const AcademicPhraseBank = () => {
   const [shareDescription, setShareDescription] = useState("");
   const [shareAnonymous, setShareAnonymous] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
+  const [messagesToShare, setMessagesToShare] = useState<Message[]>([]);
   const [posts, setPosts] = useState<BulletinPost[]>([]);
   const [expandedPosts, setExpandedPosts] = useState<Set<string>>(new Set());
   const [isLoadingPosts, setIsLoadingPosts] = useState(true);
@@ -433,31 +434,43 @@ const AcademicPhraseBank = () => {
   const handleShareAnalysis = () => {
     if (!analysisResult) return;
 
-    // Create a conversation-like structure from the analysis
+    // Create a formatted conversation from the analysis
     const analysisMessages: Message[] = [
       {
         role: "user",
-        content: `I analyzed this paragraph:\n\n${paragraphInput}`
+        content: paragraphInput
       },
       {
         role: "assistant",
-        content: `## Analysis Results\n\n**Category:** ${analysisResult.categoryType === "moves" ? "Moves/Steps" : "General Functions"} > ${analysisResult.category} > ${analysisResult.subcategory}\n\n### Extracted Templates\n\n${analysisResult.templates.map((t, i) => `${i + 1}. **Original:** ${t.original}\n   **Template:** ${t.template}\n   **Explanation:** ${t.explanation}`).join('\n\n')}\n\n### Practice Exercises\n\n${analysisResult.exercises.map((e, i) => `${i + 1}. **Task:** ${e.instruction}\n   **Template:** ${e.template}\n   **Hints:** ${e.hints.join(', ')}`).join('\n\n')}`
+        content: `## Paragraph Analysis\n\n**Category Identified:** ${analysisResult.categoryType === "moves" ? "Moves/Steps" : "General Functions"} > ${analysisResult.category} > ${analysisResult.subcategory}\n\n---\n\n### 📝 Extracted Templates\n\n${analysisResult.templates.map((t, i) => `**Template ${i + 1}**\n\n*Original sentence:*\n> ${t.original}\n\n*Reusable template:*\n\`${t.template}\`\n\n*When to use:* ${t.explanation}\n\n---`).join('\n\n')}\n\n### ✍️ Practice Exercises\n\n${analysisResult.exercises.map((e, i) => `**Exercise ${i + 1}**\n\n${e.instruction}\n\nTemplate: \`${e.template}\`\n\nHints:\n${e.hints.map(h => `- ${h}`).join('\n')}\n\n---`).join('\n\n')}`
       }
     ];
 
-    // Temporarily set messages to enable sharing
-    const originalMessages = messages;
-    setMessages(analysisMessages);
+    // Set the messages to share
+    setMessagesToShare(analysisMessages);
     
     // Pre-fill the share dialog
     setShareTitle(`Paragraph Analysis: ${analysisResult.category} - ${analysisResult.subcategory}`);
-    setShareDescription(`Analysis of academic paragraph identifying ${analysisResult.templates.length} templates and ${analysisResult.exercises.length} practice exercises.`);
+    setShareDescription(`AI analysis identifying ${analysisResult.templates.length} sentence templates and ${analysisResult.exercises.length} practice exercises from an academic paragraph.`);
     
-    // Open dialog and restore messages after a brief delay
+    // Open dialog
     setShareDialogOpen(true);
-    setTimeout(() => {
-      setMessages(originalMessages);
-    }, 100);
+  };
+
+  const handleOpenShareDialog = () => {
+    if (messages.length === 0) {
+      toast({
+        title: "No conversation",
+        description: "Please have a conversation before sharing.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setMessagesToShare(messages);
+    setShareTitle("");
+    setShareDescription("");
+    setShareDialogOpen(true);
   };
 
   // Bulletin board handlers
