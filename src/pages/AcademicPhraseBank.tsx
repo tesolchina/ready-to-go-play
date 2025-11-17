@@ -115,6 +115,7 @@ const COMMON_DISCIPLINES = [
 
 const AcademicPhraseBank = () => {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [messagesToShare, setMessagesToShare] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [categoryType, setCategoryType] = useState<"moves" | "general" | "">("");
@@ -445,19 +446,15 @@ const AcademicPhraseBank = () => {
       }
     ];
 
-    // Temporarily set messages to enable sharing
-    const originalMessages = messages;
-    setMessages(analysisMessages);
+    // Set messages to share
+    setMessagesToShare(analysisMessages);
     
     // Pre-fill the share dialog
     setShareTitle(`Paragraph Analysis: ${analysisResult.category} - ${analysisResult.subcategory}`);
     setShareDescription(`Analysis of academic paragraph identifying ${analysisResult.templates.length} templates and ${analysisResult.exercises.length} practice exercises.`);
     
-    // Open dialog and restore messages after a brief delay
+    // Open dialog
     setShareDialogOpen(true);
-    setTimeout(() => {
-      setMessages(originalMessages);
-    }, 100);
   };
 
   // Bulletin board handlers
@@ -504,9 +501,6 @@ const AcademicPhraseBank = () => {
       });
       return;
     }
-
-    // Get the actual messages to share (could be from chat or analysis)
-    const messagesToShare = messages.length > 0 ? messages : [];
 
     if (messagesToShare.length === 0) {
       toast({
@@ -1066,7 +1060,10 @@ const AcademicPhraseBank = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setShareDialogOpen(true)}
+                  onClick={() => {
+                    setMessagesToShare(messages);
+                    setShareDialogOpen(true);
+                  }}
                 >
                   <Sparkles className="mr-2 h-4 w-4" />
                   Share
@@ -1234,7 +1231,7 @@ const AcademicPhraseBank = () => {
               <div className="p-3 bg-muted rounded-lg">
                 <p className="text-sm font-medium mb-2">Preview (first 2 messages):</p>
                 <div className="space-y-2 max-h-32 overflow-y-auto text-xs">
-                  {messages.slice(0, 2).map((msg, idx) => (
+                  {messagesToShare.slice(0, 2).map((msg, idx) => (
                     <p key={idx} className="text-muted-foreground">
                       <span className="font-medium">{msg.role}:</span> {msg.content.substring(0, 100)}...
                     </p>
