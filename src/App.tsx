@@ -35,7 +35,7 @@ const App = () => (
           <Route path="/report/:id" element={<SharedReport />} />
           <Route path="/pdf-manager" element={<PDFManager />} />
           <Route path="/pdf/:slug" element={<PDFViewer />} />
-          <Route path="/embed" element={<EmbedChat />} />
+          <Route path="/embed/kimi_AI_nature.html" element={<EmbedChat />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
