@@ -14,6 +14,7 @@ import SharedReport from "./pages/SharedReport";
 import PDFManager from "./pages/PDFManager";
 import PDFViewer from "./pages/PDFViewer";
 import EmbedChat from "./pages/EmbedChat";
+import PatternAnalyzer from "./pages/PatternAnalyzer";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ const App = () => (
           <Route path="/pdf-manager" element={<PDFManager />} />
           <Route path="/pdf/:slug" element={<PDFViewer />} />
           <Route path="/embed/kimi_AI_nature.html" element={<EmbedChat />} />
+          <Route path="/pattern-analyzer" element={<PatternAnalyzer />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
