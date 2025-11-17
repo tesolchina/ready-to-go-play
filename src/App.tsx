@@ -11,6 +11,8 @@ import LessonCreator from "./pages/LessonCreator";
 import AcademicPhraseBank from "./pages/AcademicPhraseBank";
 import ValidateReferences from "./pages/ValidateReferences";
 import SharedReport from "./pages/SharedReport";
+import PDFManager from "./pages/PDFManager";
+import PDFViewer from "./pages/PDFViewer";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +32,8 @@ const App = () => (
           <Route path="/academic-phrasebank" element={<AcademicPhraseBank />} />
           <Route path="/validate-references" element={<ValidateReferences />} />
           <Route path="/report/:id" element={<SharedReport />} />
+          <Route path="/pdf-manager" element={<PDFManager />} />
+          <Route path="/pdf/:slug" element={<PDFViewer />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
