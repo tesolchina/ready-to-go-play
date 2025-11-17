@@ -430,6 +430,36 @@ const AcademicPhraseBank = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleShareAnalysis = () => {
+    if (!analysisResult) return;
+
+    // Create a conversation-like structure from the analysis
+    const analysisMessages: Message[] = [
+      {
+        role: "user",
+        content: `I analyzed this paragraph:\n\n${paragraphInput}`
+      },
+      {
+        role: "assistant",
+        content: `## Analysis Results\n\n**Category:** ${analysisResult.categoryType === "moves" ? "Moves/Steps" : "General Functions"} > ${analysisResult.category} > ${analysisResult.subcategory}\n\n### Extracted Templates\n\n${analysisResult.templates.map((t, i) => `${i + 1}. **Original:** ${t.original}\n   **Template:** ${t.template}\n   **Explanation:** ${t.explanation}`).join('\n\n')}\n\n### Practice Exercises\n\n${analysisResult.exercises.map((e, i) => `${i + 1}. **Task:** ${e.instruction}\n   **Template:** ${e.template}\n   **Hints:** ${e.hints.join(', ')}`).join('\n\n')}`
+      }
+    ];
+
+    // Temporarily set messages to enable sharing
+    const originalMessages = messages;
+    setMessages(analysisMessages);
+    
+    // Pre-fill the share dialog
+    setShareTitle(`Paragraph Analysis: ${analysisResult.category} - ${analysisResult.subcategory}`);
+    setShareDescription(`Analysis of academic paragraph identifying ${analysisResult.templates.length} templates and ${analysisResult.exercises.length} practice exercises.`);
+    
+    // Open dialog and restore messages after a brief delay
+    setShareDialogOpen(true);
+    setTimeout(() => {
+      setMessages(originalMessages);
+    }, 100);
+  };
+
   // Bulletin board handlers
   const loadPosts = async () => {
     setIsLoadingPosts(true);
@@ -475,10 +505,13 @@ const AcademicPhraseBank = () => {
       return;
     }
 
-    if (messages.length === 0) {
+    // Get the actual messages to share (could be from chat or analysis)
+    const messagesToShare = messages.length > 0 ? messages : [];
+
+    if (messagesToShare.length === 0) {
       toast({
-        title: "No conversation",
-        description: "Please have a conversation before sharing.",
+        title: "No content",
+        description: "Please have a conversation or analysis before sharing.",
         variant: "destructive",
       });
       return;
@@ -495,7 +528,7 @@ const AcademicPhraseBank = () => {
         user_id: shareAnonymous ? null : user?.id,
         title: shareTitle.trim(),
         description: shareDescription.trim() || null,
-        chat_history: messages as unknown as Json,
+        chat_history: messagesToShare as unknown as Json,
         category_type: categoryType || null,
         category: selectedCategory || null,
         subcategory: finalSubcategory,
@@ -960,14 +993,23 @@ const AcademicPhraseBank = () => {
                       <Badge>{analysisResult.category}</Badge>
                       <Badge variant="secondary">{analysisResult.subcategory}</Badge>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={useAnalysisSettings}
-                      className="mt-2"
-                    >
-                      Use This Category
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={useAnalysisSettings}
+                      >
+                        Use This Category
+                      </Button>
+                      <Button
+                        variant="default"
+                        size="sm"
+                        onClick={handleShareAnalysis}
+                      >
+                        <Sparkles className="mr-2 h-4 w-4" />
+                        Share to Bulletin Board
+                      </Button>
+                    </div>
                   </div>
 
                   <div>
