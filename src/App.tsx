@@ -13,6 +13,7 @@ import ValidateReferences from "./pages/ValidateReferences";
 import SharedReport from "./pages/SharedReport";
 import PDFManager from "./pages/PDFManager";
 import PDFViewer from "./pages/PDFViewer";
+import EmbedChat from "./pages/EmbedChat";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/report/:id" element={<SharedReport />} />
           <Route path="/pdf-manager" element={<PDFManager />} />
           <Route path="/pdf/:slug" element={<PDFViewer />} />
+          <Route path="/embed" element={<EmbedChat />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
