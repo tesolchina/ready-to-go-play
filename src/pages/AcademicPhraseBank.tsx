@@ -1126,6 +1126,8 @@ const AcademicPhraseBank = () => {
                     key={post.id}
                     title={post.title}
                     icon="📝"
+                    isOpen={expandedPosts.has(post.id)}
+                    onToggle={() => togglePostExpansion(post.id)}
                   >
                     <div className="space-y-4">
                       <div className="flex items-center gap-2 flex-wrap">
