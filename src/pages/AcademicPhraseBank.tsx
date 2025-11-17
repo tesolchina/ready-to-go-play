@@ -113,6 +113,9 @@ const COMMON_DISCIPLINES = [
   "Other",
 ];
 
+// Example paragraph for analysis
+const EXAMPLE_PARAGRAPH = "Research suggests that multilingual writers draw on underlying knowledge across languages (Gentil, 2011, Kobayashi and Rinnert, 2012, Kobayashi and Rinnert, 2023) to understand and produce a new genre. Specifically, L1 and L2 prior genre knowledge gradually become interrelated and integrated with each other to build genre knowledge (Kim and Belcher, 2018, Kobayashi and Rinnert, 2012). In Kim and Belcher's (2018) study, for example, EFL study abroad students, when exposed to familiar and analogous rhetorical situations, recognized certain familiar features and repurposed prior knowledge from both L1 and L2 when writing in a new writing context. Multilingual writers' thinking and awareness are influenced by their diverse social and writing contexts and play a significant role in how their genre knowledge develops (Kim & Belcher, 2018). Similarly, in the present study on EFL undergraduate students in genre-based writing classes, students' thinking and awareness are observed in relation to various multilingual experiences in the EGAP context.";
+
 const AcademicPhraseBank = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [messagesToShare, setMessagesToShare] = useState<Message[]>([]);
@@ -130,7 +133,7 @@ const AcademicPhraseBank = () => {
 
   // Paragraph analyzer state
   const [showAnalyzer, setShowAnalyzer] = useState(false);
-  const [paragraphInput, setParagraphInput] = useState("");
+  const [paragraphInput, setParagraphInput] = useState(EXAMPLE_PARAGRAPH);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
@@ -940,13 +943,23 @@ const AcademicPhraseBank = () => {
               </Button>
             </div>
             <CardDescription>
-              Paste a paragraph from a journal article to identify relevant categories and extract sentence templates
+              Paste a paragraph from a journal article to identify relevant categories and extract sentence templates. An example paragraph is provided below - replace it with your own text.
             </CardDescription>
           </CardHeader>
           {showAnalyzer && (
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="paragraph">Journal Article Paragraph</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="paragraph">Journal Article Paragraph</Label>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setParagraphInput(EXAMPLE_PARAGRAPH)}
+                    className="h-auto py-1 px-2 text-xs"
+                  >
+                    Reset to Example
+                  </Button>
+                </div>
                 <Textarea
                   id="paragraph"
                   placeholder="Paste a paragraph from a published journal article here... (minimum 50 characters)"
