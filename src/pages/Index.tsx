@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
-import { BookOpen, GraduationCap, Plus, Sparkles, FileText, Brain, Zap } from "lucide-react";
+import { BookOpen, GraduationCap, Plus, Sparkles, FileText, Brain, Zap, CheckCircle2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { CollapsibleSection } from "@/components/CollapsibleSection";
 
 interface Lesson {
   id: string;
@@ -149,6 +150,67 @@ const Index = () => {
                       Multi-Discipline
                     </span>
                   </div>
+                </CardContent>
+              </Card>
+            </Link>
+
+            {/* Validate References */}
+            <Link to="/validate-references" className="group block mb-6">
+              <Card className="transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-2 hover:border-primary/50 bg-gradient-to-br from-primary/5 to-primary/10">
+                <CardHeader>
+                  <div className="flex items-start gap-4">
+                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center flex-shrink-0">
+                      <CheckCircle2 className="w-8 h-8 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <CardTitle className="text-2xl mb-2 group-hover:text-primary transition-colors">
+                        Validate References
+                      </CardTitle>
+                      <CardDescription className="text-base">
+                        Automatically check and validate academic references. Verify DOIs, URLs, and search for missing citations.
+                      </CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                      DOI Verification
+                    </span>
+                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                      URL Checking
+                    </span>
+                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                      Academic Search
+                    </span>
+                  </div>
+                  
+                  <CollapsibleSection title="How It Works" icon="ℹ️">
+                    <div className="space-y-3 text-sm text-muted-foreground">
+                      <p>
+                        <strong className="text-foreground">Step 1: Input References</strong><br />
+                        Paste your reference list or upload a text file containing your citations.
+                      </p>
+                      <p>
+                        <strong className="text-foreground">Step 2: Automatic Validation</strong><br />
+                        The tool checks DOIs via Crossref, validates URLs, and searches academic databases (Semantic Scholar, PubMed) for references without links.
+                      </p>
+                      <p>
+                        <strong className="text-foreground">Step 3: Review Results</strong><br />
+                        Get detailed validation status for each reference with color-coded indicators:
+                        <span className="block mt-1 ml-4">
+                          ✓ <strong className="text-green-600">Valid</strong> - DOI or URL verified successfully<br />
+                          ✗ <strong className="text-red-600">Invalid</strong> - Link broken or not accessible<br />
+                          🔍 <strong className="text-blue-600">Found</strong> - Reference located in academic databases<br />
+                          ⊘ <strong className="text-orange-600">Not Found</strong> - Unable to verify the reference
+                        </span>
+                      </p>
+                      <p>
+                        <strong className="text-foreground">Step 4: Share & Export</strong><br />
+                        Generate shareable reports or download results as Markdown for documentation.
+                      </p>
+                    </div>
+                  </CollapsibleSection>
                 </CardContent>
               </Card>
             </Link>
