@@ -1171,14 +1171,18 @@ const AcademicPhraseBank = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => usePostSettings(post)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            usePostSettings(post);
+                          }}
                         >
                           Use These Settings
                         </Button>
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation();
                             navigator.clipboard.writeText(
                               post.chat_history.map(m => `${m.role}: ${m.content}`).join('\n\n')
                             );
