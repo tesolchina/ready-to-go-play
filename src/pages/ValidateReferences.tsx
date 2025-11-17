@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Upload, FileText, CheckCircle, XCircle, AlertCircle, Loader2, ArrowLeft, Download, ExternalLink, Share2, Copy, Check } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { CollapsibleSection } from "@/components/CollapsibleSection";
 
 interface ValidationResult {
   reference: string;
@@ -345,6 +346,84 @@ const ValidateReferences = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* How It Works Section */}
+        <div className="mb-8">
+          <CollapsibleSection title="How It Works" icon="ℹ️">
+            <div className="space-y-4 text-sm text-muted-foreground">
+              <div>
+                <h4 className="font-semibold text-foreground mb-2">Step 1: Input References</h4>
+                <p>
+                  Paste your reference list in the text area above or upload a text file containing your citations. Each reference should be on a separate line.
+                </p>
+              </div>
+              
+              <div>
+                <h4 className="font-semibold text-foreground mb-2">Step 2: Automatic Validation</h4>
+                <p>
+                  The validator will automatically:
+                </p>
+                <ul className="list-disc ml-6 mt-2 space-y-1">
+                  <li>Check DOI links via Crossref for verification</li>
+                  <li>Validate HTTP/HTTPS URLs for accessibility</li>
+                  <li>Search academic databases (Semantic Scholar, PubMed) for references without links</li>
+                  <li>Perform web searches to locate missing references</li>
+                </ul>
+              </div>
+              
+              <div>
+                <h4 className="font-semibold text-foreground mb-2">Step 3: Review Results</h4>
+                <p>
+                  Each reference will be marked with one of the following statuses:
+                </p>
+                <div className="mt-2 space-y-2 ml-4">
+                  <div className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <strong className="text-green-600">Valid</strong> - DOI or URL verified successfully
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <XCircle className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <strong className="text-red-600">Invalid</strong> - Link is broken or not accessible
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <strong className="text-blue-600">Found via Search</strong> - Reference located in academic databases
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <AlertCircle className="w-4 h-4 text-orange-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <strong className="text-orange-600">Not Found</strong> - Unable to verify or locate the reference
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <AlertCircle className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                    <div>
+                      <strong className="text-muted-foreground">No Links</strong> - Reference has no DOI or URL to validate
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-semibold text-foreground mb-2">Step 4: Share & Export</h4>
+                <p>
+                  Once validation is complete, you can:
+                </p>
+                <ul className="list-disc ml-6 mt-2 space-y-1">
+                  <li>Share your validation report with a unique link</li>
+                  <li>Download the results as a Markdown file</li>
+                  <li>Review detailed information about each reference</li>
+                </ul>
+              </div>
+            </div>
+          </CollapsibleSection>
+        </div>
 
         {results.length > 0 && (
           <div className="space-y-6">
