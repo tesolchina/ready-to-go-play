@@ -173,7 +173,7 @@ const Index = () => {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex flex-wrap gap-2 mb-4">
+                  <div className="flex flex-wrap gap-2">
                     <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
                       DOI Verification
                     </span>
@@ -184,33 +184,6 @@ const Index = () => {
                       Academic Search
                     </span>
                   </div>
-                  
-                  <CollapsibleSection title="How It Works" icon="ℹ️">
-                    <div className="space-y-3 text-sm text-muted-foreground">
-                      <p>
-                        <strong className="text-foreground">Step 1: Input References</strong><br />
-                        Paste your reference list or upload a text file containing your citations.
-                      </p>
-                      <p>
-                        <strong className="text-foreground">Step 2: Automatic Validation</strong><br />
-                        The tool checks DOIs via Crossref, validates URLs, and searches academic databases (Semantic Scholar, PubMed) for references without links.
-                      </p>
-                      <p>
-                        <strong className="text-foreground">Step 3: Review Results</strong><br />
-                        Get detailed validation status for each reference with color-coded indicators:
-                        <span className="block mt-1 ml-4">
-                          ✓ <strong className="text-green-600">Valid</strong> - DOI or URL verified successfully<br />
-                          ✗ <strong className="text-red-600">Invalid</strong> - Link broken or not accessible<br />
-                          🔍 <strong className="text-blue-600">Found</strong> - Reference located in academic databases<br />
-                          ⊘ <strong className="text-orange-600">Not Found</strong> - Unable to verify the reference
-                        </span>
-                      </p>
-                      <p>
-                        <strong className="text-foreground">Step 4: Share & Export</strong><br />
-                        Generate shareable reports or download results as Markdown for documentation.
-                      </p>
-                    </div>
-                  </CollapsibleSection>
                 </CardContent>
               </Card>
             </Link>
