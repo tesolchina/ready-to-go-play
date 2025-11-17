@@ -123,7 +123,7 @@ const AcademicPhraseBank = () => {
   const [discipline, setDiscipline] = useState<string>("__none__");
   const [customDiscipline, setCustomDiscipline] = useState<string>("");
   const [showDropdowns, setShowDropdowns] = useState(true);
-  const [selectedModel, setSelectedModel] = useState<string>("kimi");
+  const [selectedModel, setSelectedModel] = useState<string>("aliyun");
   const scrollRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -581,8 +581,8 @@ const AcademicPhraseBank = () => {
                     <SelectValue placeholder="Model" />
                   </SelectTrigger>
                   <SelectContent className="bg-background z-50">
-                    <SelectItem value="kimi">Kimi</SelectItem>
                     <SelectItem value="aliyun">Aliyun</SelectItem>
+                    <SelectItem value="kimi">Kimi</SelectItem>
                     <SelectItem value="spark">Spark</SelectItem>
                   </SelectContent>
                 </Select>

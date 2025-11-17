@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, category, subcategory, discipline, examples, model = "kimi" } = await req.json();
+    const { messages, category, subcategory, discipline, examples, model = "aliyun" } = await req.json();
     
     const KIMI_API_KEY = Deno.env.get("KIMI_API_KEY");
     const ALIYUN_API_KEY = Deno.env.get("ALIYUN_API_KEY");
