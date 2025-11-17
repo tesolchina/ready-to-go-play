@@ -6,5 +6,8 @@ verify_jwt = false
 [functions.academic-phrasebank-chat]
 verify_jwt = false
 
+[functions.analyze-paragraph]
+verify_jwt = false
+
 [functions.validate-references]
 verify_jwt = false

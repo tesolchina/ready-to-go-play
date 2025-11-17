@@ -6,6 +6,10 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Switch } from "@/components/ui/switch";
+import { CollapsibleSection } from "@/components/CollapsibleSection";
 import {
   Select,
   SelectContent,
@@ -15,7 +19,8 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Send, BookOpen, Sparkles } from "lucide-react";
+import type { Json } from "@/integrations/supabase/types";
+import { Send, BookOpen, Sparkles, ChevronDown, Copy, User } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import phrasebankData from "@/lib/phrasebank-data.json";
@@ -23,6 +28,43 @@ import phrasebankData from "@/lib/phrasebank-data.json";
 interface Message {
   role: "user" | "assistant";
   content: string;
+}
+
+interface Template {
+  original: string;
+  template: string;
+  explanation: string;
+}
+
+interface Exercise {
+  instruction: string;
+  template: string;
+  hints: string[];
+}
+
+interface AnalysisResult {
+  categoryType: "moves" | "general";
+  category: string;
+  subcategory: string;
+  templates: Template[];
+  exercises: Exercise[];
+}
+
+interface BulletinPost {
+  id: string;
+  user_id: string | null;
+  title: string;
+  description: string | null;
+  chat_history: Message[];
+  category_type: string | null;
+  category: string | null;
+  subcategory: string | null;
+  discipline: string | null;
+  upvotes: number;
+  view_count: number;
+  is_featured: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 // Moves/Steps - Research paper structure
@@ -84,6 +126,23 @@ const AcademicPhraseBank = () => {
   const [selectedModel, setSelectedModel] = useState<string>("kimi");
   const scrollRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+
+  // Paragraph analyzer state
+  const [showAnalyzer, setShowAnalyzer] = useState(false);
+  const [paragraphInput, setParagraphInput] = useState("");
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+  // Bulletin board state
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [shareTitle, setShareTitle] = useState("");
+  const [shareDescription, setShareDescription] = useState("");
+  const [shareAnonymous, setShareAnonymous] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
+  const [posts, setPosts] = useState<BulletinPost[]>([]);
+  const [expandedPosts, setExpandedPosts] = useState<Set<string>>(new Set());
+  const [isLoadingPosts, setIsLoadingPosts] = useState(true);
+  const [postFilter, setPostFilter] = useState<"all" | "category" | "recent">("recent");
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -321,6 +380,189 @@ const AcademicPhraseBank = () => {
       e.preventDefault();
       handleSend();
     }
+  };
+
+  // Paragraph analyzer handlers
+  const handleAnalyzeParagraph = async () => {
+    if (!paragraphInput.trim() || paragraphInput.length < 50) {
+      toast({
+        title: "Input required",
+        description: "Please enter at least 50 characters of text from a journal article.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsAnalyzing(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('analyze-paragraph', {
+        body: { paragraph: paragraphInput }
+      });
+
+      if (error) throw error;
+
+      setAnalysisResult(data);
+      toast({ title: "Analysis complete! 🎉" });
+    } catch (error) {
+      console.error('Error analyzing paragraph:', error);
+      toast({
+        title: "Analysis failed",
+        description: "Failed to analyze the paragraph. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  const useAnalysisSettings = () => {
+    if (!analysisResult) return;
+    
+    setCategoryType(analysisResult.categoryType);
+    setSelectedCategory(analysisResult.category);
+    setSelectedSubcategory(analysisResult.subcategory);
+    
+    toast({ 
+      title: "Settings applied! 📝",
+      description: "Start chatting with these category settings." 
+    });
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Bulletin board handlers
+  const loadPosts = async () => {
+    setIsLoadingPosts(true);
+    try {
+      let query = supabase
+        .from('phrasebank_posts')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (postFilter === "category" && selectedCategory) {
+        query = query.eq('category', selectedCategory);
+      }
+
+      const { data, error } = await query.limit(20);
+
+      if (error) throw error;
+      setPosts((data || []).map(post => ({
+        ...post,
+        chat_history: post.chat_history as unknown as Message[]
+      })));
+    } catch (error) {
+      console.error('Error loading posts:', error);
+      toast({
+        title: "Failed to load posts",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoadingPosts(false);
+    }
+  };
+
+  useEffect(() => {
+    loadPosts();
+  }, [postFilter, selectedCategory]);
+
+  const handleShareChat = async () => {
+    if (!shareTitle.trim()) {
+      toast({
+        title: "Title required",
+        description: "Please enter a title for your post.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (messages.length === 0) {
+      toast({
+        title: "No conversation",
+        description: "Please have a conversation before sharing.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSharing(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      const finalDiscipline = discipline === "Other" ? customDiscipline : (discipline === "__none__" ? null : discipline);
+      const finalSubcategory = selectedSubcategory === "__all__" ? null : selectedSubcategory;
+      
+      const postData = {
+        user_id: shareAnonymous ? null : user?.id,
+        title: shareTitle.trim(),
+        description: shareDescription.trim() || null,
+        chat_history: messages as unknown as Json,
+        category_type: categoryType || null,
+        category: selectedCategory || null,
+        subcategory: finalSubcategory,
+        discipline: finalDiscipline
+      };
+
+      const { error } = await supabase
+        .from('phrasebank_posts')
+        .insert([postData]);
+
+      if (error) throw error;
+
+      toast({ title: "Shared successfully! 🎉" });
+      setShareDialogOpen(false);
+      setShareTitle("");
+      setShareDescription("");
+      setShareAnonymous(false);
+      await loadPosts();
+    } catch (error) {
+      console.error('Error sharing chat:', error);
+      toast({
+        title: "Failed to share",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSharing(false);
+    }
+  };
+
+  const togglePostExpansion = async (postId: string) => {
+    const newExpanded = new Set(expandedPosts);
+    
+    if (newExpanded.has(postId)) {
+      newExpanded.delete(postId);
+    } else {
+      newExpanded.add(postId);
+      // Increment view count
+      const { data } = await supabase
+        .from('phrasebank_posts')
+        .select('view_count')
+        .eq('id', postId)
+        .single();
+      
+      if (data) {
+        await supabase
+          .from('phrasebank_posts')
+          .update({ view_count: (data.view_count || 0) + 1 })
+          .eq('id', postId);
+      }
+    }
+    
+    setExpandedPosts(newExpanded);
+  };
+
+  const usePostSettings = (post: BulletinPost) => {
+    if (post.category_type) setCategoryType(post.category_type as "moves" | "general");
+    if (post.category) setSelectedCategory(post.category);
+    if (post.subcategory) setSelectedSubcategory(post.subcategory);
+    if (post.discipline) setDiscipline(post.discipline);
+    
+    toast({ 
+      title: "Settings applied! 📝",
+      description: "Start chatting with these settings." 
+    });
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -653,6 +895,322 @@ const AcademicPhraseBank = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Paragraph Analyzer Section */}
+        <Card className="mt-6">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5" />
+                <CardTitle>Paragraph Analyzer</CardTitle>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowAnalyzer(!showAnalyzer)}
+              >
+                <ChevronDown className={`h-4 w-4 transition-transform ${showAnalyzer ? 'rotate-180' : ''}`} />
+              </Button>
+            </div>
+            <CardDescription>
+              Paste a paragraph from a journal article to identify relevant categories and extract sentence templates
+            </CardDescription>
+          </CardHeader>
+          {showAnalyzer && (
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="paragraph">Journal Article Paragraph</Label>
+                <Textarea
+                  id="paragraph"
+                  placeholder="Paste a paragraph from a published journal article here... (minimum 50 characters)"
+                  value={paragraphInput}
+                  onChange={(e) => setParagraphInput(e.target.value)}
+                  className="min-h-[120px]"
+                  disabled={isAnalyzing}
+                />
+                <p className="text-xs text-muted-foreground">
+                  {paragraphInput.length} / 50 characters minimum
+                </p>
+              </div>
+
+              <Button
+                onClick={handleAnalyzeParagraph}
+                disabled={isAnalyzing || paragraphInput.length < 50}
+                className="w-full"
+              >
+                {isAnalyzing ? (
+                  <>
+                    <Sparkles className="mr-2 h-4 w-4 animate-spin" />
+                    Analyzing...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    Analyze Paragraph
+                  </>
+                )}
+              </Button>
+
+              {analysisResult && (
+                <div className="space-y-4 pt-4 border-t">
+                  <div>
+                    <h4 className="font-semibold mb-2">Identified Category</h4>
+                    <div className="flex gap-2 flex-wrap">
+                      <Badge variant="outline">{analysisResult.categoryType === "moves" ? "Moves/Steps" : "General Functions"}</Badge>
+                      <Badge>{analysisResult.category}</Badge>
+                      <Badge variant="secondary">{analysisResult.subcategory}</Badge>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={useAnalysisSettings}
+                      className="mt-2"
+                    >
+                      Use This Category
+                    </Button>
+                  </div>
+
+                  <div>
+                    <h4 className="font-semibold mb-2">Extracted Templates ({analysisResult.templates.length})</h4>
+                    <div className="space-y-3">
+                      {analysisResult.templates.map((template, idx) => (
+                        <div key={idx} className="p-3 bg-muted/50 rounded-lg space-y-2">
+                          <p className="text-sm text-muted-foreground italic">{template.original}</p>
+                          <p className="text-sm font-medium text-accent-foreground">{template.template}</p>
+                          <p className="text-xs text-muted-foreground">{template.explanation}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="font-semibold mb-2">Practice Exercises ({analysisResult.exercises.length})</h4>
+                    <div className="space-y-3">
+                      {analysisResult.exercises.map((exercise, idx) => (
+                        <div key={idx} className="p-3 border rounded-lg space-y-2">
+                          <p className="text-sm font-medium">{exercise.instruction}</p>
+                          <p className="text-sm text-muted-foreground bg-muted p-2 rounded">{exercise.template}</p>
+                          <div className="text-xs text-muted-foreground">
+                            <span className="font-medium">Hints:</span>
+                            <ul className="list-disc list-inside ml-2">
+                              {exercise.hints.map((hint, hintIdx) => (
+                                <li key={hintIdx}>{hint}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          )}
+        </Card>
+
+        {/* Community Bulletin Board Section */}
+        <Card className="mt-6">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  📋 Community Bulletin Board
+                </CardTitle>
+                <CardDescription className="mt-1">
+                  Learn from conversations shared by other users
+                </CardDescription>
+              </div>
+              {messages.length > 0 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShareDialogOpen(true)}
+                >
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  Share
+                </Button>
+              )}
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="flex gap-2 mb-4 flex-wrap">
+              <Button 
+                variant={postFilter === "recent" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setPostFilter("recent")}
+              >
+                Recent
+              </Button>
+              <Button 
+                variant={postFilter === "all" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setPostFilter("all")}
+              >
+                All Posts
+              </Button>
+              {selectedCategory && (
+                <Button 
+                  variant={postFilter === "category" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setPostFilter("category")}
+                >
+                  Current Category
+                </Button>
+              )}
+            </div>
+
+            {isLoadingPosts ? (
+              <div className="space-y-4">
+                {[1,2,3].map(i => <Skeleton key={i} className="h-24" />)}
+              </div>
+            ) : posts.length === 0 ? (
+              <p className="text-muted-foreground text-center py-8">
+                No posts yet. Be the first to share!
+              </p>
+            ) : (
+              <div className="space-y-4">
+                {posts.map(post => (
+                  <CollapsibleSection
+                    key={post.id}
+                    title={post.title}
+                    icon="📝"
+                  >
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <Badge variant="outline" className="gap-1">
+                          <User className="h-3 w-3" />
+                          {post.user_id ? 'User' : 'Anonymous'}
+                        </Badge>
+                        {post.category_type && <Badge variant="outline">{post.category_type}</Badge>}
+                        {post.category && <Badge>{post.category}</Badge>}
+                        {post.subcategory && <Badge variant="secondary">{post.subcategory}</Badge>}
+                        {post.discipline && <Badge variant="outline">{post.discipline}</Badge>}
+                        <span className="text-xs text-muted-foreground ml-auto">
+                          {new Date(post.created_at).toLocaleDateString()}
+                        </span>
+                      </div>
+
+                      {post.description && (
+                        <p className="text-sm text-muted-foreground">{post.description}</p>
+                      )}
+
+                      <div className="space-y-2 bg-muted/30 rounded-lg p-4 max-h-96 overflow-y-auto">
+                        {post.chat_history.map((msg, idx) => (
+                          <div
+                            key={idx}
+                            className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                          >
+                            <div
+                              className={`max-w-[80%] rounded-lg px-4 py-2 ${
+                                msg.role === "user"
+                                  ? "bg-primary text-primary-foreground"
+                                  : "bg-muted"
+                              }`}
+                            >
+                              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {msg.content}
+                              </ReactMarkdown>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => usePostSettings(post)}
+                        >
+                          Use These Settings
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            navigator.clipboard.writeText(
+                              post.chat_history.map(m => `${m.role}: ${m.content}`).join('\n\n')
+                            );
+                            toast({ title: "Copied to clipboard!" });
+                          }}
+                        >
+                          <Copy className="h-4 w-4 mr-2" />
+                          Copy
+                        </Button>
+                      </div>
+                    </div>
+                  </CollapsibleSection>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Share Dialog */}
+        <Dialog open={shareDialogOpen} onOpenChange={setShareDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Share to Bulletin Board</DialogTitle>
+              <DialogDescription>
+                Share your conversation to help others learn from your academic writing journey
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="share-title">Title *</Label>
+                <Input
+                  id="share-title"
+                  placeholder="e.g., Learning to introduce research findings"
+                  value={shareTitle}
+                  onChange={(e) => setShareTitle(e.target.value)}
+                  maxLength={100}
+                />
+                <p className="text-xs text-muted-foreground">{shareTitle.length}/100</p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="share-description">Description (Optional)</Label>
+                <Textarea
+                  id="share-description"
+                  placeholder="Brief summary of what you learned or what this conversation covers..."
+                  value={shareDescription}
+                  onChange={(e) => setShareDescription(e.target.value)}
+                  maxLength={300}
+                />
+                <p className="text-xs text-muted-foreground">{shareDescription.length}/300</p>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="anonymous"
+                  checked={shareAnonymous}
+                  onCheckedChange={setShareAnonymous}
+                />
+                <Label htmlFor="anonymous">Share anonymously</Label>
+              </div>
+
+              <div className="p-3 bg-muted rounded-lg">
+                <p className="text-sm font-medium mb-2">Preview (first 2 messages):</p>
+                <div className="space-y-2 max-h-32 overflow-y-auto text-xs">
+                  {messages.slice(0, 2).map((msg, idx) => (
+                    <p key={idx} className="text-muted-foreground">
+                      <span className="font-medium">{msg.role}:</span> {msg.content.substring(0, 100)}...
+                    </p>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShareDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleShareChat} disabled={isSharing || !shareTitle.trim()}>
+                {isSharing ? "Sharing..." : "Share"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

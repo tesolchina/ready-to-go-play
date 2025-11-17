@@ -62,6 +62,57 @@ export type Database = {
         }
         Relationships: []
       }
+      phrasebank_posts: {
+        Row: {
+          category: string | null
+          category_type: string | null
+          chat_history: Json
+          created_at: string | null
+          description: string | null
+          discipline: string | null
+          id: string
+          is_featured: boolean | null
+          subcategory: string | null
+          title: string
+          updated_at: string | null
+          upvotes: number | null
+          user_id: string | null
+          view_count: number | null
+        }
+        Insert: {
+          category?: string | null
+          category_type?: string | null
+          chat_history: Json
+          created_at?: string | null
+          description?: string | null
+          discipline?: string | null
+          id?: string
+          is_featured?: boolean | null
+          subcategory?: string | null
+          title: string
+          updated_at?: string | null
+          upvotes?: number | null
+          user_id?: string | null
+          view_count?: number | null
+        }
+        Update: {
+          category?: string | null
+          category_type?: string | null
+          chat_history?: Json
+          created_at?: string | null
+          description?: string | null
+          discipline?: string | null
+          id?: string
+          is_featured?: boolean | null
+          subcategory?: string | null
+          title?: string
+          updated_at?: string | null
+          upvotes?: number | null
+          user_id?: string | null
+          view_count?: number | null
+        }
+        Relationships: []
+      }
       validation_reports: {
         Row: {
           created_at: string
