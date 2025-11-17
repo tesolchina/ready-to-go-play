@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 const DEMO_ESSAY = `The Prologue to Bertrand Russell's Autobiography
 What I Have Lived For
@@ -24,6 +25,21 @@ Love and knowledge, so far as they were possible, led upward toward the heavens.
 This has been my life. I have found it worth living, and would gladly live it again if the chance were offered me.
 
 Bertrand Russell (1872-1970) won the Nobel prize for literature for his History of Western Philosophy and was the co-author of Principia Mathematica.`;
+
+const DEMO_PATTERN = `This text exhibits a highly structured and rhetorically sophisticated approach, employing a clear organizational strategy to convey a central idea and its foundational components.
+
+**Overall Structure and Organization:**
+
+The text is organized into five distinct thematic sections, followed by a brief concluding biographical note.
+
+1.  **Introduction of Core Thesis:** The opening paragraph establishes the central premise or thesis statement, outlining the foundational elements that define the speaker's life. This acts as an overarching declaration.
+2.  **Elaboration of First Core Element:** This section systematically unpacks the first of the previously introduced elements, providing multiple facets and motivations behind its pursuit.
+3.  **Elaboration of Second Core Element:** This section parallels the previous one, detailing the motivations and achievements related to the second foundational element.
+4.  **Synthesis and Introduction of Third Core Element:** This segment serves as a transition, linking the first two elements but then introducing the third, contrasting its nature and impact with the preceding two. It also highlights the emotional weight and personal connection to this final element.
+5.  **Concluding Affirmation:** This brief closing statement offers a meta-commentary on the life described, providing a conclusive judgment or summation.
+6.  **External Context/Authorial Identification:** A brief, factual statement provides external context about the author, distinct from the reflective narrative.
+
+The sections flow logically from a broad declaration to specific elaborations, then to a synthesis that introduces the final core component, culminating in an overall assessment. The connection between sections is primarily thematic, with explicit or implicit repetition of keywords and concepts maintaining coherence.`;
 
 export default function PatternAnalyzer() {
   const [activeTab, setActiveTab] = useState("demo");
@@ -47,31 +63,36 @@ export default function PatternAnalyzer() {
   const handleAnalyze = async (text: string, isDemo: boolean) => {
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('pattern-analyzer', {
-        body: { text, action: 'analyze' }
-      });
-
-      if (error) throw error;
-
-      if (data.error) {
-        toast({
-          title: "Error",
-          description: data.error,
-          variant: "destructive",
-        });
-        return;
-      }
-
+      // For demo mode, use predefined pattern
       if (isDemo) {
-        setDemoPatterns(data.result);
+        setDemoPatterns(DEMO_PATTERN);
+        toast({
+          title: "Analysis Complete",
+          description: "Patterns identified successfully!",
+        });
       } else {
-        setUserPatterns(data.result);
-      }
+        // For user essays, call AI to analyze structure only
+        const { data, error } = await supabase.functions.invoke('pattern-analyzer', {
+          body: { text, action: 'analyze' }
+        });
 
-      toast({
-        title: "Analysis Complete",
-        description: "Patterns identified successfully!",
-      });
+        if (error) throw error;
+
+        if (data.error) {
+          toast({
+            title: "Error",
+            description: data.error,
+            variant: "destructive",
+          });
+          return;
+        }
+
+        setUserPatterns(data.result);
+        toast({
+          title: "Analysis Complete",
+          description: "Patterns identified successfully!",
+        });
+      }
     } catch (error) {
       console.error('Error analyzing text:', error);
       toast({
@@ -183,8 +204,8 @@ export default function PatternAnalyzer() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div className="prose prose-sm max-w-none whitespace-pre-wrap">
-                        {demoPatterns}
+                      <div className="prose prose-sm max-w-none dark:prose-invert">
+                        <ReactMarkdown>{demoPatterns}</ReactMarkdown>
                       </div>
                     </CardContent>
                   </Card>
@@ -237,8 +258,8 @@ export default function PatternAnalyzer() {
                         <CardTitle>Generated {demoOutputType === 'essay' ? 'Essay' : 'Outline'}</CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <div className="prose prose-sm max-w-none whitespace-pre-wrap">
-                          {demoResult}
+                        <div className="prose prose-sm max-w-none dark:prose-invert">
+                          <ReactMarkdown>{demoResult}</ReactMarkdown>
                         </div>
                       </CardContent>
                     </Card>
@@ -283,8 +304,8 @@ export default function PatternAnalyzer() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div className="prose prose-sm max-w-none whitespace-pre-wrap">
-                        {userPatterns}
+                      <div className="prose prose-sm max-w-none dark:prose-invert">
+                        <ReactMarkdown>{userPatterns}</ReactMarkdown>
                       </div>
                     </CardContent>
                   </Card>
@@ -337,8 +358,8 @@ export default function PatternAnalyzer() {
                         <CardTitle>Generated {userOutputType === 'essay' ? 'Essay' : 'Outline'}</CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <div className="prose prose-sm max-w-none whitespace-pre-wrap">
-                          {userResult}
+                        <div className="prose prose-sm max-w-none dark:prose-invert">
+                          <ReactMarkdown>{userResult}</ReactMarkdown>
                         </div>
                       </CardContent>
                     </Card>

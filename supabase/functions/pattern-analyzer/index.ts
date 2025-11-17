@@ -22,17 +22,22 @@ serve(async (req) => {
     let userPrompt = '';
 
     if (action === 'analyze') {
-      systemPrompt = `You are an expert writing analyst. Analyze the given text and identify its structural patterns, rhetorical devices, and organizational strategies WITHOUT discussing the specific content or topic. Focus on:
-- Overall structure and organization (how many main sections, how they connect)
-- Paragraph patterns (topic sentences, development, transitions)
-- Rhetorical devices and techniques
-- Sentence structure patterns
-- How ideas are introduced, developed, and concluded
-- Use of examples, explanations, or evidence
-- Tone and voice patterns
+      systemPrompt = `You are an expert writing analyst. Analyze the given text and identify ONLY its overall structure and organization WITHOUT discussing the specific content or topic. 
 
-Provide a clear, structured analysis that can be used as a template for writing on any topic.`;
-      userPrompt = `Analyze the structural patterns and writing techniques in this text:\n\n${text}`;
+Focus exclusively on:
+- Overall structure and organization (how many main sections, how they connect)
+- How the sections are arranged and flow from one to another
+- The logical progression of the text
+- How ideas are introduced, developed, and concluded at a structural level
+- Thematic connections between sections
+
+Provide a clear, structured analysis with:
+1. A brief introductory statement about the organizational approach
+2. A numbered list of the main structural sections
+3. A concluding statement about how the sections connect
+
+Use markdown formatting for better readability. Do NOT analyze rhetorical devices, sentence structure, tone, or voice.`;
+      userPrompt = `Analyze ONLY the overall structure and organization of this text:\n\n${text}`;
     } else if (action === 'generate') {
       systemPrompt = `You are a creative writing assistant. Generate ${outputType === 'essay' ? 'a complete essay' : 'a detailed outline'} on the given topic using the identified patterns. Maintain the same structure, rhetorical devices, and organizational approach, but apply them to the new topic.`;
       userPrompt = `Using these identified patterns:\n\n${text}\n\nGenerate ${outputType === 'essay' ? 'a complete essay' : 'a detailed outline'} on the topic: "${topic}"`;
