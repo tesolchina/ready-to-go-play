@@ -349,6 +349,17 @@ const AcademicPhraseBank = () => {
             <CardDescription>
               Get help with academic writing phrases, sentence structures, and language patterns
             </CardDescription>
+            <p className="text-xs text-muted-foreground mt-2">
+              Inspired by the{" "}
+              <a 
+                href="https://www.phrasebank.manchester.ac.uk/" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="underline hover:text-foreground transition-colors"
+              >
+                Manchester Academic Phrasebank
+              </a>
+            </p>
           </CardHeader>
           <CardContent className="flex flex-col h-[calc(100%-5rem)]">
             {/* Dropdown Selection Section */}
