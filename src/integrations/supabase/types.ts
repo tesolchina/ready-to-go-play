@@ -62,6 +62,39 @@ export type Database = {
         }
         Relationships: []
       }
+      pdf_documents: {
+        Row: {
+          created_at: string
+          custom_slug: string
+          description: string | null
+          filename: string
+          id: string
+          storage_path: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          custom_slug: string
+          description?: string | null
+          filename: string
+          id?: string
+          storage_path: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          custom_slug?: string
+          description?: string | null
+          filename?: string
+          id?: string
+          storage_path?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       phrasebank_posts: {
         Row: {
           category: string | null
@@ -139,6 +172,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_pdf_slug: { Args: { input_title: string }; Returns: string }
       generate_slug: { Args: { input_title: string }; Returns: string }
     }
     Enums: {
