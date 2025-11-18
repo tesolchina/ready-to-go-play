@@ -49,23 +49,31 @@ serve(async (req) => {
 
     console.log('Analyzing paragraph:', paragraph.substring(0, 100) + '...');
 
-    const systemPrompt = `You are an expert in academic writing analysis. Analyze the provided paragraph from a journal article.
+    const systemPrompt = `You are an expert in academic writing analysis. Your task is to comprehensively analyze the provided paragraph and identify EVERY academic writing pattern present.
 
 Available Categories:
 MOVES/STEPS: ${MOVES_CATEGORIES.join(', ')}
 GENERAL FUNCTIONS: ${GENERAL_CATEGORIES.join(', ')}
 
-Your task:
-1. Identify ALL patterns that match the paragraph - it may contain multiple writing functions
-2. For each pattern found, identify:
-   - Category type (moves or general)
-   - Specific category 
-   - Subcategory within that category
-   - Extract 3-5 reusable sentence templates
-   - Create 3-5 practice exercises
-3. Return ALL patterns found, not just the dominant one
+CRITICAL INSTRUCTIONS:
+1. You MUST identify ALL patterns present in the paragraph, not just one or the dominant pattern
+2. A single paragraph typically contains MULTIPLE patterns - look for ALL of them
+3. Examine the text thoroughly for different writing functions that may overlap
+4. For each distinct pattern you identify:
+   - Specify whether it's a "moves" or "general" category type
+   - Identify the specific category from the lists above
+   - Determine the precise subcategory
+   - Extract 3-5 sentence templates showing how this pattern is used
+   - Create 3-5 practice exercises for this pattern
+5. Return a comprehensive array with ALL patterns found - aim for 2-5 patterns typically
 
-Return your analysis using the analyze_academic_paragraph function with ALL patterns found.`;
+EXAMPLE: A paragraph discussing research findings might contain:
+- "Reporting results" (moves) - describing what was found
+- "Describing quantities" (general) - numerical data presentation  
+- "Being cautious" (general) - hedging language
+- "Explaining causality" (general) - cause-effect relationships
+
+Return your complete analysis using the analyze_academic_paragraph function with ALL patterns found.`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',

@@ -142,6 +142,8 @@ const AcademicPhraseBank = () => {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [selectedPatterns, setSelectedPatterns] = useState<Set<string>>(new Set());
+  const [filterCategoryType, setFilterCategoryType] = useState<string>("all");
+  const [filterCategory, setFilterCategory] = useState<string>("all");
 
   // Bulletin board state
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
@@ -1043,41 +1045,84 @@ const AcademicPhraseBank = () => {
 
               {analysisResult && analysisResult.patterns && analysisResult.patterns.length > 0 && (
                 <div className="space-y-4 pt-4 border-t">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <BookOpen className="h-5 w-5 text-primary" />
-                      <h4 className="font-semibold">Patterns Found: {analysisResult.patterns.length}</h4>
+                  <div className="p-4 bg-gradient-to-r from-primary/5 to-accent/5 rounded-xl border-2 mb-4">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="p-1.5 bg-primary/10 rounded-lg">
+                        <BookOpen className="h-5 w-5 text-primary" />
+                      </div>
+                      <h4 className="font-semibold text-lg">Patterns Found: {analysisResult.patterns.length}</h4>
                       <Badge variant="outline">{selectedPatterns.size} selected</Badge>
+                      <Sparkles className="h-4 w-4 text-accent ml-auto" />
                     </div>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={selectAllPatterns}
-                      >
-                        Select All
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={deselectAllPatterns}
-                      >
-                        Deselect All
-                      </Button>
-                      <Button
-                        variant="default"
-                        size="sm"
-                        onClick={handleShareAnalysis}
-                        disabled={selectedPatterns.size === 0}
-                      >
-                        <Sparkles className="mr-2 h-4 w-4" />
-                        Generate Report
-                      </Button>
+                    
+                    {/* Filter Dropdowns */}
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium">Filter by Type</Label>
+                        <Select value={filterCategoryType} onValueChange={setFilterCategoryType}>
+                          <SelectTrigger className="border-2 hover:border-primary/50 transition-colors">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-background z-50">
+                            <SelectItem value="all">All Types ({analysisResult.patterns.length})</SelectItem>
+                            <SelectItem value="moves">Moves/Steps ({analysisResult.patterns.filter(p => p.categoryType === "moves").length})</SelectItem>
+                            <SelectItem value="general">General Functions ({analysisResult.patterns.filter(p => p.categoryType === "general").length})</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium">Filter by Category</Label>
+                        <Select value={filterCategory} onValueChange={setFilterCategory}>
+                          <SelectTrigger className="border-2 hover:border-primary/50 transition-colors">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-background z-50 max-h-[300px]">
+                            <SelectItem value="all">All Categories</SelectItem>
+                            {Array.from(new Set(analysisResult.patterns.map(p => p.category))).sort().map(cat => (
+                              <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={selectAllPatterns}
+                        >
+                          Select All
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={deselectAllPatterns}
+                        >
+                          Deselect All
+                        </Button>
+                        <Button
+                          variant="default"
+                          size="sm"
+                          onClick={handleShareAnalysis}
+                          disabled={selectedPatterns.size === 0}
+                        >
+                          <Sparkles className="mr-2 h-4 w-4" />
+                          Generate Report
+                        </Button>
+                      </div>
                     </div>
                   </div>
 
                   <div className="space-y-3">
-                    {analysisResult.patterns.map((pattern, idx) => {
+                    {analysisResult.patterns
+                      .filter(pattern => 
+                        (filterCategoryType === "all" || pattern.categoryType === filterCategoryType) &&
+                        (filterCategory === "all" || pattern.category === filterCategory)
+                      )
+                      .map((pattern, idx) => {
                       const patternKey = `${pattern.category}|${pattern.subcategory}`;
                       const isSelected = selectedPatterns.has(patternKey);
                       
@@ -1132,11 +1177,11 @@ const AcademicPhraseBank = () => {
                                   <div className="space-y-2">
                                     {pattern.exercises.map((exercise, eidx) => (
                                       <div key={eidx} className="p-2 border rounded text-xs">
-                                        <p className="font-medium mb-1">{exercise.instruction}</p>
-                                        <p className="text-muted-foreground">{exercise.template}</p>
-                                      </div>
-                                    ))}
-                                  </div>
+                                         <p className="font-medium mb-1">{exercise.instruction}</p>
+                                         <p className="text-muted-foreground">{exercise.template}</p>
+                       </div>
+                     ))}
+                   </div>
                                 </div>
                               </div>
                             </div>
@@ -1144,6 +1189,25 @@ const AcademicPhraseBank = () => {
                         </div>
                       );
                     })}
+                    
+                    {analysisResult.patterns.filter(pattern => 
+                      (filterCategoryType === "all" || pattern.categoryType === filterCategoryType) &&
+                      (filterCategory === "all" || pattern.category === filterCategory)
+                    ).length === 0 && (
+                      <div className="text-center py-8">
+                        <p className="text-muted-foreground">No patterns match the selected filters.</p>
+                        <Button 
+                          variant="link" 
+                          onClick={() => {
+                            setFilterCategoryType("all");
+                            setFilterCategory("all");
+                          }}
+                          className="mt-2"
+                        >
+                          Clear filters
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
