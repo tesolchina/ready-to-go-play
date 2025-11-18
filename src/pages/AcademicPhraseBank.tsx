@@ -682,7 +682,7 @@ const AcademicPhraseBank = () => {
               </a>
             </p>
           </CardHeader>
-          <CardContent className="flex flex-col space-y-4 p-6">
+          <CardContent className="flex flex-col p-6 min-h-[600px] max-h-[600px]">
             {/* Dropdown Selection Section */}
             {showDropdowns && messages.length === 0 && (
               <div className="p-6 bg-gradient-to-br from-muted/50 to-accent/10 rounded-xl border-2 border-border/50 space-y-4 shadow-sm">
@@ -799,7 +799,7 @@ const AcademicPhraseBank = () => {
               </div>
             )}
 
-            <ScrollArea className="h-[500px] pr-4 mb-4" ref={scrollRef}>
+            <ScrollArea className="flex-1 pr-4 mb-4" ref={scrollRef}>
               {messages.length === 0 && !showDropdowns ? (
                 <div className="flex flex-col items-center justify-center h-full text-center space-y-4 py-8">
                   <BookOpen className="h-16 w-16 text-muted-foreground" />
