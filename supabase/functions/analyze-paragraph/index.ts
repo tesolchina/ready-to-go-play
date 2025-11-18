@@ -56,12 +56,16 @@ MOVES/STEPS: ${MOVES_CATEGORIES.join(', ')}
 GENERAL FUNCTIONS: ${GENERAL_CATEGORIES.join(', ')}
 
 Your task:
-1. Identify which category type (moves or general) and specific category best matches the paragraph's function
-2. Identify the subcategory within that category
-3. Extract 3-5 reusable sentence templates by replacing specific content with placeholders like [topic], [author], [finding], [method], etc.
-4. Create 3-5 practice exercises where users can practice using these templates
+1. Identify ALL patterns that match the paragraph - it may contain multiple writing functions
+2. For each pattern found, identify:
+   - Category type (moves or general)
+   - Specific category 
+   - Subcategory within that category
+   - Extract 3-5 reusable sentence templates
+   - Create 3-5 practice exercises
+3. Return ALL patterns found, not just the dominant one
 
-Return your analysis using the analyze_academic_paragraph function.`;
+Return your analysis using the analyze_academic_paragraph function with ALL patterns found.`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -79,50 +83,60 @@ Return your analysis using the analyze_academic_paragraph function.`;
           type: "function",
           function: {
             name: "analyze_academic_paragraph",
-            description: "Analyze paragraph and return structured analysis with templates and exercises",
+            description: "Analyze paragraph and return ALL patterns found with structured analysis",
             parameters: {
               type: "object",
-              required: ["categoryType", "category", "subcategory", "templates", "exercises"],
+              required: ["patterns"],
               properties: {
-                categoryType: { 
-                  type: "string", 
-                  enum: ["moves", "general"],
-                  description: "Whether this is a moves/steps or general language function"
-                },
-                category: { 
-                  type: "string",
-                  description: "The main category from the available categories"
-                },
-                subcategory: { 
-                  type: "string",
-                  description: "The specific subcategory or function within the main category"
-                },
-                templates: {
+                patterns: {
                   type: "array",
-                  description: "3-5 extracted sentence templates",
+                  description: "All patterns identified in the paragraph",
                   items: {
                     type: "object",
-                    required: ["original", "template", "explanation"],
+                    required: ["categoryType", "category", "subcategory", "templates", "exercises"],
                     properties: {
-                      original: { type: "string", description: "The original sentence from the paragraph" },
-                      template: { type: "string", description: "The generalized template with placeholders" },
-                      explanation: { type: "string", description: "Brief explanation of when to use this template" }
-                    }
-                  }
-                },
-                exercises: {
-                  type: "array",
-                  description: "3-5 practice exercises",
-                  items: {
-                    type: "object",
-                    required: ["instruction", "template", "hints"],
-                    properties: {
-                      instruction: { type: "string", description: "What the user should write about" },
-                      template: { type: "string", description: "The template to use (with blanks if needed)" },
-                      hints: { 
-                        type: "array", 
-                        items: { type: "string" },
-                        description: "2-3 hints to help the user"
+                      categoryType: { 
+                        type: "string", 
+                        enum: ["moves", "general"],
+                        description: "Whether this is a moves/steps or general language function"
+                      },
+                      category: { 
+                        type: "string",
+                        description: "The main category from the available categories"
+                      },
+                      subcategory: { 
+                        type: "string",
+                        description: "The specific subcategory or function within the main category"
+                      },
+                      templates: {
+                        type: "array",
+                        description: "3-5 extracted sentence templates",
+                        items: {
+                          type: "object",
+                          required: ["original", "template", "explanation"],
+                          properties: {
+                            original: { type: "string", description: "The original sentence from the paragraph" },
+                            template: { type: "string", description: "Template with placeholders" },
+                            explanation: { type: "string", description: "How to use this template" }
+                          }
+                        }
+                      },
+                      exercises: {
+                        type: "array",
+                        description: "3-5 practice exercises",
+                        items: {
+                          type: "object",
+                          required: ["instruction", "template", "hints"],
+                          properties: {
+                            instruction: { type: "string", description: "What the user should write about" },
+                            template: { type: "string", description: "The template to use (with blanks if needed)" },
+                            hints: { 
+                              type: "array", 
+                              items: { type: "string" },
+                              description: "2-3 hints to help the user"
+                            }
+                          }
+                        }
                       }
                     }
                   }
