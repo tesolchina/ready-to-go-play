@@ -640,18 +640,20 @@ const AcademicPhraseBank = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-primary/5">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <Card className="h-[calc(100vh-12rem)]">
-          <CardHeader>
-            <div className="flex items-center justify-between mb-2">
-              <CardTitle className="flex items-center gap-2">
-                <BookOpen className="h-6 w-6" />
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5">
+      <div className="container mx-auto px-4 py-8 max-w-5xl">
+        <Card className="h-[calc(100vh-12rem)] shadow-[var(--shadow-elevated)] border-2">
+          <CardHeader className="border-b bg-gradient-to-r from-primary/5 to-accent/5">
+            <div className="flex items-center justify-between mb-3">
+              <CardTitle className="flex items-center gap-3 text-3xl">
+                <div className="p-2 bg-primary/10 rounded-xl">
+                  <BookOpen className="h-7 w-7 text-primary" />
+                </div>
                 Academic PhraseBank Assistant
               </CardTitle>
-              <div className="w-36">
+              <div className="w-40">
                 <Select value={selectedModel} onValueChange={setSelectedModel}>
-                  <SelectTrigger className="bg-background">
+                  <SelectTrigger className="bg-background border-2 hover:border-primary/50 transition-colors">
                     <SelectValue placeholder="Model" />
                   </SelectTrigger>
                   <SelectContent className="bg-background z-50">
@@ -662,16 +664,17 @@ const AcademicPhraseBank = () => {
                 </Select>
               </div>
             </div>
-            <CardDescription>
+            <CardDescription className="text-base">
               Get help with academic writing phrases, sentence structures, and language patterns
             </CardDescription>
-            <p className="text-xs text-muted-foreground mt-2">
+            <p className="text-sm text-muted-foreground mt-3 flex items-center gap-1">
+              <Sparkles className="h-3.5 w-3.5" />
               Inspired by the{" "}
               <a 
                 href="https://www.phrasebank.manchester.ac.uk/" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="underline hover:text-foreground transition-colors"
+                className="underline hover:text-primary transition-colors font-medium"
               >
                 Manchester Academic Phrasebank
               </a>
@@ -680,7 +683,7 @@ const AcademicPhraseBank = () => {
           <CardContent className="flex flex-col h-[calc(100%-5rem)]">
             {/* Dropdown Selection Section */}
             {showDropdowns && messages.length === 0 && (
-              <div className="mb-6 p-4 bg-muted/50 rounded-lg space-y-4">
+              <div className="mb-6 p-6 bg-gradient-to-br from-muted/50 to-accent/10 rounded-xl border-2 border-border/50 space-y-4 shadow-sm">
                 <div className="space-y-2">
                   <Label htmlFor="category-type">Category Type *</Label>
                   <Select
@@ -971,22 +974,25 @@ const AcademicPhraseBank = () => {
         </Card>
 
         {/* Paragraph Analyzer Section */}
-        <Card className="mt-6">
-          <CardHeader>
+        <Card className="mt-8 shadow-[var(--shadow-elevated)] border-2 hover:border-primary/20 transition-all">
+          <CardHeader className="border-b bg-gradient-to-r from-accent/5 to-primary/5">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5" />
-                <CardTitle>Paragraph Analyzer</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-accent/10 rounded-xl">
+                  <Sparkles className="h-5 w-5 text-accent" />
+                </div>
+                <CardTitle className="text-2xl">Paragraph Analyzer</CardTitle>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowAnalyzer(!showAnalyzer)}
+                className="hover:bg-accent/20"
               >
-                <ChevronDown className={`h-4 w-4 transition-transform ${showAnalyzer ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`h-5 w-5 transition-transform duration-300 ${showAnalyzer ? 'rotate-180' : ''}`} />
               </Button>
             </div>
-            <CardDescription>
+            <CardDescription className="text-base mt-2">
               Paste a paragraph from a journal article to identify relevant categories and extract sentence templates. An example paragraph is provided below - replace it with your own text.
             </CardDescription>
           </CardHeader>
