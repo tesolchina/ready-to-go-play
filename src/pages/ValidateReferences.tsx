@@ -26,6 +26,7 @@ const ValidateReferences = () => {
   const [isSharing, setIsSharing] = useState(false);
   const [shareLink, setShareLink] = useState<string | null>(null);
   const [isCopied, setIsCopied] = useState(false);
+  const [isHowItWorksOpen, setIsHowItWorksOpen] = useState(false);
   const { toast } = useToast();
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -349,7 +350,12 @@ const ValidateReferences = () => {
 
         {/* How It Works Section */}
         <div className="mb-8">
-          <CollapsibleSection title="How It Works" icon="ℹ️">
+          <CollapsibleSection 
+            title="How It Works" 
+            icon="ℹ️"
+            isOpen={isHowItWorksOpen}
+            onToggle={() => setIsHowItWorksOpen(!isHowItWorksOpen)}
+          >
             <div className="space-y-4 text-sm text-muted-foreground">
               <div>
                 <h4 className="font-semibold text-foreground mb-2">Step 1: Input References</h4>
