@@ -976,7 +976,7 @@ const AcademicPhraseBank = () => {
         </Card>
 
         {/* Paragraph Analyzer Section */}
-        <Card className="mt-8 shadow-[var(--shadow-elevated)] border-2 hover:border-primary/20 transition-all">
+        <Card className="mt-16 shadow-[var(--shadow-elevated)] border-2 hover:border-primary/20 transition-all">
           <CardHeader className="border-b bg-gradient-to-r from-accent/5 to-primary/5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
