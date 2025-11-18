@@ -24,6 +24,7 @@ import { Send, BookOpen, Sparkles, ChevronDown, Copy, User } from "lucide-react"
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import phrasebankData from "@/lib/phrasebank-data.json";
+import { cn } from "@/lib/utils";
 
 interface Message {
   role: "user" | "assistant";
@@ -140,8 +141,7 @@ const AcademicPhraseBank = () => {
   const [paragraphInput, setParagraphInput] = useState(EXAMPLE_PARAGRAPH);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [selectedPatternCategory, setSelectedPatternCategory] = useState<string>("");
-  const [selectedPatternSubcategory, setSelectedPatternSubcategory] = useState<string>("");
+  const [selectedPatterns, setSelectedPatterns] = useState<Set<string>>(new Set());
 
   // Bulletin board state
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
@@ -412,10 +412,10 @@ const AcademicPhraseBank = () => {
       if (error) throw error;
 
       setAnalysisResult(data);
-      // Auto-select first pattern if available
+      // Auto-select all patterns
       if (data?.patterns?.length > 0) {
-        setSelectedPatternCategory(data.patterns[0].category);
-        setSelectedPatternSubcategory(data.patterns[0].subcategory);
+        const patternKeys = data.patterns.map((p: Pattern) => `${p.category}|${p.subcategory}`);
+        setSelectedPatterns(new Set(patternKeys));
       }
       toast({ 
         title: "Analysis complete! 🎉",
@@ -433,18 +433,10 @@ const AcademicPhraseBank = () => {
     }
   };
 
-  const useAnalysisSettings = () => {
-    if (!analysisResult || !selectedPatternCategory) return;
-    
-    const selectedPattern = analysisResult.patterns.find(
-      p => p.category === selectedPatternCategory && p.subcategory === selectedPatternSubcategory
-    );
-    
-    if (!selectedPattern) return;
-    
-    setCategoryType(selectedPattern.categoryType);
-    setSelectedCategory(selectedPattern.category);
-    setSelectedSubcategory(selectedPattern.subcategory);
+  const useAnalysisSettings = (pattern: Pattern) => {
+    setCategoryType(pattern.categoryType);
+    setSelectedCategory(pattern.category);
+    setSelectedSubcategory(pattern.subcategory);
     
     toast({ 
       title: "Settings applied! 📝",
@@ -454,16 +446,41 @@ const AcademicPhraseBank = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleShareAnalysis = () => {
-    if (!analysisResult || !selectedPatternCategory) return;
+  const togglePatternSelection = (category: string, subcategory: string) => {
+    const key = `${category}|${subcategory}`;
+    setSelectedPatterns(prev => {
+      const next = new Set(prev);
+      if (next.has(key)) {
+        next.delete(key);
+      } else {
+        next.add(key);
+      }
+      return next;
+    });
+  };
 
-    const selectedPattern = analysisResult.patterns.find(
-      p => p.category === selectedPatternCategory && p.subcategory === selectedPatternSubcategory
+  const selectAllPatterns = () => {
+    if (!analysisResult) return;
+    const allKeys = analysisResult.patterns.map(p => `${p.category}|${p.subcategory}`);
+    setSelectedPatterns(new Set(allKeys));
+  };
+
+  const deselectAllPatterns = () => {
+    setSelectedPatterns(new Set());
+  };
+
+  const handleShareAnalysis = () => {
+    if (!analysisResult || selectedPatterns.size === 0) return;
+
+    const patternsToShare = analysisResult.patterns.filter(p => 
+      selectedPatterns.has(`${p.category}|${p.subcategory}`)
     );
-    
-    if (!selectedPattern) return;
 
     // Create a conversation-like structure from the analysis
+    const patternContents = patternsToShare.map(pattern => 
+      `## ${pattern.categoryType === "moves" ? "Moves/Steps" : "General Functions"}: ${pattern.category} > ${pattern.subcategory}\n\n### Extracted Templates\n\n${pattern.templates.map((t, i) => `${i + 1}. **Original:** ${t.original}\n   **Template:** ${t.template}\n   **Explanation:** ${t.explanation}`).join('\n\n')}\n\n### Practice Exercises\n\n${pattern.exercises.map((e, i) => `${i + 1}. **Task:** ${e.instruction}\n   **Template:** ${e.template}\n   **Hints:** ${e.hints.join(', ')}`).join('\n\n')}`
+    ).join('\n\n---\n\n');
+
     const analysisMessages: Message[] = [
       {
         role: "user",
@@ -471,7 +488,7 @@ const AcademicPhraseBank = () => {
       },
       {
         role: "assistant",
-        content: `## Analysis Results\n\n**Category:** ${selectedPattern.categoryType === "moves" ? "Moves/Steps" : "General Functions"} > ${selectedPattern.category} > ${selectedPattern.subcategory}\n\n### Extracted Templates\n\n${selectedPattern.templates.map((t, i) => `${i + 1}. **Original:** ${t.original}\n   **Template:** ${t.template}\n   **Explanation:** ${t.explanation}`).join('\n\n')}\n\n### Practice Exercises\n\n${selectedPattern.exercises.map((e, i) => `${i + 1}. **Task:** ${e.instruction}\n   **Template:** ${e.template}\n   **Hints:** ${e.hints.join(', ')}`).join('\n\n')}`
+        content: `# Analysis Results (${patternsToShare.length} Pattern${patternsToShare.length > 1 ? 's' : ''})\n\n${patternContents}`
       }
     ];
 
@@ -479,8 +496,9 @@ const AcademicPhraseBank = () => {
     setMessagesToShare(analysisMessages);
     
     // Pre-fill the share dialog
-    setShareTitle(`Paragraph Analysis: ${selectedPattern.category} - ${selectedPattern.subcategory}`);
-    setShareDescription(`Analysis of academic paragraph identifying ${selectedPattern.templates.length} templates and ${selectedPattern.exercises.length} practice exercises.`);
+    const categories = patternsToShare.map(p => p.category).join(', ');
+    setShareTitle(`Paragraph Analysis: ${patternsToShare.length} Pattern${patternsToShare.length > 1 ? 's' : ''}`);
+    setShareDescription(`Analysis identifying ${patternsToShare.length} pattern(s): ${categories}`);
     
     // Open dialog
     setShareDialogOpen(true);
@@ -1019,131 +1037,108 @@ const AcademicPhraseBank = () => {
 
               {analysisResult && analysisResult.patterns && analysisResult.patterns.length > 0 && (
                 <div className="space-y-4 pt-4 border-t">
-                  <div className="space-y-4 p-4 bg-muted/30 rounded-lg">
+                  <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
                       <BookOpen className="h-5 w-5 text-primary" />
                       <h4 className="font-semibold">Patterns Found: {analysisResult.patterns.length}</h4>
+                      <Badge variant="outline">{selectedPatterns.size} selected</Badge>
                     </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="pattern-category">Select Category</Label>
-                        <Select
-                          value={selectedPatternCategory}
-                          onValueChange={(value) => {
-                            setSelectedPatternCategory(value);
-                            // Auto-select first subcategory for this category
-                            const pattern = analysisResult.patterns.find(p => p.category === value);
-                            if (pattern) setSelectedPatternSubcategory(pattern.subcategory);
-                          }}
-                        >
-                          <SelectTrigger id="pattern-category">
-                            <SelectValue placeholder="Choose a category..." />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {Array.from(new Set(analysisResult.patterns.map(p => p.category))).map(cat => (
-                              <SelectItem key={cat} value={cat}>
-                                {cat}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="pattern-subcategory">Select Subcategory</Label>
-                        <Select
-                          value={selectedPatternSubcategory}
-                          onValueChange={setSelectedPatternSubcategory}
-                          disabled={!selectedPatternCategory}
-                        >
-                          <SelectTrigger id="pattern-subcategory">
-                            <SelectValue placeholder="Choose a subcategory..." />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {analysisResult.patterns
-                              .filter(p => p.category === selectedPatternCategory)
-                              .map(p => (
-                                <SelectItem key={p.subcategory} value={p.subcategory}>
-                                  {p.subcategory}
-                                </SelectItem>
-                              ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={selectAllPatterns}
+                      >
+                        Select All
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={deselectAllPatterns}
+                      >
+                        Deselect All
+                      </Button>
+                      <Button
+                        variant="default"
+                        size="sm"
+                        onClick={handleShareAnalysis}
+                        disabled={selectedPatterns.size === 0}
+                      >
+                        <Sparkles className="mr-2 h-4 w-4" />
+                        Generate Report
+                      </Button>
                     </div>
                   </div>
 
-                  {selectedPatternCategory && selectedPatternSubcategory && (() => {
-                    const selectedPattern = analysisResult.patterns.find(
-                      p => p.category === selectedPatternCategory && p.subcategory === selectedPatternSubcategory
-                    );
-                    
-                    if (!selectedPattern) return null;
-                    
-                    return (
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between flex-wrap gap-2">
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium">Pattern Type:</span>
-                            <Badge variant={selectedPattern.categoryType === "moves" ? "default" : "secondary"}>
-                              {selectedPattern.categoryType === "moves" ? "Moves/Steps" : "General Functions"}
-                            </Badge>
-                          </div>
-                          <div className="flex gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={useAnalysisSettings}
-                            >
-                              Use This Category
-                            </Button>
-                            <Button
-                              variant="default"
-                              size="sm"
-                              onClick={handleShareAnalysis}
-                            >
-                              <Sparkles className="mr-2 h-4 w-4" />
-                              Share to Bulletin Board
-                            </Button>
-                          </div>
-                        </div>
+                  <div className="space-y-3">
+                    {analysisResult.patterns.map((pattern, idx) => {
+                      const patternKey = `${pattern.category}|${pattern.subcategory}`;
+                      const isSelected = selectedPatterns.has(patternKey);
+                      
+                      return (
+                        <div 
+                          key={idx}
+                          className={cn(
+                            "border rounded-lg transition-all",
+                            isSelected ? "border-primary bg-primary/5" : "border-border"
+                          )}
+                        >
+                          <div className="p-4">
+                            <div className="flex items-start gap-3">
+                              <input
+                                type="checkbox"
+                                checked={isSelected}
+                                onChange={() => togglePatternSelection(pattern.category, pattern.subcategory)}
+                                className="mt-1 h-4 w-4 rounded border-gray-300"
+                              />
+                              <div className="flex-1 space-y-3">
+                                <div className="flex items-center justify-between flex-wrap gap-2">
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <Badge variant={pattern.categoryType === "moves" ? "default" : "secondary"}>
+                                      {pattern.categoryType === "moves" ? "Moves/Steps" : "General Functions"}
+                                    </Badge>
+                                    <Badge variant="outline">{pattern.category}</Badge>
+                                    <span className="text-sm font-medium">{pattern.subcategory}</span>
+                                  </div>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => useAnalysisSettings(pattern)}
+                                  >
+                                    Use This Category
+                                  </Button>
+                                </div>
 
-                        <div>
-                          <h4 className="font-semibold mb-2">Extracted Templates ({selectedPattern.templates.length})</h4>
-                          <div className="space-y-3">
-                            {selectedPattern.templates.map((template, idx) => (
-                              <div key={idx} className="p-3 bg-muted/50 rounded-lg space-y-2">
-                                <p className="text-sm text-muted-foreground italic">{template.original}</p>
-                                <p className="text-sm font-medium text-accent-foreground">{template.template}</p>
-                                <p className="text-xs text-muted-foreground">{template.explanation}</p>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div>
-                          <h4 className="font-semibold mb-2">Practice Exercises ({selectedPattern.exercises.length})</h4>
-                          <div className="space-y-3">
-                            {selectedPattern.exercises.map((exercise, idx) => (
-                              <div key={idx} className="p-3 border rounded-lg space-y-2">
-                                <p className="text-sm font-medium">{exercise.instruction}</p>
-                                <p className="text-sm text-muted-foreground bg-muted p-2 rounded">{exercise.template}</p>
-                                <div className="text-xs text-muted-foreground">
-                                  <span className="font-medium">Hints:</span>
-                                  <ul className="list-disc list-inside ml-2">
-                                    {exercise.hints.map((hint, hintIdx) => (
-                                      <li key={hintIdx}>{hint}</li>
+                                <div>
+                                  <h5 className="text-sm font-semibold mb-2">Templates ({pattern.templates.length})</h5>
+                                  <div className="space-y-2">
+                                    {pattern.templates.map((template, tidx) => (
+                                      <div key={tidx} className="p-2 bg-muted/50 rounded text-xs space-y-1">
+                                        <p className="text-muted-foreground italic">{template.original}</p>
+                                        <p className="font-medium">{template.template}</p>
+                                      </div>
                                     ))}
-                                  </ul>
+                                  </div>
+                                </div>
+
+                                <div>
+                                  <h5 className="text-sm font-semibold mb-2">Exercises ({pattern.exercises.length})</h5>
+                                  <div className="space-y-2">
+                                    {pattern.exercises.map((exercise, eidx) => (
+                                      <div key={eidx} className="p-2 border rounded text-xs">
+                                        <p className="font-medium mb-1">{exercise.instruction}</p>
+                                        <p className="text-muted-foreground">{exercise.template}</p>
+                                      </div>
+                                    ))}
+                                  </div>
                                 </div>
                               </div>
-                            ))}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })()}
+                      );
+                    })}
+                  </div>
                 </div>
               )}
             </CardContent>
