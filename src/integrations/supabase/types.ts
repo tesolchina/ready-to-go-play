@@ -26,7 +26,7 @@ export type Database = {
           slug: string
           student_context: string | null
           subject: string
-          teacher_id: string
+          teacher_id: string | null
           title: string
           updated_at: string
         }
@@ -41,7 +41,7 @@ export type Database = {
           slug: string
           student_context?: string | null
           subject: string
-          teacher_id: string
+          teacher_id?: string | null
           title: string
           updated_at?: string
         }
@@ -56,7 +56,7 @@ export type Database = {
           slug?: string
           student_context?: string | null
           subject?: string
-          teacher_id?: string
+          teacher_id?: string | null
           title?: string
           updated_at?: string
         }

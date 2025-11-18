@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,7 +25,6 @@ const LessonCreator = () => {
   const { toast } = useToast();
   const [inputMethod, setInputMethod] = useState<"manual" | "upload">("manual");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [userId, setUserId] = useState<string | null>(null);
   
   // Load saved draft from localStorage on mount
   const [lessonData, setLessonData] = useState<LessonData>(() => {
@@ -48,23 +47,6 @@ const LessonCreator = () => {
     };
   });
 
-  // Check authentication on mount
-  useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        toast({
-          title: "Authentication Required",
-          description: "Please sign in to create lessons",
-          variant: "destructive",
-        });
-        navigate("/");
-      } else {
-        setUserId(user.id);
-      }
-    };
-    checkAuth();
-  }, [navigate, toast]);
 
   const handleInputChange = (field: keyof LessonData, value: string) => {
     setLessonData((prev) => {
@@ -109,15 +91,6 @@ const LessonCreator = () => {
   };
 
   const handleSubmit = async () => {
-    if (!userId) {
-      toast({
-        title: "Authentication Required",
-        description: "Please sign in to create lessons",
-        variant: "destructive",
-      });
-      return;
-    }
-
     // Validate that all fields are filled
     const emptyFields = Object.entries(lessonData).filter(([_, value]) => !value.trim());
     if (emptyFields.length > 0) {
@@ -141,7 +114,7 @@ const LessonCreator = () => {
       // Store the lesson in the database (type-cast until types are regenerated)
       const supabaseAny = supabase as any;
       const insertResult = await supabaseAny.from('lessons').insert({
-        teacher_id: userId,
+        teacher_id: null,
         title: data.lesson.title,
         subject: data.lesson.subject,
         grade_level: data.lesson.grade_level,
