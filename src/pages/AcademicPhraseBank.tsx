@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -21,7 +20,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import type { Json } from "@/integrations/supabase/types";
-import { Send, BookOpen, Sparkles, ChevronDown, Copy, User, Home } from "lucide-react";
+import { Send, BookOpen, Sparkles, ChevronDown, Copy, User } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import phrasebankData from "@/lib/phrasebank-data.json";
@@ -130,7 +129,6 @@ const AcademicPhraseBank = () => {
   const [showDropdowns, setShowDropdowns] = useState(true);
   const [selectedModel, setSelectedModel] = useState<string>("aliyun");
   const scrollRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
   const { toast } = useToast();
 
   // Paragraph analyzer state
@@ -603,21 +601,10 @@ const AcademicPhraseBank = () => {
         <Card className="h-[calc(100vh-12rem)]">
           <CardHeader>
             <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-4">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => navigate("/")}
-                  className="gap-2"
-                >
-                  <Home className="h-4 w-4" />
-                  Back to Home
-                </Button>
-                <CardTitle className="flex items-center gap-2">
-                  <BookOpen className="h-6 w-6" />
-                  Academic PhraseBank Assistant
-                </CardTitle>
-              </div>
+              <CardTitle className="flex items-center gap-2">
+                <BookOpen className="h-6 w-6" />
+                Academic PhraseBank Assistant
+              </CardTitle>
               <div className="w-36">
                 <Select value={selectedModel} onValueChange={setSelectedModel}>
                   <SelectTrigger className="bg-background">
