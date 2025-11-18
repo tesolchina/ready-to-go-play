@@ -201,7 +201,7 @@ const Index = () => {
                     </div>
                     <div className="flex-1">
                       <CardTitle className="text-2xl mb-2 group-hover:text-primary transition-colors">
-                        Lesson Creator
+                        Smart Lesson Builder
                       </CardTitle>
                       <CardDescription className="text-base">
                         Create your own custom lesson using AI-powered tools and our educational framework
