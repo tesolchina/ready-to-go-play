@@ -682,10 +682,10 @@ const AcademicPhraseBank = () => {
               </a>
             </p>
           </CardHeader>
-          <CardContent className="flex flex-col h-[calc(100%-5rem)]">
+          <CardContent className="flex flex-col space-y-4 p-6">
             {/* Dropdown Selection Section */}
             {showDropdowns && messages.length === 0 && (
-              <div className="mb-6 p-6 bg-gradient-to-br from-muted/50 to-accent/10 rounded-xl border-2 border-border/50 space-y-4 shadow-sm">
+              <div className="p-6 bg-gradient-to-br from-muted/50 to-accent/10 rounded-xl border-2 border-border/50 space-y-4 shadow-sm">
                 <div className="space-y-2">
                   <Label htmlFor="category-type">Category Type *</Label>
                   <Select
@@ -730,15 +730,12 @@ const AcademicPhraseBank = () => {
                   </div>
                 )}
 
-                {selectedCategory && subcategories.length > 0 && (
+                {selectedCategory && (
                   <div className="space-y-2">
                     <Label htmlFor="subcategory">Subcategory (Optional)</Label>
-                    <Select
-                      value={selectedSubcategory}
-                      onValueChange={setSelectedSubcategory}
-                    >
+                    <Select value={selectedSubcategory} onValueChange={setSelectedSubcategory}>
                       <SelectTrigger id="subcategory">
-                        <SelectValue placeholder="Select a subcategory (optional)" />
+                        <SelectValue placeholder="All subcategories" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="__all__">All subcategories</SelectItem>
@@ -802,7 +799,7 @@ const AcademicPhraseBank = () => {
               </div>
             )}
 
-            <ScrollArea className="flex-1 pr-4 mb-4" ref={scrollRef}>
+            <ScrollArea className="h-[500px] pr-4 mb-4" ref={scrollRef}>
               {messages.length === 0 && !showDropdowns ? (
                 <div className="flex flex-col items-center justify-center h-full text-center space-y-4 py-8">
                   <BookOpen className="h-16 w-16 text-muted-foreground" />
