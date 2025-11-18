@@ -187,6 +187,40 @@ const Index = () => {
                 </CardContent>
               </Card>
             </Link>
+
+            {/* Pattern Analyzer */}
+            <Link to="/pattern-analyzer" className="group block mb-6">
+              <Card className="transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-2 hover:border-primary/50 bg-gradient-to-br from-primary/5 to-primary/10">
+                <CardHeader>
+                  <div className="flex items-start gap-4">
+                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center flex-shrink-0">
+                      <Brain className="w-8 h-8 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <CardTitle className="text-2xl mb-2 group-hover:text-primary transition-colors">
+                        Pattern Analyzer
+                      </CardTitle>
+                      <CardDescription className="text-base">
+                        Analyze essay structure and writing patterns. Extract organizational strategies and generate new content using identified patterns.
+                      </CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                      Structure Analysis
+                    </span>
+                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                      Pattern Extraction
+                    </span>
+                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                      Content Generation
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
           </section>
 
           {/* Lesson Creator */}
