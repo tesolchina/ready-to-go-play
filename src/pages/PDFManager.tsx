@@ -23,6 +23,7 @@ export default function PDFManager() {
   const [documents, setDocuments] = useState<PDFDocument[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
   const { toast } = useToast();
 
   const [formData, setFormData] = useState({
@@ -33,8 +34,21 @@ export default function PDFManager() {
   });
 
   useEffect(() => {
+    checkAuth();
     fetchDocuments();
   }, []);
+
+  const checkAuth = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to upload PDFs",
+        variant: "destructive",
+      });
+    }
+    setUserId(user?.id || null);
+  };
 
   const fetchDocuments = async () => {
     try {
@@ -86,6 +100,16 @@ export default function PDFManager() {
 
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!userId) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to upload PDFs",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!formData.file || !formData.title) {
       toast({
         title: "Missing fields",
@@ -118,6 +142,7 @@ export default function PDFManager() {
         storage_path: filePath,
         custom_slug: slug,
         description: formData.description || null,
+        user_id: userId,
       });
 
       if (dbError) throw dbError;
