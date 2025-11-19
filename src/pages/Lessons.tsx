@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { BookOpen, Target, GraduationCap, FileCheck, Lightbulb } from "lucide-react";
+import { BookOpen, Target, GraduationCap, FileCheck, Lightbulb, Sparkles } from "lucide-react";
 
 const Lessons = () => {
   const lessons = [
@@ -136,6 +136,48 @@ const Lessons = () => {
                         <span className="px-3 py-1 bg-muted rounded-md text-sm">Critical Reflection</span>
                         <span className="px-3 py-1 bg-muted rounded-md text-sm">Interactive Learning</span>
                         <span className="px-3 py-1 bg-muted rounded-md text-sm">AI-Enhanced Teaching</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            </div>
+
+            {/* Lesson 3: Leverage Educational Resources */}
+            <div className="max-w-4xl mx-auto">
+              <Link to="/lessons/leverage-educational-resources">
+                <Card className="border-2 border-accent hover:shadow-xl transition-all">
+                  <CardHeader className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <span className="px-3 py-1 bg-accent/10 text-accent rounded-md text-sm font-medium">
+                        Lesson 3
+                      </span>
+                      <span className="px-3 py-1 bg-primary/10 text-primary rounded-md text-sm font-medium">
+                        ⭐ Case Study
+                      </span>
+                    </div>
+                    <CardTitle className="text-3xl">
+                      Leverage and Enhance Existing Educational Resources with AI
+                    </CardTitle>
+                    <CardDescription className="text-lg">
+                      Building on Proven Resources: The Academic Phrasebank Case Study
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Sparkles className="w-5 h-5" />
+                        <span className="font-medium">Resource Enhancement with AI</span>
+                      </div>
+                      <p className="text-base leading-relaxed">
+                        Learn how to enhance existing high-quality educational resources with AI instead of recreating 
+                        from scratch. This lesson uses the Manchester Academic Phrasebank as a case study, showing how 
+                        to add interactivity, personalization, and community features while preserving pedagogical excellence.
+                      </p>
+                      <div className="flex gap-2 pt-2 flex-wrap">
+                        <span className="px-3 py-1 bg-muted rounded-md text-sm">Resource Enhancement</span>
+                        <span className="px-3 py-1 bg-muted rounded-md text-sm">Academic Writing</span>
+                        <span className="px-3 py-1 bg-muted rounded-md text-sm">Practical Application</span>
                       </div>
                     </div>
                   </CardContent>
