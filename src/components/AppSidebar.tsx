@@ -53,7 +53,7 @@ export function AppSidebar() {
 
   return (
     <Sidebar 
-      collapsible="icon" 
+      collapsible="offcanvas"
       className="border-r bg-sidebar"
     >
       <SidebarContent className="px-6 py-8">
@@ -84,13 +84,11 @@ export function AppSidebar() {
                     >
                       <div className="flex items-center gap-3">
                         <item.icon className="h-5 w-5 flex-shrink-0" />
-                        {!isCollapsed && (
-                          <div className="flex flex-col flex-1 min-w-0">
-                            <span className="text-sm font-medium">
-                              {item.title}
-                            </span>
-                          </div>
-                        )}
+                        <div className="flex flex-col flex-1 min-w-0">
+                          <span className="text-sm font-medium">
+                            {item.title}
+                          </span>
+                        </div>
                       </div>
                     </NavLink>
                   </SidebarMenuButton>
