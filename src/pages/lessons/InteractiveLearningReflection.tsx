@@ -57,10 +57,10 @@ const InteractiveLearningReflection = () => {
                     Lesson 1
                   </span>
                 </div>
-                <h1 className="text-4xl font-bold">
+                <h1 className="text-5xl font-bold">
                   From Traditional Lecturing to Interactive Learning
                 </h1>
-                <p className="text-xl text-muted-foreground">
+                <p className="text-2xl text-muted-foreground">
                   Reflecting on Teaching Practices with AI-Enhanced Learning
                 </p>
               </div>
@@ -75,13 +75,13 @@ const InteractiveLearningReflection = () => {
             >
               <div className="space-y-6">
                 <div className="prose prose-lg max-w-none">
-                  <h4 className="text-xl font-semibold text-foreground mb-4">The Two Sigma Problem</h4>
-                  <p className="text-foreground leading-relaxed">
+                  <h4 className="text-2xl font-semibold text-foreground mb-4">The Two Sigma Problem</h4>
+                  <p className="text-foreground text-lg leading-relaxed">
                     In 1984, educational psychologist Benjamin Bloom discovered what became known as the "Two Sigma Problem": 
                     students receiving one-on-one tutoring performed <strong>two standard deviations better</strong> (98th percentile) 
                     than students in traditional classroom settings (50th percentile).
                   </p>
-                  <p className="text-foreground leading-relaxed mt-4">
+                  <p className="text-foreground text-lg leading-relaxed mt-4">
                     This research reveals a fundamental challenge in education: <strong>personalized instruction dramatically 
                     outperforms traditional lecturing</strong>, but one-on-one tutoring is impractical for most educational settings 
                     due to resource constraints.
@@ -119,16 +119,6 @@ const InteractiveLearningReflection = () => {
                   "Uncertain, I need to explore this concept further"
                 ]}
               />
-
-              <div className="mt-6 bg-muted/50 p-4 rounded-lg">
-                <h4 className="font-semibold text-foreground mb-2">📚 Further Reading</h4>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li>
-                    • Prince, M. (2004). Does active learning work? A review of the research. 
-                    <em className="text-primary"> Journal of Engineering Education</em>
-                  </li>
-                </ul>
-              </div>
             </CollapsibleSection>
 
             {/* Module 2: Teaching AI to Teach */}
@@ -140,16 +130,16 @@ const InteractiveLearningReflection = () => {
             >
               <div className="space-y-6">
                 <div className="prose prose-lg max-w-none">
-                  <p className="text-foreground leading-relaxed">
+                  <p className="text-foreground text-lg leading-relaxed">
                     <strong>The essence of AI is to simulate human intelligence.</strong> Before we develop any AI technology or 
                     solution for learning, we must first understand what makes teaching truly effective.
                   </p>
                 </div>
 
                 <div className="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-lg space-y-4">
-                  <h4 className="text-xl font-semibold text-foreground mb-3">Reflect First: Your Teaching Excellence</h4>
+                  <h4 className="text-2xl font-semibold text-foreground mb-3">Reflect First: Your Teaching Excellence</h4>
                   <div className="space-y-3">
-                    <p className="text-foreground leading-relaxed">
+                    <p className="text-foreground text-lg leading-relaxed">
                       Before thinking about AI solutions, ask yourself:
                     </p>
                     <ul className="space-y-2 list-none">
@@ -167,8 +157,8 @@ const InteractiveLearningReflection = () => {
                 </div>
 
                 <div className="prose prose-lg max-w-none">
-                  <h4 className="text-xl font-semibold text-foreground mt-6 mb-3">The Human-First Approach</h4>
-                  <p className="text-foreground leading-relaxed">
+                  <h4 className="text-2xl font-semibold text-foreground mt-6 mb-3">The Human-First Approach</h4>
+                  <p className="text-foreground text-lg leading-relaxed">
                     You need to figure out what works in your teaching — then teach AI to do it (assuming it is feasible). 
                     This human-first approach ensures that AI enhances rather than replaces the pedagogical wisdom you have developed 
                     through experience.
@@ -210,16 +200,8 @@ const InteractiveLearningReflection = () => {
               />
 
               <div className="mt-6 bg-muted/50 p-4 rounded-lg">
-                <h4 className="font-semibold text-foreground mb-2">📚 Further Reading</h4>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li>
-                    • Freeman, S. et al. (2014). Active learning increases student performance in science, engineering, and mathematics. 
-                    <em className="text-primary"> PNAS, 111(23)</em>
-                  </li>
-                  <li>
-                    • Bergmann, J., & Sams, A. (2012). Flip Your Classroom: Reach Every Student in Every Class Every Day. 
-                    <em className="text-primary"> ISTE</em>
-                  </li>
+                <h4 className="font-semibold text-foreground text-lg mb-2">📚 Further Reading</h4>
+                <ul className="space-y-2 text-base text-muted-foreground">
                   <li>
                     • <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10159400/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
                       Personalized tutoring and AI (2023)
@@ -243,11 +225,11 @@ const InteractiveLearningReflection = () => {
             >
               <div className="space-y-6">
                 <div className="prose prose-lg max-w-none">
-                  <p className="text-foreground leading-relaxed">
+                  <p className="text-foreground text-lg leading-relaxed">
                     Now it's time to apply these concepts. Design an AI-enhanced interactive learning activity based on your current teaching content.
                   </p>
 
-                  <h4 className="text-xl font-semibold text-foreground mt-6 mb-3">Design Guidelines</h4>
+                  <h4 className="text-2xl font-semibold text-foreground mt-6 mb-3">Design Guidelines</h4>
                 </div>
 
                 <ul className="space-y-3 list-none">
@@ -288,16 +270,6 @@ const InteractiveLearningReflection = () => {
                   "I'd like to collaborate with colleagues first"
                 ]}
               />
-
-              <div className="mt-6 bg-muted/50 p-4 rounded-lg">
-                <h4 className="font-semibold text-foreground mb-2">📚 Further Reading</h4>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li>
-                    • Bower, M. (2019). Technology-mediated learning theory. 
-                    <em className="text-primary"> British Journal of Educational Technology, 50(3)</em>
-                  </li>
-                </ul>
-              </div>
             </CollapsibleSection>
 
             {/* Module 4: Deep Reflection on Teaching Transformation */}
@@ -309,12 +281,12 @@ const InteractiveLearningReflection = () => {
             >
               <div className="space-y-6">
                 <div className="prose prose-lg max-w-none">
-                  <p className="text-foreground leading-relaxed">
+                  <p className="text-foreground text-lg leading-relaxed">
                     The shift from lecture-based teaching to interactive learning is not merely a change in methods, 
                     but a fundamental transformation in teaching philosophy.
                   </p>
 
-                  <h4 className="text-xl font-semibold text-foreground mt-6 mb-3">Reflection Questions</h4>
+                  <h4 className="text-2xl font-semibold text-foreground mt-6 mb-3">Reflection Questions</h4>
                 </div>
 
                 <ul className="space-y-4 list-none">
@@ -358,27 +330,13 @@ const InteractiveLearningReflection = () => {
                   "Not confident - need significant support"
                 ]}
               />
-
-              <div className="mt-6 bg-muted/50 p-4 rounded-lg">
-                <h4 className="font-semibold text-foreground mb-2">📚 Further Reading</h4>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li>
-                    • Holmes, W., Bialik, M., & Fadel, C. (2019). Artificial Intelligence in Education: Promises and Implications. 
-                    <em className="text-primary"> Center for Curriculum Redesign</em>
-                  </li>
-                  <li>
-                    • Luckin, R. (2018). Machine Learning and Human Intelligence: The future of education for the 21st century. 
-                    <em className="text-primary"> UCL IOE Press</em>
-                  </li>
-                </ul>
-              </div>
             </CollapsibleSection>
 
             {/* Next Steps */}
             <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-6 rounded-lg">
               <div className="text-center space-y-4">
-                <h3 className="text-2xl font-bold text-foreground">🎯 Next Steps</h3>
-                <p className="text-muted-foreground">
+                <h3 className="text-3xl font-bold text-foreground">🎯 Next Steps</h3>
+                <p className="text-muted-foreground text-lg">
                   After completing this lesson, try implementing one small interactive learning activity in your next class 
                   and observe changes in student response and engagement.
                 </p>
