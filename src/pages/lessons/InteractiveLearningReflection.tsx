@@ -131,9 +131,9 @@ const InteractiveLearningReflection = () => {
               </div>
             </CollapsibleSection>
 
-            {/* Module 2: AI-Enhanced Interactive Learning */}
+            {/* Module 2: Teaching AI to Teach */}
             <CollapsibleSection
-              title="AI-Enhanced Interactive Learning"
+              title="Teaching AI to Teach: Starting with Human Wisdom"
               icon="💡"
               isOpen={openSections.module2}
               onToggle={() => toggleSection("module2")}
@@ -141,70 +141,71 @@ const InteractiveLearningReflection = () => {
               <div className="space-y-6">
                 <div className="prose prose-lg max-w-none">
                   <p className="text-foreground leading-relaxed">
-                    Interactive learning emphasizes "student-centered" approaches, and AI technology provides unprecedented possibilities 
-                    to realize this vision in university English teaching.
+                    <strong>The essence of AI is to simulate human intelligence.</strong> Before we develop any AI technology or 
+                    solution for learning, we must first understand what makes teaching truly effective.
                   </p>
+                </div>
 
-                  <h4 className="text-xl font-semibold text-foreground mt-6 mb-3">Core Principles</h4>
+                <div className="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-lg space-y-4">
+                  <h4 className="text-xl font-semibold text-foreground mb-3">Reflect First: Your Teaching Excellence</h4>
+                  <div className="space-y-3">
+                    <p className="text-foreground leading-relaxed">
+                      Before thinking about AI solutions, ask yourself:
+                    </p>
+                    <ul className="space-y-2 list-none">
+                      <BulletPoint icon="✨">
+                        <strong>What is your proudest moment as a teacher?</strong>
+                      </BulletPoint>
+                      <BulletPoint icon="🎯">
+                        <strong>What is your trick for teaching students effectively?</strong>
+                      </BulletPoint>
+                      <BulletPoint icon="💭">
+                        <strong>When did you see a struggling student finally understand?</strong>
+                      </BulletPoint>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="prose prose-lg max-w-none">
+                  <h4 className="text-xl font-semibold text-foreground mt-6 mb-3">The Human-First Approach</h4>
+                  <p className="text-foreground leading-relaxed">
+                    You need to figure out what works in your teaching — then teach AI to do it (assuming it is feasible). 
+                    This human-first approach ensures that AI enhances rather than replaces the pedagogical wisdom you have developed 
+                    through experience.
+                  </p>
                 </div>
 
                 <ul className="space-y-3 list-none">
-                  <BulletPoint icon="🔍">
-                    <strong>From Teacher-Centered to Student-Centered:</strong> Teachers shift from "knowledge transmitters" to "learning facilitators," 
-                    with students actively constructing knowledge through problem-based exploration
+                  <BulletPoint icon="👤">
+                    <strong>Identify Your Best Practices:</strong> What specific strategies work when you help students one-on-one? 
+                    How do you explain difficult concepts? What questions do you ask?
                   </BulletPoint>
-                  <BulletPoint icon="🎯">
-                    <strong>From Uniform Pace to Personalized Learning:</strong> AI can provide customized content and instant feedback 
-                    based on each student's proficiency level and needs
+                  <BulletPoint icon="🤖">
+                    <strong>Translate to AI Capabilities:</strong> Can AI replicate your feedback style? Your question patterns? 
+                    Your way of breaking down complex ideas?
                   </BulletPoint>
-                  <BulletPoint icon="🌐">
-                    <strong>From Classroom-Only to Anytime, Anywhere Learning:</strong> Students can engage with AI for writing advice, 
-                    grammar explanations, and language optimization at any time
-                  </BulletPoint>
-                  <BulletPoint icon="📊">
-                    <strong>From Teacher Supervision to Intelligent Tracking:</strong> The system tracks student progress and identifies 
-                    challenges, helping teachers adjust strategies more precisely
+                  <BulletPoint icon="🔄">
+                    <strong>Scale Your Excellence:</strong> AI allows you to extend your best teaching moments to reach more students, 
+                    more often, beyond classroom hours
                   </BulletPoint>
                 </ul>
 
-                <div className="prose prose-lg max-w-none mt-6">
-                  <h4 className="text-xl font-semibold text-foreground mb-3">Implementation Framework</h4>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="bg-primary/5 p-4 rounded-lg">
-                    <h5 className="font-semibold text-foreground mb-2">Before Class: Flipped Classroom</h5>
-                    <p className="text-muted-foreground">
-                      Students preview content through videos and reading materials; AI assistants answer questions during self-study
-                    </p>
-                  </div>
-
-                  <div className="bg-primary/5 p-4 rounded-lg">
-                    <h5 className="font-semibold text-foreground mb-2">During Class: Interactive Practice</h5>
-                    <p className="text-muted-foreground">
-                      Teachers organize discussions and project activities; AI supports group collaboration and provides instant feedback
-                    </p>
-                  </div>
-
-                  <div className="bg-primary/5 p-4 rounded-lg">
-                    <h5 className="font-semibold text-foreground mb-2">After Class: Continuous Practice</h5>
-                    <p className="text-muted-foreground">
-                      Students practice writing and speaking with AI, receiving personalized improvement suggestions
-                    </p>
-                  </div>
-                </div>
+                <blockquote className="border-l-4 border-primary pl-4 italic text-muted-foreground my-6">
+                  "AI doesn't replace great teaching — it scales it. The question is not what AI can do, 
+                  but what you do best that AI can help you do more of."
+                </blockquote>
               </div>
 
               <ComprehensionCheck
                 lessonSlug={lessonSlug}
                 sectionId="module2"
-                questionId="implementation-phase"
-                question="Which phase of the AI-enhanced framework do you think would be easiest to implement first in your context?"
+                questionId="teaching-reflection"
+                question="Have you identified a specific teaching practice of yours that could be scaled with AI?"
                 options={[
-                  "Before class: Flipped classroom approach",
-                  "During class: Interactive practice",
-                  "After class: Continuous practice",
-                  "All phases simultaneously"
+                  "Yes, I have a clear practice in mind",
+                  "I have some ideas but need to reflect more",
+                  "Not yet, this is a new way of thinking for me",
+                  "I'm not sure if my practices can be replicated by AI"
                 ]}
               />
 
