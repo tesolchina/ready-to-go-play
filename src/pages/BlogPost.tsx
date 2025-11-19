@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Calendar, User, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -30,7 +30,12 @@ const BlogPost = () => {
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
         <AppSidebar />
-        <main className="flex-1 p-8 bg-background">
+        <main className="flex-1 bg-background">
+          <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4 lg:hidden">
+            <SidebarTrigger />
+            <h2 className="text-lg font-semibold">Blog Post</h2>
+          </header>
+          <div className="p-8">
           <div className="max-w-4xl mx-auto">
             <Link to="/blog">
               <Button variant="ghost" className="mb-6">
@@ -133,6 +138,7 @@ const BlogPost = () => {
                 <p className="text-muted-foreground">该博客文章不存在或已被删除</p>
               </div>
             )}
+          </div>
           </div>
         </main>
       </div>
