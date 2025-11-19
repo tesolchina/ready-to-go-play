@@ -15,5 +15,5 @@ verify_jwt = false
 [functions.validate-references]
 verify_jwt = false
 
-[functions.generate-activity-design]
+[functions.generate-simple-activity]
 verify_jwt = false
