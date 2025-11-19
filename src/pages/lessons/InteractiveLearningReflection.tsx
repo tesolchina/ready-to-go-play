@@ -40,8 +40,8 @@ const InteractiveLearningReflection = () => {
     <SidebarProvider defaultOpen={false}>
       <div className="flex min-h-screen w-full">
         <AppSidebar />
-        <main className="flex-1 p-8 bg-background">
-          <div className="max-w-4xl mx-auto space-y-8">
+        <main className="flex-1 p-4 md:p-8 bg-background overflow-x-hidden">
+          <div className="max-w-4xl mx-auto space-y-8 w-full">
             {/* Header */}
             <div>
               <div className="flex items-center justify-between mb-4">
@@ -60,10 +60,10 @@ const InteractiveLearningReflection = () => {
                     Lesson 1
                   </span>
                 </div>
-                <h1 className="text-5xl font-bold">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold break-words">
                   From Traditional Lecturing to Interactive Learning
                 </h1>
-                <p className="text-2xl text-muted-foreground">
+                <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground break-words">
                   Reflecting on Teaching Practices with AI-Enhanced Learning
                 </p>
               </div>
