@@ -5,7 +5,9 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Sparkles } from "lucide-react";
+import { ArrowLeft, Sparkles, Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Select,
   SelectContent,
@@ -69,6 +71,8 @@ const PhrasebankExercises = () => {
   const [subcategories, setSubcategories] = useState<string[]>([]);
   const [examples, setExamples] = useState<string[]>([]);
   const [showExamples, setShowExamples] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const { toast } = useToast();
 
   const categories = categoryType === "moves" ? MOVES_STEPS : GENERAL_LANGUAGE_FUNCTIONS;
 
@@ -87,31 +91,72 @@ const PhrasebankExercises = () => {
     }
   }, [selectedCategory]);
 
-  const handleGetExamples = () => {
+  const handleGetExamples = async () => {
     if (!selectedCategory) return;
 
     const categoryData = phrasebankData[selectedCategory as keyof typeof phrasebankData];
     if (!categoryData) return;
 
-    let allExamples: string[] = [];
+    let allTemplates: string[] = [];
 
     if (selectedSubcategory === "__all__") {
-      // Get all examples from all subcategories
       Object.values(categoryData).forEach((phrases) => {
         if (Array.isArray(phrases)) {
-          allExamples = [...allExamples, ...phrases];
+          allTemplates = [...allTemplates, ...phrases];
         }
       });
     } else {
-      // Get examples from selected subcategory
       const subcategoryData = categoryData[selectedSubcategory as keyof typeof categoryData];
       if (Array.isArray(subcategoryData)) {
-        allExamples = subcategoryData;
+        allTemplates = subcategoryData;
       }
     }
 
-    setExamples(allExamples);
+    if (allTemplates.length === 0) {
+      toast({
+        title: "No templates found",
+        description: "No templates available for the selected category.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setShowExamples(true);
+    setExamples([]);
+    setIsGenerating(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-phrasebank-examples', {
+        body: { 
+          category: selectedCategory,
+          subcategory: selectedSubcategory !== "__all__" ? selectedSubcategory : null,
+          discipline: discipline && discipline !== "none" ? discipline : null,
+          templates: allTemplates.slice(0, 15)
+        }
+      });
+
+      if (error) throw error;
+
+      if (data && data.examples) {
+        setExamples(data.examples);
+        toast({
+          title: "Examples generated",
+          description: `Created ${data.examples.length} discipline-specific examples`,
+        });
+      } else {
+        throw new Error('No examples generated');
+      }
+    } catch (error: any) {
+      console.error('Error generating examples:', error);
+      toast({
+        title: "Generation failed",
+        description: error.message || "Failed to generate examples. Please try again.",
+        variant: "destructive",
+      });
+      setShowExamples(false);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   return (
@@ -252,18 +297,28 @@ const PhrasebankExercises = () => {
                   {selectedCategory && (
                     <Button 
                       onClick={handleGetExamples}
+                      disabled={isGenerating}
                       size="lg"
                       className="w-full"
                     >
-                      <Sparkles className="h-5 w-5 mr-2" />
-                      Get Examples
+                      {isGenerating ? (
+                        <>
+                          <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                          Generating Examples...
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="h-5 w-5 mr-2" />
+                          Get Examples
+                        </>
+                      )}
                     </Button>
                   )}
                 </div>
               </CardContent>
             </Card>
 
-            {showExamples && examples.length > 0 && (
+            {showExamples && (
               <Card>
                 <CardHeader>
                   <CardTitle>
@@ -271,21 +326,38 @@ const PhrasebankExercises = () => {
                     {selectedSubcategory !== "__all__" && ` - ${selectedSubcategory}`}
                   </CardTitle>
                   <CardDescription>
-                    {examples.length} phrase{examples.length !== 1 ? 's' : ''} found
-                    {discipline && discipline !== "none" && ` (${discipline})`}
+                    {isGenerating 
+                      ? "Generating discipline-specific examples..." 
+                      : `${examples.length} AI-generated example${examples.length !== 1 ? 's' : ''}`}
+                    {discipline && discipline !== "none" && !isGenerating && ` for ${discipline}`}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    {examples.map((example, idx) => (
-                      <div 
-                        key={idx}
-                        className="p-4 bg-muted/50 rounded-lg border hover:border-primary/50 transition-colors"
-                      >
-                        <p className="text-sm leading-relaxed">{example}</p>
-                      </div>
-                    ))}
-                  </div>
+                  {isGenerating ? (
+                    <div className="flex items-center justify-center py-12">
+                      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    </div>
+                  ) : examples.length > 0 ? (
+                    <div className="space-y-3">
+                      {examples.map((example, idx) => (
+                        <div 
+                          key={idx}
+                          className="p-4 bg-muted/50 rounded-lg border hover:border-primary/50 transition-colors"
+                        >
+                          <div className="flex items-start gap-3">
+                            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-sm font-medium text-primary">
+                              {idx + 1}
+                            </span>
+                            <p className="text-sm leading-relaxed flex-1">{example}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-center text-muted-foreground py-8">
+                      No examples generated yet
+                    </p>
+                  )}
                 </CardContent>
               </Card>
             )}
