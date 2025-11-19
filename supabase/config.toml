@@ -14,3 +14,6 @@ verify_jwt = false
 
 [functions.validate-references]
 verify_jwt = false
+
+[functions.generate-activity-design]
+verify_jwt = false

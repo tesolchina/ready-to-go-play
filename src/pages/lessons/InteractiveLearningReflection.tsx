@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { CollapsibleSection } from "@/components/CollapsibleSection";
 import { ComprehensionCheck } from "@/components/ComprehensionCheck";
 import { BulletPoint } from "@/components/BulletPoint";
+import { ActivityDesignForm } from "@/components/ActivityDesignForm";
 import { supabase } from "@/integrations/supabase/client";
 
 const InteractiveLearningReflection = () => {
@@ -226,50 +227,15 @@ const InteractiveLearningReflection = () => {
               <div className="space-y-6">
                 <div className="prose prose-lg max-w-none">
                   <p className="text-foreground text-lg leading-relaxed">
-                    Now it's time to apply these concepts. Design an AI-enhanced interactive learning activity based on your current teaching content.
+                    Now it's time to apply these concepts. Use the form below to design an AI-enhanced interactive learning activity based on your current teaching content.
                   </p>
-
-                  <h4 className="text-2xl font-semibold text-foreground mt-6 mb-3">Design Guidelines</h4>
-                </div>
-
-                <ul className="space-y-3 list-none">
-                  <BulletPoint icon="🎯">
-                    <strong>Define Learning Objectives:</strong> What should students be able to do by the end?
-                  </BulletPoint>
-                  <BulletPoint icon="🔍">
-                    <strong>Design Active Exploration:</strong> How will you engage students and stimulate participation?
-                  </BulletPoint>
-                  <BulletPoint icon="🤖">
-                    <strong>Specify AI Support:</strong> Where and how will AI provide assistance in the learning process?
-                  </BulletPoint>
-                  <BulletPoint icon="📊">
-                    <strong>Set Feedback Mechanisms:</strong> How will students know they're making progress?
-                  </BulletPoint>
-                  <BulletPoint icon="👥">
-                    <strong>Address Diverse Needs:</strong> How will you personalize for different proficiency levels?
-                  </BulletPoint>
-                </ul>
-
-                <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg">
-                  <p className="text-muted-foreground text-sm">
-                    💡 <strong>Tip:</strong> Start small. Choose one class session and one specific skill (e.g., academic writing, critical reading) 
-                    to design your first AI-enhanced interactive activity.
+                  <p className="text-foreground text-lg leading-relaxed mt-4">
+                    Fill out the form and submit to receive a personalized flowchart and AI chatbot system prompt tailored to your activity.
                   </p>
                 </div>
+
+                <ActivityDesignForm />
               </div>
-
-              <ComprehensionCheck
-                lessonSlug={lessonSlug}
-                sectionId="module3"
-                questionId="design-readiness"
-                question="Do you feel ready to design an AI-enhanced activity for your next class?"
-                options={[
-                  "Yes, I have a clear idea",
-                  "Somewhat, but need more examples",
-                  "Not yet, need more guidance",
-                  "I'd like to collaborate with colleagues first"
-                ]}
-              />
             </CollapsibleSection>
 
             {/* Module 4: Deep Reflection on Teaching Transformation */}
