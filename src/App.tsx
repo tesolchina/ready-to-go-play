@@ -16,6 +16,7 @@ import DynamicLesson from "./pages/lessons/DynamicLesson";
 import InteractiveLearningReflection from "./pages/lessons/InteractiveLearningReflection";
 import LeverageEducationalResources from "./pages/lessons/LeverageEducationalResources";
 import VibeCoding from "./pages/lessons/VibeCoding";
+import AIAgents from "./pages/lessons/AIAgents";
 import LessonCreator from "./pages/LessonCreator";
 import AcademicPhraseBank from "./pages/AcademicPhraseBank";
 import CustomPhrasebankChat from "./pages/CustomPhrasebankChat";
@@ -45,6 +46,7 @@ const App = () => (
           <Route path="/lessons/interactive-learning-reflection" element={<InteractiveLearningReflection />} />
           <Route path="/lessons/leverage-educational-resources" element={<LeverageEducationalResources />} />
           <Route path="/lessons/vibe-coding" element={<VibeCoding />} />
+          <Route path="/lessons/ai-agents" element={<AIAgents />} />
           <Route path="/learning-apps" element={<LearningApps />} />
           <Route path="/SmartLessonBuilder" element={<Index />} />
           <Route path="/lesson/1" element={<Lesson1 />} />

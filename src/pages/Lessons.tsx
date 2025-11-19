@@ -155,38 +155,80 @@ const Lessons = () => {
             {/* Lesson 4: Vibe Coding */}
             <div className="max-w-4xl mx-auto">
               <Link to="/lessons/vibe-coding">
-                <Card className="border-2 border-purple-500 hover:shadow-xl transition-all">
+                <Card className="border-2 border-green-500 hover:shadow-xl transition-all">
                   <CardHeader className="space-y-4">
                     <div className="flex items-center gap-2">
-                      <span className="px-3 py-1 bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-md text-sm font-medium">
+                      <span className="px-3 py-1 bg-green-500/10 text-green-600 dark:text-green-400 rounded-md text-sm font-medium">
                         Lesson 4
                       </span>
                       <span className="px-3 py-1 bg-primary/10 text-primary rounded-md text-sm font-medium">
-                        🚀 Advanced
+                        🎯 Hands-On
                       </span>
                     </div>
                     <CardTitle className="text-3xl">
-                      Vibe Coding: AI as a Bridge for Human-Machine Conversation
+                      Vibe Coding: AI Generates Code for You
                     </CardTitle>
                     <CardDescription className="text-lg">
-                      From Natural Language to Programming Languages: Teaching AI to Speak Machine
+                      From Natural Language to Executable Code: Mermaid & Python in Action
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Code className="w-5 h-5" />
-                        <span className="font-medium">Code Generation & AI Agents</span>
+                        <span className="font-medium">Code Generation with Hands-On Practice</span>
                       </div>
                       <p className="text-base leading-relaxed">
-                        Discover how AI can generate programming code to automate teaching tasks instead of just chatting 
-                        in natural language. Learn to leverage Mermaid diagrams, Python scripts, and AI agents to transform 
-                        repetitive work into automated workflows—no programming experience required.
+                        Learn why programming languages matter for AI tasks. Generate Mermaid diagrams and Python code 
+                        through interactive exercises. Practice counting letters, creating visualizations, and applying 
+                        code generation to teaching tasks—no coding experience required.
                       </p>
                       <div className="flex gap-2 pt-2 flex-wrap">
-                        <span className="px-3 py-1 bg-muted rounded-md text-sm">Code Generation</span>
-                        <span className="px-3 py-1 bg-muted rounded-md text-sm">AI Agents</span>
-                        <span className="px-3 py-1 bg-muted rounded-md text-sm">Automation</span>
+                        <span className="px-3 py-1 bg-muted rounded-md text-sm">Mermaid Diagrams</span>
+                        <span className="px-3 py-1 bg-muted rounded-md text-sm">Python Code</span>
+                        <span className="px-3 py-1 bg-muted rounded-md text-sm">Interactive Practice</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            </div>
+
+            {/* Lesson 5: AI Agents */}
+            <div className="max-w-4xl mx-auto">
+              <Link to="/lessons/ai-agents">
+                <Card className="border-2 border-purple-500 hover:shadow-xl transition-all">
+                  <CardHeader className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <span className="px-3 py-1 bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-md text-sm font-medium">
+                        Lesson 5
+                      </span>
+                      <span className="px-3 py-1 bg-primary/10 text-primary rounded-md text-sm font-medium">
+                        🔮 Future Tech
+                      </span>
+                    </div>
+                    <CardTitle className="text-3xl">
+                      AI Agents: When Code Writes and Executes Itself
+                    </CardTitle>
+                    <CardDescription className="text-lg">
+                      Understanding Autonomous AI Systems That Plan, Act, and Iterate
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <BookOpen className="w-5 h-5" />
+                        <span className="font-medium">Conceptual Understanding & Future Vision</span>
+                      </div>
+                      <p className="text-base leading-relaxed">
+                        Discover how AI Agents go beyond code generation to autonomous action. Learn about real systems 
+                        like ChatGPT Code Interpreter, Claude Computer Use, and Cursor AI. Understand the trajectory from 
+                        chatbots to AI workflows, with a promise of hands-on workshops to come.
+                      </p>
+                      <div className="flex gap-2 pt-2 flex-wrap">
+                        <span className="px-3 py-1 bg-muted rounded-md text-sm">Autonomous AI</span>
+                        <span className="px-3 py-1 bg-muted rounded-md text-sm">Real Agents</span>
+                        <span className="px-3 py-1 bg-muted rounded-md text-sm">Future Vision</span>
                       </div>
                     </div>
                   </CardContent>
