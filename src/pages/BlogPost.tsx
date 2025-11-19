@@ -95,12 +95,21 @@ const BlogPost = () => {
                         const isMermaid = className?.includes('language-mermaid');
                         if (isMermaid) {
                           return (
-                            <div 
-                              className="my-8" 
-                              dangerouslySetInnerHTML={{ 
-                                __html: `<lov-mermaid>${children}</lov-mermaid>` 
-                              }} 
-                            />
+                            <div className="my-8 space-y-4">
+                              <div 
+                                dangerouslySetInnerHTML={{ 
+                                  __html: `<lov-mermaid>${children}</lov-mermaid>` 
+                                }} 
+                              />
+                              <details className="bg-muted/50 rounded-lg p-4">
+                                <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground">
+                                  查看源代码
+                                </summary>
+                                <pre className="mt-3 bg-muted p-3 rounded overflow-x-auto text-xs">
+                                  <code className="font-mono">{children}</code>
+                                </pre>
+                              </details>
+                            </div>
                           );
                         }
                         return (
