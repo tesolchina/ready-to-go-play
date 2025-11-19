@@ -1,5 +1,8 @@
 project_id = "ucfgbubrgojodrkgayap"
 
+[functions.generate-mermaid]
+verify_jwt = false
+
 [functions.provide-feedback]
 verify_jwt = false
 
