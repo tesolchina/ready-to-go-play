@@ -66,41 +66,55 @@ const Lessons = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {lessons.map((lesson) => (
-                <Link key={lesson.id} to={lesson.url} className="group">
-                  <Card className="h-full transition-all hover:shadow-lg hover:scale-[1.02]">
-                    <CardHeader>
-                      <div className="flex items-start gap-4">
-                        <div 
-                          className="w-12 h-12 rounded-xl flex items-center justify-center text-white flex-shrink-0"
-                          style={{
-                            background: 'linear-gradient(135deg, rgb(124, 58, 237) 0%, rgb(99, 102, 241) 100%)'
-                          }}
-                        >
-                          <lesson.icon className="h-6 w-6" />
-                        </div>
-                        <div className="flex-1">
-                          <CardTitle className="text-xl mb-2 group-hover:text-primary transition-colors">
-                            {lesson.title}
-                          </CardTitle>
-                          <CardDescription>{lesson.description}</CardDescription>
-                        </div>
+          <div className="space-y-8">
+            {/* Featured Lesson */}
+            <div className="max-w-4xl mx-auto">
+              <Link to="/lessons/interactive-learning-reflection">
+                <Card className="border-2 border-primary hover:shadow-xl transition-all">
+                  <CardHeader className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <span className="px-3 py-1 bg-primary/10 text-primary rounded-md text-sm font-medium">
+                        第一课 | Lesson 1
+                      </span>
+                    </div>
+                    <CardTitle className="text-3xl">
+                      从传统讲授到互动学习：教学模式的反思与实践
+                    </CardTitle>
+                    <CardDescription className="text-lg">
+                      Reflecting on Lecturing: Towards Interactive Learning with AI
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <BookOpen className="w-5 h-5" />
+                        <span className="font-medium">大学英语教学 | English for Academic Purposes</span>
                       </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex gap-2">
-                        <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
-                          {lesson.duration}
-                        </span>
-                        <span className="px-3 py-1 bg-secondary/10 text-secondary-foreground rounded-full text-sm font-medium">
-                          {lesson.level}
-                        </span>
+                      <p className="text-base leading-relaxed">
+                        本课程将引导您反思传统讲授模式的局限性，探索结合AI技术的互动学习方法，通过实践练习和深度反思，
+                        帮助您构建更有效的教学模式。
+                      </p>
+                      <div className="flex gap-2 pt-2">
+                        <span className="px-3 py-1 bg-muted rounded-md text-sm">批判性反思</span>
+                        <span className="px-3 py-1 bg-muted rounded-md text-sm">互动学习</span>
+                        <span className="px-3 py-1 bg-muted rounded-md text-sm">AI辅助教学</span>
                       </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            </div>
+
+            {/* Archive Notice */}
+            <div className="max-w-4xl mx-auto">
+              <Card className="bg-muted/50">
+                <CardContent className="pt-6">
+                  <p className="text-center text-muted-foreground">
+                    更多课程正在开发中 | More lessons coming soon
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
             </div>
 
             <Card className="border-dashed">
