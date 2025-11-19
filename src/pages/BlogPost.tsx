@@ -7,14 +7,7 @@ import { Calendar, User, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import ReactMarkdown from "react-markdown";
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'lov-mermaid': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
-    }
-  }
-}
+import { MermaidDiagram } from "@/components/MermaidDiagram";
 
 const BlogPost = () => {
   const { slug } = useParams();
@@ -102,11 +95,10 @@ const BlogPost = () => {
                       code: ({ children, className }) => {
                         const isMermaid = className?.includes('language-mermaid');
                         if (isMermaid) {
+                          const code = String(children).trim();
                           return (
                             <div className="my-8 space-y-4">
-                              <lov-mermaid>
-                                {children}
-                              </lov-mermaid>
+                              <MermaidDiagram chart={code} />
                               <details className="bg-muted/50 rounded-lg p-4">
                                 <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground">
                                   查看源代码
