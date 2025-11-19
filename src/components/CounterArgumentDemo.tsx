@@ -12,7 +12,7 @@ export const CounterArgumentDemo = () => {
   const [feedback, setFeedback] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const demoArgument = `"AI-enhanced learning is impractical for large university English classes in China because teachers lack the technical skills and time to implement it effectively."`;
+  const demoArgument = `"Imposing minimum wage is an important way to ensure worker's welfare and prevent exploitation."`;
 
   const handleSubmit = async () => {
     if (!response.trim()) {

@@ -135,7 +135,7 @@ export const SimpleActivityCreator = () => {
               id="nickname"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
-              placeholder="e.g., Professor Zhang"
+              placeholder="e.g., Jenny"
               className="text-base"
               maxLength={50}
               required
