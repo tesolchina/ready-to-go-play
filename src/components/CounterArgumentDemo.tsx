@@ -3,16 +3,22 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Loader2, Lightbulb, MessageSquare } from "lucide-react";
+import { Loader2, Lightbulb, MessageSquare, ChevronDown, ChevronUp } from "lucide-react";
 
 export const CounterArgumentDemo = () => {
   const [response, setResponse] = useState("");
   const [feedback, setFeedback] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSystemPrompt, setShowSystemPrompt] = useState(false);
 
   const demoArgument = `"Imposing minimum wage is an important way to ensure worker's welfare and prevent exploitation."`;
+
+  const systemPrompt = `This is a student's counter-argument to the claim: ${demoArgument}
+
+Provide constructive feedback on their reasoning, use of evidence, and clarity. Be encouraging and specific. Suggest improvements if needed.`;
 
   const handleSubmit = async () => {
     if (!response.trim()) {
@@ -31,7 +37,7 @@ export const CounterArgumentDemo = () => {
       const { data, error } = await supabase.functions.invoke("provide-feedback", {
         body: {
           paragraph: response.trim(),
-          context: `This is a student's counter-argument to the claim: ${demoArgument}\n\nProvide constructive feedback on their reasoning, use of evidence, and clarity. Be encouraging and specific. Suggest improvements if needed.`,
+          context: systemPrompt,
         },
       });
 
@@ -60,6 +66,32 @@ export const CounterArgumentDemo = () => {
           <strong>Demo Exercise:</strong> This is what students will see. Try it yourself!
         </AlertDescription>
       </Alert>
+
+      <Collapsible open={showSystemPrompt} onOpenChange={setShowSystemPrompt}>
+        <Card className="p-4 bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800">
+          <CollapsibleTrigger className="flex items-center justify-between w-full">
+            <h4 className="text-lg font-semibold text-foreground flex items-center gap-2">
+              <MessageSquare className="w-5 h-5" />
+              AI System Prompt (Click to {showSystemPrompt ? "hide" : "view"})
+            </h4>
+            {showSystemPrompt ? (
+              <ChevronUp className="w-5 h-5" />
+            ) : (
+              <ChevronDown className="w-5 h-5" />
+            )}
+          </CollapsibleTrigger>
+          <CollapsibleContent className="mt-3">
+            <div className="bg-muted p-3 rounded-lg">
+              <pre className="whitespace-pre-wrap text-sm font-mono text-foreground">
+                {systemPrompt}
+              </pre>
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">
+              This is the instruction given to the AI to guide its feedback behavior.
+            </p>
+          </CollapsibleContent>
+        </Card>
+      </Collapsible>
 
       <Card className="p-6 space-y-4">
         <div>
