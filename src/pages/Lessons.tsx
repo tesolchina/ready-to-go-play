@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { BookOpen, Target, GraduationCap, FileCheck, Lightbulb, Sparkles } from "lucide-react";
+import { BookOpen, Target, GraduationCap, FileCheck, Lightbulb, Sparkles, Code } from "lucide-react";
 
 const Lessons = () => {
   const lessons = [
@@ -140,6 +140,48 @@ const Lessons = () => {
                         <span className="px-3 py-1 bg-muted rounded-md text-sm">Resource Enhancement</span>
                         <span className="px-3 py-1 bg-muted rounded-md text-sm">Academic Writing</span>
                         <span className="px-3 py-1 bg-muted rounded-md text-sm">Practical Application</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            </div>
+
+            {/* Lesson 4: Vibe Coding */}
+            <div className="max-w-4xl mx-auto">
+              <Link to="/lessons/vibe-coding">
+                <Card className="border-2 border-purple-500 hover:shadow-xl transition-all">
+                  <CardHeader className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <span className="px-3 py-1 bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-md text-sm font-medium">
+                        Lesson 4
+                      </span>
+                      <span className="px-3 py-1 bg-primary/10 text-primary rounded-md text-sm font-medium">
+                        🚀 Advanced
+                      </span>
+                    </div>
+                    <CardTitle className="text-3xl">
+                      Vibe Coding: AI as a Bridge for Human-Machine Conversation
+                    </CardTitle>
+                    <CardDescription className="text-lg">
+                      From Natural Language to Programming Languages: Teaching AI to Speak Machine
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Code className="w-5 h-5" />
+                        <span className="font-medium">Code Generation & AI Agents</span>
+                      </div>
+                      <p className="text-base leading-relaxed">
+                        Discover how AI can generate programming code to automate teaching tasks instead of just chatting 
+                        in natural language. Learn to leverage Mermaid diagrams, Python scripts, and AI agents to transform 
+                        repetitive work into automated workflows—no programming experience required.
+                      </p>
+                      <div className="flex gap-2 pt-2 flex-wrap">
+                        <span className="px-3 py-1 bg-muted rounded-md text-sm">Code Generation</span>
+                        <span className="px-3 py-1 bg-muted rounded-md text-sm">AI Agents</span>
+                        <span className="px-3 py-1 bg-muted rounded-md text-sm">Automation</span>
                       </div>
                     </div>
                   </CardContent>
