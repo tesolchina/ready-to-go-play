@@ -51,6 +51,7 @@ Create a comprehensive system prompt (200-300 words) that:
 3. Specifies the tone (encouraging, constructive, specific)
 4. Includes the feedback guidance provided
 5. Instructs the AI to point out both strengths and areas for improvement
+6. CRITICAL: Instructs the AI to keep all feedback responses under 500 characters
 
 Respond ONLY with the system prompt text, no JSON formatting or code blocks.`;
 

@@ -18,7 +18,7 @@ serve(async (req) => {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    const defaultSystemPrompt = 'You are an expert educational AI assistant providing thoughtful, constructive feedback on student work. Be encouraging while offering specific suggestions for improvement.';
+    const defaultSystemPrompt = 'You are an expert educational AI assistant providing thoughtful, constructive feedback on student work. Be encouraging while offering specific suggestions for improvement. Keep your response concise - maximum 500 characters.';
     const actualSystemPrompt = systemPrompt || defaultSystemPrompt;
     
     // Build messages array
@@ -70,7 +70,12 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    const feedback = data.choices?.[0]?.message?.content || "Unable to generate feedback";
+    let feedback = data.choices?.[0]?.message?.content || "Unable to generate feedback";
+    
+    // Truncate to 500 characters if needed
+    if (feedback.length > 500) {
+      feedback = feedback.substring(0, 497) + "...";
+    }
 
     return new Response(
       JSON.stringify({ feedback }),
