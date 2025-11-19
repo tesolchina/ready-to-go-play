@@ -39,8 +39,8 @@ const VibeCoding = () => {
     <SidebarProvider defaultOpen={false}>
       <div className="flex min-h-screen w-full">
         <AppSidebar />
-        <main className="flex-1 p-8 bg-background">
-          <div className="max-w-4xl mx-auto space-y-8">
+        <main className="flex-1 p-4 md:p-8 bg-background overflow-x-hidden">
+          <div className="max-w-4xl mx-auto space-y-8 w-full">
             {/* Header */}
             <div>
               <div className="flex items-center justify-between mb-4">
@@ -59,10 +59,10 @@ const VibeCoding = () => {
                     Lesson 4
                   </span>
                 </div>
-                <h1 className="text-5xl font-bold">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold break-words">
                   Vibe Coding: AI as a Bridge for Human-Machine Conversation
                 </h1>
-                <p className="text-2xl text-muted-foreground">
+                <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground break-words">
                   From Natural Language to Programming Languages: Teaching AI to Speak Machine
                 </p>
               </div>
@@ -76,9 +76,9 @@ const VibeCoding = () => {
               onToggle={() => toggleSection("module1")}
             >
               <div className="space-y-6">
-                <div className="prose prose-lg max-w-none">
-                  <h4 className="text-2xl font-semibold text-foreground mb-4">Natural Language: For Humans, Not Machines</h4>
-                  <p className="text-foreground text-lg leading-relaxed">
+                <div className="prose prose-sm md:prose-base lg:prose-lg max-w-none break-words">
+                  <h4 className="text-xl md:text-2xl font-semibold text-foreground mb-4 break-words">Natural Language: For Humans, Not Machines</h4>
+                  <p className="text-foreground text-base md:text-lg leading-relaxed break-words">
                     When ChatGPT launched in November 2022, the world marveled at how naturally it conversed. 
                     You could chat with AI in plain English, and it would respond thoughtfully. This <strong>natural 
                     language interaction</strong> felt revolutionary—no programming required, just conversation.
