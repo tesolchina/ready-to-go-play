@@ -3,6 +3,15 @@ project_id = "ucfgbubrgojodrkgayap"
 [functions.provide-feedback]
 verify_jwt = false
 
+[functions.generate-template-analysis]
+verify_jwt = false
+
+[functions.provide-student-feedback]
+verify_jwt = false
+
+[functions.generate-phrasebank-examples]
+verify_jwt = false
+
 [functions.academic-phrasebank-chat]
 verify_jwt = false
 
@@ -20,3 +29,10 @@ verify_jwt = false
 
 [functions.analyze-reflections]
 verify_jwt = false
+
+[functions.extract-lesson-content]
+verify_jwt = false
+
+[functions.generate-lesson]
+verify_jwt = false
+
