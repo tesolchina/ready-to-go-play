@@ -219,6 +219,16 @@ const InteractiveLearningReflection = () => {
                     • Bergmann, J., & Sams, A. (2012). Flip Your Classroom: Reach Every Student in Every Class Every Day. 
                     <em className="text-primary"> ISTE</em>
                   </li>
+                  <li>
+                    • <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10159400/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                      Personalized tutoring and AI (2023)
+                    </a>
+                  </li>
+                  <li>
+                    • <a href="https://services.google.com/fh/files/misc/future_of_learning.pdf#page=9.39" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                      AI and the Future of Learning (Google, Nov 2025)
+                    </a>
+                  </li>
                 </ul>
               </div>
             </CollapsibleSection>
