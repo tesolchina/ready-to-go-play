@@ -1,14 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Clock, Users } from "lucide-react";
 import { MermaidDiagram } from "@/components/MermaidDiagram";
+import { requestQueue } from "@/lib/requestQueue";
 
 interface ActivityTemplate {
   name: string;
@@ -55,7 +57,17 @@ export const ActivityDesignForm = () => {
   const [feedbackMechanisms, setFeedbackMechanisms] = useState("");
   const [diverseNeeds, setDiverseNeeds] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [queuePosition, setQueuePosition] = useState<{ position: number; total: number } | null>(null);
   const [result, setResult] = useState<{ flowchart: string; systemPrompt: string } | null>(null);
+  const requestIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (requestIdRef.current) {
+        requestQueue.removeListener(requestIdRef.current);
+      }
+    };
+  }, []);
 
   const handleTemplateChange = (templateKey: string) => {
     setSelectedTemplate(templateKey);
@@ -96,33 +108,74 @@ export const ActivityDesignForm = () => {
     }
 
     setIsSubmitting(true);
+    setQueuePosition(null);
 
     try {
-      const { data, error } = await supabase.functions.invoke("generate-activity-design", {
-        body: {
-          nickname: nickname.trim(),
-          learningObjectives: learningObjectives.trim(),
-          activeExploration: activeExploration.trim(),
-          aiSupport: aiSupport.trim(),
-          feedbackMechanisms: feedbackMechanisms.trim(),
-          diverseNeeds: diverseNeeds.trim(),
-        },
-      });
+      // Add to queue with position tracking
+      const data = await requestQueue.add(async () => {
+        requestIdRef.current = crypto.randomUUID();
+        
+        // Set up queue position listener
+        requestQueue.onQueueChange(requestIdRef.current, (position, total) => {
+          if (position > 0) {
+            setQueuePosition({ position, total });
+          } else {
+            setQueuePosition(null);
+          }
+        });
 
-      if (error) throw error;
+        const { data, error } = await supabase.functions.invoke("generate-activity-design", {
+          body: {
+            nickname: nickname.trim(),
+            learningObjectives: learningObjectives.trim(),
+            activeExploration: activeExploration.trim(),
+            aiSupport: aiSupport.trim(),
+            feedbackMechanisms: feedbackMechanisms.trim(),
+            diverseNeeds: diverseNeeds.trim(),
+          },
+        });
+
+        if (error) throw error;
+        return data;
+      });
 
       setResult(data);
       toast.success("Activity design generated successfully!");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error generating activity design:", error);
-      toast.error("Failed to generate activity design. Please try again.");
+      
+      if (error?.status === 429) {
+        toast.error("System is currently busy. Your request has been queued and will be processed soon.");
+      } else if (error?.message?.includes("timeout")) {
+        toast.error("Request timed out. Please try again with a shorter description.");
+      } else {
+        toast.error("Failed to generate activity design. Please try again.");
+      }
     } finally {
       setIsSubmitting(false);
+      setQueuePosition(null);
+      if (requestIdRef.current) {
+        requestQueue.removeListener(requestIdRef.current);
+        requestIdRef.current = null;
+      }
     }
   };
 
   return (
     <div className="space-y-6">
+      {isSubmitting && queuePosition && queuePosition.position > 0 && (
+        <Alert>
+          <Clock className="h-4 w-4" />
+          <AlertDescription className="flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            <span className="text-base">
+              You are <strong>#{queuePosition.position}</strong> in queue. {queuePosition.total} total requests being processed.
+              Estimated wait time: <strong>{Math.ceil(queuePosition.position * 20)} seconds</strong>
+            </span>
+          </AlertDescription>
+        </Alert>
+      )}
+
       <Card className="p-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
@@ -254,7 +307,9 @@ export const ActivityDesignForm = () => {
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Generating Design...
+                {queuePosition && queuePosition.position > 0
+                  ? `In Queue (${queuePosition.position}/${queuePosition.total})...`
+                  : "Generating Design..."}
               </>
             ) : (
               "Generate Activity Design"

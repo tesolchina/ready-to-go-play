@@ -9,10 +9,17 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const requestStart = Date.now();
     const { nickname, learningObjectives, activeExploration, aiSupport, feedbackMechanisms, diverseNeeds } =
       await req.json();
 
     console.log("Generating activity design for participant:", nickname);
+    
+    // Set timeout to prevent function from running too long
+    const timeoutMs = 120000; // 120 seconds (before 150s edge function limit)
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error("Request timeout")), timeoutMs);
+    });
 
     // Input validation
     if (!nickname?.trim() || !learningObjectives?.trim() || !activeExploration?.trim() || !aiSupport?.trim()) {
@@ -63,71 +70,81 @@ The systemPrompt MUST:
     const KIMI_API_KEY = Deno.env.get("KIMI_API_KEY");
     const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
 
-    let result;
+    let result: string | undefined;
     let usedModel = "Kimi";
 
-    // Try Kimi first
-    try {
-      console.log("Attempting to use Kimi API");
-      const kimiResponse = await fetch("https://api.moonshot.cn/v1/chat/completions", {
+    // Wrap API calls with timeout
+    const generateWithTimeout = async () => {
+      // Try Kimi first
+      try {
+        console.log("Attempting to use Kimi API");
+        const kimiResponse = await fetch("https://api.moonshot.cn/v1/chat/completions", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${KIMI_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "moonshot-v1-8k",
-          messages: [
-            {
-              role: "user",
-              content: prompt,
-            },
-          ],
-          temperature: 0.7,
-        }),
-      });
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${KIMI_API_KEY}`,
+          },
+          body: JSON.stringify({
+            model: "moonshot-v1-8k",
+            messages: [
+              {
+                role: "user",
+                content: prompt,
+              },
+            ],
+            temperature: 0.7,
+          }),
+        });
 
-      if (!kimiResponse.ok) {
-        const errorText = await kimiResponse.text();
-        console.error("Kimi API error:", errorText);
-        throw new Error(`Kimi API failed: ${kimiResponse.status}`);
+        if (!kimiResponse.ok) {
+          const errorText = await kimiResponse.text();
+          console.error("Kimi API error:", errorText);
+          throw new Error(`Kimi API failed: ${kimiResponse.status}`);
+        }
+
+        const kimiData = await kimiResponse.json();
+        result = kimiData.choices[0].message.content;
+        console.log("Successfully used Kimi API");
+      } catch (kimiError) {
+        console.error("Kimi API failed, falling back to DeepSeek:", kimiError);
+        usedModel = "DeepSeek";
+
+        // Fallback to DeepSeek
+        const deepseekResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
+          },
+          body: JSON.stringify({
+            model: "deepseek-chat",
+            messages: [
+              {
+                role: "user",
+                content: prompt,
+              },
+            ],
+            temperature: 0.7,
+          }),
+        });
+
+        if (!deepseekResponse.ok) {
+          const errorText = await deepseekResponse.text();
+          console.error("DeepSeek API error:", errorText);
+          throw new Error(`DeepSeek API failed: ${deepseekResponse.status}`);
+        }
+
+        const deepseekData = await deepseekResponse.json();
+        result = deepseekData.choices[0].message.content;
+        console.log("Successfully used DeepSeek API");
       }
+    };
 
-      const kimiData = await kimiResponse.json();
-      result = kimiData.choices[0].message.content;
-      console.log("Successfully used Kimi API");
-    } catch (kimiError) {
-      console.error("Kimi API failed, falling back to DeepSeek:", kimiError);
-      usedModel = "DeepSeek";
+    // Race between API call and timeout
+    await Promise.race([generateWithTimeout(), timeoutPromise]);
 
-      // Fallback to DeepSeek
-      const deepseekResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "deepseek-chat",
-          messages: [
-            {
-              role: "user",
-              content: prompt,
-            },
-          ],
-          temperature: 0.7,
-        }),
-      });
-
-      if (!deepseekResponse.ok) {
-        const errorText = await deepseekResponse.text();
-        console.error("DeepSeek API error:", errorText);
-        throw new Error(`DeepSeek API failed: ${deepseekResponse.status}`);
-      }
-
-      const deepseekData = await deepseekResponse.json();
-      result = deepseekData.choices[0].message.content;
-      console.log("Successfully used DeepSeek API");
+    if (!result) {
+      throw new Error("No result received from AI");
     }
 
     // Parse the JSON response - try multiple approaches
@@ -157,20 +174,34 @@ The systemPrompt MUST:
       throw new Error("Invalid response structure from AI");
     }
 
-    console.log(`Successfully generated activity design using ${usedModel}`);
+    const requestTime = Date.now() - requestStart;
+    console.log(`Successfully generated activity design using ${usedModel} in ${requestTime}ms`);
 
     return new Response(JSON.stringify(parsedResult), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { 
+        ...corsHeaders, 
+        "Content-Type": "application/json",
+        "X-Processing-Time": requestTime.toString(),
+      },
     });
   } catch (error) {
     console.error("Error in generate-activity-design function:", error);
     const errorMessage = error instanceof Error ? error.message : "Failed to generate activity design";
+    
+    // Return 429 for rate limits, 504 for timeouts
+    let status = 500;
+    if (errorMessage.includes("timeout") || errorMessage.includes("Request timeout")) {
+      status = 504;
+    } else if (errorMessage.includes("rate limit") || errorMessage.includes("429")) {
+      status = 429;
+    }
+    
     return new Response(
       JSON.stringify({
         error: errorMessage,
       }),
       {
-        status: 500,
+        status,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       }
     );
