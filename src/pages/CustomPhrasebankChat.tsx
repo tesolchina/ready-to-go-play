@@ -161,8 +161,8 @@ const CustomPhrasebankChat = () => {
                             <span className="font-semibold">{pattern.category}</span>
                             {pattern.subcategory && (
                               <>
-                                <span className="text-muted-foreground">→</span>
-                                <span className="text-sm text-muted-foreground">{pattern.subcategory}</span>
+                                <span className="text-primary-foreground/80">→</span>
+                                <span className="text-sm text-primary-foreground/90">{pattern.subcategory}</span>
                               </>
                             )}
                           </div>
