@@ -7,7 +7,8 @@ import { useState, useEffect } from "react";
 import { CollapsibleSection } from "@/components/CollapsibleSection";
 import { ComprehensionCheck } from "@/components/ComprehensionCheck";
 import { BulletPoint } from "@/components/BulletPoint";
-import { ActivityDesignForm } from "@/components/ActivityDesignForm";
+import { CounterArgumentDemo } from "@/components/CounterArgumentDemo";
+import { SimpleActivityCreator } from "@/components/SimpleActivityCreator";
 import { supabase } from "@/integrations/supabase/client";
 
 const InteractiveLearningReflection = () => {
@@ -219,22 +220,36 @@ const InteractiveLearningReflection = () => {
 
             {/* Module 3: Design Your Own Interactive Activity */}
             <CollapsibleSection
-              title="Design Your Own Interactive Activity"
+              title="Try It Yourself: Counter-Argument Exercise"
               icon="🎨"
               isOpen={openSections.module3}
               onToggle={() => toggleSection("module3")}
             >
-              <div className="space-y-6">
+              <div className="space-y-8">
                 <div className="prose prose-lg max-w-none">
                   <p className="text-foreground text-lg leading-relaxed">
-                    Now it's time to apply these concepts. Use the form below to design an AI-enhanced interactive learning activity based on your current teaching content.
+                    One effective AI-enhanced activity is the <strong>counter-argument exercise</strong>. 
+                    Students address potential challenges to an argument, and AI provides personalized feedback 
+                    on their reasoning and use of evidence.
                   </p>
                   <p className="text-foreground text-lg leading-relaxed mt-4">
-                    Fill out the form and submit to receive a personalized flowchart and AI chatbot system prompt tailored to your activity.
+                    This approach is simple to implement but powerful for developing critical thinking skills.
                   </p>
                 </div>
 
-                <ActivityDesignForm />
+                <div>
+                  <h4 className="text-2xl font-semibold text-foreground mb-4">
+                    Step 1: See the Demo
+                  </h4>
+                  <CounterArgumentDemo />
+                </div>
+
+                <div className="border-t border-border pt-8">
+                  <h4 className="text-2xl font-semibold text-foreground mb-4">
+                    Step 2: Create Your Own Activity
+                  </h4>
+                  <SimpleActivityCreator />
+                </div>
               </div>
             </CollapsibleSection>
 
