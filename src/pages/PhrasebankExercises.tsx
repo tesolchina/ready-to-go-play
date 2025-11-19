@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -260,7 +260,12 @@ const PhrasebankExercises = () => {
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
         <AppSidebar />
-        <main className="flex-1 p-8 bg-background">
+        <main className="flex-1 bg-background">
+          <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4 lg:hidden">
+            <SidebarTrigger />
+            <h2 className="text-lg font-semibold">Phrasebank Exercises</h2>
+          </header>
+          <div className="p-8">
           <div className="max-w-6xl mx-auto space-y-8">
             <Link to="/academic-phrasebank">
               <Button variant="ghost" size="sm" className="mb-4">
@@ -628,6 +633,7 @@ const PhrasebankExercises = () => {
                 </CardContent>
               </Card>
             )}
+          </div>
           </div>
         </main>
       </div>

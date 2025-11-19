@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { BookOpen, Target, GraduationCap, FileCheck, Lightbulb, Sparkles, Code } from "lucide-react";
 
@@ -57,7 +57,12 @@ const Lessons = () => {
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
         <AppSidebar />
-        <main className="flex-1 p-8 bg-background">
+        <main className="flex-1 bg-background">
+          <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4 lg:hidden">
+            <SidebarTrigger />
+            <h2 className="text-lg font-semibold">Lessons</h2>
+          </header>
+          <div className="p-8">
           <div className="max-w-6xl mx-auto space-y-8">
             <div className="space-y-4">
               <h1 className="text-4xl font-bold tracking-tight">All Lessons</h1>
@@ -217,6 +222,7 @@ const Lessons = () => {
                 </Link>
               </CardContent>
             </Card>
+          </div>
           </div>
         </main>
       </div>

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { BookOpen, FileText, CheckCircle } from "lucide-react";
 
@@ -31,6 +31,10 @@ const Home = () => {
       <div className="flex min-h-screen w-full">
         <AppSidebar />
         <main className="flex-1 bg-background">
+          <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4 lg:hidden">
+            <SidebarTrigger />
+            <h2 className="text-lg font-semibold">AI Learning Hub</h2>
+          </header>
           <div className="container mx-auto px-4 py-16">
             <div className="flex flex-col items-center justify-center space-y-12">
               <div className="text-center space-y-4">
