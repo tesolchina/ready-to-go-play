@@ -1,5 +1,3 @@
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -14,40 +12,53 @@ Deno.serve(async (req) => {
     const { nickname, learningObjectives, activeExploration, aiSupport, feedbackMechanisms, diverseNeeds } =
       await req.json();
 
-    console.log("Generating activity design for:", nickname);
+    console.log("Generating activity design for participant:", nickname);
+
+    // Input validation
+    if (!nickname?.trim() || !learningObjectives?.trim() || !activeExploration?.trim() || !aiSupport?.trim()) {
+      return new Response(
+        JSON.stringify({ error: "Missing required fields" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (nickname.length > 50) {
+      return new Response(
+        JSON.stringify({ error: "Nickname too long" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     const prompt = `You are an expert educational designer specializing in AI-enhanced interactive learning activities.
 
-Given the following activity design inputs, create:
-1. A detailed Mermaid flowchart showing the learning workflow
-2. A comprehensive system prompt for an AI chatbot that will support this activity
+Create a detailed activity design for participant: ${nickname}
 
 Activity Details:
-- Nickname: ${nickname}
 - Learning Objectives: ${learningObjectives}
 - Active Exploration: ${activeExploration}
 - AI Support: ${aiSupport}
 - Feedback Mechanisms: ${feedbackMechanisms || "Not specified"}
 - Diverse Needs: ${diverseNeeds || "Not specified"}
 
-Please provide your response in the following JSON format:
+IMPORTANT: Respond ONLY with valid JSON in this exact format (no markdown, no code blocks):
 {
-  "flowchart": "graph TD\\n    A[Start] --> B[Step]\\n    ...",
-  "systemPrompt": "You are an AI teaching assistant for..."
+  "flowchart": "graph TD\\n    A[Start] --> B[Next Step]\\n    B --> C[End]",
+  "systemPrompt": "You are an AI teaching assistant..."
 }
 
-The flowchart should:
-- Use Mermaid syntax (graph TD or graph LR)
-- Show the complete student learning journey
-- Include decision points and feedback loops
-- Highlight where AI intervention occurs
+The flowchart MUST:
+- Use valid Mermaid syntax (graph TD or graph LR)
+- Show 5-8 main steps in the learning journey
+- Use simple node labels (no special characters that break Mermaid)
+- Include where AI provides support
+- Show decision points and feedback loops
 
-The system prompt should:
-- Define the AI's role clearly
-- Include specific pedagogical strategies
-- Reference the learning objectives
-- Specify how to provide feedback
-- Include guidelines for personalization`;
+The systemPrompt MUST:
+- Be 200-400 words
+- Define the AI's specific role
+- Include the learning objectives
+- Specify how to provide personalized feedback
+- Include guidelines for different proficiency levels`;
 
     const KIMI_API_KEY = Deno.env.get("KIMI_API_KEY");
     const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
@@ -119,13 +130,33 @@ The system prompt should:
       console.log("Successfully used DeepSeek API");
     }
 
-    // Parse the JSON response
-    const jsonMatch = result.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      throw new Error("Could not parse JSON from AI response");
+    // Parse the JSON response - try multiple approaches
+    let parsedResult;
+    
+    try {
+      // Try direct parse first
+      parsedResult = JSON.parse(result);
+    } catch {
+      // Try to extract JSON from markdown code blocks
+      const codeBlockMatch = result.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/);
+      if (codeBlockMatch) {
+        parsedResult = JSON.parse(codeBlockMatch[1]);
+      } else {
+        // Try to find any JSON object
+        const jsonMatch = result.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          parsedResult = JSON.parse(jsonMatch[0]);
+        } else {
+          throw new Error("Could not parse JSON from AI response");
+        }
+      }
     }
 
-    const parsedResult = JSON.parse(jsonMatch[0]);
+    // Validate the response structure
+    if (!parsedResult.flowchart || !parsedResult.systemPrompt) {
+      throw new Error("Invalid response structure from AI");
+    }
+
     console.log(`Successfully generated activity design using ${usedModel}`);
 
     return new Response(JSON.stringify(parsedResult), {
@@ -133,9 +164,10 @@ The system prompt should:
     });
   } catch (error) {
     console.error("Error in generate-activity-design function:", error);
+    const errorMessage = error instanceof Error ? error.message : "Failed to generate activity design";
     return new Response(
       JSON.stringify({
-        error: error.message || "Failed to generate activity design",
+        error: errorMessage,
       }),
       {
         status: 500,
