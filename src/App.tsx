@@ -17,6 +17,8 @@ import InteractiveLearningReflection from "./pages/lessons/InteractiveLearningRe
 import LeverageEducationalResources from "./pages/lessons/LeverageEducationalResources";
 import LessonCreator from "./pages/LessonCreator";
 import AcademicPhraseBank from "./pages/AcademicPhraseBank";
+import CustomPhrasebankChat from "./pages/CustomPhrasebankChat";
+import PhrasebankExercises from "./pages/PhrasebankExercises";
 import ValidateReferences from "./pages/ValidateReferences";
 import SharedReport from "./pages/SharedReport";
 import PDFManager from "./pages/PDFManager";
@@ -48,6 +50,8 @@ const App = () => (
           <Route path="/lesson/:slug" element={<DynamicLesson />} />
           <Route path="/lesson-creator" element={<LessonCreator />} />
           <Route path="/academic-phrasebank" element={<AcademicPhraseBank />} />
+          <Route path="/academic-phrasebank/exercises" element={<PhrasebankExercises />} />
+          <Route path="/academic-phrasebank/custom" element={<CustomPhrasebankChat />} />
           <Route path="/validate-references" element={<ValidateReferences />} />
           <Route path="/report/:id" element={<SharedReport />} />
           <Route path="/pdf-manager" element={<PDFManager />} />
