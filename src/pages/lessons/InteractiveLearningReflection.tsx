@@ -253,64 +253,64 @@ const InteractiveLearningReflection = () => {
               </div>
             </CollapsibleSection>
 
-            {/* Module 4: Deep Reflection on Teaching Transformation */}
+            {/* Module 4: Lesson Summary & Reflection */}
             <CollapsibleSection
-              title="Deep Reflection on Teaching Transformation"
-              icon="🤔"
+              title="Lesson Summary & Reflection"
+              icon="🎓"
               isOpen={openSections.module4}
               onToggle={() => toggleSection("module4")}
             >
               <div className="space-y-6">
                 <div className="prose prose-lg max-w-none">
-                  <p className="text-foreground text-lg leading-relaxed">
-                    The shift from lecture-based teaching to interactive learning is not merely a change in methods, 
-                    but a fundamental transformation in teaching philosophy.
-                  </p>
-
-                  <h4 className="text-2xl font-semibold text-foreground mt-6 mb-3">Reflection Questions</h4>
+                  <h4 className="text-2xl font-semibold text-foreground mb-4">Key Takeaways</h4>
+                  <ul className="space-y-3 list-none">
+                    <BulletPoint icon="📊">
+                      <strong>The Two Sigma Problem:</strong> One-on-one tutoring dramatically outperforms traditional lectures, 
+                      but AI can help scale personalized learning
+                    </BulletPoint>
+                    <BulletPoint icon="👤">
+                      <strong>Human-First Approach:</strong> Start with what makes your teaching excellent, 
+                      then teach AI to replicate and scale those practices
+                    </BulletPoint>
+                    <BulletPoint icon="🎯">
+                      <strong>Simple AI Activities:</strong> Counter-argument exercises demonstrate how focused, 
+                      AI-enhanced activities can develop critical thinking without complex technical setup
+                    </BulletPoint>
+                  </ul>
                 </div>
 
-                <ul className="space-y-4 list-none">
-                  <li className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                    <BulletPoint icon="👤">
-                      <strong>Role Transformation:</strong> Moving from "knowledge authority" to "learning partner" — what does this mean for you? 
-                      Are you ready for this shift?
-                    </BulletPoint>
-                  </li>
+                <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-6 rounded-lg space-y-4">
+                  <h4 className="text-2xl font-semibold text-foreground">Quick Feedback</h4>
+                  <ComprehensionCheck
+                    lessonSlug={lessonSlug}
+                    sectionId="module4"
+                    questionId="lesson-usefulness"
+                    question="How useful was this lesson for your teaching practice?"
+                    options={[
+                      "Very useful - I have concrete ideas to implement",
+                      "Useful - I learned new concepts",
+                      "Somewhat useful - Need more examples",
+                      "Not useful - Too abstract or not relevant"
+                    ]}
+                  />
+                </div>
 
-                  <li className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                    <BulletPoint icon="🎮">
-                      <strong>Trust and Control:</strong> Allowing students more autonomous exploration — do you worry about losing classroom control?
-                    </BulletPoint>
-                  </li>
-
-                  <li className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                    <BulletPoint icon="❤️">
-                      <strong>Technology and Humanity:</strong> AI can provide feedback, but what is the unique value that human teachers bring?
-                    </BulletPoint>
-                  </li>
-
-                  <li className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                    <BulletPoint icon="🚀">
-                      <strong>Challenges and Preparation:</strong> What do you see as the biggest obstacle to implementing this model? 
-                      What support do you need?
-                    </BulletPoint>
-                  </li>
-                </ul>
+                <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg space-y-4">
+                  <h4 className="text-2xl font-semibold text-foreground">Final Reflection</h4>
+                  <ComprehensionCheck
+                    lessonSlug={lessonSlug}
+                    sectionId="module4"
+                    questionId="main-insight"
+                    question="What is one key insight or teaching practice from this lesson that you would like to try in your own classroom?"
+                    options={[
+                      "Using AI for personalized student feedback",
+                      "Creating counter-argument exercises",
+                      "Identifying my best teaching practices to scale",
+                      "Other approach (please share below)"
+                    ]}
+                  />
+                </div>
               </div>
-
-              <ComprehensionCheck
-                lessonSlug={lessonSlug}
-                sectionId="module4"
-                questionId="transformation-readiness"
-                question="After this lesson, how confident do you feel about integrating AI into your teaching practice?"
-                options={[
-                  "Very confident - ready to start immediately",
-                  "Confident - will start with small experiments",
-                  "Somewhat confident - need more training",
-                  "Not confident - need significant support"
-                ]}
-              />
             </CollapsibleSection>
 
             {/* Next Steps */}
