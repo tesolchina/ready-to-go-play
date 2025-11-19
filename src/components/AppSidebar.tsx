@@ -1,4 +1,4 @@
-import { BookOpen, GraduationCap, Target, FileCheck, Lightbulb, MessageSquare, Home, Plus, CheckSquare } from "lucide-react";
+import { BookOpen, GraduationCap, Target, FileCheck, Lightbulb, MessageSquare, Home, Plus, CheckSquare, Info, Newspaper, Library, Zap } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 import {
@@ -13,7 +13,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-const tools = [
+const navigation = [
   {
     title: "Home",
     url: "/",
@@ -21,22 +21,28 @@ const tools = [
     description: "Return to dashboard"
   },
   {
-    title: "Create Lesson",
-    url: "/lesson-creator",
-    icon: Plus,
-    description: "Build custom lessons"
+    title: "About",
+    url: "/about",
+    icon: Info,
+    description: "Learn about our platform"
   },
   {
-    title: "Academic PhraseBank",
-    url: "/academic-phrasebank",
-    icon: MessageSquare,
-    description: "AI writing assistant"
+    title: "Blog",
+    url: "/blog",
+    icon: Newspaper,
+    description: "Latest articles & insights"
   },
   {
-    title: "Validate References",
-    url: "/validate-references",
-    icon: CheckSquare,
-    description: "Check DOI validity"
+    title: "Lessons",
+    url: "/lessons",
+    icon: Library,
+    description: "Browse all lessons"
+  },
+  {
+    title: "Learning Apps",
+    url: "/learning-apps",
+    icon: Zap,
+    description: "AI-powered tools"
   },
 ];
 
@@ -94,20 +100,20 @@ export function AppSidebar() {
         <SidebarGroup>
           {!isCollapsed && (
             <h1 className="text-3xl font-bold text-white mb-8 drop-shadow-md">
-              AI Prompting Course
+              AI Learning Hub for EAP
             </h1>
           )}
           
           <SidebarGroupLabel className="text-white/90 text-xs uppercase tracking-wider mb-3">
-            Tools
+            Navigation
           </SidebarGroupLabel>
           <SidebarGroupContent className="mb-6">
             <SidebarMenu className="gap-2">
-              {tools.map((tool, index) => (
+              {navigation.map((item, index) => (
                 <SidebarMenuItem key={index}>
-                  <SidebarMenuButton asChild tooltip={tool.title} className="h-auto p-0">
+                  <SidebarMenuButton asChild tooltip={item.title} className="h-auto p-0">
                     <NavLink
-                      to={tool.url}
+                      to={item.url}
                       className={({ isActive }) =>
                         `block rounded-xl p-4 transition-all duration-300 ${
                           isActive
@@ -123,15 +129,15 @@ export function AppSidebar() {
                             background: 'linear-gradient(135deg, rgb(124, 58, 237) 0%, rgb(99, 102, 241) 100%)'
                           }}
                         >
-                          <tool.icon className="h-4 w-4" />
+                          <item.icon className="h-4 w-4" />
                         </div>
                         {!isCollapsed && (
                           <div className="flex flex-col flex-1 min-w-0">
                             <span className="text-sm font-semibold text-gray-900">
-                              {tool.title}
+                              {item.title}
                             </span>
                             <span className="text-xs text-gray-600">
-                              {tool.description}
+                              {item.description}
                             </span>
                           </div>
                         )}
@@ -144,7 +150,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
 
           <SidebarGroupLabel className="text-white/90 text-xs uppercase tracking-wider mb-3">
-            Lessons
+            Featured Lessons
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="gap-4">
