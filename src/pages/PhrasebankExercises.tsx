@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { ArrowLeft } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -70,6 +73,13 @@ const PhrasebankExercises = () => {
         <AppSidebar />
         <main className="flex-1 p-8 bg-background">
           <div className="max-w-6xl mx-auto space-y-8">
+            <Link to="/academic-phrasebank">
+              <Button variant="ghost" size="sm" className="mb-4">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Academic Phrasebank
+              </Button>
+            </Link>
+            
             <div className="space-y-4">
               <h1 className="text-4xl font-bold tracking-tight">Phrasebank Exercises</h1>
               <p className="text-xl text-muted-foreground">

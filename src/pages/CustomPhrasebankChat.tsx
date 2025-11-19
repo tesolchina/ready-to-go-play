@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -10,7 +11,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2 } from "lucide-react";
+import { Loader2, ArrowLeft } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 const DEMO_ESSAY = `The Prologue to Bertrand Russell's Autobiography
@@ -149,6 +150,13 @@ const CustomPhrasebankChat = () => {
         <AppSidebar />
         <main className="flex-1 p-8 bg-background">
           <div className="max-w-6xl mx-auto space-y-8">
+            <Link to="/academic-phrasebank">
+              <Button variant="ghost" size="sm" className="mb-4">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Academic Phrasebank
+              </Button>
+            </Link>
+            
             <div className="space-y-4">
               <h1 className="text-4xl font-bold tracking-tight">Pattern Analyzer</h1>
               <p className="text-xl text-muted-foreground">
