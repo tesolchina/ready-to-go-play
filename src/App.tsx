@@ -5,6 +5,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Index from "./pages/Index";
+import About from "./pages/About";
+import Blog from "./pages/Blog";
+import Lessons from "./pages/Lessons";
+import LearningApps from "./pages/LearningApps";
 import Lesson1 from "./pages/lessons/Lesson1";
 import Lesson6 from "./pages/lessons/Lesson6";
 import DynamicLesson from "./pages/lessons/DynamicLesson";
@@ -28,6 +32,10 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/lessons" element={<Lessons />} />
+          <Route path="/learning-apps" element={<LearningApps />} />
           <Route path="/SmartLessonBuilder" element={<Index />} />
           <Route path="/lesson/1" element={<Lesson1 />} />
           <Route path="/lesson/6" element={<Lesson6 />} />

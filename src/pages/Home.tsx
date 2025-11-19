@@ -30,10 +30,10 @@ const Home = () => {
         <div className="flex flex-col items-center justify-center space-y-12">
           <div className="text-center space-y-4">
             <h1 className="text-5xl font-bold tracking-tight sm:text-6xl">
-              Welcome to Smart Lesson Builder
+              AI Learning Hub for EAP Teachers
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl">
-              An AI-powered platform for educators to create engaging lessons, validate academic references, and enhance their teaching materials.
+              Empowering English for Academic Purposes educators with AI-powered tools for lesson creation, writing support, and academic resources.
             </p>
           </div>
 
