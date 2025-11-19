@@ -1,7 +1,7 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Code, Terminal } from "lucide-react";
+import { ArrowLeft, Code, Terminal, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { CollapsibleSection } from "@/components/CollapsibleSection";
@@ -9,15 +9,22 @@ import { ComprehensionCheck } from "@/components/ComprehensionCheck";
 import { BulletPoint } from "@/components/BulletPoint";
 import { OpenEndedReflection } from "@/components/OpenEndedReflection";
 import { MermaidDiagram } from "@/components/MermaidDiagram";
+import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const VibeCoding = () => {
+  const { toast } = useToast();
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     module1: false,
     module2: false,
     module3: false,
     module4: false,
   });
+  
+  const [userDescription, setUserDescription] = useState("");
+  const [mermaidCode, setMermaidCode] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const lessonSlug = "vibe-coding";
 
@@ -33,6 +40,43 @@ const VibeCoding = () => {
 
   const toggleSection = (sectionId: string) => {
     setOpenSections((prev) => ({ ...prev, [sectionId]: !prev[sectionId] }));
+  };
+  
+  const handleGenerateMermaid = async () => {
+    if (!userDescription.trim()) {
+      toast({
+        title: "Input Required",
+        description: "Please describe a process or concept to visualize",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    setIsGenerating(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-mermaid', {
+        body: { description: userDescription }
+      });
+      
+      if (error) throw error;
+      
+      if (data?.mermaidCode) {
+        setMermaidCode(data.mermaidCode);
+        toast({
+          title: "Diagram Generated!",
+          description: "Your mermaid diagram has been created successfully"
+        });
+      }
+    } catch (error) {
+      console.error('Error generating mermaid:', error);
+      toast({
+        title: "Generation Failed",
+        description: error instanceof Error ? error.message : "Failed to generate diagram",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   return (
@@ -451,6 +495,69 @@ print(f"The letter '{letter}' appears {count} times in '{word}'")`}</pre>
                   You don't need to become a programmer—you need to learn how to describe your tasks 
                   in a way that AI can translate into executable solutions.
                 </p>
+                
+                {/* Interactive Mermaid Generator */}
+                <div className="mt-8 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-6 rounded-xl border-2 border-purple-200 dark:border-purple-800">
+                  <h4 className="text-2xl font-semibold text-foreground mb-4 flex items-center gap-2">
+                    <span>✨</span>
+                    Try It Yourself: Generate Your Own Diagram
+                  </h4>
+                  
+                  <p className="text-foreground mb-4">
+                    Describe any learning process or concept in a few words, and watch AI transform it into 
+                    both executable mermaid code and a visual diagram!
+                  </p>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-sm font-semibold mb-2 block">
+                        Describe a process or concept:
+                      </label>
+                      <Textarea
+                        value={userDescription}
+                        onChange={(e) => setUserDescription(e.target.value)}
+                        placeholder="Example: A student learning process from confusion to mastery, or the steps of peer review in writing..."
+                        className="min-h-[100px] bg-background"
+                      />
+                    </div>
+                    
+                    <Button 
+                      onClick={handleGenerateMermaid}
+                      disabled={isGenerating || !userDescription.trim()}
+                      className="w-full"
+                    >
+                      {isGenerating ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Generating...
+                        </>
+                      ) : (
+                        "Generate Diagram"
+                      )}
+                    </Button>
+                    
+                    {mermaidCode && (
+                      <div className="space-y-4 mt-6">
+                        <div className="bg-background p-4 rounded border">
+                          <p className="text-sm font-semibold mb-2">Generated Mermaid Code:</p>
+                          <pre className="text-xs overflow-x-auto bg-muted p-3 rounded">
+                            {mermaidCode}
+                          </pre>
+                        </div>
+                        
+                        <div className="bg-background p-4 rounded border">
+                          <p className="text-sm font-semibold mb-3">Rendered Diagram:</p>
+                          <MermaidDiagram chart={mermaidCode} />
+                        </div>
+                        
+                        <p className="text-sm text-muted-foreground italic">
+                          💡 Notice: You described a concept in natural language, AI generated executable code, 
+                          and the browser rendered it instantly—all without you writing a single line of code!
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
 
               <ComprehensionCheck
