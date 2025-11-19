@@ -75,6 +75,9 @@ const PhrasebankExercises = () => {
   const [showExamples, setShowExamples] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedExampleIndex, setSelectedExampleIndex] = useState<number | null>(null);
+  const [isPracticing, setIsPracticing] = useState(false);
+  const [templateData, setTemplateData] = useState<any>(null);
+  const [isGeneratingTemplate, setIsGeneratingTemplate] = useState(false);
   const [studentSentence, setStudentSentence] = useState("");
   const [feedbackData, setFeedbackData] = useState<any>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -170,8 +173,45 @@ const PhrasebankExercises = () => {
 
   const handleSelectExample = (index: number) => {
     setSelectedExampleIndex(index);
+    setIsPracticing(false);
+    setTemplateData(null);
     setStudentSentence("");
     setFeedbackData(null);
+  };
+
+  const handleStartPractice = async () => {
+    if (selectedExampleIndex === null) return;
+
+    setIsGeneratingTemplate(true);
+    setTemplateData(null);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-template-analysis', {
+        body: {
+          example: examples[selectedExampleIndex],
+          discipline: discipline || "General",
+          category: selectedCategory,
+        }
+      });
+
+      if (error) throw error;
+
+      setTemplateData(data);
+      setIsPracticing(true);
+      toast({
+        title: "Template ready",
+        description: "Study the template and write your own sentence!",
+      });
+    } catch (error) {
+      console.error('Error generating template:', error);
+      toast({
+        title: "Error",
+        description: "Failed to generate template. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGeneratingTemplate(false);
+    }
   };
 
   const handleGetFeedback = async () => {
@@ -188,7 +228,7 @@ const PhrasebankExercises = () => {
     setFeedbackData(null);
 
     try {
-      const { data, error } = await supabase.functions.invoke('provide-feedback', {
+      const { data, error } = await supabase.functions.invoke('provide-student-feedback', {
         body: {
           selectedExample: examples[selectedExampleIndex],
           studentSentence: studentSentence.trim(),
@@ -202,7 +242,7 @@ const PhrasebankExercises = () => {
       setFeedbackData(data);
       toast({
         title: "Feedback ready",
-        description: "AI analysis complete!",
+        description: "Review your AI feedback below!",
       });
     } catch (error) {
       console.error('Error getting feedback:', error);
@@ -418,11 +458,32 @@ const PhrasebankExercises = () => {
                           </div>
                         </div>
                       ))}
-                      {selectedExampleIndex === null && (
-                        <p className="text-sm text-muted-foreground text-center py-2">
-                          👆 Click on an example to practice with it
-                        </p>
-                      )}
+                      <div className="space-y-2 pt-2">
+                        {selectedExampleIndex === null ? (
+                          <p className="text-sm text-muted-foreground text-center py-2">
+                            👆 Click on an example to practice with it
+                          </p>
+                        ) : !isPracticing ? (
+                          <Button
+                            onClick={handleStartPractice}
+                            disabled={isGeneratingTemplate}
+                            size="lg"
+                            className="w-full"
+                          >
+                            {isGeneratingTemplate ? (
+                              <>
+                                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                Generating Template...
+                              </>
+                            ) : (
+                              <>
+                                <Sparkles className="h-4 w-4 mr-2" />
+                                Practice with this Example
+                              </>
+                            )}
+                          </Button>
+                        ) : null}
+                      </div>
                     </div>
                   ) : (
                     <p className="text-center text-muted-foreground py-8">
@@ -433,33 +494,38 @@ const PhrasebankExercises = () => {
               </Card>
             )}
 
-            {selectedExampleIndex !== null && (
+            {isPracticing && templateData && (
               <Card>
                 <CardHeader>
                   <CardTitle>Practice Exercise</CardTitle>
                   <CardDescription>
-                    Analyze the template and write your own sentence based on the selected example
+                    Study the template and linguistic patterns, then write your own sentence on a different topic in {discipline || "your field"}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {/* Template Analysis Section */}
-                  {feedbackData && (
+                  {templateData && (
                     <div className="space-y-4 p-4 bg-muted/30 rounded-lg border">
                       <div>
                         <h4 className="font-semibold mb-2 flex items-center gap-2">
-                          <Badge variant="secondary">Template</Badge>
+                          <Badge variant="secondary">Sentence Template</Badge>
                         </h4>
                         <p className="text-sm font-mono bg-background p-3 rounded border">
-                          {feedbackData.template}
+                          {templateData.template}
                         </p>
+                        {templateData.hint && (
+                          <p className="text-sm text-muted-foreground mt-2 italic">
+                            💡 {templateData.hint}
+                          </p>
+                        )}
                       </div>
 
                       <div>
                         <h4 className="font-semibold mb-2 flex items-center gap-2">
-                          <Badge variant="secondary">Linguistic Features</Badge>
+                          <Badge variant="secondary">Linguistic Features to Use</Badge>
                         </h4>
                         <ul className="space-y-2">
-                          {feedbackData.linguisticFeatures?.map((feature: string, idx: number) => (
+                          {templateData.linguisticFeatures?.map((feature: string, idx: number) => (
                             <li key={idx} className="text-sm flex items-start gap-2">
                               <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
                               <span>{feature}</span>
@@ -470,16 +536,24 @@ const PhrasebankExercises = () => {
 
                       <div>
                         <h4 className="font-semibold mb-2 flex items-center gap-2">
-                          <Badge variant="secondary">Patterns to Imitate</Badge>
+                          <Badge variant="secondary">Lexicogrammatical Patterns</Badge>
                         </h4>
                         <ul className="space-y-2">
-                          {feedbackData.patterns?.map((pattern: string, idx: number) => (
-                            <li key={idx} className="text-sm font-mono bg-background p-2 rounded border">
-                              {pattern}
+                          {templateData.patterns?.map((pattern: string, idx: number) => (
+                            <li key={idx} className="text-sm bg-background p-2 rounded border">
+                              <span className="font-mono text-primary">{pattern.split(':')[0]}:</span>
+                              <span className="ml-1">{pattern.split(':').slice(1).join(':')}</span>
                             </li>
                           ))}
                         </ul>
                       </div>
+
+                      {templateData.suggestedTopic && (
+                        <div className="p-3 bg-blue-50 dark:bg-blue-950/20 rounded border border-blue-200 dark:border-blue-800">
+                          <h5 className="font-medium text-sm mb-1 text-blue-800 dark:text-blue-400">Suggested Topic</h5>
+                          <p className="text-sm">{templateData.suggestedTopic}</p>
+                        </div>
+                      )}
                     </div>
                   )}
 
@@ -515,7 +589,7 @@ const PhrasebankExercises = () => {
                   </div>
 
                   {/* Feedback Section */}
-                  {feedbackData?.feedback && (
+                  {feedbackData && (
                     <div className="space-y-4 p-4 bg-card rounded-lg border-2 border-primary/20">
                       <h4 className="font-semibold text-lg flex items-center gap-2">
                         <AlertCircle className="h-5 w-5 text-primary" />
@@ -525,24 +599,24 @@ const PhrasebankExercises = () => {
                       <div className="space-y-3">
                         <div className="p-3 bg-green-50 dark:bg-green-950/20 rounded border border-green-200 dark:border-green-800">
                           <h5 className="font-medium text-sm mb-1 text-green-800 dark:text-green-400">Strengths</h5>
-                          <p className="text-sm">{feedbackData.feedback.strengths}</p>
+                          <p className="text-sm">{feedbackData.strengths}</p>
                         </div>
 
                         <div className="p-3 bg-blue-50 dark:bg-blue-950/20 rounded border border-blue-200 dark:border-blue-800">
                           <h5 className="font-medium text-sm mb-1 text-blue-800 dark:text-blue-400">Areas for Improvement</h5>
-                          <p className="text-sm">{feedbackData.feedback.improvements}</p>
+                          <p className="text-sm">{feedbackData.improvements}</p>
                         </div>
 
-                        {feedbackData.feedback.revisedVersion && (
+                        {feedbackData.revisedVersion && (
                           <div className="p-3 bg-purple-50 dark:bg-purple-950/20 rounded border border-purple-200 dark:border-purple-800">
                             <h5 className="font-medium text-sm mb-1 text-purple-800 dark:text-purple-400">Suggested Revision</h5>
-                            <p className="text-sm italic">{feedbackData.feedback.revisedVersion}</p>
+                            <p className="text-sm italic">{feedbackData.revisedVersion}</p>
                           </div>
                         )}
 
                         <div className="p-3 bg-muted/50 rounded border">
                           <h5 className="font-medium text-sm mb-1">Academic Register</h5>
-                          <p className="text-sm">{feedbackData.feedback.registerComment}</p>
+                          <p className="text-sm">{feedbackData.registerComment}</p>
                         </div>
                       </div>
                     </div>
