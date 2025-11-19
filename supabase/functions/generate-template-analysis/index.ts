@@ -42,11 +42,13 @@ Provide:
 
 2. HINT: One sentence explaining how to apply this template to a different ${discipline} topic
 
-3. LINGUISTIC FEATURES: List 3-4 key features to use (e.g., "Passive voice for objectivity", "Hedging with 'may' or 'could'", "Nominalization of verbs", "Cause-effect markers like 'led to'"). For each feature, explain in 1 sentence WHY it's used.
+3. LINGUISTIC FEATURES: List EXACTLY 2 key features. Each feature must be 2 lines maximum.
+   Format: "Feature name: Brief explanation (max 2 lines)"
+   Example: "Passive voice: Creates objectivity by removing the actor. Commonly used in reporting results."
 
-4. LEXICOGRAMMATICAL PATTERNS: Identify 2-3 specific patterns with examples:
-   Format: "Pattern name: explanation with example from original"
-   Example: "Cause-effect marker: 'X led to Y' - shows clear causation between variables"
+4. LEXICOGRAMMATICAL PATTERNS: Identify EXACTLY 2 specific patterns. Each pattern must be 2 lines maximum.
+   Format: "Pattern: Brief explanation with example (max 2 lines)"
+   Example: "X led to Y: Shows direct causation. Used when reporting clear cause-effect relationships."
 
 5. SUGGESTED TOPIC: Suggest a specific, different topic within ${discipline} that students could write about using this template
 

@@ -559,6 +559,10 @@ const PhrasebankExercises = () => {
 
                   {/* Student Input Section */}
                   <div className="space-y-3">
+                    <div className="p-3 bg-primary/5 rounded-lg border border-primary/20">
+                      <Label className="text-xs uppercase tracking-wide text-muted-foreground">Template to Follow</Label>
+                      <p className="text-sm font-mono mt-1">{templateData.template}</p>
+                    </div>
                     <Label htmlFor="student-sentence">
                       Your Sentence {discipline && discipline !== "none" && `(${discipline} context)`}
                     </Label>
