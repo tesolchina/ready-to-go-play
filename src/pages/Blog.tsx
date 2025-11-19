@@ -2,42 +2,24 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Calendar, User } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Link } from "react-router-dom";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Blog = () => {
-  const blogPosts = [
-    {
-      id: 1,
-      title: "Getting Started with AI in EAP Teaching",
-      excerpt: "Learn how to integrate AI tools into your EAP classroom effectively and ethically.",
-      date: "2024-01-15",
-      author: "Dr. Sarah Johnson",
-      category: "Teaching Tips"
-    },
-    {
-      id: 2,
-      title: "The Future of Academic Writing Support",
-      excerpt: "Exploring how AI is transforming the way we teach academic writing skills.",
-      date: "2024-01-10",
-      author: "Prof. Michael Chen",
-      category: "Research"
-    },
-    {
-      id: 3,
-      title: "Best Practices for Using Academic PhraseBank",
-      excerpt: "Maximize the benefits of our AI-powered phrasebank tool in your lessons.",
-      date: "2024-01-05",
-      author: "Dr. Emily Rodriguez",
-      category: "Tool Guides"
-    },
-    {
-      id: 4,
-      title: "Pattern Analysis in Academic Writing",
-      excerpt: "Understanding text patterns to help students develop stronger writing skills.",
-      date: "2023-12-28",
-      author: "Dr. James Wilson",
-      category: "Writing Skills"
-    },
-  ];
+  const { data: blogPosts, isLoading } = useQuery({
+    queryKey: ['blog-posts'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .order('published_date', { ascending: false });
+      
+      if (error) throw error;
+      return data;
+    }
+  });
 
   return (
     <SidebarProvider>
@@ -52,33 +34,60 @@ const Blog = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {blogPosts.map((post) => (
-                <Card key={post.id} className="hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                      <span className="px-2 py-1 bg-primary/10 text-primary rounded-md text-xs font-medium">
-                        {post.category}
-                      </span>
-                    </div>
-                    <CardTitle className="text-2xl">{post.title}</CardTitle>
-                    <CardDescription className="text-base">{post.excerpt}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
-                        <span>{new Date(post.date).toLocaleDateString()}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <User className="w-4 h-4" />
-                        <span>{post.author}</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            {isLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {[1, 2, 3, 4].map((i) => (
+                  <Card key={i}>
+                    <CardHeader>
+                      <Skeleton className="h-6 w-20 mb-2" />
+                      <Skeleton className="h-8 w-3/4 mb-2" />
+                      <Skeleton className="h-4 w-full" />
+                    </CardHeader>
+                    <CardContent>
+                      <Skeleton className="h-4 w-2/3" />
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : blogPosts && blogPosts.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {blogPosts.map((post) => (
+                  <Link to={`/blog/${post.slug}`} key={post.id}>
+                    <Card className="hover:shadow-lg transition-all hover:scale-[1.02] h-full">
+                      <CardHeader>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+                          {post.category && (
+                            <span className="px-2 py-1 bg-primary/10 text-primary rounded-md text-xs font-medium">
+                              {post.category}
+                            </span>
+                          )}
+                        </div>
+                        <CardTitle className="text-2xl">{post.title}</CardTitle>
+                        {post.excerpt && (
+                          <CardDescription className="text-base">{post.excerpt}</CardDescription>
+                        )}
+                      </CardHeader>
+                      <CardContent>
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                          <div className="flex items-center gap-1">
+                            <Calendar className="w-4 h-4" />
+                            <span>{new Date(post.published_date).toLocaleDateString('zh-CN')}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <User className="w-4 h-4" />
+                            <span>{post.author}</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground text-lg">暂无博客文章</p>
+              </div>
+            )}
           </div>
         </main>
       </div>
