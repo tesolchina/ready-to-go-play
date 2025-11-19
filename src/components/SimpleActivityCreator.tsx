@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2, Clock, Users, Copy, Check } from "lucide-react";
 import { requestQueue } from "@/lib/requestQueue";
+import ReactMarkdown from "react-markdown";
 
 export const SimpleActivityCreator = () => {
   const [nickname, setNickname] = useState("");
@@ -211,8 +212,8 @@ export const SimpleActivityCreator = () => {
               )}
             </Button>
           </div>
-          <div className="bg-muted p-4 rounded-lg">
-            <pre className="whitespace-pre-wrap text-base font-mono">{systemPrompt}</pre>
+          <div className="bg-muted p-4 rounded-lg prose prose-base max-w-none">
+            <ReactMarkdown>{systemPrompt}</ReactMarkdown>
           </div>
           <p className="text-sm text-muted-foreground mt-4">
             Use this prompt in your AI chatbot or teaching assistant tool to provide consistent, helpful feedback to students.

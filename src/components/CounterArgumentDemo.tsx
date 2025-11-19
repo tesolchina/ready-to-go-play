@@ -7,6 +7,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2, Lightbulb, MessageSquare, ChevronDown, ChevronUp } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 export const CounterArgumentDemo = () => {
   const [response, setResponse] = useState("");
@@ -18,7 +19,9 @@ export const CounterArgumentDemo = () => {
 
   const systemPrompt = `This is a student's counter-argument to the claim: ${demoArgument}
 
-Provide constructive feedback on their reasoning, use of evidence, and clarity. Be encouraging and specific. Suggest improvements if needed.`;
+Provide constructive feedback on their reasoning, use of evidence, and clarity. Be encouraging and specific. Suggest improvements if needed.
+
+IMPORTANT: Keep your response under 500 characters. Be concise and focus on the most important points.`;
 
   const handleSubmit = async () => {
     if (!response.trim()) {
@@ -157,8 +160,8 @@ Provide constructive feedback on their reasoning, use of evidence, and clarity. 
             <MessageSquare className="w-5 h-5" />
             AI Feedback
           </h4>
-          <div className="text-base leading-relaxed text-foreground whitespace-pre-wrap">
-            {feedback}
+          <div className="prose prose-base max-w-none text-foreground">
+            <ReactMarkdown>{feedback}</ReactMarkdown>
           </div>
         </Card>
       )}
