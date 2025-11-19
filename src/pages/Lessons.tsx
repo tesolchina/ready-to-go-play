@@ -57,7 +57,7 @@ const Lessons = () => {
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
         <AppSidebar />
-        <main className="flex-1 p-8">
+        <main className="flex-1 p-8 bg-background">
           <div className="max-w-6xl mx-auto space-y-8">
             <div className="space-y-4">
               <h1 className="text-4xl font-bold tracking-tight">All Lessons</h1>
