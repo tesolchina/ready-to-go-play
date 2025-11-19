@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.generate-simple-activity]
 verify_jwt = false
+
+[functions.analyze-reflections]
+verify_jwt = false
