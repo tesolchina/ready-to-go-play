@@ -9,6 +9,7 @@ import { ComprehensionCheck } from "@/components/ComprehensionCheck";
 import { BulletPoint } from "@/components/BulletPoint";
 import { CounterArgumentDemo } from "@/components/CounterArgumentDemo";
 import { SimpleActivityCreator } from "@/components/SimpleActivityCreator";
+import { OpenEndedReflection } from "@/components/OpenEndedReflection";
 import { supabase } from "@/integrations/supabase/client";
 
 const InteractiveLearningReflection = () => {
@@ -297,17 +298,11 @@ const InteractiveLearningReflection = () => {
 
                 <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg space-y-4">
                   <h4 className="text-2xl font-semibold text-foreground">Final Reflection</h4>
-                  <ComprehensionCheck
+                  <OpenEndedReflection
                     lessonSlug={lessonSlug}
                     sectionId="module4"
                     questionId="main-insight"
                     question="What is one key insight or teaching practice from this lesson that you would like to try in your own classroom?"
-                    options={[
-                      "Using AI for personalized student feedback",
-                      "Creating counter-argument exercises",
-                      "Identifying my best teaching practices to scale",
-                      "Other approach (please share below)"
-                    ]}
                   />
                 </div>
               </div>
