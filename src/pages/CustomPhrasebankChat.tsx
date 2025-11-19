@@ -2,146 +2,91 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
+import { CollapsibleSection } from "@/components/CollapsibleSection";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, ArrowLeft } from "lucide-react";
-import ReactMarkdown from "react-markdown";
+import { Sparkles, Copy, ArrowLeft } from "lucide-react";
 
-const DEMO_ESSAY = `The Prologue to Bertrand Russell's Autobiography
-What I Have Lived For
+interface Template {
+  original: string;
+  template: string;
+  explanation: string;
+}
 
-Three passions, simple but overwhelmingly strong, have governed my life: the longing for love, the search for knowledge, and unbearable pity for the suffering of mankind. These passions, like great winds, have blown me hither and thither, in a wayward course, over a great ocean of anguish, reaching to the very verge of despair.
+interface Exercise {
+  instruction: string;
+  template: string;
+  hints: string[];
+}
 
-I have sought love, first, because it brings ecstasy - ecstasy so great that I would often have sacrificed all the rest of life for a few hours of this joy. I have sought it, next, because it relieves loneliness--that terrible loneliness in which one shivering consciousness looks over the rim of the world into the cold unfathomable lifeless abyss. I have sought it finally, because in the union of love I have seen, in a mystic miniature, the prefiguring vision of the heaven that saints and poets have imagined. This is what I sought, and though it might seem too good for human life, this is what--at last--I have found.
+interface Pattern {
+  categoryType: "moves" | "general";
+  category: string;
+  subcategory: string;
+  templates: Template[];
+  exercises: Exercise[];
+}
 
-With equal passion I have sought knowledge. I have wished to understand the hearts of men. I have wished to know why the stars shine. And I have tried to apprehend the Pythagorean power by which number holds sway above the flux. A little of this, but not much, I have achieved.
+interface AnalysisResult {
+  patterns: Pattern[];
+}
 
-Love and knowledge, so far as they were possible, led upward toward the heavens. But always pity brought me back to earth. Echoes of cries of pain reverberate in my heart. Children in famine, victims tortured by oppressors, helpless old people a burden to their sons, and the whole world of loneliness, poverty, and pain make a mockery of what human life should be. I long to alleviate this evil, but I cannot, and I too suffer.
-
-This has been my life. I have found it worth living, and would gladly live it again if the chance were offered me.
-
-Bertrand Russell (1872-1970) won the Nobel prize for literature for his History of Western Philosophy and was the co-author of Principia Mathematica.`;
-
-const DEMO_PATTERN = `This text exhibits a highly structured and rhetorically sophisticated approach, employing a clear organizational strategy to convey a central idea and its foundational components.
-
-**Overall Structure and Organization:**
-
-The text is organized into five distinct thematic sections, followed by a brief concluding biographical note.
-
-1.  **Introduction of Core Thesis:** The opening paragraph establishes the central premise or thesis statement, outlining the foundational elements that define the speaker's life. This acts as an overarching declaration.
-2.  **Elaboration of First Core Element:** This section systematically unpacks the first of the previously introduced elements, providing multiple facets and motivations behind its pursuit.
-3.  **Elaboration of Second Core Element:** This section parallels the previous one, detailing the motivations and achievements related to the second foundational element.
-4.  **Synthesis and Introduction of Third Core Element:** This segment serves as a transition, linking the first two elements but then introducing the third, contrasting its nature and impact with the preceding two. It also highlights the emotional weight and personal connection to this final element.
-5.  **Concluding Affirmation:** This brief closing statement offers a meta-commentary on the life described, providing a conclusive judgment or summation.
-6.  **External Context/Authorial Identification:** A brief, factual statement provides external context about the author, distinct from the reflective narrative.
-
-**Rhetorical Techniques and Patterns:**
-
-*   **Parallel Structure/Anaphora:** The text heavily employs parallelism, particularly through anaphora (repetition of words or phrases at the beginning of clauses), most notably with "I have sought" in the second paragraph. This creates a sense of rhythm, emphasis, and cumulative effect.
-*   **Rule of Three:** The central thesis revolves around three distinct passions, which is a classic rhetorical device that creates a sense of completeness and balance.
-*   **Metaphor and Simile:** The text uses vivid metaphors and similes (e.g., "like great winds," "ocean of anguish," "shivering consciousness") to evoke powerful emotional and sensory experiences.`;
+const EXAMPLE_PARAGRAPH = `Traditionally, teachers have focused on teaching rather than learning. In recent years, however, universities and other institutions have recognised the importance of student-centered learning approaches. It is increasingly common for academic departments and teachers to reconsider their practices and adjust teaching strategies to encourage students to assume more responsibility for their own learning. This shift has been facilitated by AI tools that enable more interactive and personalized learning experiences. AI can help teachers create customized learning materials, provide instant feedback, and facilitate peer-to-peer learning. Nevertheless, the role of the teacher remains critical in guiding students and ensuring that technology enhances rather than replaces human interaction.`;
 
 const CustomPhrasebankChat = () => {
-  const [userEssay, setUserEssay] = useState("");
-  const [userPatterns, setUserPatterns] = useState("");
-  const [userTopic, setUserTopic] = useState("");
-  const [userOutputType, setUserOutputType] = useState<"essay" | "outline">("essay");
-  const [userResult, setUserResult] = useState("");
-  
-  const [demoTopic, setDemoTopic] = useState("");
-  const [demoOutputType, setDemoOutputType] = useState<"essay" | "outline">("essay");
-  const [demoResult, setDemoResult] = useState("");
-  const [demoPatterns] = useState(DEMO_PATTERN);
-  
-  const [loading, setLoading] = useState(false);
+  const [paragraphInput, setParagraphInput] = useState(EXAMPLE_PARAGRAPH);
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const { toast } = useToast();
 
-  const handleAnalyze = async (text: string, isDemo: boolean) => {
-    if (!text.trim()) {
+  const handleAnalyzeParagraph = async () => {
+    if (!paragraphInput.trim() || paragraphInput.length < 50) {
       toast({
-        title: "Error",
-        description: "Please enter some text to analyze",
+        title: "Input required",
+        description: "Please enter at least 50 characters of text.",
         variant: "destructive",
       });
       return;
     }
 
-    setLoading(true);
+    setIsAnalyzing(true);
+    
     try {
-      const { data, error } = await supabase.functions.invoke('pattern-analyzer', {
-        body: { text, action: 'analyze' }
+      const { data, error } = await supabase.functions.invoke('analyze-paragraph', {
+        body: { paragraph: paragraphInput }
       });
 
       if (error) throw error;
 
-      if (!isDemo) {
-        setUserPatterns(data.result);
+      if (data && data.patterns) {
+        setAnalysisResult(data);
+        toast({
+          title: "Analysis complete",
+          description: `Found ${data.patterns.length} relevant pattern(s)`,
+        });
       }
-      
-      toast({
-        title: "Success",
-        description: "Text patterns analyzed successfully",
-      });
     } catch (error: any) {
+      console.error('Analysis error:', error);
       toast({
-        title: "Error",
-        description: error.message || "Failed to analyze text",
+        title: "Analysis failed",
+        description: error.message || "Failed to analyze paragraph.",
         variant: "destructive",
       });
     } finally {
-      setLoading(false);
+      setIsAnalyzing(false);
     }
   };
 
-  const handleGenerate = async (patterns: string, topic: string, outputType: string, isDemo: boolean) => {
-    if (!patterns.trim() || !topic.trim()) {
-      toast({
-        title: "Error",
-        description: "Please provide both patterns and a topic",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('pattern-analyzer', {
-        body: { 
-          text: patterns, 
-          action: 'generate',
-          topic,
-          outputType 
-        }
-      });
-
-      if (error) throw error;
-
-      if (isDemo) {
-        setDemoResult(data.result);
-      } else {
-        setUserResult(data.result);
-      }
-      
-      toast({
-        title: "Success",
-        description: `${outputType === 'essay' ? 'Essay' : 'Outline'} generated successfully`,
-      });
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to generate content",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast({
+      title: "Copied",
+      description: "Template copied to clipboard",
+    });
   };
 
   return (
@@ -158,192 +103,165 @@ const CustomPhrasebankChat = () => {
             </Link>
             
             <div className="space-y-4">
-              <h1 className="text-4xl font-bold tracking-tight">Pattern Analyzer</h1>
+              <h1 className="text-4xl font-bold tracking-tight">Academic Phrasebank Analyzer</h1>
               <p className="text-xl text-muted-foreground">
-                Analyze writing patterns and generate new content
+                Identify Academic Phrasebank patterns in your writing and get relevant templates
               </p>
             </div>
 
-            <Tabs defaultValue="demo" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="demo">Demo Mode</TabsTrigger>
-                <TabsTrigger value="custom">Custom Analysis</TabsTrigger>
-              </TabsList>
+            <Card className="shadow-lg border-2">
+              <CardHeader className="border-b bg-gradient-to-r from-accent/5 to-primary/5">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-accent/10 rounded-xl">
+                    <Sparkles className="h-5 w-5 text-accent" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-2xl">Analyze Your Paragraph</CardTitle>
+                    <CardDescription>
+                      Paste a paragraph to identify which Academic Phrasebank categories and moves it uses
+                    </CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
 
-              <TabsContent value="demo" className="space-y-6 mt-6">
-                {!demoResult ? (
-                  <>
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Example Essay</CardTitle>
-                        <CardDescription>
-                          Bertrand Russell's famous prologue
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="prose prose-sm max-w-none dark:prose-invert">
-                          <ReactMarkdown>{DEMO_ESSAY}</ReactMarkdown>
-                        </div>
-                      </CardContent>
-                    </Card>
+              <CardContent className="pt-6">
+                <div className="space-y-4">
+                  <Textarea
+                    value={paragraphInput}
+                    onChange={(e) => setParagraphInput(e.target.value)}
+                    placeholder="Paste a paragraph from an academic text here..."
+                    className="min-h-[200px] text-base"
+                  />
+                  
+                  <Button 
+                    onClick={handleAnalyzeParagraph}
+                    disabled={isAnalyzing}
+                    size="lg"
+                    className="w-full sm:w-auto"
+                  >
+                    {isAnalyzing ? "Analyzing..." : "Analyze Paragraph"}
+                  </Button>
+                </div>
 
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Identified Patterns</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="prose prose-sm max-w-none dark:prose-invert">
-                          <ReactMarkdown>{demoPatterns}</ReactMarkdown>
-                        </div>
-                      </CardContent>
-                    </Card>
+                {analysisResult && (
+                  <div className="mt-8 space-y-6">
+                    <div className="flex items-center gap-2 pb-2 border-b">
+                      <h3 className="text-lg font-semibold">Analysis Results</h3>
+                      <Badge variant="secondary">{analysisResult.patterns.length} patterns found</Badge>
+                    </div>
 
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Generate New Content</CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div>
-                          <Label htmlFor="demo-topic">New Topic</Label>
-                          <Input
-                            id="demo-topic"
-                            placeholder="e.g., My passion for music"
-                            value={demoTopic}
-                            onChange={(e) => setDemoTopic(e.target.value)}
-                          />
-                        </div>
-
-                        <div>
-                          <Label>Output Type</Label>
-                          <RadioGroup value={demoOutputType} onValueChange={(v) => setDemoOutputType(v as "essay" | "outline")}>
-                            <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="essay" id="demo-essay" />
-                              <Label htmlFor="demo-essay">Complete Essay</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="outline" id="demo-outline" />
-                              <Label htmlFor="demo-outline">Outline</Label>
-                            </div>
-                          </RadioGroup>
-                        </div>
-
-                        <Button
-                          onClick={() => handleGenerate(demoPatterns, demoTopic, demoOutputType, true)}
-                          disabled={loading || !demoTopic.trim()}
-                        >
-                          {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-                          Generate {demoOutputType === 'essay' ? 'Essay' : 'Outline'}
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  </>
-                ) : (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Generated {demoOutputType === 'essay' ? 'Essay' : 'Outline'}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="prose prose-sm max-w-none dark:prose-invert">
-                        <ReactMarkdown>{demoResult}</ReactMarkdown>
-                      </div>
-                      <Button variant="outline" onClick={() => setDemoResult("")}>
-                        Try Another Topic
-                      </Button>
-                    </CardContent>
-                  </Card>
-                )}
-              </TabsContent>
-
-              <TabsContent value="custom" className="space-y-6 mt-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Your Essay</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <Textarea
-                      value={userEssay}
-                      onChange={(e) => setUserEssay(e.target.value)}
-                      placeholder="Paste your essay here..."
-                      className="min-h-[300px]"
-                    />
-                    <Button
-                      onClick={() => handleAnalyze(userEssay, false)}
-                      disabled={loading || !userEssay.trim()}
-                    >
-                      {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-                      Analyze Pattern
-                    </Button>
-                  </CardContent>
-                </Card>
-
-                {userPatterns && (
-                  <>
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Identified Patterns</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="prose prose-sm max-w-none dark:prose-invert">
-                          <ReactMarkdown>{userPatterns}</ReactMarkdown>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Generate New Content</CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div>
-                          <Label htmlFor="user-topic">New Topic</Label>
-                          <Input
-                            id="user-topic"
-                            placeholder="e.g., My passion for music"
-                            value={userTopic}
-                            onChange={(e) => setUserTopic(e.target.value)}
-                          />
-                        </div>
-
-                        <div>
-                          <Label>Output Type</Label>
-                          <RadioGroup value={userOutputType} onValueChange={(v) => setUserOutputType(v as "essay" | "outline")}>
-                            <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="essay" id="user-essay" />
-                              <Label htmlFor="user-essay">Complete Essay</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="outline" id="user-outline" />
-                              <Label htmlFor="user-outline">Outline</Label>
-                            </div>
-                          </RadioGroup>
-                        </div>
-
-                        <Button
-                          onClick={() => handleGenerate(userPatterns, userTopic, userOutputType, false)}
-                          disabled={loading || !userTopic.trim()}
-                        >
-                          {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-                          Generate
-                        </Button>
-                      </CardContent>
-                    </Card>
-
-                    {userResult && (
-                      <Card>
-                        <CardHeader>
-                          <CardTitle>Generated Content</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="prose prose-sm max-w-none dark:prose-invert">
-                            <ReactMarkdown>{userResult}</ReactMarkdown>
+                    {analysisResult.patterns.map((pattern, patternIdx) => (
+                      <CollapsibleSection
+                        key={patternIdx}
+                        title={
+                          <div className="flex items-center gap-3">
+                            <Badge variant={pattern.categoryType === "moves" ? "default" : "secondary"}>
+                              {pattern.categoryType === "moves" ? "Move" : "Function"}
+                            </Badge>
+                            <span className="font-semibold">{pattern.category}</span>
+                            {pattern.subcategory && (
+                              <>
+                                <span className="text-muted-foreground">→</span>
+                                <span className="text-sm text-muted-foreground">{pattern.subcategory}</span>
+                              </>
+                            )}
                           </div>
-                        </CardContent>
-                      </Card>
-                    )}
-                  </>
+                        }
+                        defaultOpen={true}
+                      >
+                        <div className="space-y-4">
+                          {pattern.templates.length > 0 && (
+                            <div className="space-y-3">
+                              <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">
+                                Templates
+                              </h4>
+                              {pattern.templates.map((template, idx) => (
+                                <Card key={idx} className="bg-muted/30">
+                                  <CardContent className="pt-4">
+                                    <div className="space-y-3">
+                                      <div className="flex items-start justify-between gap-4">
+                                        <div className="space-y-2 flex-1">
+                                          <p className="text-sm font-medium">Original:</p>
+                                          <p className="text-sm text-muted-foreground italic">
+                                            {template.original}
+                                          </p>
+                                        </div>
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          onClick={() => copyToClipboard(template.template)}
+                                          className="shrink-0"
+                                        >
+                                          <Copy className="h-4 w-4" />
+                                        </Button>
+                                      </div>
+
+                                      <div className="space-y-2">
+                                        <p className="text-sm font-medium">Template:</p>
+                                        <p className="text-sm font-mono bg-background p-3 rounded border">
+                                          {template.template}
+                                        </p>
+                                      </div>
+
+                                      {template.explanation && (
+                                        <div className="space-y-2 pt-2 border-t">
+                                          <p className="text-sm font-medium">Usage:</p>
+                                          <p className="text-sm text-muted-foreground">
+                                            {template.explanation}
+                                          </p>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </CardContent>
+                                </Card>
+                              ))}
+                            </div>
+                          )}
+
+                          {pattern.exercises.length > 0 && (
+                            <div className="space-y-3">
+                              <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">
+                                Practice Exercises
+                              </h4>
+                              {pattern.exercises.map((exercise, idx) => (
+                                <Card key={idx} className="bg-primary/5">
+                                  <CardContent className="pt-4">
+                                    <div className="space-y-3">
+                                      <div className="space-y-2">
+                                        <p className="text-sm font-medium">Instructions:</p>
+                                        <p className="text-sm">{exercise.instruction}</p>
+                                      </div>
+
+                                      <div className="space-y-2">
+                                        <p className="text-sm font-medium">Template:</p>
+                                        <p className="text-sm font-mono bg-background p-3 rounded border">
+                                          {exercise.template}
+                                        </p>
+                                      </div>
+
+                                      {exercise.hints && exercise.hints.length > 0 && (
+                                        <div className="space-y-2 pt-2 border-t">
+                                          <p className="text-sm font-medium">Hints:</p>
+                                          <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                                            {exercise.hints.map((hint, hintIdx) => (
+                                              <li key={hintIdx}>{hint}</li>
+                                            ))}
+                                          </ul>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </CardContent>
+                                </Card>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </CollapsibleSection>
+                    ))}
+                  </div>
                 )}
-              </TabsContent>
-            </Tabs>
+              </CardContent>
+            </Card>
           </div>
         </main>
       </div>
