@@ -54,17 +54,17 @@ export function AppSidebar() {
   return (
     <Sidebar 
       collapsible="icon" 
-      className="border-none bg-gradient-to-b from-indigo-50 to-purple-50"
+      className="border-r bg-sidebar"
     >
       <SidebarContent className="px-6 py-8">
         <SidebarGroup>
           {!isCollapsed && (
-            <h1 className="text-3xl font-bold text-primary mb-8">
+            <h1 className="text-2xl font-bold text-white mb-8">
               AI Learning Hub for EAP
             </h1>
           )}
           
-          <SidebarGroupLabel className="text-muted-foreground text-xs uppercase tracking-wider mb-3 font-semibold">
+          <SidebarGroupLabel className="text-white/70 text-xs uppercase tracking-wider mb-3 font-semibold">
             Navigation
           </SidebarGroupLabel>
           <SidebarGroupContent className="mb-6">
@@ -75,10 +75,10 @@ export function AppSidebar() {
                     <NavLink
                       to={item.url}
                       className={({ isActive }) =>
-                        `block rounded-xl p-4 transition-all duration-300 ${
+                        `block rounded-lg p-3 transition-all duration-200 ${
                           isActive
-                            ? "bg-primary text-primary-foreground shadow-lg"
-                            : "bg-white hover:bg-accent hover:text-accent-foreground shadow-sm hover:shadow-md"
+                            ? "bg-sidebar-accent text-white"
+                            : "text-white/80 hover:bg-white/10 hover:text-white"
                         }`
                       }
                     >
@@ -86,11 +86,8 @@ export function AppSidebar() {
                         <item.icon className="h-5 w-5 flex-shrink-0" />
                         {!isCollapsed && (
                           <div className="flex flex-col flex-1 min-w-0">
-                            <span className="text-sm font-semibold">
+                            <span className="text-sm font-medium">
                               {item.title}
-                            </span>
-                            <span className="text-xs opacity-80">
-                              {item.description}
                             </span>
                           </div>
                         )}

@@ -17,17 +17,17 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 210 24% 16%;
 
-    --primary: 250 84% 54%;
+    --primary: 220 90% 40%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 214 32% 91%;
-    --secondary-foreground: 250 84% 54%;
+    --secondary-foreground: 220 90% 40%;
 
-    --muted: 214 32% 91%;
+    --muted: 220 13% 91%;
     --muted-foreground: 215 16% 47%;
 
-    --accent: 210 40% 96%;
-    --accent-foreground: 250 84% 54%;
+    --accent: 220 60% 97%;
+    --accent-foreground: 220 90% 40%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
@@ -40,14 +40,19 @@ All colors MUST be HSL.
 
     --border: 214 32% 91%;
     --input: 214 32% 91%;
-    --ring: 250 84% 54%;
+    --ring: 220 90% 40%;
 
     --radius: 0.75rem;
 
-    --gradient-primary: linear-gradient(135deg, hsl(250 84% 54%) 0%, hsl(280 70% 50%) 100%);
-    --gradient-background: linear-gradient(135deg, hsl(250 72% 60%) 0%, hsl(280 65% 52%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(220 90% 40%) 0%, hsl(220 90% 50%) 100%);
+    --gradient-background: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(220 13% 97%) 100%);
     --gradient-success: linear-gradient(90deg, hsl(197 71% 53%) 0%, hsl(142 71% 45%) 100%);
     --gradient-card: linear-gradient(135deg, hsl(0 0% 98%) 0%, hsl(0 0% 100%) 100%);
+    
+    --sidebar-background: 220 13% 46%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-accent: 220 90% 40%;
+    --sidebar-accent-foreground: 0 0% 100%;
     
     --shadow-elevated: 0 10px 30px rgba(0, 0, 0, 0.1);
     --shadow-card: 0 5px 20px rgba(0, 0, 0, 0.08);
@@ -106,8 +111,7 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply text-foreground;
-    background: var(--gradient-background);
+    @apply text-foreground bg-background;
     min-height: 100vh;
   }
 
