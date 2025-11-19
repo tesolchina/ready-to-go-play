@@ -30,7 +30,7 @@ const Home = () => {
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
         <AppSidebar />
-        <main className="flex-1 bg-gradient-to-b from-background to-muted/20">
+        <main className="flex-1 bg-background">
           <div className="container mx-auto px-4 py-16">
             <div className="flex flex-col items-center justify-center space-y-12">
               <div className="text-center space-y-4">
