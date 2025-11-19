@@ -53,6 +53,51 @@ export type Database = {
         }
         Relationships: []
       }
+      lesson_interactions: {
+        Row: {
+          created_at: string
+          id: string
+          lesson_slug: string
+          question_id: string
+          response_option: string
+          section_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lesson_slug: string
+          question_id: string
+          response_option: string
+          section_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lesson_slug?: string
+          question_id?: string
+          response_option?: string
+          section_id?: string
+        }
+        Relationships: []
+      }
+      lesson_visitors: {
+        Row: {
+          id: string
+          lesson_slug: string
+          visited_at: string
+        }
+        Insert: {
+          id?: string
+          lesson_slug: string
+          visited_at?: string
+        }
+        Update: {
+          id?: string
+          lesson_slug?: string
+          visited_at?: string
+        }
+        Relationships: []
+      }
       lessons: {
         Row: {
           challenges: string | null
