@@ -1,4 +1,4 @@
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -41,12 +41,15 @@ const InteractiveLearningReflection = () => {
           <div className="max-w-4xl mx-auto space-y-8">
             {/* Header */}
             <div>
-              <Link to="/lessons">
-                <Button variant="ghost" className="mb-4">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Lessons
-                </Button>
-              </Link>
+              <div className="flex items-center justify-between mb-4">
+                <Link to="/lessons">
+                  <Button variant="ghost">
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Back to Lessons
+                  </Button>
+                </Link>
+                <SidebarTrigger />
+              </div>
               
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
@@ -72,47 +75,48 @@ const InteractiveLearningReflection = () => {
             >
               <div className="space-y-6">
                 <div className="prose prose-lg max-w-none">
+                  <h4 className="text-xl font-semibold text-foreground mb-4">The Two Sigma Problem</h4>
                   <p className="text-foreground leading-relaxed">
-                    In traditional university English classrooms, teachers often rely on a "one-way transmission" model: 
-                    teachers lecture, students listen. While this may seem efficient for information delivery, it creates several challenges:
+                    In 1984, educational psychologist Benjamin Bloom discovered what became known as the "Two Sigma Problem": 
+                    students receiving one-on-one tutoring performed <strong>two standard deviations better</strong> (98th percentile) 
+                    than students in traditional classroom settings (50th percentile).
+                  </p>
+                  <p className="text-foreground leading-relaxed mt-4">
+                    This research reveals a fundamental challenge in education: <strong>personalized instruction dramatically 
+                    outperforms traditional lecturing</strong>, but one-on-one tutoring is impractical for most educational settings 
+                    due to resource constraints.
                   </p>
                 </div>
 
                 <ul className="space-y-3 list-none">
-                  <BulletPoint icon="📉">
-                    <strong>Low Student Engagement:</strong> Passive learning leads to divided attention and reduced motivation
+                  <BulletPoint icon="📊">
+                    <strong>The Data:</strong> One-on-one tutoring: 98th percentile vs. Traditional classroom: 50th percentile
                   </BulletPoint>
-                  <BulletPoint icon="👥">
-                    <strong>Lack of Personalization:</strong> Unable to address individual student needs and proficiency levels
+                  <BulletPoint icon="🎯">
+                    <strong>The Challenge:</strong> How can we achieve tutoring-like results in classroom settings?
                   </BulletPoint>
-                  <BulletPoint icon="⏱️">
-                    <strong>Delayed Feedback:</strong> Teachers struggle to monitor each student's comprehension in real-time
-                  </BulletPoint>
-                  <BulletPoint icon="💬">
-                    <strong>Limited Practice Opportunities:</strong> Language learning requires extensive practice, but classroom time is finite
-                  </BulletPoint>
-                  <BulletPoint icon="🔄">
-                    <strong>Difficulty in Knowledge Transfer:</strong> Students find it challenging to apply learned concepts to authentic contexts
+                  <BulletPoint icon="💡">
+                    <strong>The Opportunity:</strong> AI technology now makes personalized, interactive learning scalable
                   </BulletPoint>
                 </ul>
 
                 <blockquote className="border-l-4 border-primary pl-4 italic text-muted-foreground my-6">
-                  "Tell me and I forget, teach me and I may remember, involve me and I learn."
-                  <br />— Benjamin Franklin
+                  "The tutoring process demonstrates that most students have the potential to reach high levels of learning. 
+                  The challenge is to find methods of group instruction as effective as one-to-one tutoring."
+                  <br />— Benjamin Bloom (1984)
                 </blockquote>
               </div>
 
               <ComprehensionCheck
                 lessonSlug={lessonSlug}
                 sectionId="module1"
-                questionId="problem-understanding"
-                question="Which challenge of traditional lecturing resonates most with your teaching experience?"
+                questionId="two-sigma-language-learning"
+                question="Do you think the Two Sigma Problem is applicable to university English language learning in China?"
                 options={[
-                  "Low student engagement",
-                  "Lack of personalization",
-                  "Delayed feedback",
-                  "Limited practice opportunities",
-                  "Difficulty in knowledge transfer"
+                  "Yes, personalized feedback is critical for language acquisition",
+                  "Partially, it depends on the specific language skill being taught",
+                  "No, language learning requires different approaches than other subjects",
+                  "Uncertain, I need to explore this concept further"
                 ]}
               />
 
