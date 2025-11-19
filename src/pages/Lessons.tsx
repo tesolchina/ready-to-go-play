@@ -67,6 +67,44 @@ const Lessons = () => {
             </div>
 
           <div className="space-y-8">
+            {/* Academic Phrasebank Tool */}
+            <div className="max-w-4xl mx-auto">
+              <Link to="/academic-phrasebank">
+                <Card className="border-2 border-blue-500 hover:shadow-xl transition-all bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20">
+                  <CardHeader className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <span className="px-3 py-1 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-md text-sm font-medium">
+                        Teaching Tool
+                      </span>
+                    </div>
+                    <CardTitle className="text-3xl">
+                      Academic Phrasebank
+                    </CardTitle>
+                    <CardDescription className="text-lg">
+                      AI-Powered Academic Writing Assistant
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <BookOpen className="w-5 h-5" />
+                        <span className="font-medium">Interactive Writing Support</span>
+                      </div>
+                      <p className="text-base leading-relaxed">
+                        Access a comprehensive collection of academic phrases and templates. Analyze your writing, 
+                        get AI-powered suggestions, and improve your academic English with context-aware assistance.
+                      </p>
+                      <div className="flex gap-2 pt-2">
+                        <span className="px-3 py-1 bg-muted rounded-md text-sm">Academic Writing</span>
+                        <span className="px-3 py-1 bg-muted rounded-md text-sm">AI Assistant</span>
+                        <span className="px-3 py-1 bg-muted rounded-md text-sm">Phrasebank</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            </div>
+
             {/* Featured Lesson */}
             <div className="max-w-4xl mx-auto">
               <Link to="/lessons/interactive-learning-reflection">
