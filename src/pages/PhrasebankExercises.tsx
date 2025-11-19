@@ -5,9 +5,11 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Sparkles, Loader2 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { ArrowLeft, Sparkles, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -72,6 +74,10 @@ const PhrasebankExercises = () => {
   const [examples, setExamples] = useState<string[]>([]);
   const [showExamples, setShowExamples] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [selectedExampleIndex, setSelectedExampleIndex] = useState<number | null>(null);
+  const [studentSentence, setStudentSentence] = useState("");
+  const [feedbackData, setFeedbackData] = useState<any>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const { toast } = useToast();
 
   const categories = categoryType === "moves" ? MOVES_STEPS : GENERAL_LANGUAGE_FUNCTIONS;
@@ -123,6 +129,9 @@ const PhrasebankExercises = () => {
 
     setShowExamples(true);
     setExamples([]);
+    setSelectedExampleIndex(null);
+    setStudentSentence("");
+    setFeedbackData(null);
     setIsGenerating(true);
 
     try {
@@ -156,6 +165,54 @@ const PhrasebankExercises = () => {
       setShowExamples(false);
     } finally {
       setIsGenerating(false);
+    }
+  };
+
+  const handleSelectExample = (index: number) => {
+    setSelectedExampleIndex(index);
+    setStudentSentence("");
+    setFeedbackData(null);
+  };
+
+  const handleGetFeedback = async () => {
+    if (!studentSentence.trim() || selectedExampleIndex === null) {
+      toast({
+        title: "Please write a sentence",
+        description: "Enter your sentence before getting feedback.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsAnalyzing(true);
+    setFeedbackData(null);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('provide-feedback', {
+        body: {
+          selectedExample: examples[selectedExampleIndex],
+          studentSentence: studentSentence.trim(),
+          discipline: discipline || "General",
+          category: selectedCategory,
+        }
+      });
+
+      if (error) throw error;
+
+      setFeedbackData(data);
+      toast({
+        title: "Feedback ready",
+        description: "AI analysis complete!",
+      });
+    } catch (error) {
+      console.error('Error getting feedback:', error);
+      toast({
+        title: "Error",
+        description: "Failed to get feedback. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAnalyzing(false);
     }
   };
 
@@ -342,21 +399,153 @@ const PhrasebankExercises = () => {
                       {examples.map((example, idx) => (
                         <div 
                           key={idx}
-                          className="p-4 bg-muted/50 rounded-lg border hover:border-primary/50 transition-colors"
+                          className={`p-4 rounded-lg border transition-all cursor-pointer ${
+                            selectedExampleIndex === idx 
+                              ? 'bg-primary/5 border-primary shadow-sm' 
+                              : 'bg-muted/50 hover:border-primary/50'
+                          }`}
+                          onClick={() => handleSelectExample(idx)}
                         >
                           <div className="flex items-start gap-3">
-                            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-sm font-medium text-primary">
+                            <span className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-sm font-medium ${
+                              selectedExampleIndex === idx 
+                                ? 'bg-primary text-primary-foreground' 
+                                : 'bg-primary/10 text-primary'
+                            }`}>
                               {idx + 1}
                             </span>
                             <p className="text-sm leading-relaxed flex-1">{example}</p>
                           </div>
                         </div>
                       ))}
+                      {selectedExampleIndex === null && (
+                        <p className="text-sm text-muted-foreground text-center py-2">
+                          👆 Click on an example to practice with it
+                        </p>
+                      )}
                     </div>
                   ) : (
                     <p className="text-center text-muted-foreground py-8">
                       No examples generated yet
                     </p>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
+            {selectedExampleIndex !== null && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Practice Exercise</CardTitle>
+                  <CardDescription>
+                    Analyze the template and write your own sentence based on the selected example
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Template Analysis Section */}
+                  {feedbackData && (
+                    <div className="space-y-4 p-4 bg-muted/30 rounded-lg border">
+                      <div>
+                        <h4 className="font-semibold mb-2 flex items-center gap-2">
+                          <Badge variant="secondary">Template</Badge>
+                        </h4>
+                        <p className="text-sm font-mono bg-background p-3 rounded border">
+                          {feedbackData.template}
+                        </p>
+                      </div>
+
+                      <div>
+                        <h4 className="font-semibold mb-2 flex items-center gap-2">
+                          <Badge variant="secondary">Linguistic Features</Badge>
+                        </h4>
+                        <ul className="space-y-2">
+                          {feedbackData.linguisticFeatures?.map((feature: string, idx: number) => (
+                            <li key={idx} className="text-sm flex items-start gap-2">
+                              <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
+                              <span>{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h4 className="font-semibold mb-2 flex items-center gap-2">
+                          <Badge variant="secondary">Patterns to Imitate</Badge>
+                        </h4>
+                        <ul className="space-y-2">
+                          {feedbackData.patterns?.map((pattern: string, idx: number) => (
+                            <li key={idx} className="text-sm font-mono bg-background p-2 rounded border">
+                              {pattern}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Student Input Section */}
+                  <div className="space-y-3">
+                    <Label htmlFor="student-sentence">
+                      Your Sentence {discipline && discipline !== "none" && `(${discipline} context)`}
+                    </Label>
+                    <Textarea
+                      id="student-sentence"
+                      value={studentSentence}
+                      onChange={(e) => setStudentSentence(e.target.value)}
+                      placeholder="Write your own sentence following the template and patterns above..."
+                      className="min-h-[100px]"
+                    />
+                    <Button 
+                      onClick={handleGetFeedback}
+                      disabled={isAnalyzing || !studentSentence.trim()}
+                      className="w-full"
+                    >
+                      {isAnalyzing ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Analyzing...
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="h-4 w-4 mr-2" />
+                          Get AI Feedback
+                        </>
+                      )}
+                    </Button>
+                  </div>
+
+                  {/* Feedback Section */}
+                  {feedbackData?.feedback && (
+                    <div className="space-y-4 p-4 bg-card rounded-lg border-2 border-primary/20">
+                      <h4 className="font-semibold text-lg flex items-center gap-2">
+                        <AlertCircle className="h-5 w-5 text-primary" />
+                        AI Feedback
+                      </h4>
+
+                      <div className="space-y-3">
+                        <div className="p-3 bg-green-50 dark:bg-green-950/20 rounded border border-green-200 dark:border-green-800">
+                          <h5 className="font-medium text-sm mb-1 text-green-800 dark:text-green-400">Strengths</h5>
+                          <p className="text-sm">{feedbackData.feedback.strengths}</p>
+                        </div>
+
+                        <div className="p-3 bg-blue-50 dark:bg-blue-950/20 rounded border border-blue-200 dark:border-blue-800">
+                          <h5 className="font-medium text-sm mb-1 text-blue-800 dark:text-blue-400">Areas for Improvement</h5>
+                          <p className="text-sm">{feedbackData.feedback.improvements}</p>
+                        </div>
+
+                        {feedbackData.feedback.revisedVersion && (
+                          <div className="p-3 bg-purple-50 dark:bg-purple-950/20 rounded border border-purple-200 dark:border-purple-800">
+                            <h5 className="font-medium text-sm mb-1 text-purple-800 dark:text-purple-400">Suggested Revision</h5>
+                            <p className="text-sm italic">{feedbackData.feedback.revisedVersion}</p>
+                          </div>
+                        )}
+
+                        <div className="p-3 bg-muted/50 rounded border">
+                          <h5 className="font-medium text-sm mb-1">Academic Register</h5>
+                          <p className="text-sm">{feedbackData.feedback.registerComment}</p>
+                        </div>
+                      </div>
+                    </div>
                   )}
                 </CardContent>
               </Card>
