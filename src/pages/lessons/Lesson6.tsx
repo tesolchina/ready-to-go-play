@@ -148,13 +148,15 @@ const Lesson6 = () => {
             </ul>
 
             <ComprehensionCheck
+              lessonSlug="lesson-6"
+              sectionId="tab-0"
+              questionId="genai-challenge-question"
               question="According to Moorhouse et al. (2025), what is the primary challenge editors face regarding GenAI policies?"
               options={[
-                { text: "GenAI tools are too expensive for journals", correct: false },
-                { text: "Ambiguous and inconsistent policies create confusion about acceptable use", correct: true },
-                { text: "GenAI tools are not sophisticated enough yet", correct: false },
+                "GenAI tools are too expensive for journals",
+                "Ambiguous and inconsistent policies create confusion about acceptable use",
+                "GenAI tools are not sophisticated enough yet",
               ]}
-              onComplete={() => handleTabComplete("0")}
             />
 
             <div className="space-y-4 mt-8">
@@ -241,13 +243,15 @@ const Lesson6 = () => {
             </ul>
 
             <ComprehensionCheck
+              lessonSlug="lesson-6"
+              sectionId="tab-1"
+              questionId="disclosure-question"
               question="What is a primary reason authors fail to disclose GenAI use according to research?"
               options={[
-                { text: "They don't know how to disclose it", correct: false },
-                { text: "Fear of bias affecting peer review outcomes", correct: true },
-                { text: "GenAI tools don't require disclosure", correct: false },
+                "They don't know how to disclose it",
+                "Fear of bias affecting peer review outcomes",
+                "GenAI tools don't require disclosure",
               ]}
-              onComplete={() => handleTabComplete("1")}
             />
 
             <div className="space-y-4 mt-8">
@@ -335,13 +339,15 @@ const Lesson6 = () => {
             </ul>
 
             <ComprehensionCheck
+              lessonSlug="lesson-6"
+              sectionId="tab-2"
+              questionId="cope-guidelines-question"
               question="According to COPE guidelines and most publisher policies, what is required when using GenAI tools?"
               options={[
-                { text: "Listing AI as a co-author", correct: false },
-                { text: "Transparent disclosure of AI use and author accountability", correct: true },
-                { text: "Using AI only for data analysis", correct: false },
+                "Listing AI as a co-author",
+                "Transparent disclosure of AI use and author accountability",
+                "Using AI only for data analysis",
               ]}
-              onComplete={() => handleTabComplete("2")}
             />
 
             <div className="space-y-4 mt-8">
@@ -450,13 +456,15 @@ const Lesson6 = () => {
             </ul>
 
             <ComprehensionCheck
+              lessonSlug="lesson-6"
+              sectionId="tab-3"
+              questionId="best-practice-question"
               question="What is the most important practice when using GenAI in academic writing?"
               options={[
-                { text: "Using the latest AI tool version", correct: false },
-                { text: "Maintaining human oversight and verifying all outputs", correct: true },
-                { text: "Using AI for all writing tasks", correct: false },
+                "Using the latest AI tool version",
+                "Maintaining human oversight and verifying all outputs",
+                "Using AI for all writing tasks",
               ]}
-              onComplete={() => handleTabComplete("3")}
             />
 
             <div className="space-y-4 mt-8">

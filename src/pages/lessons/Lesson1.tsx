@@ -145,13 +145,15 @@ const Lesson1 = () => {
             </ul>
 
             <ComprehensionCheck
+              lessonSlug="lesson-1"
+              sectionId="tab-0"
+              questionId="challenge-question"
               question="What is the main challenge teachers face when using AI tools?"
               options={[
-                { text: "AI tools are too expensive", correct: false },
-                { text: "Generic prompts produce generic results that don't meet educational needs", correct: true },
-                { text: "AI tools are difficult to access", correct: false },
+                "AI tools are too expensive",
+                "Generic prompts produce generic results that don't meet educational needs",
+                "AI tools are difficult to access",
               ]}
-              onComplete={() => handleTabComplete("0")}
             />
 
             <div className="space-y-4 mt-8">
@@ -230,13 +232,15 @@ const Lesson1 = () => {
             </ul>
 
             <ComprehensionCheck
+              lessonSlug="lesson-1"
+              sectionId="tab-1"
+              questionId="effective-prompts-question"
               question="Which of the following is NOT a common behavior of effective prompts?"
               options={[
-                { text: "Providing context", correct: false },
-                { text: "Using vague language", correct: true },
-                { text: "Setting constraints", correct: false },
+                "Providing context",
+                "Using vague language",
+                "Setting constraints",
               ]}
-              onComplete={() => handleTabComplete("1")}
             />
 
             <div className="space-y-4 mt-8">
@@ -313,13 +317,15 @@ const Lesson1 = () => {
             </ul>
 
             <ComprehensionCheck
+              lessonSlug="lesson-1"
+              sectionId="tab-2"
+              questionId="framework-purpose-question"
               question="What is the purpose of the AI Prompt Engineering Framework?"
               options={[
-                { text: "To confuse the AI", correct: false },
-                { text: "To provide a structured approach to crafting effective prompts", correct: true },
-                { text: "To limit the AI's creativity", correct: false },
+                "To confuse the AI",
+                "To provide a structured approach to crafting effective prompts",
+                "To limit the AI's creativity",
               ]}
-              onComplete={() => handleTabComplete("2")}
             />
 
             <div className="space-y-4 mt-8">
@@ -397,13 +403,15 @@ const Lesson1 = () => {
             </ul>
 
             <ComprehensionCheck
+              lessonSlug="lesson-1"
+              sectionId="tab-3"
+              questionId="first-step-question"
               question="What is the first step in the AI Prompt Engineering Framework?"
               options={[
-                { text: "Constructing the prompt", correct: false },
-                { text: "Analyzing the desired outcome", correct: true },
-                { text: "Testing the AI-generated content", correct: false },
+                "Constructing the prompt",
+                "Analyzing the desired outcome",
+                "Testing the AI-generated content",
               ]}
-              onComplete={() => handleTabComplete("3")}
             />
 
             <div className="space-y-4 mt-8">
