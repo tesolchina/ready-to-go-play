@@ -20,7 +20,7 @@ interface BulletPoint {
 
 interface ComprehensionCheckData {
   question: string;
-  options: { text: string; correct: boolean }[];
+  options: string[];
 }
 
 interface AdditionalSection {
@@ -324,9 +324,11 @@ const DynamicLesson = () => {
 
                 {tab.comprehensionCheck && (
                   <ComprehensionCheck
+                    lessonSlug={`dynamic-lesson-${slug}`}
+                    sectionId={`tab-${tab.id}`}
+                    questionId={`question-${tab.id}`}
                     question={tab.comprehensionCheck.question}
                     options={tab.comprehensionCheck.options}
-                    onComplete={() => handleTabComplete(tab.id)}
                   />
                 )}
 
