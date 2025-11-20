@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 interface SectionAnalyticsProps {
   lessonSlug: string;
   sectionId: string;
+  refreshTrigger?: number;
 }
 
 interface AnalyticsData {
@@ -16,7 +17,7 @@ interface AnalyticsData {
   sentimentBreakdown: { sentiment: string; count: number }[];
 }
 
-export const SectionAnalytics = ({ lessonSlug, sectionId }: SectionAnalyticsProps) => {
+export const SectionAnalytics = ({ lessonSlug, sectionId, refreshTrigger }: SectionAnalyticsProps) => {
   const [analytics, setAnalytics] = useState<AnalyticsData>({
     visitorCount: 0,
     responseCount: 0,
@@ -113,7 +114,7 @@ export const SectionAnalytics = ({ lessonSlug, sectionId }: SectionAnalyticsProp
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [lessonSlug, sectionId]);
+  }, [lessonSlug, sectionId, refreshTrigger]);
 
   if (loading) {
     return (

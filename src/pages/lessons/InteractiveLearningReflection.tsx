@@ -20,8 +20,13 @@ const InteractiveLearningReflection = () => {
     module3: false,
     module4: false,
   });
+  const [analyticsRefresh, setAnalyticsRefresh] = useState(0);
 
   const lessonSlug = "interactive-learning-reflection";
+
+  const handleAnalyticsRefresh = () => {
+    setAnalyticsRefresh(prev => prev + 1);
+  };
 
   useEffect(() => {
     // Track unique visitor using localStorage
@@ -254,13 +259,14 @@ const InteractiveLearningReflection = () => {
                   <h4 className="text-2xl font-semibold text-foreground mb-4">
                     Step 1: See the Demo
                   </h4>
-                  <CounterArgumentDemo />
+                  <CounterArgumentDemo onAnalyticsUpdate={handleAnalyticsRefresh} />
                 </div>
 
                 <div className="mt-6">
                   <SectionAnalytics 
                     lessonSlug="interactive-learning-reflection"
                     sectionId="counter-argument-exercise"
+                    refreshTrigger={analyticsRefresh}
                   />
                 </div>
 
