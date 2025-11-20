@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
+import { Mail, ExternalLink, MessageCircle } from "lucide-react";
 
 const About = () => {
   return (
@@ -39,12 +40,46 @@ const About = () => {
               <CardHeader>
                 <CardTitle>Created By</CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="text-foreground">
-                  <strong>Dr. Simon Wang</strong><br />
-                  Lecturer in English and Innovation Officer<br />
-                  The Language Centre, Hong Kong Baptist University
-                </p>
+              <CardContent className="space-y-4">
+                <div>
+                  <p className="text-foreground font-semibold text-lg">
+                    Dr. Simon Wang
+                  </p>
+                  <p className="text-muted-foreground">
+                    Lecturer in English and Innovation Officer<br />
+                    The Language Centre, Hong Kong Baptist University
+                  </p>
+                </div>
+                
+                <div className="space-y-2 pt-2">
+                  <div className="flex items-center gap-2 text-sm">
+                    <Mail className="h-4 w-4 text-muted-foreground" />
+                    <a 
+                      href="mailto:simonwang@hkbu.edu.hk"
+                      className="text-primary hover:underline"
+                    >
+                      simonwang@hkbu.edu.hk
+                    </a>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 text-sm">
+                    <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                    <a 
+                      href="https://lc.hkbu.edu.hk/main/simonwang/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline"
+                    >
+                      https://lc.hkbu.edu.hk/main/simonwang/
+                    </a>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 text-sm">
+                    <MessageCircle className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-muted-foreground">WeChat ID:</span>
+                    <span className="text-foreground font-medium">tesolchina</span>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
