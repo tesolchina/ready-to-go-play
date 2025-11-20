@@ -82,6 +82,7 @@ const PhrasebankExercises = () => {
   const [studentSentence, setStudentSentence] = useState("");
   const [feedbackData, setFeedbackData] = useState<any>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [progressMessage, setProgressMessage] = useState<string>("");
   const { toast } = useToast();
 
   const categories = categoryType === "moves" ? MOVES_STEPS : GENERAL_LANGUAGE_FUNCTIONS;
@@ -169,6 +170,7 @@ const PhrasebankExercises = () => {
       setShowExamples(false);
     } finally {
       setIsGenerating(false);
+      setProgressMessage("");
     }
   };
 
@@ -212,6 +214,7 @@ const PhrasebankExercises = () => {
       });
     } finally {
       setIsGeneratingTemplate(false);
+      setProgressMessage("");
     }
   };
 
@@ -240,6 +243,7 @@ const PhrasebankExercises = () => {
 
       if (error) throw error;
 
+      setProgressMessage("Generating detailed feedback...");
       setFeedbackData(data);
       toast({
         title: "Feedback ready",
@@ -254,6 +258,7 @@ const PhrasebankExercises = () => {
       });
     } finally {
       setIsAnalyzing(false);
+      setProgressMessage("");
     }
   };
 
@@ -586,16 +591,22 @@ const PhrasebankExercises = () => {
                     >
                       {isAnalyzing ? (
                         <>
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                           Analyzing...
                         </>
                       ) : (
                         <>
-                          <Sparkles className="h-4 w-4 mr-2" />
+                          <Sparkles className="mr-2 h-4 w-4" />
                           Get AI Feedback
                         </>
                       )}
                     </Button>
+                    
+                    {progressMessage && (
+                      <div className="text-sm text-muted-foreground text-center animate-pulse">
+                        {progressMessage}
+                      </div>
+                    )}
                   </div>
 
                   {/* Feedback Section */}

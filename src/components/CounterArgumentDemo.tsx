@@ -14,6 +14,7 @@ export const CounterArgumentDemo = () => {
   const [feedback, setFeedback] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSystemPrompt, setShowSystemPrompt] = useState(false);
+  const [progressMessage, setProgressMessage] = useState<string>("");
 
   const demoArgument = `"Imposing minimum wage is an important way to ensure worker's welfare and prevent exploitation."`;
 
@@ -35,8 +36,12 @@ IMPORTANT: Keep your response under 500 characters. Be concise and focus on the 
     }
 
     setIsSubmitting(true);
+    setProgressMessage("Connecting to AI...");
 
     try {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      setProgressMessage("Analyzing your argument...");
+      
       const { data, error } = await supabase.functions.invoke("provide-feedback", {
         body: {
           paragraph: response.trim(),
@@ -46,6 +51,7 @@ IMPORTANT: Keep your response under 500 characters. Be concise and focus on the 
 
       if (error) throw error;
 
+      setProgressMessage("Generating feedback...");
       setFeedback(data.feedback);
       toast.success("Feedback received!");
     } catch (error) {
@@ -53,6 +59,7 @@ IMPORTANT: Keep your response under 500 characters. Be concise and focus on the 
       toast.error("Failed to get feedback. Please try again.");
     } finally {
       setIsSubmitting(false);
+      setProgressMessage("");
     }
   };
 
@@ -146,6 +153,13 @@ IMPORTANT: Keep your response under 500 characters. Be concise and focus on the 
               </>
             )}
           </Button>
+          
+          {progressMessage && (
+            <div className="text-sm text-muted-foreground text-center animate-pulse mt-2">
+              {progressMessage}
+            </div>
+          )}
+          
           {(response || feedback) && (
             <Button onClick={handleReset} variant="outline" size="lg" className="text-base">
               Reset

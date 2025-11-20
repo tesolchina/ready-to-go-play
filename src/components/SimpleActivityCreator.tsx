@@ -19,6 +19,7 @@ export const SimpleActivityCreator = () => {
   const [queuePosition, setQueuePosition] = useState<{ position: number; total: number } | null>(null);
   const [systemPrompt, setSystemPrompt] = useState("");
   const [copied, setCopied] = useState(false);
+  const [progressMessage, setProgressMessage] = useState<string>("");
   const requestIdRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -49,10 +50,12 @@ export const SimpleActivityCreator = () => {
 
     setIsSubmitting(true);
     setQueuePosition(null);
+    setProgressMessage("Preparing your request...");
 
     try {
       const data = await requestQueue.add(async () => {
         requestIdRef.current = crypto.randomUUID();
+        setProgressMessage("Connecting to AI...");
 
         requestQueue.onQueueChange(requestIdRef.current, (position, total) => {
           if (position > 0) {
@@ -62,6 +65,8 @@ export const SimpleActivityCreator = () => {
           }
         });
 
+        setProgressMessage("Generating your activity prompt...");
+        
         const { data, error } = await supabase.functions.invoke("generate-simple-activity", {
           body: {
             nickname: nickname.trim(),
@@ -87,6 +92,7 @@ export const SimpleActivityCreator = () => {
     } finally {
       setIsSubmitting(false);
       setQueuePosition(null);
+      setProgressMessage("");
       if (requestIdRef.current) {
         requestQueue.removeListener(requestIdRef.current);
         requestIdRef.current = null;

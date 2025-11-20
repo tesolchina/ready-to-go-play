@@ -29,6 +29,7 @@ export const OpenEndedReflection = ({
   const [allResponses, setAllResponses] = useState<string[]>([]);
   const [thematicAnalysis, setThematicAnalysis] = useState("");
   const [responseCount, setResponseCount] = useState(0);
+  const [progressMessage, setProgressMessage] = useState<string>("");
 
   const handleSubmit = async () => {
     if (!response.trim()) {
@@ -68,6 +69,7 @@ export const OpenEndedReflection = ({
 
   const loadResults = async () => {
     setIsLoadingResults(true);
+    setProgressMessage("Loading all responses...");
 
     try {
       // Fetch all responses for this question
@@ -86,6 +88,8 @@ export const OpenEndedReflection = ({
 
       // Generate thematic analysis
       if (responses.length > 0) {
+        setProgressMessage("Analyzing themes and patterns...");
+        
         const { data: analysisData, error: analysisError } = await supabase.functions.invoke(
           "analyze-reflections",
           {
@@ -104,6 +108,7 @@ export const OpenEndedReflection = ({
       toast.error("Failed to load results. Please try again.");
     } finally {
       setIsLoadingResults(false);
+      setProgressMessage("");
     }
   };
 
