@@ -6,10 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { CollapsibleSection } from "@/components/CollapsibleSection";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Sparkles, Copy, ArrowLeft, Send } from "lucide-react";
+import { Sparkles, Copy, ArrowLeft, Send, ChevronDown, Info, Loader2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 interface Template {
@@ -56,7 +56,22 @@ const CustomPhrasebankChat = () => {
   const [submittingTemplate, setSubmittingTemplate] = useState<string | null>(null);
   const [analysisProgress, setAnalysisProgress] = useState<string>("");
   const [feedbackProgress, setFeedbackProgress] = useState<Record<string, string>>({});
+  const [showSystemPrompt, setShowSystemPrompt] = useState(false);
   const { toast } = useToast();
+
+  const systemPromptText = `You are an expert in academic writing. Analyze the paragraph and identify ALL academic patterns present.
+
+Categories:
+MOVES: Introducing work, Referring to sources, Describing methods, Reporting results, Discussing findings, Writing conclusions
+GENERAL: Being cautious, Being critical, Classifying and listing, Compare and contrast, Defining terms, Describing trends, Describing quantities, Explaining causality, Giving examples, Signalling transition, Writing about the past
+
+Instructions:
+1. Find ALL patterns (typically 2-5)
+2. For each pattern:
+   - Type: "moves" or "general"
+   - Category & subcategory
+   - 3-5 templates from the text
+   - 3-5 practice exercises`;
 
   const handleAnalyzeParagraph = async () => {
     if (!paragraphInput.trim() || paragraphInput.length < 50) {
@@ -69,20 +84,26 @@ const CustomPhrasebankChat = () => {
     }
 
     setIsAnalyzing(true);
-    setAnalysisProgress("Checking for cached analysis...");
+    setAnalysisProgress("🔍 Initializing analysis...");
     
     try {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
       // Check if this is the default paragraph
       if (paragraphInput.trim() === EXAMPLE_PARAGRAPH.trim()) {
+        setAnalysisProgress("📊 Checking for cached analysis...");
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
         // Fetch from database
         const { data: cachedData, error: dbError } = await supabase
           .from('paragraph_analyses')
           .select('analysis_result')
           .eq('is_default', true)
           .eq('paragraph_text', paragraphInput.trim())
-          .single();
+          .maybeSingle();
 
         if (cachedData && !dbError) {
+          setAnalysisProgress("✅ Loading cached results...");
           setAnalysisResult(cachedData.analysis_result as unknown as AnalysisResult);
           setSelectedPatternIndex(null);
           toast({
@@ -96,15 +117,19 @@ const CustomPhrasebankChat = () => {
       }
 
       // Call AI function for analysis
-      setAnalysisProgress("Connecting to AI service...");
-      await new Promise(resolve => setTimeout(resolve, 300));
-      setAnalysisProgress("Analyzing paragraph structure...");
+      setAnalysisProgress("🤖 Connecting to AI service...");
+      await new Promise(resolve => setTimeout(resolve, 400));
+      
+      setAnalysisProgress("📝 Reading and understanding your paragraph...");
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      setAnalysisProgress("🔎 Identifying academic patterns and categories...");
       
       const { data, error } = await supabase.functions.invoke('analyze-paragraph', {
         body: { paragraph: paragraphInput }
       });
       
-      setAnalysisProgress("Processing patterns and templates...");
+      setAnalysisProgress("✨ Generating templates and exercises...");
 
       if (error) throw error;
 
@@ -240,6 +265,78 @@ const CustomPhrasebankChat = () => {
 
               <CardContent className="pt-6">
                 <div className="space-y-4">
+                  {/* System Prompt Info */}
+                  <Collapsible open={showSystemPrompt} onOpenChange={setShowSystemPrompt}>
+                    <CollapsibleTrigger asChild>
+                      <Button variant="outline" size="sm" className="w-full justify-between">
+                        <span className="flex items-center gap-2">
+                          <Info className="h-4 w-4" />
+                          How AI Analyzes Your Paragraph
+                        </span>
+                        <ChevronDown className={`h-4 w-4 transition-transform ${showSystemPrompt ? 'rotate-180' : ''}`} />
+                      </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="mt-4 space-y-4">
+                      <Card className="bg-muted/50">
+                        <CardHeader>
+                          <CardTitle className="text-sm">AI Processing Steps</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-3 text-sm">
+                          <div className="flex items-start gap-2">
+                            <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                              <span className="text-xs font-bold text-primary">1</span>
+                            </div>
+                            <div>
+                              <p className="font-medium">Text Analysis</p>
+                              <p className="text-muted-foreground">AI reads your paragraph and identifies sentence structures, transitions, and academic language patterns.</p>
+                            </div>
+                          </div>
+                          <div className="flex items-start gap-2">
+                            <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                              <span className="text-xs font-bold text-primary">2</span>
+                            </div>
+                            <div>
+                              <p className="font-medium">Pattern Matching</p>
+                              <p className="text-muted-foreground">Compares your text against academic phrasebank categories (Moves & General Functions) to find matching patterns.</p>
+                            </div>
+                          </div>
+                          <div className="flex items-start gap-2">
+                            <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                              <span className="text-xs font-bold text-primary">3</span>
+                            </div>
+                            <div>
+                              <p className="font-medium">Template Extraction</p>
+                              <p className="text-muted-foreground">Extracts 3-5 reusable sentence templates from your text with placeholders for key information.</p>
+                            </div>
+                          </div>
+                          <div className="flex items-start gap-2">
+                            <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                              <span className="text-xs font-bold text-primary">4</span>
+                            </div>
+                            <div>
+                              <p className="font-medium">Exercise Generation</p>
+                              <p className="text-muted-foreground">Creates 3-5 practice exercises with instructions and hints to help you master the patterns.</p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                      
+                      <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800">
+                        <CardHeader>
+                          <CardTitle className="text-sm flex items-center gap-2">
+                            <Sparkles className="h-4 w-4" />
+                            System Prompt
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <pre className="text-xs whitespace-pre-wrap font-mono bg-background p-4 rounded border overflow-x-auto">
+                            {systemPromptText}
+                          </pre>
+                        </CardContent>
+                      </Card>
+                    </CollapsibleContent>
+                  </Collapsible>
+                  
                   <Textarea
                     value={paragraphInput}
                     onChange={(e) => setParagraphInput(e.target.value)}
@@ -247,13 +344,30 @@ const CustomPhrasebankChat = () => {
                     className="min-h-[200px] text-base"
                   />
                   
+                  {analysisProgress && (
+                    <div className="flex items-center gap-3 p-4 bg-primary/5 rounded-lg border border-primary/20">
+                      <Loader2 className="h-5 w-5 animate-spin text-primary shrink-0" />
+                      <p className="text-sm font-medium">{analysisProgress}</p>
+                    </div>
+                  )}
+                  
                   <Button 
                     onClick={handleAnalyzeParagraph}
                     disabled={isAnalyzing}
                     size="lg"
                     className="w-full sm:w-auto"
                   >
-                    {isAnalyzing ? "Analyzing..." : "Analyze Paragraph"}
+                    {isAnalyzing ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Analyzing...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="mr-2 h-4 w-4" />
+                        Analyze Paragraph
+                      </>
+                    )}
                   </Button>
                 </div>
 
@@ -419,9 +533,10 @@ const CustomPhrasebankChat = () => {
                                               />
 
                                               {progressMsg && (
-                                                <p className="text-sm text-muted-foreground italic">
-                                                  {progressMsg}
-                                                </p>
+                                                <div className="flex items-center gap-2 p-3 bg-primary/5 rounded-lg border border-primary/20">
+                                                  <Loader2 className="h-4 w-4 animate-spin text-primary shrink-0" />
+                                                  <p className="text-sm text-muted-foreground">{progressMsg}</p>
+                                                </div>
                                               )}
 
                                               <Button
