@@ -22,22 +22,10 @@ serve(async (req) => {
     // Read file content
     const fileContent = await file.arrayBuffer();
     const base64Content = btoa(String.fromCharCode(...new Uint8Array(fileContent)));
+    const KIMI_API_KEY = Deno.env.get('KIMI_API_KEY');
+    const DEEPSEEK_API_KEY = Deno.env.get('DEEPSEEK_API_KEY');
 
-    // Use Lovable AI to extract lesson content
-    const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
-    
-    const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${lovableApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          {
-            role: 'system',
-            content: `You are an educational content extraction assistant. Extract lesson information from documents and structure it according to these fields:
+    const systemPrompt = `You are an educational content extraction assistant. Extract lesson information from documents and structure it according to these fields:
 1. problem: What is the problem to solve and in what context?
 2. audience: Who are the audience and learners?
 3. undesirableSolutions: What are common undesirable solutions or behaviors?
@@ -46,22 +34,72 @@ serve(async (req) => {
 6. practice: How should students practice?
 7. reflection: How should students reflect?
 
-Return ONLY a valid JSON object with these exact field names. If information for a field is not found, use an empty string.`
-          },
-          {
-            role: 'user',
-            content: `Extract lesson content from this document. File type: ${file.type}, File name: ${file.name}. Here is the content (base64): ${base64Content.substring(0, 10000)}`
-          }
-        ],
-      }),
-    });
+Return ONLY a valid JSON object with these exact field names. If information for a field is not found, use an empty string.`;
 
-    if (!aiResponse.ok) {
-      throw new Error(`AI API error: ${aiResponse.statusText}`);
+    const userContent = `Extract lesson content from this document. File type: ${file.type}, File name: ${file.name}. Here is the content (base64): ${base64Content.substring(0, 10000)}`;
+
+    let extractedContent: string;
+    let usedModel = "Kimi";
+
+    try {
+      console.log("Attempting to use Kimi API");
+      const kimiResponse = await fetch("https://api.moonshot.cn/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${KIMI_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "moonshot-v1-8k",
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userContent }
+          ],
+          temperature: 0.7,
+        }),
+      });
+
+      if (!kimiResponse.ok) {
+        const errorText = await kimiResponse.text();
+        console.error("Kimi API error:", errorText);
+        throw new Error(`Kimi API failed: ${kimiResponse.status}`);
+      }
+
+      const kimiData = await kimiResponse.json();
+      extractedContent = kimiData.choices[0].message.content;
+      console.log("Successfully used Kimi API");
+    } catch (kimiError) {
+      console.error("Kimi API failed, falling back to DeepSeek:", kimiError);
+      usedModel = "DeepSeek";
+
+      const deepseekResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "deepseek-chat",
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userContent }
+          ],
+          temperature: 0.7,
+        }),
+      });
+
+      if (!deepseekResponse.ok) {
+        const errorText = await deepseekResponse.text();
+        console.error("DeepSeek API error:", errorText);
+        throw new Error(`Both Kimi and DeepSeek APIs failed`);
+      }
+
+      const deepseekData = await deepseekResponse.json();
+      extractedContent = deepseekData.choices[0].message.content;
+      console.log("Successfully used DeepSeek API");
     }
 
-    const aiData = await aiResponse.json();
-    const extractedContent = aiData.choices[0].message.content;
+    console.log(`Extracted content using ${usedModel}`);
     
     // Parse the JSON response
     let lessonData;
