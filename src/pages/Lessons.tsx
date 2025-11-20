@@ -253,23 +253,6 @@ const Lessons = () => {
               </Card>
             </div>
             </div>
-
-            <Card className="border-dashed">
-              <CardHeader>
-                <CardTitle>Create Your Own Lesson</CardTitle>
-                <CardDescription>
-                  Use our lesson creator tool to build custom lessons tailored to your needs
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Link 
-                  to="/lesson-creator"
-                  className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 transition-colors"
-                >
-                  Go to Lesson Creator
-                </Link>
-              </CardContent>
-            </Card>
           </div>
           </div>
         </main>
