@@ -6,7 +6,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+const KIMI_API_KEY = Deno.env.get('KIMI_API_KEY');
+const DEEPSEEK_API_KEY = Deno.env.get('DEEPSEEK_API_KEY');
 
 // Available phrasebank categories
 const MOVES_CATEGORIES = [
@@ -75,23 +76,28 @@ EXAMPLE: A paragraph discussing research findings might contain:
 
 Return your complete analysis using the analyze_academic_paragraph function with ALL patterns found.`;
 
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: `Analyze this academic paragraph:\n\n${paragraph}` }
-        ],
-        tools: [{
-          type: "function",
-          function: {
-            name: "analyze_academic_paragraph",
-            description: "Analyze paragraph and return ALL patterns found with structured analysis",
+    let responseData: any;
+    let usedModel = "Kimi";
+
+    try {
+      console.log("Attempting to use Kimi API");
+      const kimiResponse = await fetch('https://api.moonshot.cn/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${KIMI_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'moonshot-v1-8k',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: `Analyze this academic paragraph:\n\n${paragraph}` }
+          ],
+          tools: [{
+            type: "function",
+            function: {
+              name: "analyze_academic_paragraph",
+              description: "Analyze paragraph and return ALL patterns found with structured analysis",
             parameters: {
               type: "object",
               required: ["patterns"],

@@ -22,15 +22,50 @@ serve(async (req) => {
       }
     }
 
-    // Use Lovable AI to generate a structured lesson
-    const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
+    const KIMI_API_KEY = Deno.env.get('KIMI_API_KEY');
+    const DEEPSEEK_API_KEY = Deno.env.get('DEEPSEEK_API_KEY');
+
+    const systemPrompt = `You are an expert educational content creator. Generate a comprehensive, engaging lesson based on the provided framework.`;
     
-    const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${lovableApiKey}`,
-        'Content-Type': 'application/json',
-      },
+    const userPrompt = `Create a comprehensive 6-tab lesson based on this information:
+
+Problem & Context: ${lessonData.problem}
+Audience: ${lessonData.audience}
+Common Undesirable Solutions: ${lessonData.undesirableSolutions}
+Framework/Solution: ${lessonData.framework}
+How It Works: ${lessonData.howItWorks}
+Practice Activities: ${lessonData.practice}
+Reflection: ${lessonData.reflection}
+
+Structure the lesson with exactly 6 tabs:
+1. "The Problem" - Explain the problem in context with 4 bullet points, ONE MC question (REQUIRED), and additional reading
+2. "Common Behaviors" - Describe undesirable approaches with 4 bullet points, ONE MC question (REQUIRED), and examples
+3. "The Framework" - Present the new framework/solution with 4 bullet points, ONE MC question (REQUIRED), and structure explanation
+4. "How It Works" - Step-by-step demonstration with 4 bullet points, ONE MC question (REQUIRED), and practical examples
+5. "Practice" - Interactive practice with 2-4 custom input fields and a system prompt for AI feedback
+6. "Reflection" - Summary and custom reflection question
+
+CRITICAL REQUIREMENTS:
+1. Ensure ALL bullet points have meaningful, non-empty text content. Never leave bullet text blank.
+2. TABS 0-3 MUST HAVE EXACTLY ONE MULTIPLE CHOICE QUESTION EACH (comprehensionCheck field is REQUIRED)
+3. Each MC question must have 3-4 options with exactly one correct answer
+4. For tabs 0-3: Include 4 engaging bullet points with emojis, ONE MC question with 3 options (one correct), and 2 collapsible sections.
+5. For tab 4: Provide intro text, create 2-4 practiceFields based on lesson content, and write a systemPrompt to guide AI feedback.
+6. For tab 5: Provide congratulatory intro and a custom reflection question in reflectionContent.question that relates specifically to THIS lesson's content.
+
+Make it engaging and pedagogically sound!`;
+
+    let responseData: any;
+    let usedModel = "Kimi";
+
+    try {
+      console.log("Attempting to use Kimi API");
+      const kimiResponse = await fetch('https://api.moonshot.cn/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${KIMI_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
       body: JSON.stringify({
         model: 'google/gemini-2.5-flash',
         messages: [

@@ -12,11 +12,8 @@ serve(async (req) => {
 
   try {
     const { userPrompt, userInputs, conversationHistory, systemPrompt } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
-    }
+    const KIMI_API_KEY = Deno.env.get("KIMI_API_KEY");
+    const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
 
     const defaultSystemPrompt = 'You are an expert educational AI assistant providing thoughtful, constructive feedback on student work. Be encouraging while offering specific suggestions for improvement. Keep your response concise - maximum 500 characters.';
     const actualSystemPrompt = systemPrompt || defaultSystemPrompt;
@@ -48,29 +45,62 @@ serve(async (req) => {
       ];
     }
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages,
-      }),
-    });
+    let feedback: string;
+    let usedModel = "Kimi";
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("AI gateway error:", response.status, errorText);
-      return new Response(
-        JSON.stringify({ error: "Failed to get AI feedback" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+    try {
+      console.log("Attempting to use Kimi API");
+      const kimiResponse = await fetch("https://api.moonshot.cn/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${KIMI_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "moonshot-v1-8k",
+          messages,
+          temperature: 0.7,
+        }),
+      });
+
+      if (!kimiResponse.ok) {
+        const errorText = await kimiResponse.text();
+        console.error("Kimi API error:", errorText);
+        throw new Error(`Kimi API failed: ${kimiResponse.status}`);
+      }
+
+      const kimiData = await kimiResponse.json();
+      feedback = kimiData.choices?.[0]?.message?.content || "Unable to generate feedback";
+      console.log("Successfully used Kimi API");
+    } catch (kimiError) {
+      console.error("Kimi API failed, falling back to DeepSeek:", kimiError);
+      usedModel = "DeepSeek";
+
+      const deepseekResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "deepseek-chat",
+          messages,
+          temperature: 0.7,
+        }),
+      });
+
+      if (!deepseekResponse.ok) {
+        const errorText = await deepseekResponse.text();
+        console.error("DeepSeek API error:", errorText);
+        throw new Error(`Both Kimi and DeepSeek APIs failed`);
+      }
+
+      const deepseekData = await deepseekResponse.json();
+      feedback = deepseekData.choices?.[0]?.message?.content || "Unable to generate feedback";
+      console.log("Successfully used DeepSeek API");
     }
 
-    const data = await response.json();
-    let feedback = data.choices?.[0]?.message?.content || "Unable to generate feedback";
+    console.log(`Generated feedback using ${usedModel}`);
     
     // Truncate to 500 characters if needed
     if (feedback.length > 500) {

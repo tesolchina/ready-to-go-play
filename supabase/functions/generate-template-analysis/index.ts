@@ -12,11 +12,8 @@ serve(async (req) => {
 
   try {
     const { example, discipline, category } = await req.json();
-
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-    if (!LOVABLE_API_KEY) {
-      throw new Error('LOVABLE_API_KEY is not configured');
-    }
+    const KIMI_API_KEY = Deno.env.get('KIMI_API_KEY');
+    const DEEPSEEK_API_KEY = Deno.env.get('DEEPSEEK_API_KEY');
 
     console.log('Generating template analysis for:', {
       category,
@@ -61,38 +58,80 @@ Format response as JSON:
   "suggestedTopic": "specific topic suggestion"
 }`;
 
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are an expert academic writing instructor. Provide clear, actionable guidance in valid JSON format only.'
-          },
-          {
-            role: 'user',
-            content: analysisPrompt
-          }
-        ],
-        temperature: 0.7,
-      }),
-    });
+    let content: string;
+    let usedModel = "Kimi";
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Lovable AI API error:', response.status, errorText);
-      throw new Error(`AI API error: ${response.status}`);
+    try {
+      console.log("Attempting to use Kimi API");
+      const kimiResponse = await fetch("https://api.moonshot.cn/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${KIMI_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "moonshot-v1-8k",
+          messages: [
+            {
+              role: 'system',
+              content: 'You are an expert academic writing instructor. Provide clear, actionable guidance in valid JSON format only.'
+            },
+            {
+              role: 'user',
+              content: analysisPrompt
+            }
+          ],
+          temperature: 0.7,
+        }),
+      });
+
+      if (!kimiResponse.ok) {
+        const errorText = await kimiResponse.text();
+        console.error("Kimi API error:", errorText);
+        throw new Error(`Kimi API failed: ${kimiResponse.status}`);
+      }
+
+      const kimiData = await kimiResponse.json();
+      content = kimiData.choices[0].message.content;
+      console.log("Successfully used Kimi API");
+    } catch (kimiError) {
+      console.error("Kimi API failed, falling back to DeepSeek:", kimiError);
+      usedModel = "DeepSeek";
+
+      const deepseekResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "deepseek-chat",
+          messages: [
+            {
+              role: 'system',
+              content: 'You are an expert academic writing instructor. Provide clear, actionable guidance in valid JSON format only.'
+            },
+            {
+              role: 'user',
+              content: analysisPrompt
+            }
+          ],
+          temperature: 0.7,
+        }),
+      });
+
+      if (!deepseekResponse.ok) {
+        const errorText = await deepseekResponse.text();
+        console.error("DeepSeek API error:", errorText);
+        throw new Error(`Both Kimi and DeepSeek APIs failed`);
+      }
+
+      const deepseekData = await deepseekResponse.json();
+      content = deepseekData.choices[0].message.content;
+      console.log("Successfully used DeepSeek API");
     }
 
-    const data = await response.json();
-    const content = data.choices[0].message.content;
-    
-    console.log('AI template response received, parsing...');
+    console.log(`AI template response received using ${usedModel}, parsing...`);
     
     // Extract JSON from markdown code blocks if present
     let jsonContent = content;

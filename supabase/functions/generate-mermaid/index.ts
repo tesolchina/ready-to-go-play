@@ -13,11 +13,8 @@ serve(async (req) => {
 
   try {
     const { description } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-
-    if (!LOVABLE_API_KEY) {
-      throw new Error('LOVABLE_API_KEY is not configured');
-    }
+    const KIMI_API_KEY = Deno.env.get('KIMI_API_KEY');
+    const DEEPSEEK_API_KEY = Deno.env.get('DEEPSEEK_API_KEY');
 
     const systemPrompt = `You are an expert at creating mermaid diagrams. Convert the user's description into a clear, well-structured mermaid diagram code. 
 
@@ -28,41 +25,68 @@ Rules:
 - Only return the mermaid code, no explanations
 - Do not include markdown code blocks, just the raw mermaid syntax`;
 
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: description }
-        ],
-      }),
-    });
+    let mermaidCode: string;
+    let usedModel = "Kimi";
 
-    if (!response.ok) {
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: 'Rate limits exceeded, please try again later.' }), {
-          status: 429,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+    try {
+      console.log("Attempting to use Kimi API");
+      const kimiResponse = await fetch("https://api.moonshot.cn/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${KIMI_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "moonshot-v1-8k",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: description }
+          ],
+          temperature: 0.7,
+        }),
+      });
+
+      if (!kimiResponse.ok) {
+        const errorText = await kimiResponse.text();
+        console.error("Kimi API error:", errorText);
+        throw new Error(`Kimi API failed: ${kimiResponse.status}`);
       }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: 'Payment required, please add funds to your Lovable AI workspace.' }), {
-          status: 402,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+
+      const kimiData = await kimiResponse.json();
+      mermaidCode = kimiData.choices[0].message.content.trim();
+      console.log("Successfully used Kimi API");
+    } catch (kimiError) {
+      console.error("Kimi API failed, falling back to DeepSeek:", kimiError);
+      usedModel = "DeepSeek";
+
+      const deepseekResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "deepseek-chat",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: description }
+          ],
+          temperature: 0.7,
+        }),
+      });
+
+      if (!deepseekResponse.ok) {
+        const errorText = await deepseekResponse.text();
+        console.error("DeepSeek API error:", errorText);
+        throw new Error(`Both Kimi and DeepSeek APIs failed`);
       }
-      const errorText = await response.text();
-      console.error('AI gateway error:', response.status, errorText);
-      throw new Error('AI gateway error');
+
+      const deepseekData = await deepseekResponse.json();
+      mermaidCode = deepseekData.choices[0].message.content.trim();
+      console.log("Successfully used DeepSeek API");
     }
 
-    const data = await response.json();
-    const mermaidCode = data.choices[0].message.content.trim();
+    console.log(`Generated mermaid code using ${usedModel}`);
 
     return new Response(
       JSON.stringify({ mermaidCode }),
