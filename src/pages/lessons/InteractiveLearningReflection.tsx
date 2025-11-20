@@ -316,24 +316,6 @@ const InteractiveLearningReflection = () => {
                 </div>
               </div>
             </CollapsibleSection>
-
-            {/* Next Steps */}
-            <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-6 rounded-lg">
-              <div className="text-center space-y-4">
-                <h3 className="text-3xl font-bold text-foreground">🎯 Next Steps</h3>
-                <p className="text-muted-foreground text-lg">
-                  After completing this lesson, try implementing one small interactive learning activity in your next class 
-                  and observe changes in student response and engagement.
-                </p>
-                <div className="flex justify-center gap-4">
-                  <Link to="/lessons">
-                    <Button variant="outline">
-                      Back to Lessons
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </div>
           </div>
         </main>
       </div>
