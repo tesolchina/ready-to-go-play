@@ -1,10 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { BookOpen, Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { BookOpen, Sparkles, ArrowLeft } from "lucide-react";
 
 const AcademicPhraseBank = () => {
+  const navigate = useNavigate();
+  
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
@@ -15,6 +18,14 @@ const AcademicPhraseBank = () => {
             <h2 className="text-lg font-semibold">Academic Phrasebank</h2>
           </header>
           <div className="p-8">
+            <Button 
+              variant="ghost" 
+              onClick={() => navigate('/learning-apps')}
+              className="mb-6"
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Learning Apps
+            </Button>
           <div className="max-w-6xl mx-auto space-y-8">
             <div className="space-y-4">
               <h1 className="text-4xl font-bold tracking-tight">Academic Phrasebank</h1>
