@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -9,12 +9,36 @@ import { toast } from "sonner";
 import { Loader2, Lightbulb, MessageSquare, ChevronDown, ChevronUp } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
+const LESSON_SLUG = "interactive-learning-reflection";
+const SECTION_ID = "counter-argument-exercise";
+
 export const CounterArgumentDemo = () => {
   const [response, setResponse] = useState("");
   const [feedback, setFeedback] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSystemPrompt, setShowSystemPrompt] = useState(false);
   const [progressMessage, setProgressMessage] = useState<string>("");
+
+  // Track section visit on mount
+  useEffect(() => {
+    const trackSectionVisit = async () => {
+      const storageKey = `visited_${LESSON_SLUG}_${SECTION_ID}`;
+      const hasVisited = localStorage.getItem(storageKey);
+      
+      if (!hasVisited) {
+        try {
+          await supabase.from("section_visits").insert({
+            lesson_slug: LESSON_SLUG,
+            section_id: SECTION_ID,
+          });
+          localStorage.setItem(storageKey, new Date().toISOString());
+        } catch (error) {
+          console.error('Error tracking section visit:', error);
+        }
+      }
+    };
+    trackSectionVisit();
+  }, []);
 
   const demoArgument = `"Imposing minimum wage is an important way to ensure worker's welfare and prevent exploitation."`;
 
@@ -42,17 +66,41 @@ IMPORTANT: Keep your response under 500 characters. Be concise and focus on the 
       await new Promise(resolve => setTimeout(resolve, 300));
       setProgressMessage("Analyzing your argument...");
       
-      const { data, error } = await supabase.functions.invoke("provide-feedback", {
+      // Get feedback
+      const { data: feedbackData, error: feedbackError } = await supabase.functions.invoke("provide-feedback", {
         body: {
           paragraph: response.trim(),
           context: systemPrompt,
         },
       });
 
-      if (error) throw error;
+      if (feedbackError) throw feedbackError;
+
+      setProgressMessage("Performing semantic analysis...");
+      
+      // Perform semantic analysis
+      const { data: semanticData, error: semanticError } = await supabase.functions.invoke("semantic-analysis", {
+        body: {
+          text: response.trim(),
+        },
+      });
+
+      if (semanticError) {
+        console.error("Semantic analysis error:", semanticError);
+      } else if (semanticData) {
+        // Save response analytics
+        await supabase.from("response_analytics").insert({
+          lesson_slug: LESSON_SLUG,
+          section_id: SECTION_ID,
+          response_text: response.trim(),
+          sentiment: semanticData.sentiment,
+          key_themes: semanticData.key_themes,
+          word_count: semanticData.word_count,
+        });
+      }
 
       setProgressMessage("Generating feedback...");
-      setFeedback(data.feedback);
+      setFeedback(feedbackData.feedback);
       toast.success("Feedback received!");
     } catch (error) {
       console.error("Error getting feedback:", error);

@@ -10,6 +10,7 @@ import { BulletPoint } from "@/components/BulletPoint";
 import { CounterArgumentDemo } from "@/components/CounterArgumentDemo";
 import { SimpleActivityCreator } from "@/components/SimpleActivityCreator";
 import { OpenEndedReflection } from "@/components/OpenEndedReflection";
+import { SectionAnalytics } from "@/components/SectionAnalytics";
 import { supabase } from "@/integrations/supabase/client";
 
 const InteractiveLearningReflection = () => {
@@ -254,6 +255,13 @@ const InteractiveLearningReflection = () => {
                     Step 1: See the Demo
                   </h4>
                   <CounterArgumentDemo />
+                </div>
+
+                <div className="mt-6">
+                  <SectionAnalytics 
+                    lessonSlug="interactive-learning-reflection"
+                    sectionId="counter-argument-exercise"
+                  />
                 </div>
 
                 <div className="border-t border-border pt-8">
