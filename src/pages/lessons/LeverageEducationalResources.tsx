@@ -192,32 +192,44 @@ const LeverageEducationalResources = () => {
                 </div>
 
                 <div className="prose prose-lg max-w-none">
-                  <h4 className="text-2xl font-semibold text-foreground mt-6 mb-3">The Three-Layer Enhancement Model</h4>
+                  <h4 className="text-2xl font-semibold text-foreground mt-6 mb-3">The Two-Part Enhancement Approach</h4>
                   <p className="text-foreground text-lg leading-relaxed">
-                    When enhancing existing resources with AI, think in three layers:
+                    When enhancing existing resources with AI, we follow a pedagogically sound two-part approach that 
+                    preserves the original resource's structure while adding powerful interactive capabilities:
                   </p>
                 </div>
 
-                <ul className="space-y-3 list-none">
+                <ul className="space-y-4 list-none">
                   <BulletPoint icon="1️⃣">
-                    <strong>Layer 1: Preserve the Knowledge Structure</strong><br />
-                    Keep the original organization, categories, and pedagogical logic. In the Academic Phrasebank 
-                    case, we maintain the moves/steps structure and general language functions. The expert knowledge 
-                    remains intact.
+                    <strong>Part 1: Template Application & Guided Practice</strong><br />
+                    Start by helping students understand and use the templates from the original resource. AI generates 
+                    discipline-specific example sentences using the Phrasebank templates, showing students how the phrases 
+                    work in their field of study. This is followed by <strong>imitation exercises</strong> where students 
+                    practice applying the same templates to their own topics, building confidence through structured practice.
                   </BulletPoint>
                   <BulletPoint icon="2️⃣">
-                    <strong>Layer 2: Add Interactivity</strong><br />
-                    Transform passive browsing into active engagement. Instead of reading examples, students can ask 
-                    questions, request discipline-specific phrases, and explore connections between categories. 
-                    AI handles the conversational interface.
-                  </BulletPoint>
-                  <BulletPoint icon="3️⃣">
-                    <strong>Layer 3: Enable Personalized Practice</strong><br />
-                    Create activities that weren't possible before: analyze student writing to identify which phrases 
-                    they need, generate custom exercises based on their discipline, provide feedback on phrase usage 
-                    in context. AI enables scale and personalization.
+                    <strong>Part 2: Pattern Recognition & Application to Student Writing</strong><br />
+                    Once students understand the templates, help them identify patterns in real academic writing. Students 
+                    submit model texts (from their readings or own drafts), and AI analyzes them using the Phrasebank framework—identifying 
+                    which categories and functions appear in the text. The system then generates <strong>targeted exercises</strong> 
+                    based on the identified patterns, helping students recognize and apply these structures in context.
                   </BulletPoint>
                 </ul>
+
+                <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg mt-4">
+                  <h5 className="text-lg font-semibold text-foreground mb-3">💡 The General Enhancement Principle</h5>
+                  <p className="text-foreground leading-relaxed">
+                    This two-part structure reflects a broader principle for AI-enhanced learning: <strong>move from 
+                    guidance to independence</strong>. First, provide scaffolded examples and structured practice (Part 1). 
+                    Then, help students recognize and apply patterns in authentic contexts (Part 2). This progression mirrors 
+                    effective pedagogy while leveraging AI's ability to personalize content and provide instant feedback.
+                  </p>
+                  <p className="text-foreground leading-relaxed mt-3">
+                    The key is that <strong>AI augments rather than replaces</strong> the original resource's pedagogical structure. 
+                    The Academic Phrasebank's expert-crafted categories remain the foundation; AI adds the interactivity, 
+                    personalization, and practice opportunities that static resources cannot provide.
+                  </p>
+                </div>
 
                 <div className="prose prose-lg max-w-none">
                   <h4 className="text-2xl font-semibold text-foreground mt-6 mb-3">Academic Phrasebank Enhancement: A Case Study</h4>
@@ -256,26 +268,30 @@ const LeverageEducationalResources = () => {
 
                 <div className="prose prose-lg max-w-none">
                   <p className="text-foreground text-lg leading-relaxed">
-                    The AI-enhanced version maintains this exact structure but adds:
+                    <strong>How does the AI-enhanced version work in practice?</strong>
                   </p>
                 </div>
 
-                <ul className="space-y-3 list-none">
+                <ul className="space-y-4 list-none">
+                  <BulletPoint icon="📝">
+                    <strong>Part 1 - Template-Based Generation:</strong> Select a category (e.g., "Introducing Work" → 
+                    "Establishing a territory") and your discipline (e.g., Education, Biology). The AI generates 
+                    discipline-specific example sentences using the Phrasebank templates, then provides imitation 
+                    exercises where you practice writing similar sentences for your own research topic.
+                  </BulletPoint>
+                  <BulletPoint icon="🔍">
+                    <strong>Part 2 - Text Analysis & Pattern Recognition:</strong> Paste a model paragraph from an academic 
+                    text in your field. The AI analyzes it using the Phrasebank framework, identifying which academic 
+                    functions and language patterns are present (e.g., "The author uses hedging language and cites sources 
+                    to establish credibility"). You then get targeted exercises to practice the identified patterns.
+                  </BulletPoint>
+                  <BulletPoint icon="🎯">
+                    <strong>Personalization at Scale:</strong> Every interaction is customized—discipline-specific examples, 
+                    analysis of your actual texts, exercises based on your needs—something impossible with the static resource alone.
+                  </BulletPoint>
                   <BulletPoint icon="💬">
-                    <strong>Conversational Interface:</strong> Students can ask "How do I introduce a research gap?" 
-                    instead of browsing categories
-                  </BulletPoint>
-                  <BulletPoint icon="🎓">
-                    <strong>Discipline Customization:</strong> Phrases adapted for Biology, Engineering, Education, 
-                    etc.—something impossible to pre-create for all fields
-                  </BulletPoint>
-                  <BulletPoint icon="📊">
-                    <strong>Paragraph Analysis:</strong> Students paste their writing, AI identifies which Phrasebank 
-                    categories apply and suggests relevant phrases
-                  </BulletPoint>
-                  <BulletPoint icon="🤝">
-                    <strong>Community Learning:</strong> Students share examples and learn from each other's questions, 
-                    building a living resource
+                    <strong>Conversational Exploration:</strong> Instead of browsing categories manually, you can ask questions 
+                    like "How do I introduce a research gap in educational research?" and get contextual guidance.
                   </BulletPoint>
                 </ul>
 
@@ -289,12 +305,12 @@ const LeverageEducationalResources = () => {
                 lessonSlug={lessonSlug}
                 sectionId="module2"
                 questionId="enhancement-understanding"
-                question="Which layer of enhancement would be most valuable for resources you currently use?"
+                question="Which part of the two-part enhancement approach resonates most with your teaching needs?"
                 options={[
-                  "Preserving structure - I need to organize scattered resources",
-                  "Adding interactivity - My students need more engagement",
-                  "Enabling personalization - Students need customized examples",
-                  "All three - I can see applying this framework"
+                  "Part 1 - Students need guided practice with templates and examples",
+                  "Part 2 - Students need help recognizing patterns in authentic texts",
+                  "Both - Students need structured progression from guidance to independence",
+                  "I can see applying this approach to other resources I use"
                 ]}
               />
 
@@ -326,8 +342,8 @@ const LeverageEducationalResources = () => {
                 <div className="prose prose-lg max-w-none">
                   <p className="text-foreground text-lg leading-relaxed">
                     Now experience the difference between the original static resource and an AI-enhanced version. 
-                    The <strong>Academic Phrasebank Assistant</strong> demonstrates all three enhancement layers while 
-                    preserving the original Phrasebank's structure and content.
+                    The <strong>Academic Phrasebank Assistant</strong> demonstrates the two-part enhancement approach while 
+                    preserving the original Phrasebank's structure and expert-crafted content.
                   </p>
                 </div>
 
@@ -371,16 +387,18 @@ const LeverageEducationalResources = () => {
                     <h5 className="text-xl font-semibold text-foreground">What to Try:</h5>
                     <ul className="space-y-3 list-none">
                       <BulletPoint icon="1️⃣">
-                        <strong>Conversational Query:</strong> Ask "How do I introduce a research gap in Biology?" 
-                        Compare the response to browsing the static site.
+                        <strong>Part 1 - Template Generation:</strong> Select a category (e.g., "Introducing Work") 
+                        and your discipline. The AI generates discipline-specific example sentences and provides 
+                        imitation exercises for you to practice.
                       </BulletPoint>
                       <BulletPoint icon="2️⃣">
-                        <strong>Discipline Customization:</strong> Select your discipline and get field-specific phrases. 
-                        Try switching disciplines to see personalization.
+                        <strong>Part 2 - Text Analysis:</strong> Paste a paragraph from an academic text in your field. 
+                        The AI analyzes it using the Phrasebank framework, identifies patterns, and generates 
+                        targeted exercises based on what it finds.
                       </BulletPoint>
                       <BulletPoint icon="3️⃣">
-                        <strong>Paragraph Analysis:</strong> Paste a paragraph from a journal article in your field. 
-                        The AI will identify which Phrasebank categories are being used.
+                        <strong>Conversational Exploration:</strong> Ask questions like "How do I introduce a research 
+                        gap in Biology?" and get contextual guidance instead of browsing static categories.
                       </BulletPoint>
                       <BulletPoint icon="4️⃣">
                         <strong>Community Learning:</strong> Browse the bulletin board to see how others are using 
@@ -441,8 +459,9 @@ const LeverageEducationalResources = () => {
                       Don't recreate from scratch—find, evaluate, and enhance what experts have built.
                     </BulletPoint>
                     <BulletPoint icon="🔄">
-                      <strong>Three-Layer Enhancement:</strong> Preserve knowledge structure, add interactivity, 
-                      enable personalization. Each layer builds on the previous one.
+                      <strong>Two-Part Enhancement Approach:</strong> First, help students understand templates through 
+                      guided examples and imitation. Then, help them recognize patterns in authentic texts and apply 
+                      them through targeted practice.
                     </BulletPoint>
                     <BulletPoint icon="🎯">
                       <strong>AI as Amplifier:</strong> AI transforms static resources into dynamic learning tools 
@@ -477,7 +496,7 @@ const LeverageEducationalResources = () => {
                     lessonSlug={lessonSlug}
                     sectionId="module4"
                     questionId="resource-enhancement-plan"
-                    question="Identify one existing educational resource you use (textbook, website, reference tool, etc.) and describe how you might enhance it using the three-layer framework. What would each layer add for your students?"
+                    question="Identify one existing educational resource you use (textbook, website, reference tool, etc.) and describe how you might enhance it using the two-part approach. How could Part 1 (template application & guided practice) and Part 2 (pattern recognition in authentic contexts) improve student learning with your chosen resource?"
                   />
                 </div>
 
@@ -513,9 +532,9 @@ const LeverageEducationalResources = () => {
                 <h3 className="text-3xl font-bold text-foreground">🎯 Next Steps</h3>
                 <p className="text-muted-foreground text-lg">
                   Choose one educational resource you currently recommend to students. This week, spend 30 minutes 
-                  brainstorming how each of the three enhancement layers could improve student learning. Start with 
-                  Layer 1 (structure), then imagine Layer 2 (interactivity), then dream about Layer 3 (personalization). 
-                  Share your ideas with a colleague or in a teaching community.
+                  brainstorming how the two-part enhancement approach could improve student learning: How could you add 
+                  guided practice with templates (Part 1)? How could you help students recognize and apply patterns from 
+                  authentic texts (Part 2)? Share your ideas with a colleague or in a teaching community.
                 </p>
                 <div className="flex justify-center gap-4 flex-wrap">
                   <Link to="/lessons">
