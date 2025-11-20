@@ -129,7 +129,7 @@ export const SimpleActivityCreator = () => {
     setIsSending(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke("provide-student-feedback", {
+      const { data, error } = await supabase.functions.invoke("simple-activity-chat", {
         body: {
           systemPrompt,
           userMessage: newUserMessage.content,
