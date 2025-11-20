@@ -76,6 +76,73 @@ EXAMPLE: A paragraph discussing research findings might contain:
 
 Return your complete analysis using the analyze_academic_paragraph function with ALL patterns found.`;
 
+    const toolDefinition = [{
+      type: "function",
+      function: {
+        name: "analyze_academic_paragraph",
+        description: "Analyze paragraph and return ALL patterns found with structured analysis",
+        parameters: {
+          type: "object",
+          required: ["patterns"],
+          properties: {
+            patterns: {
+              type: "array",
+              description: "All patterns identified in the paragraph",
+              items: {
+                type: "object",
+                required: ["categoryType", "category", "subcategory", "templates", "exercises"],
+                properties: {
+                  categoryType: { 
+                    type: "string", 
+                    enum: ["moves", "general"],
+                    description: "Whether this is a moves/steps or general language function"
+                  },
+                  category: { 
+                    type: "string",
+                    description: "The main category from the available categories"
+                  },
+                  subcategory: { 
+                    type: "string",
+                    description: "The specific subcategory or function within the main category"
+                  },
+                  templates: {
+                    type: "array",
+                    description: "3-5 extracted sentence templates",
+                    items: {
+                      type: "object",
+                      required: ["original", "template", "explanation"],
+                      properties: {
+                        original: { type: "string", description: "The original sentence from the paragraph" },
+                        template: { type: "string", description: "Template with placeholders" },
+                        explanation: { type: "string", description: "How to use this template" }
+                      }
+                    }
+                  },
+                  exercises: {
+                    type: "array",
+                    description: "3-5 practice exercises",
+                    items: {
+                      type: "object",
+                      required: ["instruction", "template", "hints"],
+                      properties: {
+                        instruction: { type: "string", description: "What the user should write about" },
+                        template: { type: "string", description: "The template to use (with blanks if needed)" },
+                        hints: { 
+                          type: "array", 
+                          items: { type: "string" },
+                          description: "2-3 hints to help the user"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }];
+
     let responseData: any;
     let usedModel = "Kimi";
 
@@ -93,94 +160,62 @@ Return your complete analysis using the analyze_academic_paragraph function with
             { role: 'system', content: systemPrompt },
             { role: 'user', content: `Analyze this academic paragraph:\n\n${paragraph}` }
           ],
-          tools: [{
-            type: "function",
-            function: {
-              name: "analyze_academic_paragraph",
-              description: "Analyze paragraph and return ALL patterns found with structured analysis",
-            parameters: {
-              type: "object",
-              required: ["patterns"],
-              properties: {
-                patterns: {
-                  type: "array",
-                  description: "All patterns identified in the paragraph",
-                  items: {
-                    type: "object",
-                    required: ["categoryType", "category", "subcategory", "templates", "exercises"],
-                    properties: {
-                      categoryType: { 
-                        type: "string", 
-                        enum: ["moves", "general"],
-                        description: "Whether this is a moves/steps or general language function"
-                      },
-                      category: { 
-                        type: "string",
-                        description: "The main category from the available categories"
-                      },
-                      subcategory: { 
-                        type: "string",
-                        description: "The specific subcategory or function within the main category"
-                      },
-                      templates: {
-                        type: "array",
-                        description: "3-5 extracted sentence templates",
-                        items: {
-                          type: "object",
-                          required: ["original", "template", "explanation"],
-                          properties: {
-                            original: { type: "string", description: "The original sentence from the paragraph" },
-                            template: { type: "string", description: "Template with placeholders" },
-                            explanation: { type: "string", description: "How to use this template" }
-                          }
-                        }
-                      },
-                      exercises: {
-                        type: "array",
-                        description: "3-5 practice exercises",
-                        items: {
-                          type: "object",
-                          required: ["instruction", "template", "hints"],
-                          properties: {
-                            instruction: { type: "string", description: "What the user should write about" },
-                            template: { type: "string", description: "The template to use (with blanks if needed)" },
-                            hints: { 
-                              type: "array", 
-                              items: { type: "string" },
-                              description: "2-3 hints to help the user"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }],
-        tool_choice: { type: "function", function: { name: "analyze_academic_paragraph" } }
-      }),
-    });
+          tools: toolDefinition,
+          tool_choice: { type: "function", function: { name: "analyze_academic_paragraph" } }
+        }),
+      });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Lovable AI API error:', errorText);
-      throw new Error(`API request failed: ${response.status}`);
+      if (!kimiResponse.ok) {
+        const errorText = await kimiResponse.text();
+        console.error('Kimi API error:', errorText);
+        throw new Error(`Kimi API failed: ${kimiResponse.status}`);
+      }
+
+      responseData = await kimiResponse.json();
+      console.log('Successfully used Kimi API');
+    } catch (kimiError) {
+      console.error('Kimi API failed, falling back to DeepSeek:', kimiError);
+      usedModel = "DeepSeek";
+
+      const deepseekResponse = await fetch('https://api.deepseek.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${DEEPSEEK_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'deepseek-chat',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: `Analyze this academic paragraph:\n\n${paragraph}` }
+          ],
+          tools: toolDefinition,
+          tool_choice: { type: "function", function: { name: "analyze_academic_paragraph" } }
+        }),
+      });
+
+      if (!deepseekResponse.ok) {
+        const errorText = await deepseekResponse.text();
+        console.error('DeepSeek API error:', errorText);
+        throw new Error('Both Kimi and DeepSeek APIs failed');
+      }
+
+      responseData = await deepseekResponse.json();
+      console.log('Successfully used DeepSeek API');
     }
 
-    const data = await response.json();
-    console.log('Lovable AI response:', JSON.stringify(data));
+    console.log(`Analysis completed using ${usedModel}`);
+    console.log('API response:', JSON.stringify(responseData));
 
     // Extract the tool call result
-    const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
+    const toolCall = responseData.choices?.[0]?.message?.tool_calls?.[0];
     if (!toolCall) {
       throw new Error('No tool call in response');
     }
 
     const analysisResult = JSON.parse(toolCall.function.arguments);
     
-    console.log('Analysis result:', JSON.stringify(analysisResult));
+    console.log('Analysis complete, found', analysisResult.patterns?.length || 0, 'patterns');
 
     return new Response(
       JSON.stringify(analysisResult),
@@ -189,10 +224,13 @@ Return your complete analysis using the analyze_academic_paragraph function with
 
   } catch (error) {
     console.error('Error in analyze-paragraph function:', error);
-    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return new Response(
       JSON.stringify({ error: errorMessage }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { 
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      }
     );
   }
 });

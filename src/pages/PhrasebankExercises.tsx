@@ -10,6 +10,7 @@ import { ArrowLeft, Sparkles, Loader2, CheckCircle, AlertCircle } from "lucide-r
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
+import ReactMarkdown from "react-markdown";
 import {
   Select,
   SelectContent,
@@ -608,24 +609,32 @@ const PhrasebankExercises = () => {
                       <div className="space-y-3">
                         <div className="p-3 bg-green-50 dark:bg-green-950/20 rounded border border-green-200 dark:border-green-800">
                           <h5 className="font-medium text-sm mb-1 text-green-800 dark:text-green-400">Strengths</h5>
-                          <p className="text-sm">{feedbackData.strengths}</p>
+                          <div className="text-sm prose prose-sm max-w-none dark:prose-invert">
+                            <ReactMarkdown>{feedbackData.strengths}</ReactMarkdown>
+                          </div>
                         </div>
 
                         <div className="p-3 bg-blue-50 dark:bg-blue-950/20 rounded border border-blue-200 dark:border-blue-800">
                           <h5 className="font-medium text-sm mb-1 text-blue-800 dark:text-blue-400">Areas for Improvement</h5>
-                          <p className="text-sm">{feedbackData.improvements}</p>
+                          <div className="text-sm prose prose-sm max-w-none dark:prose-invert">
+                            <ReactMarkdown>{feedbackData.improvements}</ReactMarkdown>
+                          </div>
                         </div>
 
                         {feedbackData.revisedVersion && (
                           <div className="p-3 bg-purple-50 dark:bg-purple-950/20 rounded border border-purple-200 dark:border-purple-800">
                             <h5 className="font-medium text-sm mb-1 text-purple-800 dark:text-purple-400">Suggested Revision</h5>
-                            <p className="text-sm italic">{feedbackData.revisedVersion}</p>
+                            <div className="text-sm italic prose prose-sm max-w-none dark:prose-invert">
+                              <ReactMarkdown>{feedbackData.revisedVersion}</ReactMarkdown>
+                            </div>
                           </div>
                         )}
 
                         <div className="p-3 bg-muted/50 rounded border">
                           <h5 className="font-medium text-sm mb-1">Academic Register</h5>
-                          <p className="text-sm">{feedbackData.registerComment}</p>
+                          <div className="text-sm prose prose-sm max-w-none dark:prose-invert">
+                            <ReactMarkdown>{feedbackData.registerComment}</ReactMarkdown>
+                          </div>
                         </div>
                       </div>
                     </div>

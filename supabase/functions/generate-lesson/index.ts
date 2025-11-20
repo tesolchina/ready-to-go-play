@@ -55,6 +55,110 @@ CRITICAL REQUIREMENTS:
 
 Make it engaging and pedagogically sound!`;
 
+    const toolDefinition = [
+      {
+        type: "function",
+        function: {
+          name: "create_lesson",
+          description: "Create a structured educational lesson with 6 tabs",
+          parameters: {
+            type: "object",
+            properties: {
+              title: { type: "string", description: "A compelling lesson title" },
+              subject: { type: "string", description: "The subject area" },
+              grade_level: { type: "string", description: "Target grade level" },
+              learning_objectives: { type: "string", description: "Clear learning objectives" },
+              tabs: {
+                type: "array",
+                description: "6 tabs for the lesson",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: { type: "string", description: "Tab ID (0-5)" },
+                    label: { type: "string", description: "Tab label" },
+                    title: { type: "string", description: "Section title" },
+                    intro: { type: "string", description: "Introduction paragraph" },
+                    bulletPoints: {
+                      type: "array",
+                      description: "4 key bullet points with icons - MUST have valid text",
+                      items: {
+                        type: "object",
+                        properties: {
+                          icon: { type: "string", description: "Single emoji icon" },
+                          text: { type: "string", description: "REQUIRED - Bullet point text, never empty" }
+                        },
+                        required: ["icon", "text"]
+                      }
+                    },
+                    comprehensionCheck: {
+                      type: "object",
+                      description: "REQUIRED for tabs 0-3. MC question with exactly 3 options",
+                      properties: {
+                        question: { type: "string" },
+                        options: {
+                          type: "array",
+                          items: {
+                            type: "object",
+                            properties: {
+                              text: { type: "string" },
+                              isCorrect: { type: "boolean" }
+                            },
+                            required: ["text", "isCorrect"]
+                          }
+                        }
+                      },
+                      required: ["question", "options"]
+                    },
+                    collapsibleSections: {
+                      type: "array",
+                      description: "2 collapsible sections for additional content",
+                      items: {
+                        type: "object",
+                        properties: {
+                          title: { type: "string" },
+                          content: { type: "string" }
+                        },
+                        required: ["title", "content"]
+                      }
+                    },
+                    practiceContent: {
+                      type: "object",
+                      description: "For tab 4 - practice activity configuration",
+                      properties: {
+                        practiceFields: {
+                          type: "array",
+                          items: {
+                            type: "object",
+                            properties: {
+                              label: { type: "string" },
+                              placeholder: { type: "string" }
+                            },
+                            required: ["label", "placeholder"]
+                          }
+                        },
+                        systemPrompt: { type: "string", description: "Prompt to guide AI feedback" }
+                      },
+                      required: ["practiceFields", "systemPrompt"]
+                    },
+                    reflectionContent: {
+                      type: "object",
+                      description: "For tab 5 - reflection question",
+                      properties: {
+                        question: { type: "string", description: "Custom reflection question for THIS lesson" }
+                      },
+                      required: ["question"]
+                    }
+                  },
+                  required: ["id", "label", "title", "intro"]
+                }
+              }
+            },
+            required: ["title", "subject", "grade_level", "learning_objectives", "tabs"]
+          }
+        }
+      }
+    ];
+
     let responseData: any;
     let usedModel = "Kimi";
 
@@ -66,201 +170,79 @@ Make it engaging and pedagogically sound!`;
           'Authorization': `Bearer ${KIMI_API_KEY}`,
           'Content-Type': 'application/json',
         },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          {
-            role: 'system',
-            content: `You are an expert educational content creator. Generate a comprehensive, engaging lesson based on the provided framework.`
-          },
-          {
-            role: 'user',
-            content: `Create a comprehensive 6-tab lesson based on this information:
+        body: JSON.stringify({
+          model: 'moonshot-v1-8k',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userPrompt }
+          ],
+          tools: toolDefinition,
+          tool_choice: { type: "function", function: { name: "create_lesson" } }
+        }),
+      });
 
-Problem & Context: ${lessonData.problem}
-Audience: ${lessonData.audience}
-Common Undesirable Solutions: ${lessonData.undesirableSolutions}
-Framework/Solution: ${lessonData.framework}
-How It Works: ${lessonData.howItWorks}
-Practice Activities: ${lessonData.practice}
-Reflection: ${lessonData.reflection}
+      if (!kimiResponse.ok) {
+        const errorText = await kimiResponse.text();
+        console.error('Kimi API error:', errorText);
+        throw new Error(`Kimi API failed: ${kimiResponse.status}`);
+      }
 
-Structure the lesson with exactly 6 tabs:
-1. "The Problem" - Explain the problem in context with 4 bullet points, ONE MC question (REQUIRED), and additional reading
-2. "Common Behaviors" - Describe undesirable approaches with 4 bullet points, ONE MC question (REQUIRED), and examples
-3. "The Framework" - Present the new framework/solution with 4 bullet points, ONE MC question (REQUIRED), and structure explanation
-4. "How It Works" - Step-by-step demonstration with 4 bullet points, ONE MC question (REQUIRED), and practical examples
-5. "Practice" - Interactive practice with 2-4 custom input fields and a system prompt for AI feedback
-6. "Reflection" - Summary and custom reflection question
+      responseData = await kimiResponse.json();
+      console.log('Successfully used Kimi API');
+    } catch (kimiError) {
+      console.error('Kimi API failed, falling back to DeepSeek:', kimiError);
+      usedModel = "DeepSeek";
 
-CRITICAL REQUIREMENTS:
-1. Ensure ALL bullet points have meaningful, non-empty text content. Never leave bullet text blank.
-2. TABS 0-3 MUST HAVE EXACTLY ONE MULTIPLE CHOICE QUESTION EACH (comprehensionCheck field is REQUIRED)
-3. Each MC question must have 3-4 options with exactly one correct answer
-4. For tabs 0-3: Include 4 engaging bullet points with emojis, ONE MC question with 3 options (one correct), and 2 collapsible sections.
-5. For tab 4: Provide intro text, create 2-4 practiceFields based on lesson content, and write a systemPrompt to guide AI feedback.
-6. For tab 5: Provide congratulatory intro and a custom reflection question in reflectionContent.question that relates specifically to THIS lesson's content.
+      const deepseekResponse = await fetch('https://api.deepseek.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${DEEPSEEK_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'deepseek-chat',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userPrompt }
+          ],
+          tools: toolDefinition,
+          tool_choice: { type: "function", function: { name: "create_lesson" } }
+        }),
+      });
 
-Make it engaging and pedagogically sound!`
-          }
-        ],
-        tools: [
-          {
-            type: "function",
-            function: {
-              name: "create_lesson",
-              description: "Create a structured educational lesson with 6 tabs",
-              parameters: {
-                type: "object",
-                properties: {
-                  title: { type: "string", description: "A compelling lesson title" },
-                  subject: { type: "string", description: "The subject area" },
-                  grade_level: { type: "string", description: "Target grade level" },
-                  learning_objectives: { type: "string", description: "Clear learning objectives" },
-                  tabs: {
-                    type: "array",
-                    description: "6 tabs for the lesson",
-                    items: {
-                      type: "object",
-                      properties: {
-                        id: { type: "string", description: "Tab ID (0-5)" },
-                        label: { type: "string", description: "Tab label" },
-                        title: { type: "string", description: "Section title" },
-                        intro: { type: "string", description: "Introduction paragraph" },
-                        bulletPoints: {
-                          type: "array",
-                          description: "4 key bullet points with icons - MUST have valid text",
-                          items: {
-                            type: "object",
-                            properties: {
-                              icon: { type: "string", description: "Single emoji icon" },
-                              text: { type: "string", description: "Bullet point text - MUST NOT be empty" }
-                            },
-                            required: ["icon", "text"]
-                          }
-                        },
-                        comprehensionCheck: {
-                          type: "object",
-                          description: "MC question for this tab",
-                          properties: {
-                            question: { type: "string" },
-                            options: {
-                              type: "array",
-                              items: {
-                                type: "object",
-                                properties: {
-                                  text: { type: "string" },
-                                  correct: { type: "boolean" }
-                                }
-                              }
-                            }
-                          }
-                        },
-                        additionalSections: {
-                          type: "array",
-                          description: "Collapsible sections for additional content",
-                          items: {
-                            type: "object",
-                            properties: {
-                              title: { type: "string" },
-                              icon: { type: "string", description: "Single emoji" },
-                              content: { type: "string" }
-                            }
-                          }
-                        },
-                        practiceContent: {
-                          type: "object",
-                          description: "Only for tab 4: Practice configuration with custom inputs and AI feedback",
-                          properties: {
-                            systemPrompt: {
-                              type: "string",
-                              description: "System prompt that guides the AI's feedback on user submissions"
-                            },
-                            practiceFields: {
-                              type: "array",
-                              description: "Custom input fields for practice exercises",
-                              items: {
-                                type: "object",
-                                properties: {
-                                  label: { type: "string", description: "Field label" },
-                                  placeholder: { type: "string", description: "Field placeholder text" },
-                                  type: { type: "string", enum: ["text", "textarea"], description: "Input type" }
-                                }
-                              }
-                            }
-                          }
-                        },
-                        reflectionContent: {
-                          type: "object",
-                          description: "Only for tab 5: Custom reflection question",
-                          properties: {
-                            question: {
-                              type: "string",
-                              description: "Reflection question aligned with this specific lesson's content"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                required: ["title", "subject", "grade_level", "learning_objectives", "tabs"]
-              }
-            }
-          }
-        ],
-        tool_choice: { type: "function", function: { name: "create_lesson" } }
-      }),
-    });
+      if (!deepseekResponse.ok) {
+        const errorText = await deepseekResponse.text();
+        console.error('DeepSeek API error:', errorText);
+        throw new Error('Both Kimi and DeepSeek APIs failed');
+      }
 
-    if (!aiResponse.ok) {
-      throw new Error(`AI API error: ${aiResponse.statusText}`);
+      responseData = await deepseekResponse.json();
+      console.log('Successfully used DeepSeek API');
     }
 
-    const aiData = await aiResponse.json();
-    
+    console.log(`Lesson generation completed using ${usedModel}`);
+
     // Extract the tool call result
-    const toolCall = aiData.choices[0].message.tool_calls?.[0];
-    if (!toolCall || toolCall.function.name !== 'create_lesson') {
-      throw new Error('AI did not return expected tool call');
-    }
-    
-    const lessonStructure = JSON.parse(toolCall.function.arguments);
-
-    // Validate that first 4 tabs have comprehension checks
-    for (let i = 0; i < 4; i++) {
-      const tab = lessonStructure.tabs[i];
-      if (!tab.comprehensionCheck || !tab.comprehensionCheck.question || !tab.comprehensionCheck.options || tab.comprehensionCheck.options.length < 3) {
-        console.error(`Tab ${i} missing valid comprehension check:`, tab);
-        throw new Error(`Tab ${i} (${tab.label}) must have a comprehension check with at least 3 options`);
-      }
-      // Ensure at least one correct answer
-      const hasCorrectAnswer = tab.comprehensionCheck.options.some((opt: any) => opt.correct === true);
-      if (!hasCorrectAnswer) {
-        console.error(`Tab ${i} has no correct answer:`, tab.comprehensionCheck);
-        throw new Error(`Tab ${i} (${tab.label}) must have at least one correct answer in the comprehension check`);
-      }
+    const toolCall = responseData.choices?.[0]?.message?.tool_calls?.[0];
+    if (!toolCall || !toolCall.function) {
+      throw new Error('No valid tool call in response');
     }
 
-    // Return the generated lesson (will be stored on the frontend)
+    const lessonContent = JSON.parse(toolCall.function.arguments);
+
     return new Response(
-      JSON.stringify({ 
-        lesson: lessonStructure,
-        sourceData: lessonData
-      }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
+      JSON.stringify(lessonContent),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
   } catch (error) {
-    console.error('Error in generate-lesson:', error);
+    console.error('Error in generate-lesson function:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
     return new Response(
       JSON.stringify({ error: errorMessage }),
       { 
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       }
     );
   }

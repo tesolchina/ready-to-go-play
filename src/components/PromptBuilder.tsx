@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, Send, MessageSquare } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import ReactMarkdown from 'react-markdown';
 
 interface PracticeField {
   label: string;
@@ -181,8 +182,8 @@ export const PromptBuilder: React.FC<PromptBuilderProps> = ({
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="p-4 rounded-lg bg-muted">
-              <p className="whitespace-pre-wrap">{feedback}</p>
+            <div className="p-4 rounded-lg bg-muted prose prose-base max-w-none dark:prose-invert">
+              <ReactMarkdown>{feedback}</ReactMarkdown>
             </div>
 
             {/* Conversation Thread */}
@@ -200,7 +201,13 @@ export const PromptBuilder: React.FC<PromptBuilderProps> = ({
                     <p className="text-sm font-semibold mb-1">
                       {message.role === 'user' ? 'You' : 'AI'}
                     </p>
-                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                    {message.role === 'user' ? (
+                      <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                    ) : (
+                      <div className="text-sm prose prose-sm max-w-none dark:prose-invert">
+                        <ReactMarkdown>{message.content}</ReactMarkdown>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
