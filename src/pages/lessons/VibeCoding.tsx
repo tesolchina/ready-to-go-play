@@ -124,11 +124,6 @@ The letter '${letterInput}' appears ${count} times in '${wordInput}'`);
               </div>
               
               <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <span className="px-3 py-1 bg-primary/10 text-primary rounded-md text-sm font-medium">
-                    Lesson 4
-                  </span>
-                </div>
                 <h1 className="text-5xl font-bold">
                   Vibe Coding: AI Generates Code for You
                 </h1>

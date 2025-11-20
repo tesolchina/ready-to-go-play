@@ -53,9 +53,6 @@ const AIAgents = () => {
               
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
-                  <span className="px-3 py-1 bg-primary/10 text-primary rounded-md text-sm font-medium">
-                    Lesson 5
-                  </span>
                   <span className="px-3 py-1 bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-md text-sm font-medium">
                     🔮 Future Tech
                   </span>
