@@ -146,6 +146,33 @@ export type Database = {
         }
         Relationships: []
       }
+      paragraph_analyses: {
+        Row: {
+          analysis_result: Json
+          created_at: string
+          id: string
+          is_default: boolean | null
+          paragraph_text: string
+          updated_at: string
+        }
+        Insert: {
+          analysis_result: Json
+          created_at?: string
+          id?: string
+          is_default?: boolean | null
+          paragraph_text: string
+          updated_at?: string
+        }
+        Update: {
+          analysis_result?: Json
+          created_at?: string
+          id?: string
+          is_default?: boolean | null
+          paragraph_text?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       pdf_documents: {
         Row: {
           created_at: string
@@ -230,6 +257,42 @@ export type Database = {
           upvotes?: number | null
           user_id?: string | null
           view_count?: number | null
+        }
+        Relationships: []
+      }
+      template_submissions: {
+        Row: {
+          ai_feedback: Json | null
+          created_at: string
+          id: string
+          paragraph_text: string
+          pattern_category: string
+          pattern_subcategory: string
+          template_text: string
+          user_answer: string
+          user_id: string | null
+        }
+        Insert: {
+          ai_feedback?: Json | null
+          created_at?: string
+          id?: string
+          paragraph_text: string
+          pattern_category: string
+          pattern_subcategory: string
+          template_text: string
+          user_answer: string
+          user_id?: string | null
+        }
+        Update: {
+          ai_feedback?: Json | null
+          created_at?: string
+          id?: string
+          paragraph_text?: string
+          pattern_category?: string
+          pattern_subcategory?: string
+          template_text?: string
+          user_answer?: string
+          user_id?: string | null
         }
         Relationships: []
       }
