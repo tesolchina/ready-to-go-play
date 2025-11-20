@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, ArrowLeft, Copy } from "lucide-react";
+import { Loader2, ArrowLeft, Copy, ChevronDown, ChevronUp, Info } from "lucide-react";
 import { MermaidDiagram } from "@/components/MermaidDiagram";
 
 const DEMO_ESSAY = `The Prologue to Bertrand Russell's Autobiography
@@ -28,6 +29,7 @@ export default function PatternAnalyzer() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [analyzeLevel, setAnalyzeLevel] = useState<"essay" | "paragraph">("essay");
+  const [showSystemPrompt, setShowSystemPrompt] = useState(false);
   
   // Demo mode state
   const [demoMermaidCode, setDemoMermaidCode] = useState("");
@@ -37,6 +39,23 @@ export default function PatternAnalyzer() {
   const [userMermaidCode, setUserMermaidCode] = useState("");
   
   const { toast } = useToast();
+
+  const systemPromptText = `You are an expert at creating mermaid diagrams for academic writing structure analysis. 
+
+When analyzing text:
+- Focus on HIGH-LEVEL structure and organization, not minute details
+- Identify PARALLEL and COMPARABLE themes or sections
+- Show how major ideas relate and flow to each other
+- For essays: identify main sections, thesis, body themes, and conclusion
+- For paragraphs: show topic sentence, supporting ideas, and concluding statement
+- Use simple, clear node labels (avoid long text in nodes)
+- Keep the diagram focused on structure, not content details
+
+Diagram guidelines:
+- Use flowchart (graph TD or graph LR) for structure visualization
+- Maximum 8-12 nodes for essay level, 5-8 nodes for paragraph level
+- Show relationships between parallel themes
+- Only return the raw mermaid code (no markdown blocks, no "mermaid" prefix)`;
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -102,9 +121,47 @@ export default function PatternAnalyzer() {
         </Button>
         <div className="max-w-5xl mx-auto">
           <h1 className="text-4xl font-bold mb-2">Writing Structure Visualizer</h1>
-          <p className="text-muted-foreground mb-8">
+          <p className="text-muted-foreground mb-4">
             Visualize essay and paragraph structure using interactive mermaid diagrams
           </p>
+
+          <Collapsible open={showSystemPrompt} onOpenChange={setShowSystemPrompt} className="mb-6">
+            <CollapsibleTrigger asChild>
+              <Button variant="outline" size="sm" className="w-full justify-between">
+                <span className="flex items-center gap-2">
+                  <Info className="h-4 w-4" />
+                  How AI Analyzes Your Text
+                </span>
+                {showSystemPrompt ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              </Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="mt-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">AI System Prompt</CardTitle>
+                  <CardDescription>
+                    This is the instruction given to the AI model (DeepSeek/Kimi) to analyze your text structure
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="bg-muted p-4 rounded-lg">
+                      <pre className="text-sm whitespace-pre-wrap font-mono">{systemPromptText}</pre>
+                    </div>
+                    <div className="text-sm text-muted-foreground space-y-2">
+                      <p><strong>What this means:</strong></p>
+                      <ul className="list-disc list-inside space-y-1 ml-2">
+                        <li>AI focuses on <strong>high-level organization</strong>, not every detail</li>
+                        <li>Identifies <strong>parallel themes</strong> and how they connect</li>
+                        <li>Creates simple, clear diagrams (8-12 nodes for essays, 5-8 for paragraphs)</li>
+                        <li>Shows structural relationships, not content summaries</li>
+                      </ul>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </CollapsibleContent>
+          </Collapsible>
 
           <Tabs value={analyzeLevel} onValueChange={(v) => setAnalyzeLevel(v as "essay" | "paragraph")}>
             <TabsList className="grid w-full grid-cols-2 mb-6">
