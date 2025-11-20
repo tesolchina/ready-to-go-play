@@ -26,39 +26,10 @@ Rules:
 - Do not include markdown code blocks, just the raw mermaid syntax`;
 
     let mermaidCode: string;
-    let usedModel = "Kimi";
+    let usedModel = "DeepSeek";
 
     try {
-      console.log("Attempting to use Kimi API");
-      const kimiResponse = await fetch("https://api.moonshot.cn/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${KIMI_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "moonshot-v1-8k",
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: description }
-          ],
-          temperature: 0.7,
-        }),
-      });
-
-      if (!kimiResponse.ok) {
-        const errorText = await kimiResponse.text();
-        console.error("Kimi API error:", errorText);
-        throw new Error(`Kimi API failed: ${kimiResponse.status}`);
-      }
-
-      const kimiData = await kimiResponse.json();
-      mermaidCode = kimiData.choices[0].message.content.trim();
-      console.log("Successfully used Kimi API");
-    } catch (kimiError) {
-      console.error("Kimi API failed, falling back to DeepSeek:", kimiError);
-      usedModel = "DeepSeek";
-
+      console.log("Attempting to use DeepSeek API");
       const deepseekResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
         method: "POST",
         headers: {
@@ -78,12 +49,41 @@ Rules:
       if (!deepseekResponse.ok) {
         const errorText = await deepseekResponse.text();
         console.error("DeepSeek API error:", errorText);
-        throw new Error(`Both Kimi and DeepSeek APIs failed`);
+        throw new Error(`DeepSeek API failed: ${deepseekResponse.status}`);
       }
 
       const deepseekData = await deepseekResponse.json();
       mermaidCode = deepseekData.choices[0].message.content.trim();
       console.log("Successfully used DeepSeek API");
+    } catch (deepseekError) {
+      console.error("DeepSeek API failed, falling back to Kimi:", deepseekError);
+      usedModel = "Kimi";
+
+      const kimiResponse = await fetch("https://api.moonshot.cn/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${KIMI_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "moonshot-v1-8k",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: description }
+          ],
+          temperature: 0.7,
+        }),
+      });
+
+      if (!kimiResponse.ok) {
+        const errorText = await kimiResponse.text();
+        console.error("Kimi API error:", errorText);
+        throw new Error(`Both DeepSeek and Kimi APIs failed`);
+      }
+
+      const kimiData = await kimiResponse.json();
+      mermaidCode = kimiData.choices[0].message.content.trim();
+      console.log("Successfully used Kimi API");
     }
 
     // Clean up the mermaid code - remove markdown code blocks and "mermaid" prefix if present
