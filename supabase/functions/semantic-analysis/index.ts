@@ -12,10 +12,11 @@ serve(async (req) => {
 
   try {
     const { text } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    const KIMI_API_KEY = Deno.env.get("KIMI_API_KEY");
+    const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
 
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
+    if (!KIMI_API_KEY || !DEEPSEEK_API_KEY) {
+      throw new Error("API keys not configured");
     }
 
     if (!text || typeof text !== 'string' || text.trim().length === 0) {
@@ -27,62 +28,95 @@ serve(async (req) => {
 
     console.log("Performing semantic analysis on text:", text.substring(0, 100));
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages: [
-          {
-            role: "system",
-            content: "You are a semantic analysis expert. Analyze the given text and extract: 1) sentiment (positive/negative/neutral), 2) up to 5 key themes as an array, 3) word count. Return ONLY valid JSON with these exact fields: sentiment, key_themes (array of strings), word_count (number)."
+    const toolDefinition = [{
+      type: "function",
+      function: {
+        name: "semantic_analysis",
+        description: "Extract semantic analysis from text",
+        parameters: {
+          type: "object",
+          properties: {
+            sentiment: { 
+              type: "string",
+              enum: ["positive", "negative", "neutral"]
+            },
+            key_themes: {
+              type: "array",
+              items: { type: "string" },
+              maxItems: 5
+            },
+            word_count: { type: "number" }
           },
-          {
-            role: "user",
-            content: `Analyze this text:\n\n${text}`
-          }
-        ],
-        tools: [
-          {
-            type: "function",
-            function: {
-              name: "semantic_analysis",
-              description: "Extract semantic analysis from text",
-              parameters: {
-                type: "object",
-                properties: {
-                  sentiment: { 
-                    type: "string",
-                    enum: ["positive", "negative", "neutral"]
-                  },
-                  key_themes: {
-                    type: "array",
-                    items: { type: "string" },
-                    maxItems: 5
-                  },
-                  word_count: { type: "number" }
-                },
-                required: ["sentiment", "key_themes", "word_count"],
-                additionalProperties: false
-              }
-            }
-          }
-        ],
-        tool_choice: { type: "function", function: { name: "semantic_analysis" } }
-      }),
-    });
+          required: ["sentiment", "key_themes", "word_count"],
+          additionalProperties: false
+        }
+      }
+    }];
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("AI gateway error:", response.status, errorText);
-      throw new Error(`AI gateway returned ${response.status}`);
+    const systemPrompt = "You are a semantic analysis expert. Analyze the given text and extract: 1) sentiment (positive/negative/neutral), 2) up to 5 key themes as an array, 3) word count. Return ONLY valid JSON with these exact fields: sentiment, key_themes (array of strings), word_count (number).";
+
+    // Try Kimi first
+    let response;
+    let data;
+    let apiUsed = 'Kimi';
+
+    try {
+      console.log("Attempting analysis with Kimi API");
+      response = await fetch("https://api.moonshot.cn/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${KIMI_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "moonshot-v1-32k",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: `Analyze this text:\n\n${text}` }
+          ],
+          tools: toolDefinition,
+          tool_choice: { type: "function", function: { name: "semantic_analysis" } }
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Kimi API failed: ${response.status}`);
+      }
+
+      data = await response.json();
+      console.log("Successfully analyzed with Kimi API");
+    } catch (kimiError) {
+      console.error("Kimi API failed, falling back to DeepSeek:", kimiError);
+      apiUsed = 'DeepSeek';
+
+      response = await fetch("https://api.deepseek.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "deepseek-chat",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: `Analyze this text:\n\n${text}` }
+          ],
+          tools: toolDefinition,
+          tool_choice: { type: "function", function: { name: "semantic_analysis" } }
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("DeepSeek API error:", response.status, errorText);
+        throw new Error(`Both APIs failed. DeepSeek status: ${response.status}`);
+      }
+
+      data = await response.json();
+      console.log("Successfully analyzed with DeepSeek API");
     }
 
-    const data = await response.json();
-    console.log("AI response:", JSON.stringify(data));
+    console.log(`AI response from ${apiUsed}:`, JSON.stringify(data));
 
     // Extract the tool call result
     const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];

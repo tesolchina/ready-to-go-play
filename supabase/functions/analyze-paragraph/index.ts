@@ -5,7 +5,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+const KIMI_API_KEY = Deno.env.get('KIMI_API_KEY');
+const DEEPSEEK_API_KEY = Deno.env.get('DEEPSEEK_API_KEY');
 
 // Available phrasebank categories
 const MOVES_CATEGORIES = [
@@ -131,34 +132,68 @@ Return using the analyze_academic_paragraph function.`;
       }
     }];
 
-    console.log("Using Lovable AI for fast analysis");
-    
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: `Analyze this academic paragraph:\n\n${paragraph}` }
-        ],
-        tools: toolDefinition,
-        tool_choice: { type: "function", function: { name: "analyze_academic_paragraph" } },
-      }),
-    });
+    // Try Kimi first
+    let response;
+    let responseData;
+    let apiUsed = 'Kimi';
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Lovable AI error:', errorText);
-      throw new Error(`AI analysis failed: ${response.status}`);
+    try {
+      console.log("Attempting analysis with Kimi API");
+      response = await fetch('https://api.moonshot.cn/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${KIMI_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'moonshot-v1-32k',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: `Analyze this academic paragraph:\n\n${paragraph}` }
+          ],
+          tools: toolDefinition,
+          tool_choice: { type: "function", function: { name: "analyze_academic_paragraph" } },
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Kimi API failed: ${response.status}`);
+      }
+
+      responseData = await response.json();
+      console.log('Successfully analyzed with Kimi API');
+    } catch (kimiError) {
+      console.error('Kimi API failed, falling back to DeepSeek:', kimiError);
+      apiUsed = 'DeepSeek';
+
+      response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${DEEPSEEK_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'deepseek-chat',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: `Analyze this academic paragraph:\n\n${paragraph}` }
+          ],
+          tools: toolDefinition,
+          tool_choice: { type: "function", function: { name: "analyze_academic_paragraph" } },
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('DeepSeek API error:', errorText);
+        throw new Error(`Both APIs failed. DeepSeek status: ${response.status}`);
+      }
+
+      responseData = await response.json();
+      console.log('Successfully analyzed with DeepSeek API');
     }
 
-    const responseData = await response.json();
-    console.log('Successfully analyzed with Lovable AI');
-    console.log('API response:', JSON.stringify(responseData));
+    console.log(`API response from ${apiUsed}:`, JSON.stringify(responseData));
 
     // Extract the tool call result
     const toolCall = responseData.choices?.[0]?.message?.tool_calls?.[0];
