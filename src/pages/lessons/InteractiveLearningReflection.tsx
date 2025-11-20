@@ -72,11 +72,6 @@ const InteractiveLearningReflection = () => {
               </div>
               
               <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <span className="px-3 py-1 bg-primary/10 text-primary rounded-md text-sm font-medium">
-                    Lesson 1
-                  </span>
-                </div>
                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold break-words">
                   From Traditional Lecturing to Interactive Learning
                 </h1>
