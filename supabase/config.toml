@@ -42,3 +42,6 @@ verify_jwt = false
 [functions.template-feedback]
 verify_jwt = false
 
+[functions.semantic-analysis]
+verify_jwt = false
+

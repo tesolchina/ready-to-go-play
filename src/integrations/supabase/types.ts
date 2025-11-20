@@ -260,6 +260,60 @@ export type Database = {
         }
         Relationships: []
       }
+      response_analytics: {
+        Row: {
+          created_at: string
+          id: string
+          key_themes: string[] | null
+          lesson_slug: string
+          response_text: string
+          section_id: string
+          sentiment: string | null
+          word_count: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key_themes?: string[] | null
+          lesson_slug: string
+          response_text: string
+          section_id: string
+          sentiment?: string | null
+          word_count?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key_themes?: string[] | null
+          lesson_slug?: string
+          response_text?: string
+          section_id?: string
+          sentiment?: string | null
+          word_count?: number | null
+        }
+        Relationships: []
+      }
+      section_visits: {
+        Row: {
+          id: string
+          lesson_slug: string
+          section_id: string
+          visited_at: string
+        }
+        Insert: {
+          id?: string
+          lesson_slug: string
+          section_id: string
+          visited_at?: string
+        }
+        Update: {
+          id?: string
+          lesson_slug?: string
+          section_id?: string
+          visited_at?: string
+        }
+        Relationships: []
+      }
       template_submissions: {
         Row: {
           ai_feedback: Json | null
