@@ -158,11 +158,11 @@ const LessonCreator = () => {
       <div className="container max-w-4xl mx-auto px-4 py-8">
         <Button
           variant="ghost"
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/learning-apps")}
           className="mb-6"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Dashboard
+          Back to Learning Apps
         </Button>
 
         <Card>

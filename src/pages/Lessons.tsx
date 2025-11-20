@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { BringYourOwnKey } from "@/components/BringYourOwnKey";
+import { CollapsibleSection } from "@/components/CollapsibleSection";
 import { BookOpen, Target, GraduationCap, FileCheck, Lightbulb, Sparkles, Code } from "lucide-react";
 
 const Lessons = () => {
@@ -75,7 +76,22 @@ const Lessons = () => {
           <div className="space-y-8">
             {/* Bring Your Own Key Module */}
             <div className="max-w-4xl mx-auto">
-              <BringYourOwnKey />
+              <CollapsibleSection 
+                title="API Key Configuration" 
+                icon="🔑"
+                defaultOpen={true}
+              >
+                <div className="space-y-4 mb-6">
+                  <p className="text-muted-foreground">
+                    This page includes AI features that consume computing power from Large Language Models (LLMs). 
+                    Users are expected to pay for such computing power by obtaining an API key from either Kimi or DeepSeek.
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Please configure your API key below to enable AI-powered interactive features in the lessons.
+                  </p>
+                </div>
+                <BringYourOwnKey />
+              </CollapsibleSection>
             </div>
 
             {/* Featured Lesson */}
