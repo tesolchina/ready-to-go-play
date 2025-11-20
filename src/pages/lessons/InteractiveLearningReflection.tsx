@@ -221,18 +221,7 @@ const InteractiveLearningReflection = () => {
 
               <div className="mt-6 bg-muted/50 p-4 rounded-lg">
                 <h4 className="font-semibold text-foreground text-lg mb-2">📚 Further Reading</h4>
-                <ul className="space-y-2 text-base text-muted-foreground">
-                  <li>
-                    • <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10159400/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                      Personalized tutoring and AI (2023)
-                    </a>
-                  </li>
-                  <li>
-                    • <a href="https://services.google.com/fh/files/misc/future_of_learning.pdf#page=9.39" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                      AI and the Future of Learning (Google, Nov 2025)
-                    </a>
-                  </li>
-                </ul>
+                <p className="text-base text-muted-foreground">To be updated</p>
               </div>
             </CollapsibleSection>
 
