@@ -50,31 +50,21 @@ serve(async (req) => {
 
     console.log('Analyzing paragraph:', paragraph.substring(0, 100) + '...');
 
-    const systemPrompt = `You are an expert in academic writing analysis. Your task is to comprehensively analyze the provided paragraph and identify EVERY academic writing pattern present.
+    const systemPrompt = `You are an expert in academic writing. Analyze the paragraph and identify ALL academic patterns present.
 
-Available Categories:
-MOVES/STEPS: ${MOVES_CATEGORIES.join(', ')}
-GENERAL FUNCTIONS: ${GENERAL_CATEGORIES.join(', ')}
+Categories:
+MOVES: ${MOVES_CATEGORIES.join(', ')}
+GENERAL: ${GENERAL_CATEGORIES.join(', ')}
 
-CRITICAL INSTRUCTIONS:
-1. You MUST identify ALL patterns present in the paragraph, not just one or the dominant pattern
-2. A single paragraph typically contains MULTIPLE patterns - look for ALL of them
-3. Examine the text thoroughly for different writing functions that may overlap
-4. For each distinct pattern you identify:
-   - Specify whether it's a "moves" or "general" category type
-   - Identify the specific category from the lists above
-   - Determine the precise subcategory
-   - Extract 3-5 sentence templates showing how this pattern is used
-   - Create 3-5 practice exercises for this pattern
-5. Return a comprehensive array with ALL patterns found - aim for 2-5 patterns typically
+Instructions:
+1. Find ALL patterns (typically 2-5)
+2. For each pattern:
+   - Type: "moves" or "general"
+   - Category & subcategory
+   - 3-5 templates from the text
+   - 3-5 practice exercises
 
-EXAMPLE: A paragraph discussing research findings might contain:
-- "Reporting results" (moves) - describing what was found
-- "Describing quantities" (general) - numerical data presentation  
-- "Being cautious" (general) - hedging language
-- "Explaining causality" (general) - cause-effect relationships
-
-Return your complete analysis using the analyze_academic_paragraph function with ALL patterns found.`;
+Return using the analyze_academic_paragraph function.`;
 
     const toolDefinition = [{
       type: "function",
@@ -155,14 +145,14 @@ Return your complete analysis using the analyze_academic_paragraph function with
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'moonshot-v1-8k',
+          model: 'moonshot-v1-32k',
           messages: [
             { role: 'system', content: systemPrompt },
             { role: 'user', content: `Analyze this academic paragraph:\n\n${paragraph}` }
           ],
           tools: toolDefinition,
           tool_choice: { type: "function", function: { name: "analyze_academic_paragraph" } },
-          max_tokens: 8000
+          max_tokens: 16000
         }),
       });
 
