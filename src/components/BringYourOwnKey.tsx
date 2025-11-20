@@ -1,0 +1,218 @@
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { ExternalLink, Key, CheckCircle2, XCircle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+
+type ApiProvider = "kimi" | "deepseek";
+
+export const BringYourOwnKey = () => {
+  const [kimiKey, setKimiKey] = useState("");
+  const [deepseekKey, setDeepseekKey] = useState("");
+  const [savedKeys, setSavedKeys] = useState<Record<ApiProvider, boolean>>({
+    kimi: false,
+    deepseek: false,
+  });
+  const { toast } = useToast();
+
+  useEffect(() => {
+    // Load saved keys from localStorage
+    const storedKimiKey = localStorage.getItem("user_kimi_api_key");
+    const storedDeepseekKey = localStorage.getItem("user_deepseek_api_key");
+    
+    if (storedKimiKey) {
+      setKimiKey(storedKimiKey);
+      setSavedKeys(prev => ({ ...prev, kimi: true }));
+    }
+    if (storedDeepseekKey) {
+      setDeepseekKey(storedDeepseekKey);
+      setSavedKeys(prev => ({ ...prev, deepseek: true }));
+    }
+  }, []);
+
+  const handleSaveKey = (provider: ApiProvider, key: string) => {
+    if (!key.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter an API key",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const storageKey = `user_${provider}_api_key`;
+    localStorage.setItem(storageKey, key.trim());
+    setSavedKeys(prev => ({ ...prev, [provider]: true }));
+    
+    toast({
+      title: "API Key Saved",
+      description: `Your ${provider === "kimi" ? "Kimi" : "DeepSeek"} API key has been saved locally`,
+    });
+  };
+
+  const handleRemoveKey = (provider: ApiProvider) => {
+    const storageKey = `user_${provider}_api_key`;
+    localStorage.removeItem(storageKey);
+    
+    if (provider === "kimi") {
+      setKimiKey("");
+    } else {
+      setDeepseekKey("");
+    }
+    
+    setSavedKeys(prev => ({ ...prev, [provider]: false }));
+    
+    toast({
+      title: "API Key Removed",
+      description: `Your ${provider === "kimi" ? "Kimi" : "DeepSeek"} API key has been removed`,
+    });
+  };
+
+  return (
+    <Card className="border-2">
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <Key className="h-5 w-5" />
+          <CardTitle>Bring Your Own Key (BYOK)</CardTitle>
+        </div>
+        <CardDescription>
+          Use your own API keys for enhanced AI features. Your keys are stored locally and never sent to our servers.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <Alert>
+          <AlertDescription className="text-sm">
+            By providing your own API keys, you can use AI features directly with your preferred providers. 
+            Keys are stored in your browser's local storage and only used for API requests you initiate.
+          </AlertDescription>
+        </Alert>
+
+        {/* Kimi API Key */}
+        <div className="space-y-3 p-4 border rounded-lg">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Label htmlFor="kimi-key" className="text-base font-semibold">
+                Kimi API Key
+              </Label>
+              {savedKeys.kimi ? (
+                <Badge variant="default" className="gap-1">
+                  <CheckCircle2 className="h-3 w-3" />
+                  Active
+                </Badge>
+              ) : (
+                <Badge variant="secondary" className="gap-1">
+                  <XCircle className="h-3 w-3" />
+                  Not Set
+                </Badge>
+              )}
+            </div>
+            <a
+              href="https://platform.moonshot.cn/console/api-keys"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-primary hover:underline flex items-center gap-1"
+            >
+              Get Key
+              <ExternalLink className="h-3 w-3" />
+            </a>
+          </div>
+          
+          <p className="text-sm text-muted-foreground">
+            Get your API key from the Moonshot AI Platform (Kimi). You'll need to create an account and navigate to the API keys section.
+          </p>
+          
+          <div className="flex gap-2">
+            <Input
+              id="kimi-key"
+              type="password"
+              value={kimiKey}
+              onChange={(e) => setKimiKey(e.target.value)}
+              placeholder="sk-..."
+              className="flex-1"
+            />
+            {savedKeys.kimi ? (
+              <Button
+                variant="destructive"
+                onClick={() => handleRemoveKey("kimi")}
+              >
+                Remove
+              </Button>
+            ) : (
+              <Button
+                onClick={() => handleSaveKey("kimi", kimiKey)}
+                disabled={!kimiKey.trim()}
+              >
+                Save
+              </Button>
+            )}
+          </div>
+        </div>
+
+        {/* DeepSeek API Key */}
+        <div className="space-y-3 p-4 border rounded-lg">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Label htmlFor="deepseek-key" className="text-base font-semibold">
+                DeepSeek API Key
+              </Label>
+              {savedKeys.deepseek ? (
+                <Badge variant="default" className="gap-1">
+                  <CheckCircle2 className="h-3 w-3" />
+                  Active
+                </Badge>
+              ) : (
+                <Badge variant="secondary" className="gap-1">
+                  <XCircle className="h-3 w-3" />
+                  Not Set
+                </Badge>
+              )}
+            </div>
+            <a
+              href="https://platform.deepseek.com/api_keys"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-primary hover:underline flex items-center gap-1"
+            >
+              Get Key
+              <ExternalLink className="h-3 w-3" />
+            </a>
+          </div>
+          
+          <p className="text-sm text-muted-foreground">
+            Get your API key from the DeepSeek Platform. Sign up for an account and generate an API key from your dashboard.
+          </p>
+          
+          <div className="flex gap-2">
+            <Input
+              id="deepseek-key"
+              type="password"
+              value={deepseekKey}
+              onChange={(e) => setDeepseekKey(e.target.value)}
+              placeholder="sk-..."
+              className="flex-1"
+            />
+            {savedKeys.deepseek ? (
+              <Button
+                variant="destructive"
+                onClick={() => handleRemoveKey("deepseek")}
+              >
+                Remove
+              </Button>
+            ) : (
+              <Button
+                onClick={() => handleSaveKey("deepseek", deepseekKey)}
+                disabled={!deepseekKey.trim()}
+              >
+                Save
+              </Button>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};

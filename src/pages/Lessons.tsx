@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
+import { BringYourOwnKey } from "@/components/BringYourOwnKey";
 import { BookOpen, Target, GraduationCap, FileCheck, Lightbulb, Sparkles, Code } from "lucide-react";
 
 const Lessons = () => {
@@ -72,6 +73,11 @@ const Lessons = () => {
             </div>
 
           <div className="space-y-8">
+            {/* Bring Your Own Key Module */}
+            <div className="max-w-4xl mx-auto">
+              <BringYourOwnKey />
+            </div>
+
             {/* Featured Lesson */}
             <div className="max-w-4xl mx-auto">
               <Link to="/lessons/interactive-learning-reflection">
