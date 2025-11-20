@@ -86,7 +86,10 @@ Rules:
       console.log("Successfully used DeepSeek API");
     }
 
-    console.log(`Generated mermaid code using ${usedModel}`);
+    // Clean up the mermaid code - remove markdown code blocks if present
+    mermaidCode = mermaidCode.replace(/```mermaid\n?/g, '').replace(/```\n?$/g, '').trim();
+    
+    console.log(`Generated mermaid code using ${usedModel}:`, mermaidCode.substring(0, 100));
 
     return new Response(
       JSON.stringify({ mermaidCode }),

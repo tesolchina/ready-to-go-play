@@ -26,10 +26,15 @@ export const MermaidDiagram = ({ chart }: MermaidDiagramProps) => {
           }
         } catch (error) {
           console.error('Mermaid render error:', error);
+          console.error('Chart content:', chart);
           if (containerRef.current) {
             containerRef.current.innerHTML = `<div class="text-destructive p-4 border border-destructive rounded">
               <p class="font-semibold">Error rendering diagram</p>
-              <p class="text-sm mt-1">The mermaid code may be invalid. Please check the syntax.</p>
+              <p class="text-sm mt-1 mb-2">${error instanceof Error ? error.message : 'The mermaid code may be invalid.'}</p>
+              <details class="text-xs">
+                <summary class="cursor-pointer font-medium">View raw mermaid code</summary>
+                <pre class="mt-2 p-2 bg-muted rounded overflow-auto">${chart}</pre>
+              </details>
             </div>`;
           }
         }
