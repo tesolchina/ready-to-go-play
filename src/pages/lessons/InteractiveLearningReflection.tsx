@@ -23,11 +23,22 @@ const InteractiveLearningReflection = () => {
   const lessonSlug = "interactive-learning-reflection";
 
   useEffect(() => {
-    // Track visitor
+    // Track unique visitor using localStorage
     const trackVisitor = async () => {
-      await supabase.from("lesson_visitors").insert({
-        lesson_slug: lessonSlug,
-      });
+      const storageKey = `visited_${lessonSlug}`;
+      const hasVisited = localStorage.getItem(storageKey);
+      
+      if (!hasVisited) {
+        try {
+          await supabase.from("lesson_visitors").insert({
+            lesson_slug: lessonSlug,
+          });
+          // Mark this lesson as visited in localStorage
+          localStorage.setItem(storageKey, new Date().toISOString());
+        } catch (error) {
+          console.error('Error tracking visitor:', error);
+        }
+      }
     };
     trackVisitor();
   }, []);
