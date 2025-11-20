@@ -12,7 +12,11 @@ import ReactMarkdown from "react-markdown";
 const LESSON_SLUG = "interactive-learning-reflection";
 const SECTION_ID = "counter-argument-exercise";
 
-export const CounterArgumentDemo = () => {
+interface CounterArgumentDemoProps {
+  onAnalyticsUpdate?: () => void;
+}
+
+export const CounterArgumentDemo = ({ onAnalyticsUpdate }: CounterArgumentDemoProps = {}) => {
   const [response, setResponse] = useState("");
   const [feedback, setFeedback] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -97,6 +101,9 @@ IMPORTANT: Keep your response under 500 characters. Be concise and focus on the 
           key_themes: semanticData.key_themes,
           word_count: semanticData.word_count,
         });
+        
+        // Trigger analytics update
+        onAnalyticsUpdate?.();
       }
 
       setProgressMessage("Generating feedback...");
