@@ -27,13 +27,6 @@ const LearningApps = () => {
       path: "/validate-references",
       category: "Citation Tools"
     },
-    {
-      title: "Lesson Creator",
-      description: "Build custom lessons with AI assistance tailored to your teaching objectives and student needs.",
-      icon: Plus,
-      path: "/lesson-creator",
-      category: "Teaching Tools"
-    },
   ];
 
   return (

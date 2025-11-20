@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -8,7 +9,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2 } from "lucide-react";
+import { Loader2, ArrowLeft } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 const DEMO_ESSAY = `The Prologue to Bertrand Russell's Autobiography
@@ -42,6 +43,7 @@ The text is organized into five distinct thematic sections, followed by a brief 
 The sections flow logically from a broad declaration to specific elaborations, then to a synthesis that introduces the final core component, culminating in an overall assessment. The connection between sections is primarily thematic, with explicit or implicit repetition of keywords and concepts maintaining coherence.`;
 
 export default function PatternAnalyzer() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("demo");
   const [loading, setLoading] = useState(false);
   
@@ -157,6 +159,14 @@ export default function PatternAnalyzer() {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto py-8 px-4">
+        <Button 
+          variant="ghost" 
+          onClick={() => navigate('/learning-apps')}
+          className="mb-6"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Learning Apps
+        </Button>
         <div className="max-w-5xl mx-auto">
           <h1 className="text-4xl font-bold mb-2">Writing Pattern Analyzer</h1>
           <p className="text-muted-foreground mb-8">
