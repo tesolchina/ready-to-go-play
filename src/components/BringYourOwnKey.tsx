@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Key, CheckCircle2, XCircle } from "lucide-react";
+import { ExternalLink, Key, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 type ApiProvider = "kimi" | "deepseek";
@@ -17,6 +17,7 @@ export const BringYourOwnKey = () => {
     kimi: false,
     deepseek: false,
   });
+  const [testingKey, setTestingKey] = useState<ApiProvider | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -34,13 +35,71 @@ export const BringYourOwnKey = () => {
     }
   }, []);
 
-  const handleSaveKey = (provider: ApiProvider, key: string) => {
+  const testApiKey = async (provider: ApiProvider, key: string) => {
     if (!key.trim()) {
       toast({
         title: "Error",
         description: "Please enter an API key",
         variant: "destructive",
       });
+      return false;
+    }
+
+    setTestingKey(provider);
+    
+    try {
+      const endpoint = provider === "kimi" 
+        ? "https://api.moonshot.cn/v1/chat/completions"
+        : "https://api.deepseek.com/chat/completions";
+      
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${key.trim()}`
+        },
+        body: JSON.stringify({
+          model: provider === "kimi" ? "moonshot-v1-8k" : "deepseek-chat",
+          messages: [{ role: "user", content: "test" }],
+          max_tokens: 10
+        })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`${provider} API test failed:`, response.status, errorText);
+        
+        toast({
+          title: "Invalid API Key",
+          description: `The ${provider === "kimi" ? "Kimi" : "DeepSeek"} API key appears to be invalid. Please check and try again.`,
+          variant: "destructive",
+        });
+        return false;
+      }
+
+      toast({
+        title: "Connection Successful",
+        description: `${provider === "kimi" ? "Kimi" : "DeepSeek"} API key is valid and working!`,
+      });
+      return true;
+      
+    } catch (error) {
+      console.error(`Error testing ${provider} API key:`, error);
+      toast({
+        title: "Connection Failed",
+        description: `Could not connect to ${provider === "kimi" ? "Kimi" : "DeepSeek"}. Please check your internet connection and try again.`,
+        variant: "destructive",
+      });
+      return false;
+    } finally {
+      setTestingKey(null);
+    }
+  };
+
+  const handleSaveKey = async (provider: ApiProvider, key: string) => {
+    const isValid = await testApiKey(provider, key);
+    
+    if (!isValid) {
       return;
     }
 
@@ -80,14 +139,14 @@ export const BringYourOwnKey = () => {
           <CardTitle>Bring Your Own Key (BYOK)</CardTitle>
         </div>
         <CardDescription>
-          Use your own API keys for enhanced AI features. Your keys are stored locally and never sent to our servers.
+          Provide an API key from either Kimi or DeepSeek (you only need one). Your keys are stored locally in your browser and never sent to our servers.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <Alert>
           <AlertDescription className="text-sm">
-            By providing your own API keys, you can use AI features directly with your preferred providers. 
-            Keys are stored in your browser's local storage and only used for API requests you initiate.
+            <strong>Note:</strong> You only need to provide ONE API key from either Kimi or DeepSeek. 
+            Your key will be tested before saving to ensure it works correctly. Keys are stored in your browser's local storage and only used for API requests you initiate.
           </AlertDescription>
         </Alert>
 
@@ -144,9 +203,16 @@ export const BringYourOwnKey = () => {
             ) : (
               <Button
                 onClick={() => handleSaveKey("kimi", kimiKey)}
-                disabled={!kimiKey.trim()}
+                disabled={!kimiKey.trim() || testingKey === "kimi"}
               >
-                Save
+                {testingKey === "kimi" ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Testing...
+                  </>
+                ) : (
+                  "Test & Save"
+                )}
               </Button>
             )}
           </div>
@@ -205,9 +271,16 @@ export const BringYourOwnKey = () => {
             ) : (
               <Button
                 onClick={() => handleSaveKey("deepseek", deepseekKey)}
-                disabled={!deepseekKey.trim()}
+                disabled={!deepseekKey.trim() || testingKey === "deepseek"}
               >
-                Save
+                {testingKey === "deepseek" ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Testing...
+                  </>
+                ) : (
+                  "Test & Save"
+                )}
               </Button>
             )}
           </div>
