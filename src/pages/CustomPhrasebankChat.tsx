@@ -51,8 +51,10 @@ const CustomPhrasebankChat = () => {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [templateAnswers, setTemplateAnswers] = useState<Record<string, string>>({});
-  const [templateFeedback, setTemplateFeedback] = useState<Record<string, TemplateFeedback>>({});
+  const [templateFeedback, setTemplateFeedback] = useState<Record<string, TemplateFeedback>>({}); 
   const [submittingTemplate, setSubmittingTemplate] = useState<string | null>(null);
+  const [analysisProgress, setAnalysisProgress] = useState<string>("");
+  const [feedbackProgress, setFeedbackProgress] = useState<Record<string, string>>({});
   const { toast } = useToast();
 
   const handleAnalyzeParagraph = async () => {
@@ -66,6 +68,7 @@ const CustomPhrasebankChat = () => {
     }
 
     setIsAnalyzing(true);
+    setAnalysisProgress("Checking for cached analysis...");
     
     try {
       // Check if this is the default paragraph
@@ -90,9 +93,15 @@ const CustomPhrasebankChat = () => {
       }
 
       // Call AI function for analysis
+      setAnalysisProgress("Connecting to AI service...");
+      await new Promise(resolve => setTimeout(resolve, 300));
+      setAnalysisProgress("Analyzing paragraph structure...");
+      
       const { data, error } = await supabase.functions.invoke('analyze-paragraph', {
         body: { paragraph: paragraphInput }
       });
+      
+      setAnalysisProgress("Processing patterns and templates...");
 
       if (error) throw error;
 
@@ -134,8 +143,12 @@ const CustomPhrasebankChat = () => {
     }
 
     setSubmittingTemplate(answerKey);
-
+    setFeedbackProgress({ ...feedbackProgress, [answerKey]: "Connecting to AI..." });
+    
     try {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      setFeedbackProgress({ ...feedbackProgress, [answerKey]: "Analyzing your answer..." });
+      
       const { data, error } = await supabase.functions.invoke('template-feedback', {
         body: {
           paragraphText: paragraphInput,
@@ -148,6 +161,8 @@ const CustomPhrasebankChat = () => {
 
       if (error) throw error;
 
+      setFeedbackProgress({ ...feedbackProgress, [answerKey]: "Generating feedback..." });
+      
       if (data) {
         setTemplateFeedback(prev => ({
           ...prev,
@@ -167,6 +182,7 @@ const CustomPhrasebankChat = () => {
       });
     } finally {
       setSubmittingTemplate(null);
+      setFeedbackProgress({ ...feedbackProgress, [answerKey]: "" });
     }
   };
 
@@ -325,16 +341,27 @@ const CustomPhrasebankChat = () => {
                                           />
                                           <Button
                                             onClick={() => handleSubmitTemplateAnswer(patternIdx, idx, pattern, template)}
-                                            disabled={isSubmitting || !templateAnswers[answerKey]}
-                                            size="sm"
+                                            disabled={submittingTemplate === answerKey || !templateAnswers[answerKey]?.trim()}
+                                            className="w-full"
                                           >
-                                            {isSubmitting ? "Getting Feedback..." : (
+                                            {submittingTemplate === answerKey ? (
                                               <>
-                                                <Send className="h-4 w-4 mr-2" />
+                                                <Sparkles className="mr-2 h-4 w-4 animate-spin" />
+                                                Getting Feedback...
+                                              </>
+                                            ) : (
+                                              <>
+                                                <Send className="mr-2 h-4 w-4" />
                                                 Get AI Feedback
                                               </>
                                             )}
                                           </Button>
+                                          
+                                          {feedbackProgress[answerKey] && (
+                                            <div className="text-sm text-muted-foreground text-center animate-pulse">
+                                              {feedbackProgress[answerKey]}
+                                            </div>
+                                          )}
                                         </div>
 
                                         {/* Feedback Display */}

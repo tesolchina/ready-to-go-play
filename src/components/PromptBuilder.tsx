@@ -34,6 +34,7 @@ export const PromptBuilder: React.FC<PromptBuilderProps> = ({
   const [conversationHistory, setConversationHistory] = useState<any[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFollowingUp, setIsFollowingUp] = useState(false);
+  const [progressMessage, setProgressMessage] = useState<string>("");
   const { toast } = useToast();
 
   const handleSubmit = async () => {
@@ -49,8 +50,15 @@ export const PromptBuilder: React.FC<PromptBuilderProps> = ({
     }
 
     setIsSubmitting(true);
+    setProgressMessage("Connecting to AI...");
+    
     try {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      setProgressMessage("Analyzing your input...");
+      
       const result = await onSubmit(userInputs, systemPrompt);
+      
+      setProgressMessage("Generating feedback...");
       setFeedback(result);
       setConversationHistory([
         { role: 'user', content: JSON.stringify(userInputs) },
@@ -64,6 +72,7 @@ export const PromptBuilder: React.FC<PromptBuilderProps> = ({
       // Error handling is done in the parent component
     } finally {
       setIsSubmitting(false);
+      setProgressMessage("");
     }
   };
 
@@ -78,6 +87,8 @@ export const PromptBuilder: React.FC<PromptBuilderProps> = ({
     }
 
     setIsFollowingUp(true);
+    setProgressMessage("Processing follow-up question...");
+    
     try {
       const result = await onFollowUp(followUpPrompt, conversationHistory, systemPrompt);
       const updatedHistory = [
@@ -95,6 +106,7 @@ export const PromptBuilder: React.FC<PromptBuilderProps> = ({
       // Error handling is done in the parent component
     } finally {
       setIsFollowingUp(false);
+      setProgressMessage("");
     }
   };
 
@@ -161,15 +173,21 @@ export const PromptBuilder: React.FC<PromptBuilderProps> = ({
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Analyzing...
+                Getting Feedback...
               </>
             ) : (
               <>
                 <Send className="mr-2 h-4 w-4" />
-                Submit for Feedback
+                Get Feedback
               </>
             )}
           </Button>
+          
+          {progressMessage && (
+            <div className="text-sm text-muted-foreground text-center animate-pulse">
+              {progressMessage}
+            </div>
+          )}
         </CardContent>
       </Card>
 
