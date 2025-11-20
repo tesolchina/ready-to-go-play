@@ -11,21 +11,28 @@ serve(async (req) => {
   }
 
   try {
-    const { userPrompt, userInputs, conversationHistory, systemPrompt } = await req.json();
+    const { userPrompt, userInputs, conversationHistory, systemPrompt, paragraph, context } = await req.json();
     const KIMI_API_KEY = Deno.env.get("KIMI_API_KEY");
     const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
 
     const defaultSystemPrompt = 'You are an expert educational AI assistant providing thoughtful, constructive feedback on student work. Be encouraging while offering specific suggestions for improvement. Keep your response concise - maximum 500 characters.';
-    const actualSystemPrompt = systemPrompt || defaultSystemPrompt;
+    
+    // Handle both old format (paragraph/context) and new format (userPrompt/systemPrompt)
+    const actualUserPrompt = userPrompt || paragraph || '';
+    const actualSystemPrompt = systemPrompt || context || defaultSystemPrompt;
     
     // Build messages array
     let messages;
     if (conversationHistory && conversationHistory.length > 0) {
-      // This is a follow-up conversation
+      // This is a follow-up conversation - validate and filter messages
+      const validHistory = conversationHistory.filter((msg: any) => 
+        msg.role && msg.content && typeof msg.content === 'string' && msg.content.trim().length > 0
+      );
+      
       messages = [
         { role: 'system', content: actualSystemPrompt },
-        ...conversationHistory,
-        { role: 'user', content: userPrompt }
+        ...validHistory,
+        { role: 'user', content: actualUserPrompt }
       ];
     } else if (userInputs) {
       // Initial submission with structured inputs
@@ -41,8 +48,17 @@ serve(async (req) => {
       // Fallback for legacy format
       messages = [
         { role: 'system', content: actualSystemPrompt },
-        { role: 'user', content: userPrompt }
+        { role: 'user', content: actualUserPrompt }
       ];
+    }
+
+    // Final validation - ensure all messages have required fields
+    messages = messages.filter((msg: any) => 
+      msg.role && msg.content && typeof msg.content === 'string' && msg.content.trim().length > 0
+    );
+
+    if (messages.length < 2) {
+      throw new Error("Invalid message format - missing required content");
     }
 
     let feedback: string;
@@ -50,6 +66,7 @@ serve(async (req) => {
 
     try {
       console.log("Attempting to use Kimi API");
+      console.log("Messages being sent:", JSON.stringify(messages));
       const kimiResponse = await fetch("https://api.moonshot.cn/v1/chat/completions", {
         method: "POST",
         headers: {
