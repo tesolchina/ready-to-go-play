@@ -161,7 +161,8 @@ Return your complete analysis using the analyze_academic_paragraph function with
             { role: 'user', content: `Analyze this academic paragraph:\n\n${paragraph}` }
           ],
           tools: toolDefinition,
-          tool_choice: { type: "function", function: { name: "analyze_academic_paragraph" } }
+          tool_choice: { type: "function", function: { name: "analyze_academic_paragraph" } },
+          max_tokens: 8000
         }),
       });
 
@@ -190,7 +191,8 @@ Return your complete analysis using the analyze_academic_paragraph function with
             { role: 'user', content: `Analyze this academic paragraph:\n\n${paragraph}` }
           ],
           tools: toolDefinition,
-          tool_choice: { type: "function", function: { name: "analyze_academic_paragraph" } }
+          tool_choice: { type: "function", function: { name: "analyze_academic_paragraph" } },
+          max_tokens: 8000
         }),
       });
 
