@@ -8,6 +8,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Upload, FileText, CheckCircle, XCircle, AlertCircle, Loader2, ArrowLeft, Download, ExternalLink, Share2, Copy, Check } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CollapsibleSection } from "@/components/CollapsibleSection";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/AppSidebar";
 
 interface ValidationResult {
   reference: string;

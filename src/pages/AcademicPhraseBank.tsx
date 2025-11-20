@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { BookOpen, Sparkles } from "lucide-react";
+import { BookOpen, Sparkles, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const AcademicPhraseBank = () => {
   return (
@@ -16,6 +17,14 @@ const AcademicPhraseBank = () => {
           </header>
           <div className="p-8">
           <div className="max-w-6xl mx-auto space-y-8">
+            <div className="flex items-center gap-4 mb-6">
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/" className="flex items-center gap-2">
+                  <ArrowLeft className="h-4 w-4" />
+                  Back to Learning Apps
+                </Link>
+              </Button>
+            </div>
             <div className="space-y-4">
               <h1 className="text-4xl font-bold tracking-tight">Academic Phrasebank</h1>
               <p className="text-xl text-muted-foreground">
