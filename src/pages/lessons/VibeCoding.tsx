@@ -1,18 +1,14 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Code, Loader2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { CollapsibleSection } from "@/components/CollapsibleSection";
 import { ComprehensionCheck } from "@/components/ComprehensionCheck";
 import { BulletPoint } from "@/components/BulletPoint";
 import { OpenEndedReflection } from "@/components/OpenEndedReflection";
-import { MermaidDiagram } from "@/components/MermaidDiagram";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
 
 const VibeCodingRevised = () => {
   const { toast } = useToast();
@@ -22,15 +18,6 @@ const VibeCodingRevised = () => {
     module3: false,
     module4: false,
   });
-  
-  const [userDescription, setUserDescription] = useState("");
-  const [mermaidCode, setMermaidCode] = useState("");
-  const [isGenerating, setIsGenerating] = useState(false);
-  
-  // Python exercise state
-  const [wordInput, setWordInput] = useState("strawberry");
-  const [letterInput, setLetterInput] = useState("r");
-  const [pythonResult, setPythonResult] = useState("");
 
   const lessonSlug = "vibe-coding";
 
@@ -45,64 +32,6 @@ const VibeCodingRevised = () => {
 
   const toggleSection = (sectionId: string) => {
     setOpenSections((prev) => ({ ...prev, [sectionId]: !prev[sectionId] }));
-  };
-  
-  const handleGenerateMermaid = async () => {
-    if (!userDescription.trim()) {
-      toast({
-        title: "Input Required",
-        description: "Please describe a process or concept to visualize",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    setIsGenerating(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('generate-mermaid', {
-        body: { description: userDescription }
-      });
-      
-      if (error) throw error;
-      
-      if (data?.mermaidCode) {
-        setMermaidCode(data.mermaidCode);
-        toast({
-          title: "Diagram Generated!",
-          description: "Your mermaid diagram has been created successfully"
-        });
-      }
-    } catch (error) {
-      console.error('Error generating mermaid:', error);
-      toast({
-        title: "Generation Failed",
-        description: error instanceof Error ? error.message : "Failed to generate diagram",
-        variant: "destructive"
-      });
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-  
-  const runPythonExample = () => {
-    // Simulate Python execution
-    const count = wordInput.toLowerCase().split(letterInput.toLowerCase()).length - 1;
-    const code = `word = "${wordInput}"
-letter = "${letterInput}"
-count = word.lower().count(letter.lower())
-print(f"The letter '{letter}' appears {count} times in '{word}'")`;
-    
-    setPythonResult(`Generated Python Code:
-
-${code}
-
-Output:
-The letter '${letterInput}' appears ${count} times in '${wordInput}'`);
-    
-    toast({
-      title: "Code Executed!",
-      description: `Found ${count} occurrence(s) of '${letterInput}' in '${wordInput}'`
-    });
   };
 
   return (
