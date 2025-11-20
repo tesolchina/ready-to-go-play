@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
@@ -6,7 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Sparkles, Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ArrowLeft, Sparkles, Loader2, CheckCircle, AlertCircle, MessageSquare, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import phrasebankData from "@/lib/phrasebank-data.json";
 
 // Moves/Steps - Research paper structure
@@ -83,9 +85,60 @@ const PhrasebankExercises = () => {
   const [feedbackData, setFeedbackData] = useState<any>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [progressMessage, setProgressMessage] = useState<string>("");
+  
+  // Comment section state
+  const [comments, setComments] = useState<any[]>([]);
+  const [commentNickname, setCommentNickname] = useState("");
+  const [commentText, setCommentText] = useState("");
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
+  const [commentSummary, setCommentSummary] = useState<string>("");
+  const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
+  const summaryIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  
   const { toast } = useToast();
 
   const categories = categoryType === "moves" ? MOVES_STEPS : GENERAL_LANGUAGE_FUNCTIONS;
+
+  // Load comments and set up realtime subscription
+  useEffect(() => {
+    loadComments();
+    
+    const channel = supabase
+      .channel('phrasebank-comments')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'phrasebank_comments'
+        },
+        () => {
+          loadComments();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  // Generate summary every 5 minutes
+  useEffect(() => {
+    generateSummary();
+    
+    summaryIntervalRef.current = setInterval(() => {
+      if (comments.length > 0) {
+        generateSummary();
+      }
+    }, 5 * 60 * 1000); // 5 minutes
+
+    return () => {
+      if (summaryIntervalRef.current) {
+        clearInterval(summaryIntervalRef.current);
+      }
+    };
+  }, [comments]);
 
   // Load subcategories when category changes
   useEffect(() => {
@@ -101,6 +154,84 @@ const PhrasebankExercises = () => {
       setShowExamples(false);
     }
   }, [selectedCategory]);
+
+  const loadComments = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('phrasebank_comments')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setComments(data || []);
+    } catch (error) {
+      console.error('Error loading comments:', error);
+    }
+  };
+
+  const generateSummary = async () => {
+    if (comments.length === 0) {
+      setCommentSummary("No comments yet. Be the first to share your thoughts!");
+      return;
+    }
+
+    setIsGeneratingSummary(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('summarize-comments', {
+        body: { comments }
+      });
+
+      if (error) throw error;
+      setCommentSummary(data.summary);
+    } catch (error) {
+      console.error('Error generating summary:', error);
+      setCommentSummary("Unable to generate summary at this time.");
+    } finally {
+      setIsGeneratingSummary(false);
+    }
+  };
+
+  const handleSubmitComment = async () => {
+    if (!commentNickname.trim() || !commentText.trim()) {
+      toast({
+        title: "Missing information",
+        description: "Please provide both nickname and comment.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmittingComment(true);
+    try {
+      const { error } = await supabase
+        .from('phrasebank_comments')
+        .insert([
+          {
+            user_nickname: commentNickname.trim(),
+            comment_text: commentText.trim(),
+          }
+        ]);
+
+      if (error) throw error;
+
+      toast({
+        title: "Comment posted",
+        description: "Your comment has been added successfully!",
+      });
+
+      setCommentText("");
+      setCommentNickname("");
+    } catch (error) {
+      console.error('Error submitting comment:', error);
+      toast({
+        title: "Error",
+        description: "Failed to post comment. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmittingComment(false);
+    }
+  };
 
   const handleGetExamples = async () => {
     if (!selectedCategory) return;
@@ -653,6 +784,119 @@ const PhrasebankExercises = () => {
                 </CardContent>
               </Card>
             )}
+
+            {/* Comments Section */}
+            <Card className="mt-12">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MessageSquare className="h-5 w-5" />
+                  Community Discussion
+                </CardTitle>
+                <CardDescription>
+                  Share your thoughts and experiences with academic phrasebank exercises
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* AI Summary */}
+                <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-semibold text-sm flex items-center gap-2">
+                      <Sparkles className="h-4 w-4 text-primary" />
+                      AI Summary of Comments
+                    </h4>
+                    {isGeneratingSummary && (
+                      <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                    )}
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    {commentSummary || "Generating summary..."}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    Updates every 5 minutes when new comments are added
+                  </p>
+                </div>
+
+                {/* Comment Form */}
+                <div className="space-y-4 p-4 bg-muted/30 rounded-lg border">
+                  <h4 className="font-semibold">Leave a Comment</h4>
+                  <div className="space-y-3">
+                    <div>
+                      <Label htmlFor="comment-nickname">Nickname</Label>
+                      <Input
+                        id="comment-nickname"
+                        value={commentNickname}
+                        onChange={(e) => setCommentNickname(e.target.value)}
+                        placeholder="Your nickname..."
+                        disabled={isSubmittingComment}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="comment-text">Your Comment</Label>
+                      <Textarea
+                        id="comment-text"
+                        value={commentText}
+                        onChange={(e) => setCommentText(e.target.value)}
+                        placeholder="Share your thoughts about the phrasebank exercises..."
+                        className="min-h-[100px]"
+                        disabled={isSubmittingComment}
+                      />
+                    </div>
+                    <Button
+                      onClick={handleSubmitComment}
+                      disabled={isSubmittingComment || !commentNickname.trim() || !commentText.trim()}
+                      className="w-full"
+                    >
+                      {isSubmittingComment ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Posting...
+                        </>
+                      ) : (
+                        <>
+                          <Send className="mr-2 h-4 w-4" />
+                          Post Comment
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Comments Display */}
+                <div className="space-y-3">
+                  <h4 className="font-semibold">
+                    All Comments ({comments.length})
+                  </h4>
+                  {comments.length === 0 ? (
+                    <p className="text-center text-muted-foreground py-8">
+                      No comments yet. Be the first to share your thoughts!
+                    </p>
+                  ) : (
+                    <ScrollArea className="h-[500px] rounded-md border p-4">
+                      <div className="space-y-4">
+                        {comments.map((comment) => (
+                          <div
+                            key={comment.id}
+                            className="p-4 bg-muted/50 rounded-lg border space-y-2"
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="font-semibold text-sm">
+                                {comment.user_nickname}
+                              </span>
+                              <span className="text-xs text-muted-foreground">
+                                {new Date(comment.created_at).toLocaleString()}
+                              </span>
+                            </div>
+                            <p className="text-sm whitespace-pre-wrap">
+                              {comment.comment_text}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
           </div>
           </div>
         </main>
