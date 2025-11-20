@@ -21,6 +21,7 @@ const VibeCodingRevised = () => {
     module2: false,
     module3: false,
     module4: false,
+    module5: false,
   });
   
   const [userDescription, setUserDescription] = useState("");
@@ -454,12 +455,199 @@ print(f"'{letter}' appears {count} times")`}</pre>
               />
             </CollapsibleSection>
 
-            {/* Module 4: Teaching Applications */}
+            {/* Module 4: Advanced Case Study - Reference Validator */}
+            <CollapsibleSection
+              title="Advanced Case Study: Reference Validator"
+              icon="📚"
+              isOpen={openSections.module4}
+              onToggle={() => toggleSection("module4")}
+            >
+              <div className="space-y-6">
+                <div className="prose prose-lg max-w-none">
+                  <p className="text-foreground text-lg leading-relaxed">
+                    Now let's explore a real-world application that demonstrates the power of vibe coding: 
+                    <strong> the Academic Reference Validator</strong>. This tool shows how AI-generated code can 
+                    automate complex, repetitive tasks and leverage external computing resources at scale.
+                  </p>
+                </div>
+
+                <div className="bg-gradient-to-r from-primary/5 to-accent/5 p-6 rounded-xl border-2">
+                  <h4 className="text-2xl font-semibold text-foreground mb-4">The Challenge</h4>
+                  <p className="text-foreground mb-4">
+                    Teachers often need to verify student references: checking if DOIs work, if URLs are valid, 
+                    and if the citations can be found in academic databases. Doing this manually for even 10 
+                    references is tedious. For 100 references? Nearly impossible.
+                  </p>
+                  
+                  <div className="bg-muted p-4 rounded">
+                    <p className="text-sm font-semibold mb-2">Manual Process (Traditional):</p>
+                    <ul className="text-sm space-y-2 list-disc list-inside text-muted-foreground">
+                      <li>Copy each reference one by one</li>
+                      <li>Manually check if DOI links work</li>
+                      <li>Visit multiple databases to search for citations</li>
+                      <li>Record results in a spreadsheet</li>
+                      <li>Time: ~5 minutes per reference × 20 references = <strong>100 minutes</strong></li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-6 rounded-xl border-2">
+                  <h4 className="text-2xl font-semibold text-foreground mb-4">The Vibe Coding Solution</h4>
+                  
+                  <div className="space-y-6">
+                    <div>
+                      <h5 className="text-xl font-semibold text-foreground mb-3 flex items-center gap-2">
+                        <span className="bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center text-sm">1</span>
+                        Automation of Repetitive Tasks
+                      </h5>
+                      <p className="text-foreground mb-2">
+                        AI-generated code automatically parses the entire reference section and identifies each 
+                        reference line—no manual copy-paste needed.
+                      </p>
+                      <div className="bg-muted p-3 rounded text-sm">
+                        <p className="font-semibold mb-1">What the code does:</p>
+                        <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                          <li>Detects reference formatting patterns</li>
+                          <li>Separates individual references</li>
+                          <li>Extracts DOIs and URLs automatically</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h5 className="text-xl font-semibold text-foreground mb-3 flex items-center gap-2">
+                        <span className="bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center text-sm">2</span>
+                        Introducing APIs: Connecting to External Services
+                      </h5>
+                      <p className="text-foreground mb-2">
+                        <strong>API (Application Programming Interface)</strong> is how programs communicate with 
+                        external services. Instead of visiting websites manually, code sends requests to APIs.
+                      </p>
+                      <div className="bg-background p-4 rounded border space-y-3">
+                        <div>
+                          <p className="font-semibold text-sm mb-1">Example: CrossRef API for DOI Validation</p>
+                          <pre className="text-xs bg-muted p-2 rounded overflow-x-auto">
+{`// AI-generated code sends DOI to CrossRef API
+fetch('https://api.crossref.org/works/' + doi)
+  .then(response => response.json())
+  .then(data => {
+    // Validates if DOI exists and retrieves metadata
+    console.log('Valid DOI:', data.title);
+  });`}
+                          </pre>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          💡 The code sends the DOI to CrossRef's servers, which check millions of academic 
+                          records instantly and return validation results.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h5 className="text-xl font-semibold text-foreground mb-3 flex items-center gap-2">
+                        <span className="bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center text-sm">3</span>
+                        Searching Databases at Scale
+                      </h5>
+                      <p className="text-foreground mb-2">
+                        The validator doesn't stop at DOI checking—it also searches academic databases like 
+                        Europe PMC to find references that might be missing DOIs.
+                      </p>
+                      <div className="bg-muted p-3 rounded text-sm space-y-2">
+                        <p className="font-semibold">For each reference, the code:</p>
+                        <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                          <li>Extracts author names and publication year</li>
+                          <li>Constructs search queries automatically</li>
+                          <li>Sends queries to Europe PMC API</li>
+                          <li>Retrieves matching papers with metadata</li>
+                          <li>All done in parallel for 20+ references simultaneously</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-r from-green-50 to-teal-50 dark:from-green-900/20 dark:to-teal-900/20 p-6 rounded-xl border-2">
+                  <h4 className="text-2xl font-semibold text-foreground mb-4">
+                    ⚡ The Power of Computing Resources at Scale
+                  </h4>
+                  
+                  <div className="space-y-4">
+                    <p className="text-foreground">
+                      <strong>Key Insight:</strong> Once you start using vibe coding, you're not just writing code—you're 
+                      leveraging massive computing infrastructure:
+                    </p>
+                    
+                    <ul className="space-y-3 list-none">
+                      <BulletPoint icon="🌐">
+                        <strong>CrossRef Database:</strong> 150+ million DOI records checked instantly
+                      </BulletPoint>
+                      <BulletPoint icon="📚">
+                        <strong>Europe PMC:</strong> 40+ million abstracts and full-text papers searchable
+                      </BulletPoint>
+                      <BulletPoint icon="⚡">
+                        <strong>Parallel Processing:</strong> Code checks 20 references simultaneously, not sequentially
+                      </BulletPoint>
+                      <BulletPoint icon="🔄">
+                        <strong>Automated Retry Logic:</strong> Handles errors and rate limits automatically
+                      </BulletPoint>
+                    </ul>
+                    
+                    <div className="bg-background p-4 rounded border mt-4">
+                      <p className="text-sm font-semibold mb-2">Result:</p>
+                      <p className="text-foreground">
+                        <strong>Manual checking: ~100 minutes</strong> for 20 references<br />
+                        <strong>AI-generated validator: ~30 seconds</strong> for 20 references<br />
+                        <span className="text-primary font-bold">200× faster with more comprehensive results</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-xl">
+                  <h4 className="text-2xl font-semibold text-foreground mb-4">
+                    🎯 Try It Yourself
+                  </h4>
+                  <p className="text-foreground mb-3">
+                    Experience the Reference Validator in our Learning Apps section:
+                  </p>
+                  <Link to="/validate-references">
+                    <Button className="w-full" size="lg">
+                      Open Reference Validator →
+                    </Button>
+                  </Link>
+                  <p className="text-sm text-muted-foreground mt-3">
+                    💡 Notice how the tool automates parsing, API calls, and database searches—all from 
+                    AI-generated code that would take hours to write manually.
+                  </p>
+                </div>
+
+                <blockquote className="border-l-4 border-primary pl-4 italic text-muted-foreground my-6">
+                  "Vibe coding isn't just about generating code—it's about accessing computing resources at scale. 
+                  You describe the task, AI generates code that taps into global databases and APIs, performing 
+                  in seconds what would take hours manually."
+                </blockquote>
+              </div>
+
+              <ComprehensionCheck
+                lessonSlug={lessonSlug}
+                sectionId="module4"
+                questionId="api-understanding"
+                question="What is the main advantage of using APIs in the Reference Validator?"
+                options={[
+                  "APIs enable code to access external databases and computing resources at scale",
+                  "APIs make the code run faster on your computer",
+                  "APIs are easier to write than regular code",
+                  "APIs eliminate the need for validation"
+                ]}
+              />
+            </CollapsibleSection>
+
+            {/* Module 5: Teaching Applications */}
             <CollapsibleSection
               title="Apply to Your Teaching"
               icon="🎓"
-              isOpen={openSections.module4}
-              onToggle={() => toggleSection("module4")}
+              isOpen={openSections.module5}
+              onToggle={() => toggleSection("module5")}
             >
               <div className="space-y-6">
                 <div className="prose prose-lg max-w-none">
@@ -549,7 +737,7 @@ print(f"'{letter}' appears {count} times")`}</pre>
 
               <ComprehensionCheck
                 lessonSlug={lessonSlug}
-                sectionId="module4"
+                sectionId="module5"
                 questionId="teaching-applications"
                 question="What type of teaching tasks benefit most from vibe coding?"
                 options={[
@@ -565,8 +753,8 @@ print(f"'{letter}' appears {count} times")`}</pre>
             <CollapsibleSection
               title="Lesson Summary & Next Steps"
               icon="🎓"
-              isOpen={openSections.module4}
-              onToggle={() => toggleSection("module4")}
+              isOpen={openSections.module5}
+              onToggle={() => toggleSection("module5")}
             >
               <div className="space-y-6">
                 <div className="prose prose-lg max-w-none">
@@ -576,13 +764,16 @@ print(f"'{letter}' appears {count} times")`}</pre>
                       <strong>Beyond Natural Language:</strong> Programming languages are for machines. AI bridges the gap.
                     </BulletPoint>
                     <BulletPoint icon="📊">
-                      <strong>Mermaid Diagrams:</strong> Generate visual diagrams from text descriptions automatically.
+                      <strong>Basic Examples:</strong> Mermaid for diagrams, Python for calculations—simple introductions to code generation.
                     </BulletPoint>
-                    <BulletPoint icon="🐍">
-                      <strong>Python Precision:</strong> Code generation ensures accuracy for calculations and analysis.
+                    <BulletPoint icon="📚">
+                      <strong>Advanced Case Study:</strong> Reference Validator demonstrates automation, APIs, and computing at scale.
+                    </BulletPoint>
+                    <BulletPoint icon="🌐">
+                      <strong>Leverage Resources:</strong> Vibe coding connects you to global databases and computing infrastructure.
                     </BulletPoint>
                     <BulletPoint icon="🎓">
-                      <strong>Teaching Automation:</strong> Use AI-generated code to handle repetitive tasks.
+                      <strong>Teaching Applications:</strong> Automate repetitive tasks and access resources beyond manual capability.
                     </BulletPoint>
                   </ul>
                 </div>
