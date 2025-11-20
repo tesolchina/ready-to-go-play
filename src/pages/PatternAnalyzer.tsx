@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -28,7 +27,6 @@ Bertrand Russell (1872-1970) won the Nobel prize for literature for his History 
 export default function PatternAnalyzer() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [analyzeLevel, setAnalyzeLevel] = useState<"essay" | "paragraph">("essay");
   const [showSystemPrompt, setShowSystemPrompt] = useState(false);
   
   // Demo mode state
@@ -40,21 +38,21 @@ export default function PatternAnalyzer() {
   
   const { toast } = useToast();
 
-  const systemPromptText = `You are an expert at creating mermaid diagrams for academic writing structure analysis. 
+  const systemPromptText = `You are an expert at creating mermaid diagrams for academic essay structure analysis. 
 
-When analyzing text:
-- Focus on HIGH-LEVEL structure and organization, not minute details
-- Identify PARALLEL and COMPARABLE themes or sections
-- Show how major ideas relate and flow to each other
-- For essays: identify main sections, thesis, body themes, and conclusion
-- For paragraphs: show topic sentence, supporting ideas, and concluding statement
-- Use simple, clear node labels (avoid long text in nodes)
-- Keep the diagram focused on structure, not content details
+When analyzing essays:
+- Focus on MACRO-LEVEL structure only (overall organization)
+- Identify main sections: introduction, body themes/arguments, conclusion
+- Show how major sections connect and flow logically
+- Identify parallel or comparable arguments/themes across sections
+- Show thesis development and how it's supported
+- Use simple, clear labels for main sections only
 
 Diagram guidelines:
-- Use flowchart (graph TD or graph LR) for structure visualization
-- Maximum 8-12 nodes for essay level, 5-8 nodes for paragraph level
-- Show relationships between parallel themes
+- Use flowchart (graph TD for top-down, graph LR for left-right)
+- Maximum 8-12 nodes showing only main sections
+- Avoid drilling into paragraph or sentence details
+- Show structural relationships between major parts
 - Only return the raw mermaid code (no markdown blocks, no "mermaid" prefix)`;
 
   const copyToClipboard = (text: string) => {
@@ -65,13 +63,12 @@ Diagram guidelines:
     });
   };
 
-  const handleAnalyze = async (text: string, level: "essay" | "paragraph", isDemo: boolean) => {
+  const handleAnalyze = async (text: string, isDemo: boolean) => {
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('generate-mermaid', {
         body: { 
-          description: `Analyze the structure of this ${level} and create a mermaid diagram showing the organization and flow. For essay level, show main sections and their relationships. For paragraph level, show sentence-by-sentence structure and connections.\n\nText:\n${text}`,
-          level 
+          description: `Analyze the MACRO-LEVEL structure of this essay and create a mermaid diagram showing the main sections and their relationships. Focus on overall organization, not paragraph details.\n\nEssay:\n${text}`
         }
       });
 
@@ -94,7 +91,7 @@ Diagram guidelines:
 
       toast({
         title: "Structure Visualized",
-        description: `${level === 'essay' ? 'Essay' : 'Paragraph'} structure diagram generated!`,
+        description: "Essay structure diagram generated successfully!",
       });
     } catch (error) {
       console.error('Error analyzing text:', error);
@@ -120,9 +117,9 @@ Diagram guidelines:
           Back to Learning Apps
         </Button>
         <div className="max-w-5xl mx-auto">
-          <h1 className="text-4xl font-bold mb-2">Writing Structure Visualizer</h1>
+          <h1 className="text-4xl font-bold mb-2">Essay Structure Visualizer</h1>
           <p className="text-muted-foreground mb-4">
-            Visualize essay and paragraph structure using interactive mermaid diagrams
+            Visualize the macro-level structure of essays using interactive mermaid diagrams
           </p>
 
           <Collapsible open={showSystemPrompt} onOpenChange={setShowSystemPrompt} className="mb-6">
@@ -140,7 +137,7 @@ Diagram guidelines:
                 <CardHeader>
                   <CardTitle className="text-lg">AI System Prompt</CardTitle>
                   <CardDescription>
-                    This is the instruction given to the AI model (DeepSeek/Kimi) to analyze your text structure
+                    This is the instruction given to the AI model (DeepSeek/Kimi) to analyze essay structure
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -151,10 +148,10 @@ Diagram guidelines:
                     <div className="text-sm text-muted-foreground space-y-2">
                       <p><strong>What this means:</strong></p>
                       <ul className="list-disc list-inside space-y-1 ml-2">
-                        <li>AI focuses on <strong>high-level organization</strong>, not every detail</li>
-                        <li>Identifies <strong>parallel themes</strong> and how they connect</li>
-                        <li>Creates simple, clear diagrams (8-12 nodes for essays, 5-8 for paragraphs)</li>
-                        <li>Shows structural relationships, not content summaries</li>
+                        <li>AI focuses on <strong>macro-level structure</strong> only (overall organization)</li>
+                        <li>Identifies <strong>main sections</strong>: intro, body themes, conclusion</li>
+                        <li>Shows how major sections <strong>connect logically</strong></li>
+                        <li>Creates simple diagrams with 8-12 nodes for main sections only</li>
                       </ul>
                     </div>
                   </div>
@@ -163,155 +160,84 @@ Diagram guidelines:
             </CollapsibleContent>
           </Collapsible>
 
-          <Tabs value={analyzeLevel} onValueChange={(v) => setAnalyzeLevel(v as "essay" | "paragraph")}>
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="essay">Essay Level</TabsTrigger>
-              <TabsTrigger value="paragraph">Paragraph Level</TabsTrigger>
-            </TabsList>
+          <Card>
+            <CardHeader>
+              <CardTitle>Demo: Bertrand Russell&apos;s &quot;What I Have Lived For&quot;</CardTitle>
+              <CardDescription>
+                Analyze the macro-level structure of this classic essay
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Textarea
+                value={DEMO_ESSAY}
+                readOnly
+                className="min-h-[400px] font-serif text-sm mb-4"
+              />
+              <Button
+                onClick={() => handleAnalyze(DEMO_ESSAY, true)}
+                disabled={loading}
+              >
+                {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+                Visualize Essay Structure
+              </Button>
+            </CardContent>
+          </Card>
 
-            <TabsContent value="essay" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Demo: Bertrand Russell&apos;s &quot;What I Have Lived For&quot;</CardTitle>
-                  <CardDescription>
-                    Visualize the essay structure with a mermaid diagram
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
+          {demoMermaidCode && (
+            <Card className="mt-6">
+              <CardHeader>
+                <CardTitle>Essay Structure Diagram</CardTitle>
+                <CardDescription>
+                  Interactive visualization of the essay&apos;s macro-level organization
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="bg-muted/30 p-4 rounded-lg">
+                  <MermaidDiagram chart={demoMermaidCode} />
+                </div>
+                
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-semibold text-sm">Mermaid Code</h4>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => copyToClipboard(demoMermaidCode)}
+                    >
+                      <Copy className="w-3 h-3 mr-2" />
+                      Copy Code
+                    </Button>
+                  </div>
                   <Textarea
-                    value={DEMO_ESSAY}
+                    value={demoMermaidCode}
                     readOnly
-                    className="min-h-[400px] font-serif text-sm mb-4"
+                    className="font-mono text-xs min-h-[150px]"
                   />
-                  <Button
-                    onClick={() => handleAnalyze(DEMO_ESSAY, "essay", true)}
-                    disabled={loading}
-                  >
-                    {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-                    Visualize Essay Structure
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {demoMermaidCode && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Essay Structure Diagram</CardTitle>
-                    <CardDescription>
-                      Interactive visualization of the essay&apos;s organization and flow
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="bg-muted/30 p-4 rounded-lg">
-                      <MermaidDiagram chart={demoMermaidCode} />
-                    </div>
-                    
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <h4 className="font-semibold text-sm">Mermaid Code</h4>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => copyToClipboard(demoMermaidCode)}
-                        >
-                          <Copy className="w-3 h-3 mr-2" />
-                          Copy Code
-                        </Button>
-                      </div>
-                      <Textarea
-                        value={demoMermaidCode}
-                        readOnly
-                        className="font-mono text-xs min-h-[150px]"
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-            </TabsContent>
-
-            <TabsContent value="paragraph" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Demo: First Paragraph</CardTitle>
-                  <CardDescription>
-                    Visualize sentence-by-sentence structure and connections
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Textarea
-                    value={DEMO_ESSAY.split('\n\n')[2]}
-                    readOnly
-                    className="min-h-[200px] font-serif text-sm mb-4"
-                  />
-                  <Button
-                    onClick={() => handleAnalyze(DEMO_ESSAY.split('\n\n')[2], "paragraph", true)}
-                    disabled={loading}
-                  >
-                    {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-                    Visualize Paragraph Structure
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {demoMermaidCode && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Paragraph Structure Diagram</CardTitle>
-                    <CardDescription>
-                      Detailed sentence-level analysis showing logical flow and connections
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="bg-muted/30 p-4 rounded-lg">
-                      <MermaidDiagram chart={demoMermaidCode} />
-                    </div>
-                    
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <h4 className="font-semibold text-sm">Mermaid Code</h4>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => copyToClipboard(demoMermaidCode)}
-                        >
-                          <Copy className="w-3 h-3 mr-2" />
-                          Copy Code
-                        </Button>
-                      </div>
-                      <Textarea
-                        value={demoMermaidCode}
-                        readOnly
-                        className="font-mono text-xs min-h-[150px]"
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-            </TabsContent>
-          </Tabs>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           <Card className="mt-6">
             <CardHeader>
-              <CardTitle>Analyze Your Own Text</CardTitle>
+              <CardTitle>Analyze Your Own Essay</CardTitle>
               <CardDescription>
-                Paste your essay or paragraph to visualize its structure
+                Paste your complete essay to visualize its macro-level structure
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <Textarea
                 value={userText}
                 onChange={(e) => setUserText(e.target.value)}
-                placeholder={analyzeLevel === "essay" 
-                  ? "Paste your complete essay here..." 
-                  : "Paste a single paragraph here..."}
+                placeholder="Paste your complete essay here..."
                 className="min-h-[300px]"
               />
               <Button
-                onClick={() => handleAnalyze(userText, analyzeLevel, false)}
+                onClick={() => handleAnalyze(userText, false)}
                 disabled={loading || !userText.trim()}
               >
                 {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-                Visualize {analyzeLevel === 'essay' ? 'Essay' : 'Paragraph'} Structure
+                Visualize Essay Structure
               </Button>
 
               {userMermaidCode && (
