@@ -42,10 +42,10 @@ const LearningApps = () => {
             <div className="flex flex-col items-center justify-center space-y-12">
               <div className="text-center space-y-4">
                 <h1 className="text-5xl font-bold tracking-tight sm:text-6xl">
-                  AI Learning Hub for EAP Teachers
+                  Specialized AI Learning Apps
                 </h1>
                 <p className="text-xl text-muted-foreground max-w-2xl">
-                  A platform created for workshops and training on AI technologies and literacies for EAP university teachers and students. We offer AI-empowered lessons for both live teaching and asynchronous learning, and develop learning apps such as customized AI chatbots and interactive learning experiences.
+                  Beyond generic AI chatbots, we develop purpose-built learning applications that integrate AI in specialized ways for academic writing and EAP instruction. Each app is designed to address specific pedagogical needs through structured workflows, targeted feedback systems, and discipline-aware assistance tailored for university teachers and students.
                 </p>
               </div>
 
