@@ -2,15 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, ArrowLeft } from "lucide-react";
-import ReactMarkdown from "react-markdown";
+import { Loader2, ArrowLeft, Copy } from "lucide-react";
+import { MermaidDiagram } from "@/components/MermaidDiagram";
 
 const DEMO_ESSAY = `The Prologue to Bertrand Russell's Autobiography
 What I Have Lived For
@@ -27,100 +24,36 @@ This has been my life. I have found it worth living, and would gladly live it ag
 
 Bertrand Russell (1872-1970) won the Nobel prize for literature for his History of Western Philosophy and was the co-author of Principia Mathematica.`;
 
-const DEMO_PATTERN = `This text exhibits a highly structured and rhetorically sophisticated approach, employing a clear organizational strategy to convey a central idea and its foundational components.
-
-**Overall Structure and Organization:**
-
-The text is organized into five distinct thematic sections, followed by a brief concluding biographical note.
-
-1.  **Introduction of Core Thesis:** The opening paragraph establishes the central premise or thesis statement, outlining the foundational elements that define the speaker's life. This acts as an overarching declaration.
-2.  **Elaboration of First Core Element:** This section systematically unpacks the first of the previously introduced elements, providing multiple facets and motivations behind its pursuit.
-3.  **Elaboration of Second Core Element:** This section parallels the previous one, detailing the motivations and achievements related to the second foundational element.
-4.  **Synthesis and Introduction of Third Core Element:** This segment serves as a transition, linking the first two elements but then introducing the third, contrasting its nature and impact with the preceding two. It also highlights the emotional weight and personal connection to this final element.
-5.  **Concluding Affirmation:** This brief closing statement offers a meta-commentary on the life described, providing a conclusive judgment or summation.
-6.  **External Context/Authorial Identification:** A brief, factual statement provides external context about the author, distinct from the reflective narrative.
-
-The sections flow logically from a broad declaration to specific elaborations, then to a synthesis that introduces the final core component, culminating in an overall assessment. The connection between sections is primarily thematic, with explicit or implicit repetition of keywords and concepts maintaining coherence.`;
-
 export default function PatternAnalyzer() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("demo");
   const [loading, setLoading] = useState(false);
+  const [analyzeLevel, setAnalyzeLevel] = useState<"essay" | "paragraph">("essay");
   
   // Demo mode state
-  const [demoPatterns, setDemoPatterns] = useState("");
-  const [demoTopic, setDemoTopic] = useState("");
-  const [demoOutputType, setDemoOutputType] = useState<"essay" | "outline">("essay");
-  const [demoResult, setDemoResult] = useState("");
+  const [demoMermaidCode, setDemoMermaidCode] = useState("");
   
   // User mode state
-  const [userEssay, setUserEssay] = useState("");
-  const [userPatterns, setUserPatterns] = useState("");
-  const [userTopic, setUserTopic] = useState("");
-  const [userOutputType, setUserOutputType] = useState<"essay" | "outline">("essay");
-  const [userResult, setUserResult] = useState("");
+  const [userText, setUserText] = useState("");
+  const [userMermaidCode, setUserMermaidCode] = useState("");
   
   const { toast } = useToast();
 
-  const handleAnalyze = async (text: string, isDemo: boolean) => {
-    setLoading(true);
-    try {
-      // For demo mode, use predefined pattern
-      if (isDemo) {
-        setDemoPatterns(DEMO_PATTERN);
-        toast({
-          title: "Analysis Complete",
-          description: "Patterns identified successfully!",
-        });
-      } else {
-        // For user essays, call AI to analyze structure only
-        const { data, error } = await supabase.functions.invoke('pattern-analyzer', {
-          body: { text, action: 'analyze' }
-        });
-
-        if (error) throw error;
-
-        if (data.error) {
-          toast({
-            title: "Error",
-            description: data.error,
-            variant: "destructive",
-          });
-          return;
-        }
-
-        setUserPatterns(data.result);
-        toast({
-          title: "Analysis Complete",
-          description: "Patterns identified successfully!",
-        });
-      }
-    } catch (error) {
-      console.error('Error analyzing text:', error);
-      toast({
-        title: "Error",
-        description: "Failed to analyze text. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast({
+      title: "Copied!",
+      description: "Mermaid code copied to clipboard",
+    });
   };
 
-  const handleGenerate = async (patterns: string, topic: string, outputType: "essay" | "outline", isDemo: boolean) => {
-    if (!topic.trim()) {
-      toast({
-        title: "Topic Required",
-        description: "Please enter a topic for the new content.",
-        variant: "destructive",
-      });
-      return;
-    }
-
+  const handleAnalyze = async (text: string, level: "essay" | "paragraph", isDemo: boolean) => {
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('pattern-analyzer', {
-        body: { text: patterns, action: 'generate', topic, outputType }
+      const { data, error } = await supabase.functions.invoke('generate-mermaid', {
+        body: { 
+          description: `Analyze the structure of this ${level} and create a mermaid diagram showing the organization and flow. For essay level, show main sections and their relationships. For paragraph level, show sentence-by-sentence structure and connections.\n\nText:\n${text}`,
+          level 
+        }
       });
 
       if (error) throw error;
@@ -135,20 +68,20 @@ export default function PatternAnalyzer() {
       }
 
       if (isDemo) {
-        setDemoResult(data.result);
+        setDemoMermaidCode(data.mermaidCode);
       } else {
-        setUserResult(data.result);
+        setUserMermaidCode(data.mermaidCode);
       }
 
       toast({
-        title: "Generation Complete",
-        description: `${outputType === 'essay' ? 'Essay' : 'Outline'} generated successfully!`,
+        title: "Structure Visualized",
+        description: `${level === 'essay' ? 'Essay' : 'Paragraph'} structure diagram generated!`,
       });
     } catch (error) {
-      console.error('Error generating content:', error);
+      console.error('Error analyzing text:', error);
       toast({
         title: "Error",
-        description: "Failed to generate content. Please try again.",
+        description: "Failed to analyze text. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -168,216 +101,190 @@ export default function PatternAnalyzer() {
           Back to Learning Apps
         </Button>
         <div className="max-w-5xl mx-auto">
-          <h1 className="text-4xl font-bold mb-2">Writing Pattern Analyzer</h1>
+          <h1 className="text-4xl font-bold mb-2">Writing Structure Visualizer</h1>
           <p className="text-muted-foreground mb-8">
-            Identify writing patterns from essays and generate new content using those patterns
+            Visualize essay and paragraph structure using interactive mermaid diagrams
           </p>
 
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="demo">Demo Mode</TabsTrigger>
-              <TabsTrigger value="custom">Your Essay</TabsTrigger>
+          <Tabs value={analyzeLevel} onValueChange={(v) => setAnalyzeLevel(v as "essay" | "paragraph")}>
+            <TabsList className="grid w-full grid-cols-2 mb-6">
+              <TabsTrigger value="essay">Essay Level</TabsTrigger>
+              <TabsTrigger value="paragraph">Paragraph Level</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="demo" className="space-y-6 mt-6">
+            <TabsContent value="essay" className="space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Demo: Bertrand Russell's "What I Have Lived For"</CardTitle>
+                  <CardTitle>Demo: Bertrand Russell&apos;s &quot;What I Have Lived For&quot;</CardTitle>
                   <CardDescription>
-                    Let's analyze this classic essay and learn its patterns
+                    Visualize the essay structure with a mermaid diagram
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Textarea
                     value={DEMO_ESSAY}
                     readOnly
-                    className="min-h-[400px] font-serif text-sm"
+                    className="min-h-[400px] font-serif text-sm mb-4"
                   />
                   <Button
-                    onClick={() => handleAnalyze(DEMO_ESSAY, true)}
+                    onClick={() => handleAnalyze(DEMO_ESSAY, "essay", true)}
                     disabled={loading}
-                    className="mt-4"
                   >
                     {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-                    Analyze Patterns
+                    Visualize Essay Structure
                   </Button>
                 </CardContent>
               </Card>
 
-              {demoPatterns && (
-                <>
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Identified Patterns</CardTitle>
-                      <CardDescription>
-                        Structural and rhetorical patterns found in the essay
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="prose prose-sm max-w-none dark:prose-invert">
-                        <ReactMarkdown>{demoPatterns}</ReactMarkdown>
+              {demoMermaidCode && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Essay Structure Diagram</CardTitle>
+                    <CardDescription>
+                      Interactive visualization of the essay&apos;s organization and flow
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="bg-muted/30 p-4 rounded-lg">
+                      <MermaidDiagram chart={demoMermaidCode} />
+                    </div>
+                    
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="font-semibold text-sm">Mermaid Code</h4>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => copyToClipboard(demoMermaidCode)}
+                        >
+                          <Copy className="w-3 h-3 mr-2" />
+                          Copy Code
+                        </Button>
                       </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Generate New Content</CardTitle>
-                      <CardDescription>
-                        Apply these patterns to a new topic
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <Label htmlFor="demo-topic">New Topic</Label>
-                        <Input
-                          id="demo-topic"
-                          placeholder="e.g., My passion for music"
-                          value={demoTopic}
-                          onChange={(e) => setDemoTopic(e.target.value)}
-                        />
-                      </div>
-
-                      <div>
-                        <Label>Output Type</Label>
-                        <RadioGroup value={demoOutputType} onValueChange={(v) => setDemoOutputType(v as "essay" | "outline")}>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="essay" id="demo-essay" />
-                            <Label htmlFor="demo-essay">Complete Essay</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="outline" id="demo-outline" />
-                            <Label htmlFor="demo-outline">Outline</Label>
-                          </div>
-                        </RadioGroup>
-                      </div>
-
-                      <Button
-                        onClick={() => handleGenerate(demoPatterns, demoTopic, demoOutputType, true)}
-                        disabled={loading}
-                      >
-                        {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-                        Generate {demoOutputType === 'essay' ? 'Essay' : 'Outline'}
-                      </Button>
-                    </CardContent>
-                  </Card>
-
-                  {demoResult && (
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Generated {demoOutputType === 'essay' ? 'Essay' : 'Outline'}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="prose prose-sm max-w-none dark:prose-invert">
-                          <ReactMarkdown>{demoResult}</ReactMarkdown>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-                </>
+                      <Textarea
+                        value={demoMermaidCode}
+                        readOnly
+                        className="font-mono text-xs min-h-[150px]"
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
               )}
             </TabsContent>
 
-            <TabsContent value="custom" className="space-y-6 mt-6">
+            <TabsContent value="paragraph" className="space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Your Essay or Paragraph</CardTitle>
+                  <CardTitle>Demo: First Paragraph</CardTitle>
                   <CardDescription>
-                    Paste your essay or paragraph to analyze its writing patterns
+                    Visualize sentence-by-sentence structure and connections
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Textarea
-                    value={userEssay}
-                    onChange={(e) => setUserEssay(e.target.value)}
-                    placeholder="Paste your essay or paragraph here..."
-                    className="min-h-[300px]"
+                    value={DEMO_ESSAY.split('\n\n')[2]}
+                    readOnly
+                    className="min-h-[200px] font-serif text-sm mb-4"
                   />
                   <Button
-                    onClick={() => handleAnalyze(userEssay, false)}
-                    disabled={loading || !userEssay.trim()}
-                    className="mt-4"
+                    onClick={() => handleAnalyze(DEMO_ESSAY.split('\n\n')[2], "paragraph", true)}
+                    disabled={loading}
                   >
                     {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-                    Analyze Patterns
+                    Visualize Paragraph Structure
                   </Button>
                 </CardContent>
               </Card>
 
-              {userPatterns && (
-                <>
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Identified Patterns</CardTitle>
-                      <CardDescription>
-                        Structural and rhetorical patterns found in your essay
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="prose prose-sm max-w-none dark:prose-invert">
-                        <ReactMarkdown>{userPatterns}</ReactMarkdown>
+              {demoMermaidCode && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Paragraph Structure Diagram</CardTitle>
+                    <CardDescription>
+                      Detailed sentence-level analysis showing logical flow and connections
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="bg-muted/30 p-4 rounded-lg">
+                      <MermaidDiagram chart={demoMermaidCode} />
+                    </div>
+                    
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="font-semibold text-sm">Mermaid Code</h4>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => copyToClipboard(demoMermaidCode)}
+                        >
+                          <Copy className="w-3 h-3 mr-2" />
+                          Copy Code
+                        </Button>
                       </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Generate New Content</CardTitle>
-                      <CardDescription>
-                        Apply these patterns to a new topic
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <Label htmlFor="user-topic">New Topic</Label>
-                        <Input
-                          id="user-topic"
-                          placeholder="Enter your new topic..."
-                          value={userTopic}
-                          onChange={(e) => setUserTopic(e.target.value)}
-                        />
-                      </div>
-
-                      <div>
-                        <Label>Output Type</Label>
-                        <RadioGroup value={userOutputType} onValueChange={(v) => setUserOutputType(v as "essay" | "outline")}>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="essay" id="user-essay" />
-                            <Label htmlFor="user-essay">Complete Essay</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="outline" id="user-outline" />
-                            <Label htmlFor="user-outline">Outline</Label>
-                          </div>
-                        </RadioGroup>
-                      </div>
-
-                      <Button
-                        onClick={() => handleGenerate(userPatterns, userTopic, userOutputType, false)}
-                        disabled={loading}
-                      >
-                        {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-                        Generate {userOutputType === 'essay' ? 'Essay' : 'Outline'}
-                      </Button>
-                    </CardContent>
-                  </Card>
-
-                  {userResult && (
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Generated {userOutputType === 'essay' ? 'Essay' : 'Outline'}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="prose prose-sm max-w-none dark:prose-invert">
-                          <ReactMarkdown>{userResult}</ReactMarkdown>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-                </>
+                      <Textarea
+                        value={demoMermaidCode}
+                        readOnly
+                        className="font-mono text-xs min-h-[150px]"
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
               )}
             </TabsContent>
           </Tabs>
+
+          <Card className="mt-6">
+            <CardHeader>
+              <CardTitle>Analyze Your Own Text</CardTitle>
+              <CardDescription>
+                Paste your essay or paragraph to visualize its structure
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Textarea
+                value={userText}
+                onChange={(e) => setUserText(e.target.value)}
+                placeholder={analyzeLevel === "essay" 
+                  ? "Paste your complete essay here..." 
+                  : "Paste a single paragraph here..."}
+                className="min-h-[300px]"
+              />
+              <Button
+                onClick={() => handleAnalyze(userText, analyzeLevel, false)}
+                disabled={loading || !userText.trim()}
+              >
+                {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+                Visualize {analyzeLevel === 'essay' ? 'Essay' : 'Paragraph'} Structure
+              </Button>
+
+              {userMermaidCode && (
+                <div className="mt-6 space-y-4">
+                  <div className="bg-muted/30 p-4 rounded-lg">
+                    <MermaidDiagram chart={userMermaidCode} />
+                  </div>
+                  
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-semibold text-sm">Mermaid Code</h4>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => copyToClipboard(userMermaidCode)}
+                      >
+                        <Copy className="w-3 h-3 mr-2" />
+                        Copy Code
+                      </Button>
+                    </div>
+                    <Textarea
+                      value={userMermaidCode}
+                      readOnly
+                      className="font-mono text-xs min-h-[150px]"
+                    />
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
