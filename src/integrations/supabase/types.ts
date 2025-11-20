@@ -209,6 +209,30 @@ export type Database = {
         }
         Relationships: []
       }
+      phrasebank_comments: {
+        Row: {
+          comment_text: string
+          created_at: string
+          id: string
+          updated_at: string
+          user_nickname: string
+        }
+        Insert: {
+          comment_text: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_nickname: string
+        }
+        Update: {
+          comment_text?: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_nickname?: string
+        }
+        Relationships: []
+      }
       phrasebank_posts: {
         Row: {
           category: string | null
