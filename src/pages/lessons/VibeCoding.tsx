@@ -128,7 +128,7 @@ The letter '${letterInput}' appears ${count} times in '${wordInput}'`);
                   Vibe Coding: AI Generates Code for You
                 </h1>
                 <p className="text-2xl text-muted-foreground">
-                  From Natural Language to Executable Code: Mermaid & Python in Action
+                  Automating Repetitive Tasks and Leveraging Computing Resources at Scale
                 </p>
               </div>
             </div>
@@ -155,25 +155,25 @@ The letter '${letterInput}' appears ${count} times in '${wordInput}'`);
                 </div>
 
                 <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg">
-                  <h5 className="text-xl font-semibold text-foreground mb-3">Quick Example</h5>
+                  <h5 className="text-xl font-semibold text-foreground mb-3">Quick Example: Reference Validation</h5>
                   <div className="space-y-4">
                     <div>
-                      <p className="text-foreground font-semibold mb-2">❌ Describing in Natural Language:</p>
+                      <p className="text-foreground font-semibold mb-2">❌ Manual Process:</p>
                       <div className="bg-muted p-3 rounded text-sm italic">
-                        "Can you create a flowchart showing research steps..."
+                        Checking 20 references manually: copy each DOI, visit Crossref website, search, verify, repeat...
                       </div>
                       <p className="text-muted-foreground text-sm mt-2">
-                        AI describes it → You manually create it → Time consuming
+                        20+ minutes of repetitive clicking and copying
                       </p>
                     </div>
                     
                     <div>
-                      <p className="text-foreground font-semibold mb-2">✅ Generating Code:</p>
+                      <p className="text-foreground font-semibold mb-2">✅ With Code Automation:</p>
                       <div className="bg-muted p-3 rounded text-sm italic">
-                        "Generate Mermaid code for a research process flowchart"
+                        Code parses references, sends each DOI to Crossref API automatically, validates all 20 references
                       </div>
                       <p className="text-muted-foreground text-sm mt-2">
-                        AI generates code → Computer renders instantly → Automatic
+                        10 seconds of automated processing
                       </p>
                     </div>
                   </div>
@@ -214,242 +214,282 @@ The letter '${letterInput}' appears ${count} times in '${wordInput}'`);
               />
             </CollapsibleSection>
 
-            {/* Module 2: Hands-On with Mermaid */}
+            {/* Module 2: Automating Repetitive Tasks */}
             <CollapsibleSection
-              title="Hands-On: Generate Mermaid Diagrams"
-              icon="📊"
+              title="Automation: Parsing Multiple References"
+              icon="🔄"
               isOpen={openSections.module2}
               onToggle={() => toggleSection("module2")}
             >
               <div className="space-y-6">
                 <div className="prose prose-lg max-w-none">
+                  <h4 className="text-2xl font-semibold text-foreground mb-4">The Power of Automation</h4>
                   <p className="text-foreground text-lg leading-relaxed">
-                    <strong>Mermaid</strong> is a simple language for creating diagrams using text. Instead of using 
-                    drawing tools, you write code and the computer renders beautiful diagrams.
+                    Imagine you need to validate 20 academic references. Manually checking each one means copying DOIs, 
+                    visiting websites, searching databases—repetitive work that takes 20+ minutes. <strong>With code, 
+                    this becomes automated.</strong>
                   </p>
                 </div>
 
                 <div className="bg-gradient-to-r from-primary/5 to-accent/5 p-6 rounded-xl border-2">
                   <h4 className="text-2xl font-semibold text-foreground mb-4">
-                    Example: Learning Process Flowchart
+                    Example: Reference Validator Workflow
                   </h4>
                   
-                  <div className="bg-background p-4 rounded border mb-4">
-                    <p className="text-sm font-semibold mb-2">Mermaid Code:</p>
-                    <pre className="text-xs overflow-x-auto bg-muted p-2 rounded">
-{`graph TD
-    A[Reading Input] --> B[Comprehension]
-    B --> C[Practice]
-    C --> D[Feedback]
-    D --> E{Mastery?}
-    E -->|Yes| F[Next Topic]
-    E -->|No| C`}
-                    </pre>
+                  <div className="space-y-4">
+                    <div className="bg-background p-4 rounded border">
+                      <p className="text-sm font-semibold mb-2">Step 1: Parse the Input</p>
+                      <p className="text-sm text-muted-foreground mb-2">
+                        Code reads a reference list and splits it into individual lines automatically:
+                      </p>
+                      <pre className="text-xs overflow-x-auto bg-muted p-2 rounded">
+{`Input: "Russell, B. (1970). Autobiography.
+Smith, J. (2020). AI in Education. DOI: 10.1234/abc"
+
+Code splits by newline → creates array:
+["Russell, B. (1970). Autobiography.",
+ "Smith, J. (2020). AI in Education. DOI: 10.1234/abc"]`}
+                      </pre>
+                    </div>
+
+                    <div className="bg-background p-4 rounded border">
+                      <p className="text-sm font-semibold mb-2">Step 2: Extract Key Information</p>
+                      <p className="text-sm text-muted-foreground mb-2">
+                        Code identifies patterns like DOIs, URLs, author names:
+                      </p>
+                      <pre className="text-xs overflow-x-auto bg-muted p-2 rounded">
+{`Reference 1: No DOI found → needs database search
+Reference 2: DOI found → "10.1234/abc"`}
+                      </pre>
+                    </div>
+
+                    <div className="bg-background p-4 rounded border">
+                      <p className="text-sm font-semibold mb-2">Step 3: Process Each Reference</p>
+                      <p className="text-sm text-muted-foreground mb-2">
+                        Code loops through all references automatically:
+                      </p>
+                      <pre className="text-xs overflow-x-auto bg-muted p-2 rounded">
+{`for each reference in references:
+    if DOI found:
+        validate_via_crossref(DOI)
+    else:
+        search_database(reference)
+    save_result()`}
+                      </pre>
+                    </div>
                   </div>
 
-                  <div>
-                    <p className="text-sm font-semibold mb-2">Result:</p>
-                    <MermaidDiagram
-                      chart={`graph TD
-    A[Reading Input] --> B[Comprehension]
-    B --> C[Practice]
-    C --> D[Feedback]
-    D --> E{Mastery?}
-    E -->|Yes| F[Next Topic]
-    E -->|No| C`}
-                    />
+                  <div className="mt-4 bg-green-50 dark:bg-green-900/20 p-4 rounded">
+                    <p className="text-sm font-semibold text-foreground mb-2">💡 The Key Insight:</p>
+                    <p className="text-sm text-muted-foreground">
+                      What takes you 20+ minutes of manual clicking now happens in seconds. Code handles the repetitive work—
+                      splitting text, extracting patterns, processing each item—automatically.
+                    </p>
                   </div>
+                </div>
+
+                <div className="prose prose-lg max-w-none">
+                  <h4 className="text-2xl font-semibold text-foreground mb-4">Why This Matters for Teachers</h4>
+                  <ul className="space-y-3 list-none">
+                    <BulletPoint icon="🔄">
+                      <strong>Automation of Repetitive Tasks:</strong> Instead of manually checking references one by one, 
+                      code processes all of them simultaneously
+                    </BulletPoint>
+                    <BulletPoint icon="📊">
+                      <strong>Scalability:</strong> Validating 5 references or 500 references takes the same effort—just change the input
+                    </BulletPoint>
+                    <BulletPoint icon="⚡">
+                      <strong>Speed:</strong> What takes humans minutes takes code seconds
+                    </BulletPoint>
+                    <BulletPoint icon="🎯">
+                      <strong>Consistency:</strong> Code follows the same logic for every reference, no human error
+                    </BulletPoint>
+                  </ul>
                 </div>
 
                 <div className="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-xl">
                   <h4 className="text-2xl font-semibold text-foreground mb-4">
-                    🎯 Your Turn: Generate a Diagram
+                    🎯 Try It Yourself
                   </h4>
                   <p className="text-foreground mb-4">
-                    Describe a process or concept from your teaching, and AI will generate Mermaid code for you.
+                    Visit our <Link to="/learning-apps/validate-references" className="text-primary hover:underline font-semibold">
+                    Reference Validator app</Link> to see automation in action. Paste multiple references and watch 
+                    how code processes them automatically.
                   </p>
-                  
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-semibold mb-2 block">
-                        Describe your diagram:
-                      </label>
-                      <Textarea
-                        value={userDescription}
-                        onChange={(e) => setUserDescription(e.target.value)}
-                        placeholder="Example: A flowchart showing how students prepare for a presentation: choose topic, research, create slides, practice, present, get feedback"
-                        className="min-h-[100px]"
-                      />
-                    </div>
-                    
-                    <Button 
-                      onClick={handleGenerateMermaid}
-                      disabled={isGenerating}
-                      className="w-full"
-                    >
-                      {isGenerating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                      Generate Mermaid Diagram
+                  <Link to="/learning-apps/validate-references">
+                    <Button className="w-full">
+                      Try Reference Validator →
                     </Button>
-                    
-                    {mermaidCode && (
-                      <div className="space-y-4 mt-6">
-                        <div className="bg-background p-4 rounded border">
-                          <p className="text-sm font-semibold mb-2">Generated Code:</p>
-                          <pre className="text-xs overflow-x-auto bg-muted p-2 rounded whitespace-pre-wrap break-words">
-                            {mermaidCode}
-                          </pre>
-                        </div>
-                        <div className="bg-background p-4 rounded border">
-                          <p className="text-sm font-semibold mb-2">Your Diagram:</p>
-                          <MermaidDiagram chart={mermaidCode} />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  
-                  <p className="text-sm text-muted-foreground mt-4">
-                    💡 Notice: You described it in English, AI generated code, computer rendered it automatically.
-                  </p>
+                  </Link>
                 </div>
               </div>
 
               <ComprehensionCheck
                 lessonSlug={lessonSlug}
                 sectionId="module2"
-                questionId="mermaid-understanding"
-                question="What is the advantage of using Mermaid code over drawing tools?"
+                questionId="automation-understanding"
+                question="What is the main advantage of using code to parse and process multiple references?"
                 options={[
-                  "Code is text-based, easy to edit, version control, and regenerate",
-                  "Mermaid creates more beautiful diagrams",
-                  "Drawing tools don't work well",
-                  "Code is faster to write than using a mouse"
+                  "It automates repetitive tasks and scales easily to handle many items",
+                  "Code is more accurate at reading text than humans",
+                  "It creates better-looking output",
+                  "It's easier to learn than manual checking"
                 ]}
               />
             </CollapsibleSection>
 
-            {/* Module 3: Hands-On with Python */}
+            {/* Module 3: API Integration */}
             <CollapsibleSection
-              title="Hands-On: Generate Python Code"
-              icon="🐍"
+              title="Leveraging External Resources: APIs"
+              icon="🌐"
               isOpen={openSections.module3}
               onToggle={() => toggleSection("module3")}
             >
               <div className="space-y-6">
                 <div className="prose prose-lg max-w-none">
-                  <h4 className="text-2xl font-semibold text-foreground mb-4">The Strawberry Problem</h4>
+                  <h4 className="text-2xl font-semibold text-foreground mb-4">What is an API?</h4>
                   <p className="text-foreground text-lg leading-relaxed">
-                    A famous AI test: "How many times does the letter 'r' appear in 'strawberry'?" Many AI models 
-                    get this wrong when using natural language reasoning. But with code generation...
+                    An <strong>API (Application Programming Interface)</strong> is how programs talk to each other. 
+                    When you use code, you can access vast external resources—databases, computational tools, research 
+                    repositories—that would be impossible to access manually at scale.
                   </p>
                 </div>
 
-                <div className="bg-gradient-to-r from-green-50 to-teal-50 dark:from-green-900/20 dark:to-teal-900/20 p-6 rounded-xl border-2">
+                <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 p-6 rounded-xl border-2">
                   <h4 className="text-2xl font-semibold text-foreground mb-4">
-                    Why Code Works Better
+                    Example: Validating a DOI via Crossref API
                   </h4>
                   
                   <div className="space-y-4">
                     <div>
-                      <p className="text-sm font-semibold mb-2">❌ Natural Language (Often Wrong):</p>
+                      <p className="text-sm font-semibold mb-2">Manual Process:</p>
                       <div className="bg-muted p-3 rounded text-sm">
-                        <p className="italic">"How many 'r' in 'strawberry'?"</p>
-                        <p className="mt-2">AI: "Let me count... s-t-r-a-w-b-e-r-r-y... 2 times."</p>
-                        <p className="mt-2 text-red-500 font-semibold">❌ Wrong! (Answer is 3)</p>
+                        <p className="mb-2">1. Copy DOI: "10.1234/abc"</p>
+                        <p className="mb-2">2. Open browser → go to crossref.org</p>
+                        <p className="mb-2">3. Find search box → paste DOI → click search</p>
+                        <p className="mb-2">4. Review results → verify title and authors match</p>
+                        <p className="text-muted-foreground mt-2">⏱️ Time: 1-2 minutes per reference</p>
                       </div>
                     </div>
 
                     <div>
-                      <p className="text-sm font-semibold mb-2">✅ Python Code (Always Correct):</p>
+                      <p className="text-sm font-semibold mb-2">✅ With API (Automated via Code):</p>
                       <div className="bg-background p-3 rounded border">
-                        <pre className="text-xs">{`word = "strawberry"
-letter = "r"
-count = word.count(letter)
-print(f"'{letter}' appears {count} times")`}</pre>
-                        <p className="mt-2 text-green-600 font-semibold">✓ Output: 'r' appears 3 times</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <p className="text-muted-foreground text-sm mt-4">
-                    💡 When AI generates code, it uses precise computational tools, not "thinking."
-                  </p>
-                </div>
+                        <pre className="text-xs">{`# Send DOI to Crossref API
+response = fetch("https://api.crossref.org/works/10.1234/abc")
+data = response.json()
 
-                <div className="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-xl">
-                  <h4 className="text-2xl font-semibold text-foreground mb-4">
-                    🎯 Your Turn: Count Letters
-                  </h4>
-                  <p className="text-foreground mb-4">
-                    Try different words and letters to see Python code generation in action.
-                  </p>
-                  
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-sm font-semibold mb-2 block">Word:</label>
-                        <Input
-                          value={wordInput}
-                          onChange={(e) => setWordInput(e.target.value)}
-                          placeholder="e.g., strawberry"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-sm font-semibold mb-2 block">Letter to count:</label>
-                        <Input
-                          value={letterInput}
-                          onChange={(e) => setLetterInput(e.target.value)}
-                          placeholder="e.g., r"
-                          maxLength={1}
-                        />
+# Extract information
+title = data['title']
+authors = data['author']
+verified = compare(title, authors, original_reference)
+
+# Result: Verified ✓ in 0.5 seconds`}</pre>
                       </div>
                     </div>
-                    
-                    <Button 
-                      onClick={runPythonExample}
-                      className="w-full"
-                    >
-                      <Code className="mr-2 h-4 w-4" />
-                      Generate & Run Python Code
-                    </Button>
-                    
-                    {pythonResult && (
-                      <div className="bg-background p-4 rounded border">
-                        <pre className="text-sm whitespace-pre-wrap font-mono">
-                          {pythonResult}
-                        </pre>
-                      </div>
-                    )}
                   </div>
-                  
-                  <div className="mt-6 bg-blue-50 dark:bg-blue-900/20 p-4 rounded">
-                    <p className="text-sm font-semibold mb-2">💡 Try These Examples:</p>
-                    <ul className="text-sm space-y-1">
-                      <li>• Word: "Mississippi", Letter: "s" (should find 4)</li>
-                      <li>• Word: "programming", Letter: "m" (should find 2)</li>
-                      <li>• Word: "teacher", Letter: "e" (should find 2)</li>
+
+                  <div className="mt-4 bg-green-50 dark:bg-green-900/20 p-4 rounded">
+                    <p className="text-sm font-semibold text-foreground mb-2">🔑 The API Advantage:</p>
+                    <ul className="text-sm text-muted-foreground space-y-1">
+                      <li>• <strong>Direct access:</strong> No browser, no clicking, just data</li>
+                      <li>• <strong>Machine-readable format:</strong> Data comes structured (JSON), ready to process</li>
+                      <li>• <strong>Scalable:</strong> Send 100 DOIs? Same code, same speed</li>
+                      <li>• <strong>Free computing resources:</strong> Crossref's servers do the work</li>
                     </ul>
                   </div>
                 </div>
 
-                <div className="prose prose-lg max-w-none">
-                  <h4 className="text-2xl font-semibold text-foreground mt-6 mb-3">Beyond Letter Counting</h4>
-                  <p className="text-foreground text-lg leading-relaxed">
-                    This same principle applies to complex tasks: text analysis, data processing, pattern recognition. 
-                    AI-generated code executes precisely while natural language descriptions remain ambiguous.
+                <div className="bg-gradient-to-r from-green-50 to-teal-50 dark:from-green-900/20 dark:to-teal-900/20 p-6 rounded-xl border-2">
+                  <h4 className="text-2xl font-semibold text-foreground mb-4">
+                    Multiple APIs: Searching Research Databases
+                  </h4>
+                  
+                  <p className="text-sm text-foreground mb-4">
+                    What if a reference has no DOI? The Reference Validator uses multiple APIs:
                   </p>
+
+                  <div className="space-y-3">
+                    <div className="bg-background p-3 rounded border">
+                      <p className="text-sm font-semibold mb-1">1. Semantic Scholar API</p>
+                      <p className="text-xs text-muted-foreground">
+                        Search 200+ million academic papers by title, author, keyword
+                      </p>
+                    </div>
+
+                    <div className="bg-background p-3 rounded border">
+                      <p className="text-sm font-semibold mb-1">2. PubMed API</p>
+                      <p className="text-xs text-muted-foreground">
+                        Access 35+ million biomedical research citations
+                      </p>
+                    </div>
+
+                    <div className="bg-background p-3 rounded border">
+                      <p className="text-sm font-semibold mb-1">3. Google Scholar (via web search)</p>
+                      <p className="text-xs text-muted-foreground">
+                        Broader academic search as a fallback
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 bg-blue-50 dark:bg-blue-900/20 p-3 rounded">
+                    <p className="text-sm text-muted-foreground">
+                      💡 Code automatically tries each API until it finds a match—what would take you 5-10 minutes 
+                      manually happens in 2 seconds automatically.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="prose prose-lg max-w-none">
+                  <h4 className="text-2xl font-semibold text-foreground mt-6 mb-3">The Scale Advantage</h4>
+                  <p className="text-foreground text-lg leading-relaxed">
+                    Once you start using APIs, you're no longer limited by your own time or computing power. You're 
+                    <strong> leveraging massive computing resources and databases</strong>—resources that would be 
+                    impossible to access manually at scale.
+                  </p>
+                  
+                  <ul className="space-y-3 list-none mt-4">
+                    <BulletPoint icon="🌐">
+                      <strong>Global databases:</strong> Access millions of research papers instantly
+                    </BulletPoint>
+                    <BulletPoint icon="⚡">
+                      <strong>Distributed computing:</strong> External servers do the heavy computational work
+                    </BulletPoint>
+                    <BulletPoint icon="🔄">
+                      <strong>Real-time updates:</strong> Always accessing the latest data
+                    </BulletPoint>
+                    <BulletPoint icon="💰">
+                      <strong>Free resources:</strong> Most academic APIs are free for educational use
+                    </BulletPoint>
+                  </ul>
+                </div>
+
+                <div className="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-xl">
+                  <h4 className="text-2xl font-semibold text-foreground mb-4">
+                    🎯 See It in Action
+                  </h4>
+                  <p className="text-foreground mb-4">
+                    Try validating references with and without DOIs in our Reference Validator. Notice how it 
+                    automatically uses different APIs depending on what information is available.
+                  </p>
+                  <Link to="/learning-apps/validate-references">
+                    <Button className="w-full">
+                      Test API Integration →
+                    </Button>
+                  </Link>
                 </div>
               </div>
 
               <ComprehensionCheck
                 lessonSlug={lessonSlug}
                 sectionId="module3"
-                questionId="python-advantage"
-                question="Why is AI-generated code more reliable than natural language for counting tasks?"
+                questionId="api-advantage"
+                question="What is the main advantage of using APIs for reference validation?"
                 options={[
-                  "Code uses computational methods that guarantee accuracy",
-                  "AI is better at writing code than natural language",
-                  "Python is smarter than English",
-                  "Natural language is too complex"
+                  "Access to vast external databases and computing resources at scale",
+                  "APIs are easier to understand than websites",
+                  "APIs make prettier output",
+                  "APIs are more accurate than manual checking"
                 ]}
               />
             </CollapsibleSection>
@@ -472,78 +512,94 @@ print(f"'{letter}' appears {count} times")`}</pre>
                 <div className="grid gap-4">
                   <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 p-6 rounded-xl border-2">
                     <h5 className="text-xl font-semibold text-foreground mb-3">
-                      📊 Analyze Student Writing
+                      ✅ Validate Student References
                     </h5>
                     <p className="text-sm text-foreground mb-2">
-                      <strong>Task:</strong> Count passive voice, sentence length, vocabulary frequency in 30 essays.
+                      <strong>Task:</strong> Check if 100 student references are accurate and properly cited.
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      <strong>Vibe Coding:</strong> "Generate Python code to analyze text files for passive voice patterns, 
-                      average sentence length, and academic word frequency. Output as CSV."
+                    <p className="text-sm text-muted-foreground mb-2">
+                      <strong>Vibe Coding + APIs:</strong> Code parses each reference, extracts DOIs, sends them to 
+                      Crossref API, searches Semantic Scholar for non-DOI refs, generates validation report.
+                    </p>
+                    <p className="text-xs text-primary font-semibold">
+                      💡 Manual: 2+ hours → With code: 2 minutes
                     </p>
                   </div>
 
                   <div className="bg-gradient-to-r from-green-50 to-teal-50 dark:from-green-900/20 dark:to-teal-900/20 p-6 rounded-xl border-2">
                     <h5 className="text-xl font-semibold text-foreground mb-3">
-                      📚 Reading Level Reports
+                      📊 Analyze Academic Patterns
                     </h5>
                     <p className="text-sm text-foreground mb-2">
-                      <strong>Task:</strong> Determine CEFR levels and readability scores for your text collection.
+                      <strong>Task:</strong> Find common phrase patterns in 50 model essays for teaching writing.
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      <strong>Vibe Coding:</strong> "Generate Python code using textstat to calculate readability metrics 
-                      for all .txt files and create an HTML report."
+                    <p className="text-sm text-muted-foreground mb-2">
+                      <strong>Vibe Coding + APIs:</strong> Code analyzes text, identifies linguistic patterns, 
+                      uses NLP APIs for semantic analysis, generates categorized phrase templates.
+                    </p>
+                    <p className="text-xs text-primary font-semibold">
+                      💡 Leverages external NLP computing resources you don't own
                     </p>
                   </div>
 
                   <div className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 p-6 rounded-xl border-2">
                     <h5 className="text-xl font-semibold text-foreground mb-3">
-                      🎯 Vocabulary Exercises
+                      🔍 Research Literature Review
                     </h5>
                     <p className="text-sm text-foreground mb-2">
-                      <strong>Task:</strong> Create 20 fill-in-the-blank exercises with target vocabulary.
+                      <strong>Task:</strong> Find and summarize recent research on a topic across multiple databases.
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      <strong>Vibe Coding:</strong> "Generate Python code to search a corpus for vocabulary usage, 
-                      create cloze exercises, and export to PDF."
+                    <p className="text-sm text-muted-foreground mb-2">
+                      <strong>Vibe Coding + APIs:</strong> Code queries Semantic Scholar, PubMed, and arXiv APIs 
+                      simultaneously, downloads metadata, extracts abstracts, creates comparative summary.
+                    </p>
+                    <p className="text-xs text-primary font-semibold">
+                      💡 Access to 250+ million papers you couldn't manually search
                     </p>
                   </div>
 
                   <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-6 rounded-xl border-2">
                     <h5 className="text-xl font-semibold text-foreground mb-3">
-                      🗂️ Organize Materials
+                      📚 Build Custom Corpora
                     </h5>
                     <p className="text-sm text-foreground mb-2">
-                      <strong>Task:</strong> Sort 200 teaching files by topic, level, and skill.
+                      <strong>Task:</strong> Collect 1000 discipline-specific academic texts for analysis.
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      <strong>Vibe Coding:</strong> "Generate Python code to scan documents, categorize by topic/level, 
-                      rename files descriptively, and organize into folders."
+                    <p className="text-sm text-muted-foreground mb-2">
+                      <strong>Vibe Coding + APIs:</strong> Code uses web APIs to search academic repositories, 
+                      filters by discipline and date, downloads open-access papers, organizes into corpus.
+                    </p>
+                    <p className="text-xs text-primary font-semibold">
+                      💡 Impossible to do manually at this scale
                     </p>
                   </div>
                 </div>
 
                 <div className="bg-gradient-to-r from-primary/5 to-accent/5 p-6 rounded-lg">
-                  <h5 className="text-xl font-semibold text-foreground mb-3">The Pattern</h5>
+                  <h5 className="text-xl font-semibold text-foreground mb-3">The Pattern: Scale and Resources</h5>
                   <p className="text-foreground mb-4">
-                    These aren't coding tasks—they're teaching tasks that require time, technical skills, or repetitive work.
+                    These tasks share a common theme: <strong>they require computing resources and scale beyond what 
+                    you can do manually.</strong>
                   </p>
                   <ul className="space-y-2 list-none">
-                    <BulletPoint icon="⏱️">
-                      <strong>Time you don't have</strong> (analyzing hundreds of texts manually)
+                    <BulletPoint icon="🌐">
+                      <strong>External databases</strong> (millions of academic papers you can't manually search)
                     </BulletPoint>
-                    <BulletPoint icon="🔧">
-                      <strong>Skills you might lack</strong> (text processing, statistics)
+                    <BulletPoint icon="⚡">
+                      <strong>Computing power</strong> (processing thousands of items in seconds)
                     </BulletPoint>
-                    <BulletPoint icon="♻️">
-                      <strong>Work you shouldn't do</strong> (repetitive counting, formatting)
+                    <BulletPoint icon="🔄">
+                      <strong>Automation</strong> (repetitive tasks that don't require human judgment)
+                    </BulletPoint>
+                    <BulletPoint icon="📊">
+                      <strong>Data at scale</strong> (analyzing patterns across hundreds of documents)
                     </BulletPoint>
                   </ul>
                 </div>
 
                 <blockquote className="border-l-4 border-primary pl-4 italic text-muted-foreground my-6">
-                  "Vibe coding lets you describe what you need, and AI generates the automation tool. You don't become 
-                  a programmer—you learn to describe tasks AI can translate into solutions."
+                  "Vibe coding + APIs = Access to computing resources at scale. You're not just automating tasks—you're 
+                  leveraging databases, servers, and computational tools that would be impossible to use manually."
                 </blockquote>
               </div>
 
@@ -573,16 +629,19 @@ print(f"'{letter}' appears {count} times")`}</pre>
                   <h4 className="text-2xl font-semibold text-foreground mb-4">Key Takeaways</h4>
                   <ul className="space-y-3 list-none">
                     <BulletPoint icon="💬">
-                      <strong>Beyond Natural Language:</strong> Programming languages are for machines. AI bridges the gap.
+                      <strong>Beyond Natural Language:</strong> Code automates what natural language only describes.
                     </BulletPoint>
-                    <BulletPoint icon="📊">
-                      <strong>Mermaid Diagrams:</strong> Generate visual diagrams from text descriptions automatically.
+                    <BulletPoint icon="🔄">
+                      <strong>Automation:</strong> Parse and process multiple items simultaneously—code handles repetitive work.
                     </BulletPoint>
-                    <BulletPoint icon="🐍">
-                      <strong>Python Precision:</strong> Code generation ensures accuracy for calculations and analysis.
+                    <BulletPoint icon="🌐">
+                      <strong>API Integration:</strong> Access external databases and computing resources at scale.
+                    </BulletPoint>
+                    <BulletPoint icon="⚡">
+                      <strong>Scale Advantage:</strong> Leverage resources you don't own—millions of papers, distributed computing, real-time data.
                     </BulletPoint>
                     <BulletPoint icon="🎓">
-                      <strong>Teaching Automation:</strong> Use AI-generated code to handle repetitive tasks.
+                      <strong>Teaching Empowerment:</strong> Vibe coding enables tasks that are impossible manually—validating hundreds of references, analyzing massive corpora, building custom datasets.
                     </BulletPoint>
                   </ul>
                 </div>
@@ -636,9 +695,10 @@ print(f"'{letter}' appears {count} times")`}</pre>
               <div className="text-center space-y-4">
                 <h3 className="text-3xl font-bold text-foreground">🎯 Next Steps</h3>
                 <p className="text-muted-foreground text-lg">
-                  Try one experiment: Ask ChatGPT or Claude to "generate Python code to analyze a text file" 
-                  for something in your teaching. See what code it creates. You don't need to run it—just observe 
-                  how AI translates your intent into executable instructions.
+                  Try our <Link to="/learning-apps/validate-references" className="text-primary hover:underline font-semibold">
+                  Reference Validator</Link> to see vibe coding + API integration in action. Notice how code automates 
+                  parsing, sends requests to external databases, and processes results at scale—tasks that would be 
+                  impossible to do manually with the same speed and accuracy.
                 </p>
                 <div className="flex justify-center gap-4">
                   <Link to="/lessons">
