@@ -1,4 +1,4 @@
-import { BookOpen, GraduationCap, Target, FileCheck, Lightbulb, MessageSquare, Home, Plus, CheckSquare, Info, Newspaper, Library, Zap } from "lucide-react";
+import { BookOpen, GraduationCap, Target, FileCheck, Lightbulb, MessageSquare, Plus, CheckSquare, Info, Newspaper, Library, Zap } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 import {
@@ -14,12 +14,6 @@ import {
 } from "@/components/ui/sidebar";
 
 const navigation = [
-  {
-    title: "Home",
-    url: "/",
-    icon: Home,
-    description: "Return to dashboard"
-  },
   {
     title: "About",
     url: "/about",
