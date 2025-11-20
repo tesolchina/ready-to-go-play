@@ -86,8 +86,12 @@ Rules:
       console.log("Successfully used DeepSeek API");
     }
 
-    // Clean up the mermaid code - remove markdown code blocks if present
-    mermaidCode = mermaidCode.replace(/```mermaid\n?/g, '').replace(/```\n?$/g, '').trim();
+    // Clean up the mermaid code - remove markdown code blocks and "mermaid" prefix if present
+    mermaidCode = mermaidCode
+      .replace(/```mermaid\n?/g, '')
+      .replace(/```\n?$/g, '')
+      .replace(/^mermaid\s*\n/i, '')  // Remove "mermaid" word at the start
+      .trim();
     
     console.log(`Generated mermaid code using ${usedModel}:`, mermaidCode.substring(0, 100));
 
