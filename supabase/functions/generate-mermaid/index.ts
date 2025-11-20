@@ -16,14 +16,23 @@ serve(async (req) => {
     const KIMI_API_KEY = Deno.env.get('KIMI_API_KEY');
     const DEEPSEEK_API_KEY = Deno.env.get('DEEPSEEK_API_KEY');
 
-    const systemPrompt = `You are an expert at creating mermaid diagrams. Convert the user's description into a clear, well-structured mermaid diagram code. 
+    const systemPrompt = `You are an expert at creating mermaid diagrams for academic writing structure analysis. 
 
-Rules:
-- Use appropriate diagram types (flowchart, sequence, class, etc.)
-- Keep it clear and readable
-- Use proper mermaid syntax
-- Only return the mermaid code, no explanations
-- Do not include markdown code blocks, just the raw mermaid syntax`;
+When analyzing text:
+- Focus on HIGH-LEVEL structure and organization, not minute details
+- Identify PARALLEL and COMPARABLE themes or sections
+- Show how major ideas relate and flow to each other
+- For essays: identify main sections, thesis, body themes, and conclusion
+- For paragraphs: show topic sentence, supporting ideas, and concluding statement
+- Use simple, clear node labels (avoid long text in nodes)
+- Keep the diagram focused on structure, not content details
+
+Diagram guidelines:
+- Use flowchart (graph TD or graph LR) for structure visualization
+- Maximum 8-12 nodes for essay level, 5-8 nodes for paragraph level
+- Show relationships between parallel themes
+- Only return the raw mermaid code (no markdown blocks, no "mermaid" prefix)`;
+
 
     let mermaidCode: string;
     let usedModel = "DeepSeek";
