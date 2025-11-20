@@ -45,16 +45,18 @@ const LearningApps = () => {
             <SidebarTrigger />
             <h2 className="text-lg font-semibold">Learning Apps</h2>
           </header>
-          <div className="p-8">
-          <div className="max-w-6xl mx-auto space-y-8">
-            <div className="space-y-4">
-              <h1 className="text-4xl font-bold tracking-tight">Learning Apps</h1>
-              <p className="text-xl text-muted-foreground">
-                AI-powered tools to enhance your teaching and students' learning
-              </p>
-            </div>
+          <div className="container mx-auto px-4 py-16">
+            <div className="flex flex-col items-center justify-center space-y-12">
+              <div className="text-center space-y-4">
+                <h1 className="text-5xl font-bold tracking-tight sm:text-6xl">
+                  AI Learning Hub for EAP Teachers
+                </h1>
+                <p className="text-xl text-muted-foreground max-w-2xl">
+                  A platform created for workshops and training on AI technologies and literacies for EAP university teachers and students. We offer AI-empowered lessons for both live teaching and asynchronous learning, and develop learning apps such as customized AI chatbots and interactive learning experiences.
+                </p>
+              </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-6xl mt-12">
               {apps.map((app) => (
                 <Link key={app.path} to={app.path} className="group">
                   <Card className="h-full transition-all hover:shadow-lg hover:scale-[1.02]">
@@ -81,16 +83,16 @@ const LearningApps = () => {
               ))}
             </div>
 
-            <Card className="bg-muted/50">
-              <CardHeader>
-                <CardTitle>More Tools Coming Soon</CardTitle>
-                <CardDescription>
-                  We're continuously developing new AI-powered tools to support EAP teaching and learning. 
-                  Stay tuned for updates!
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          </div>
+              <Card className="bg-muted/50">
+                <CardHeader>
+                  <CardTitle>More Tools Coming Soon</CardTitle>
+                  <CardDescription>
+                    We're continuously developing new AI-powered tools to support EAP teaching and learning. 
+                    Stay tuned for updates!
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </div>
           </div>
         </main>
       </div>
