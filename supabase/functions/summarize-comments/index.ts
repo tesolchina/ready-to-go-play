@@ -2,7 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-platform-session, x-user-kimi-key, x-user-deepseek-key",
 };
 
 serve(async (req) => {
@@ -22,11 +22,31 @@ serve(async (req) => {
       );
     }
 
-    const KIMI_API_KEY = Deno.env.get("KIMI_API_KEY");
-    const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
-    
-    if (!KIMI_API_KEY || !DEEPSEEK_API_KEY) {
-      throw new Error("API keys not configured");
+    // Get API keys from environment variables (platform keys)
+    let KIMI_API_KEY = Deno.env.get("KIMI_API_KEY");
+    let DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
+
+    // Check for platform session in headers
+    const platformSession = req.headers.get("x-platform-session");
+    const hasPlatformAccess = !!platformSession;
+
+    // If no platform access, use user-provided keys from headers
+    if (!hasPlatformAccess) {
+      const userKimiKey = req.headers.get("x-user-kimi-key");
+      const userDeepseekKey = req.headers.get("x-user-deepseek-key");
+      
+      if (userKimiKey) KIMI_API_KEY = userKimiKey;
+      if (userDeepseekKey) DEEPSEEK_API_KEY = userDeepseekKey;
+    }
+
+    if (!KIMI_API_KEY && !DEEPSEEK_API_KEY) {
+      return new Response(
+        JSON.stringify({ 
+          error: "AI services not configured. Please configure your API key in the Lessons page.",
+          needsConfiguration: true 
+        }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
     // Prepare comments text for summarization
