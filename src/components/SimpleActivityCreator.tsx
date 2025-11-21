@@ -14,9 +14,17 @@ import { useAIServiceGuard } from "@/hooks/useAIServiceGuard";
 import { Link } from "react-router-dom";
 import { getAIHeaders } from "@/lib/aiServiceGuard";
 
+const DEFAULT_SYSTEM_PROMPT_TEMPLATE = `You are an experienced language teacher. The student is asked to come up with a counterargument and a rebuttal in response to the following claim: 
+"{ARGUMENT}"
+
+Your job is to first check if there is a counterargument and a rebuttal in the student's answer. 
+Then whether the counterargument is a valid challenge. And whether the rebuttal is relevant and addresses the challenge. 
+You should also explore other possible challenges and rebuttals in your answer. 
+Your comments on the student's response should be critical and constructive.  You should offer actionable insights to help the student improve their writing and critical thinking skills.`;
+
 export const SimpleActivityCreator = () => {
   const { isActivated, checkAndNotify } = useAIServiceGuard();
-  const [systemPrompt, setSystemPrompt] = useState("");
+  const [systemPrompt, setSystemPrompt] = useState(DEFAULT_SYSTEM_PROMPT_TEMPLATE);
   const [argument, setArgument] = useState("");
   const [generatedSystemPrompt, setGeneratedSystemPrompt] = useState("");
   const [copied, setCopied] = useState(false);
@@ -40,8 +48,8 @@ export const SimpleActivityCreator = () => {
       return;
     }
 
-    if (systemPrompt.length > 2000) {
-      toast.error("System prompt must be less than 2000 characters");
+    if (systemPrompt.length > 3000) {
+      toast.error("System prompt must be less than 3000 characters");
       return;
     }
 
@@ -50,10 +58,24 @@ export const SimpleActivityCreator = () => {
       return;
     }
 
-    setGeneratedSystemPrompt(systemPrompt.trim());
+    // Replace {ARGUMENT} placeholder with the actual argument if it exists in the prompt
+    const finalSystemPrompt = systemPrompt.trim().replace(/{ARGUMENT}/g, `"${argument.trim()}"`);
+    setGeneratedSystemPrompt(finalSystemPrompt);
     setShowChatbot(true);
     setChatMessages([]);
     toast.success("Feedback chatbot ready!");
+  };
+
+  const handleArgumentChange = (value: string) => {
+    setArgument(value);
+    // Optionally update the system prompt with the argument if {ARGUMENT} placeholder exists
+    if (systemPrompt.includes("{ARGUMENT}")) {
+      const updatedPrompt = DEFAULT_SYSTEM_PROMPT_TEMPLATE.replace(/{ARGUMENT}/g, value ? `"${value}"` : "{ARGUMENT}");
+      // Only update if user hasn't manually edited the template significantly
+      if (systemPrompt === DEFAULT_SYSTEM_PROMPT_TEMPLATE || systemPrompt.includes("{ARGUMENT}")) {
+        setSystemPrompt(updatedPrompt);
+      }
+    }
   };
 
   const handleCopy = () => {
@@ -157,18 +179,17 @@ export const SimpleActivityCreator = () => {
               System Prompt *
             </Label>
             <p className="text-sm text-muted-foreground mt-1 mb-2">
-              Write the system prompt that defines how the chatbot should behave and provide feedback
+              Edit the system prompt template below. Use <code className="bg-muted px-1 py-0.5 rounded">{"{ARGUMENT}"}</code> as a placeholder for the claim/argument that will be inserted automatically, or replace it with your specific argument.
             </p>
             <Textarea
               id="systemPrompt"
               value={systemPrompt}
               onChange={(e) => setSystemPrompt(e.target.value)}
-              placeholder='e.g., You are an experienced language teacher. The student is asked to come up with a counterargument and a rebuttal in response to the following claim: "Imposing minimum wage is an important way to ensure worker'\''s welfare and prevent exploitation." Your job is to check if there is a counterargument and a rebuttal in the student'\''s answer. Then whether the counterargument is a valid challenge. And whether the rebuttal is relevant and addresses the challenge.'
-              className="text-base min-h-[200px]"
-              maxLength={2000}
+              className="text-base min-h-[250px] font-mono text-sm"
+              maxLength={3000}
               required
             />
-            <p className="text-sm text-muted-foreground mt-2">{systemPrompt.length}/2000 characters</p>
+            <p className="text-sm text-muted-foreground mt-2">{systemPrompt.length}/3000 characters</p>
           </div>
 
           <div>
@@ -176,12 +197,12 @@ export const SimpleActivityCreator = () => {
               The Argument/Claim *
             </Label>
             <p className="text-sm text-muted-foreground mt-1 mb-2">
-              What statement should students address a counter-argument to?
+              What statement should students address a counter-argument to? (This will replace <code className="bg-muted px-1 py-0.5 rounded">{"{ARGUMENT}"}</code> in the system prompt above)
             </p>
             <Textarea
               id="argument"
               value={argument}
-              onChange={(e) => setArgument(e.target.value)}
+              onChange={(e) => handleArgumentChange(e.target.value)}
               placeholder='e.g., "Traditional teaching methods are more effective than AI-enhanced learning for developing critical thinking skills."'
               className="text-base min-h-[120px]"
               maxLength={1000}
@@ -191,7 +212,7 @@ export const SimpleActivityCreator = () => {
           </div>
 
           <Button type="submit" disabled={!isActivated} size="lg" className="w-full text-base">
-            Generate Feedback Chatbot
+            Generate AI Feedback Chatbot
           </Button>
         </form>
       </Card>
