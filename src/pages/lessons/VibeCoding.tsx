@@ -133,7 +133,7 @@ The letter '${letterInput}' appears ${count} times in '${wordInput}'`);
               </div>
               
               <div className="space-y-4">
-                <h1 className="text-5xl font-bold">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold break-words">
                   Vibe Coding: AI Generates Code for You
                 </h1>
                 <p className="text-2xl text-muted-foreground">

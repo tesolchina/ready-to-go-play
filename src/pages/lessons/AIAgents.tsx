@@ -57,7 +57,7 @@ const AIAgents = () => {
                     🔮 Future Tech
                   </span>
                 </div>
-                <h1 className="text-5xl font-bold">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold break-words">
                   AI Agents: When Code Writes and Executes Itself
                 </h1>
                 <p className="text-2xl text-muted-foreground">
