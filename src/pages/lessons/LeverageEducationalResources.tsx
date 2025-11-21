@@ -77,21 +77,39 @@ const LeverageEducationalResources = () => {
                     everything, we enhance proven resources that have stood the test of time, combining 
                     expert knowledge with AI capabilities for personalization and interaction.
                   </p>
-                  <p className="text-foreground text-lg leading-relaxed mt-4">
-                    The internet is filled with excellent educational resources developed by dedicated educators and researchers. 
-                    One such resource is the <strong>Manchester Academic Phrasebank</strong>, created by Dr. John Morley at the University of 
-                    of Manchester. Since 2009, it has helped millions of students and researchers write academic English more effectively.
-                  </p>
-                  <p className="text-foreground text-lg leading-relaxed mt-4">
-                    The Academic Phrasebank provides examples of commonly-used phrases in academic writing, organized by function 
-                    (e.g., "Introducing Work", "Being Cautious", "Describing Methods"). It's <strong>free, well-organized, and 
-                    pedagogically sound</strong>—exactly the kind of resource teachers should leverage.
-                  </p>
-                  <p className="text-foreground text-lg leading-relaxed mt-4">
-                    However, there's a challenge: while the Phrasebank is comprehensive, it's essentially a <strong>static reference 
-                    tool</strong>. Students must browse categories, read examples, and figure out how to apply them. There's no 
-                    personalization, no feedback, and no way to practice using phrases in context.
-                  </p>
+                </div>
+
+                <div className="bg-muted/50 p-6 rounded-lg space-y-4">
+                  <h5 className="text-xl font-semibold text-foreground">The Manchester Academic Phrasebank: A Case Example</h5>
+                  <ul className="space-y-3 list-none">
+                    <BulletPoint icon="📚">
+                      Created by Dr. John Morley at the University of Manchester
+                    </BulletPoint>
+                    <BulletPoint icon="✅">
+                      Since 2009, it has helped millions of students and researchers write academic English more effectively
+                    </BulletPoint>
+                    <BulletPoint icon="🗂️">
+                      Provides examples of commonly-used phrases in academic writing, organized by function (e.g., "Introducing Work", "Being Cautious", "Describing Methods")
+                    </BulletPoint>
+                    <BulletPoint icon="⭐">
+                      Free, well-organized, and pedagogically sound—exactly the kind of resource teachers should leverage
+                    </BulletPoint>
+                  </ul>
+                </div>
+
+                <div className="prose prose-lg max-w-none mt-4">
+                  <h5 className="text-xl font-semibold text-foreground mb-3">The Challenge:</h5>
+                  <ul className="space-y-3 list-none">
+                    <BulletPoint icon="📖">
+                      Essentially a static reference tool
+                    </BulletPoint>
+                    <BulletPoint icon="❌">
+                      Students must browse categories, read examples, and figure out how to apply them
+                    </BulletPoint>
+                    <BulletPoint icon="🚫">
+                      No personalization, no feedback, and no way to practice using phrases in context
+                    </BulletPoint>
+                  </ul>
                 </div>
 
                 <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg">
@@ -169,12 +187,19 @@ const LeverageEducationalResources = () => {
               onToggle={() => toggleSection("module2")}
             >
               <div className="space-y-6">
-                <div className="prose prose-lg max-w-none">
-                  <p className="text-foreground text-lg leading-relaxed">
-                    <strong>The most effective use of AI in education is enhancement, not recreation.</strong> 
-                    Combine proven resources with AI's capabilities for personalization, interaction, and feedback. 
-                    This is evolution—amplifying expertise rather than replacing it.
+                <div className="bg-gradient-to-r from-primary/10 to-accent/10 p-6 rounded-lg border-2 border-primary/20">
+                  <h4 className="text-xl font-bold text-foreground mb-3">🎯 Core Principle</h4>
+                  <p className="text-foreground text-lg leading-relaxed font-medium">
+                    <strong>The most effective use of AI in education is enhancement, not recreation.</strong>
                   </p>
+                  <ul className="space-y-2 list-none mt-4">
+                    <BulletPoint icon="✨">
+                      Combine proven resources with AI capabilities for personalization, interaction, and feedback
+                    </BulletPoint>
+                    <BulletPoint icon="📈">
+                      This is evolution—amplifying expertise rather than replacing it
+                    </BulletPoint>
+                  </ul>
                 </div>
 
                 <div className="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-lg space-y-4">
@@ -203,10 +228,19 @@ const LeverageEducationalResources = () => {
                 <div className="prose prose-lg max-w-none">
                   <h4 className="text-2xl font-semibold text-foreground mt-6 mb-3">The Two-Part Enhancement Approach</h4>
                   <p className="text-foreground text-lg leading-relaxed mb-4">
-                    <strong>Move from guidance to independence:</strong> This two-part approach preserves the original 
-                    resource's structure while adding interactive capabilities that help students progress from scaffolded 
-                    practice to independent application.
+                    <strong>Move from guidance to independence:</strong>
                   </p>
+                  <ul className="space-y-2 list-none">
+                    <BulletPoint icon="🏗️">
+                      Preserves the original resource's structure
+                    </BulletPoint>
+                    <BulletPoint icon="📊">
+                      Adds interactive capabilities
+                    </BulletPoint>
+                    <BulletPoint icon="🎓">
+                      Helps students progress from scaffolded practice to independent application
+                    </BulletPoint>
+                  </ul>
                 </div>
 
                 <ul className="space-y-4 list-none">
@@ -242,11 +276,19 @@ const LeverageEducationalResources = () => {
 
                 <div className="prose prose-lg max-w-none">
                   <h4 className="text-2xl font-semibold text-foreground mt-6 mb-3">Academic Phrasebank Enhancement: A Case Study</h4>
+                  <p className="text-foreground text-lg leading-relaxed mb-3">
+                    The original Academic Phrasebank is organized into:
+                  </p>
+                  <ul className="space-y-2 list-none mb-4">
+                    <BulletPoint icon="📑">
+                      <strong>Section-specific functions:</strong> Introducing work, referring to sources, describing methods, etc.
+                    </BulletPoint>
+                    <BulletPoint icon="🔤">
+                      <strong>General language functions:</strong> Being cautious, comparing, defining terms, etc.
+                    </BulletPoint>
+                  </ul>
                   <p className="text-foreground text-lg leading-relaxed">
-                    The original Academic Phrasebank is organized into <strong>section-specific functions</strong> (introducing work, 
-                    referring to sources, describing methods, etc.) and <strong>general language functions</strong> (being cautious, 
-                    comparing, defining terms, etc.). This expert-crafted framework provides the structure; AI adds interactivity 
-                    and personalization.
+                    This expert-crafted framework provides the structure; AI adds interactivity and personalization.
                   </p>
                 </div>
 
@@ -326,11 +368,20 @@ const LeverageEducationalResources = () => {
             >
               <div className="space-y-8">
                 <div className="prose prose-lg max-w-none">
-                  <p className="text-foreground text-lg leading-relaxed">
-                    Now experience the difference between the original static resource and an AI-enhanced version. 
-                    The <strong>Academic Phrasebank Assistant</strong> demonstrates the two-part enhancement approach while 
-                    preserving the original Phrasebank's structure and expert-crafted content.
+                  <p className="text-foreground text-lg leading-relaxed mb-3">
+                    Now experience the difference between the original static resource and an AI-enhanced version:
                   </p>
+                  <ul className="space-y-2 list-none">
+                    <BulletPoint icon="🤖">
+                      The <strong>Academic Phrasebank Assistant</strong> demonstrates the two-part enhancement approach
+                    </BulletPoint>
+                    <BulletPoint icon="📚">
+                      Preserves the original Phrasebank's structure and expert-crafted content
+                    </BulletPoint>
+                    <BulletPoint icon="✨">
+                      Adds interactivity, personalization, and practice opportunities
+                    </BulletPoint>
+                  </ul>
                 </div>
 
                 <div className="bg-gradient-to-r from-primary/5 to-accent/5 p-6 rounded-xl border-2 border-border/50">
@@ -400,7 +451,7 @@ const LeverageEducationalResources = () => {
                   </Link>
 
                   <p className="text-sm text-muted-foreground mt-4 text-center">
-                    The app will open in a new tab. Try using it for 5-10 minutes, then return to complete this lesson.
+                    Try using the app for 5-10 minutes, then return to complete this lesson.
                   </p>
 
                   <div className="bg-muted/50 p-4 rounded-lg mt-4">
@@ -451,7 +502,7 @@ const LeverageEducationalResources = () => {
                     <BulletPoint icon="📚">
                       <strong>Leverage Existing Quality:</strong> Excellent educational resources already exist. 
                       Don't recreate from scratch—find, evaluate, and enhance what experts have built. This is 
-                      <strong> evolution, not revolution</strong>.
+                      <strong>evolution, not revolution</strong>.
                     </BulletPoint>
                     <BulletPoint icon="🔄">
                       <strong>Two-Part Enhancement Approach:</strong> Move from guidance to independence. First, 
