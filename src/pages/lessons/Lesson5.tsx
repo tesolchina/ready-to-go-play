@@ -7,7 +7,7 @@ const Lesson5 = () => {
       <Card className="p-8">
         <div className="flex items-center gap-3 mb-6">
           <Lightbulb className="h-8 w-8 text-primary" />
-          <h1 className="text-3xl font-bold">Content Adaptation</h1>
+          <h1 className="text-2xl md:text-3xl font-bold">Content Adaptation</h1>
         </div>
         
         <p className="text-lg text-muted-foreground mb-6">

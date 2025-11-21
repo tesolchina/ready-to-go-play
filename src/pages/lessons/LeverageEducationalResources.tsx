@@ -42,11 +42,12 @@ const LeverageEducationalResources = () => {
           <div className="max-w-4xl mx-auto space-y-8 w-full">
             {/* Header */}
             <div>
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
                 <Link to="/lessons">
-                  <Button variant="ghost">
+                  <Button variant="ghost" size="sm" className="h-9">
                     <ArrowLeft className="w-4 h-4 mr-2" />
-                    Back to Lessons
+                    <span className="hidden sm:inline">Back to Lessons</span>
+                    <span className="sm:hidden">Back</span>
                   </Button>
                 </Link>
                 <SidebarTrigger />
@@ -71,7 +72,7 @@ const LeverageEducationalResources = () => {
             >
               <div className="space-y-6">
                 <div className="prose prose-lg max-w-none">
-                  <h4 className="text-2xl font-semibold text-foreground mb-4">Existing Quality Resources</h4>
+                  <h4 className="text-xl md:text-2xl font-semibold text-foreground mb-4">Existing Quality Resources</h4>
                   <p className="text-foreground text-lg leading-relaxed mt-4">
                     <strong>AI in education is evolution, not revolution.</strong> Rather than replacing 
                     everything, we enhance proven resources that have stood the test of time, combining 
@@ -203,7 +204,7 @@ const LeverageEducationalResources = () => {
                 </div>
 
                 <div className="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-lg space-y-4">
-                  <h4 className="text-2xl font-semibold text-foreground mb-3">Reflect First: What Resources Do You Use?</h4>
+                  <h4 className="text-lg md:text-xl lg:text-2xl font-semibold text-foreground mb-3">Reflect First: What Resources Do You Use?</h4>
                   <div className="space-y-3">
                     <p className="text-foreground text-lg leading-relaxed">
                       Before thinking about AI solutions, ask yourself:
@@ -226,7 +227,7 @@ const LeverageEducationalResources = () => {
                 </div>
 
                 <div className="prose prose-lg max-w-none">
-                  <h4 className="text-2xl font-semibold text-foreground mt-6 mb-3">The Two-Part Enhancement Approach</h4>
+                  <h4 className="text-xl md:text-2xl font-semibold text-foreground mt-6 mb-3">The Two-Part Enhancement Approach</h4>
                   <p className="text-foreground text-lg leading-relaxed mb-4">
                     <strong>Move from guidance to independence:</strong>
                   </p>
@@ -275,7 +276,7 @@ const LeverageEducationalResources = () => {
                 </div>
 
                 <div className="prose prose-lg max-w-none">
-                  <h4 className="text-2xl font-semibold text-foreground mt-6 mb-3">Academic Phrasebank Enhancement: A Case Study</h4>
+                  <h4 className="text-xl md:text-2xl font-semibold text-foreground mt-6 mb-3">Academic Phrasebank Enhancement: A Case Study</h4>
                   <p className="text-foreground text-lg leading-relaxed mb-3">
                     The original Academic Phrasebank is organized into:
                   </p>
@@ -385,7 +386,7 @@ const LeverageEducationalResources = () => {
                 </div>
 
                 <div className="bg-gradient-to-r from-primary/5 to-accent/5 p-6 rounded-xl border-2 border-border/50">
-                  <h4 className="text-2xl font-semibold text-foreground mb-4">
+                  <h4 className="text-xl md:text-2xl font-semibold text-foreground mb-4">
                     Step 1: Explore the Original
                   </h4>
                   <p className="text-foreground mb-4">
@@ -416,7 +417,7 @@ const LeverageEducationalResources = () => {
                 </div>
 
                 <div className="border-t border-border pt-8">
-                  <h4 className="text-2xl font-semibold text-foreground mb-4">
+                  <h4 className="text-xl md:text-2xl font-semibold text-foreground mb-4">
                     Step 2: Try the AI-Enhanced Version
                   </h4>
                   
@@ -464,7 +465,7 @@ const LeverageEducationalResources = () => {
                 </div>
 
                 <div className="border-t border-border pt-8">
-                  <h4 className="text-2xl font-semibold text-foreground mb-4">
+                  <h4 className="text-xl md:text-2xl font-semibold text-foreground mb-4">
                     Step 3: Reflection Questions
                   </h4>
                   
@@ -497,7 +498,7 @@ const LeverageEducationalResources = () => {
             >
               <div className="space-y-6">
                 <div className="prose prose-lg max-w-none">
-                  <h4 className="text-2xl font-semibold text-foreground mb-4">Key Takeaways</h4>
+                  <h4 className="text-xl md:text-2xl font-semibold text-foreground mb-4">Key Takeaways</h4>
                   <ul className="space-y-3 list-none">
                     <BulletPoint icon="📚">
                       <strong>Leverage Existing Quality:</strong> Excellent educational resources already exist. 
@@ -525,7 +526,7 @@ const LeverageEducationalResources = () => {
                 </div>
 
                 <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-6 rounded-lg space-y-4">
-                  <h4 className="text-2xl font-semibold text-foreground">Quick Feedback</h4>
+                  <h4 className="text-xl md:text-2xl font-semibold text-foreground">Quick Feedback</h4>
                   <ComprehensionCheck
                     lessonSlug={lessonSlug}
                     sectionId="module4"
@@ -541,7 +542,7 @@ const LeverageEducationalResources = () => {
                 </div>
 
                 <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg space-y-4">
-                  <h4 className="text-2xl font-semibold text-foreground">Final Reflection</h4>
+                  <h4 className="text-xl md:text-2xl font-semibold text-foreground">Final Reflection</h4>
                   <OpenEndedReflection
                     lessonSlug={lessonSlug}
                     sectionId="module4"
