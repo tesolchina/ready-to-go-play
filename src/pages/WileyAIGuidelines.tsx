@@ -113,39 +113,11 @@ const WileyAIGuidelines = () => {
       return;
     }
 
-    setIsSharing(true);
-    try {
-      const { data, error } = await supabase
-        .from("wiley_chat_history")
-        .insert({
-          chat_messages: chatMessages.map((msg) => ({
-            role: msg.role,
-            content: msg.content,
-            timestamp: msg.timestamp.toISOString(),
-          })),
-        })
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      const link = `${window.location.origin}/wiley-chat/${data.id}`;
-      setShareLink(link);
-
-      toast({
-        title: "Share link created!",
-        description: "Copy the link to share this chat history.",
-      });
-    } catch (error: any) {
-      console.error("Error creating share link:", error);
-      toast({
-        title: "Error creating share link",
-        description: "Please try again later.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSharing(false);
-    }
+    // Share functionality temporarily disabled - database table not configured
+    toast({
+      title: "Share feature coming soon",
+      description: "This feature is being updated. For now, you can export the chat history instead.",
+    });
   };
 
   const copyShareLink = async () => {
@@ -407,9 +379,11 @@ Use AI Technology in a manner that aligns with privacy, confidentiality, and com
                               : "bg-muted"
                           }`}
                         >
-                          <ReactMarkdown className="text-sm prose prose-sm max-w-none dark:prose-invert">
-                            {msg.content}
-                          </ReactMarkdown>
+                          <div className="text-sm prose prose-sm max-w-none dark:prose-invert">
+                            <ReactMarkdown>
+                              {msg.content}
+                            </ReactMarkdown>
+                          </div>
                           <p className="text-xs opacity-70 mt-2">
                             {msg.timestamp.toLocaleTimeString()}
                           </p>
