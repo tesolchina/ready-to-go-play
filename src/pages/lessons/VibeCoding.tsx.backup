@@ -653,231 +653,85 @@ fetch('https://api.crossref.org/works/' + doi)
                 <div className="prose prose-lg max-w-none">
                   <p className="text-foreground text-lg leading-relaxed">
                     Vibe coding isn't about becoming a programmer—it's about <strong>using AI to automate teaching tasks</strong>. 
-                    Here are two powerful approaches that unlock new possibilities for your teaching:
+                    Here are practical examples:
                   </p>
                 </div>
 
-                {/* Batch File Processing via API */}
-                <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 p-6 rounded-xl border-2">
-                  <h4 className="text-2xl font-semibold text-foreground mb-4">
-                    📦 Idea 1: Send Files to LLMs in Batches Through API
-                  </h4>
-                  
-                  <div className="space-y-4">
-                    <p className="text-foreground mb-3">
-                      <strong>The Challenge:</strong> You have 50 student essays, 100 reading passages, or 200 assignment files 
-                      that need analysis. Copy-pasting each one into ChatGPT is impractical. How do you process them all at scale?
+                <div className="grid gap-4">
+                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 p-6 rounded-xl border-2">
+                    <h5 className="text-xl font-semibold text-foreground mb-3">
+                      📊 Analyze Student Writing
+                    </h5>
+                    <p className="text-sm text-foreground mb-2">
+                      <strong>Task:</strong> Count passive voice, sentence length, vocabulary frequency in 30 essays.
                     </p>
-                    
-                    <div className="bg-muted p-4 rounded">
-                      <p className="text-sm font-semibold mb-2">❌ Manual Approach (Traditional):</p>
-                      <ul className="text-sm space-y-2 list-disc list-inside text-muted-foreground">
-                        <li>Open each file one by one</li>
-                        <li>Copy content into ChatGPT</li>
-                        <li>Wait for response</li>
-                        <li>Copy results to a spreadsheet</li>
-                        <li>Time: ~3 minutes per file × 50 files = <strong>150 minutes</strong></li>
-                      </ul>
-                    </div>
-
-                    <div className="bg-background p-4 rounded border">
-                      <p className="text-sm font-semibold mb-2">✅ Batch API Approach (Vibe Coding):</p>
-                      <p className="text-foreground text-sm mb-3">
-                        <strong>API (Application Programming Interface)</strong> allows your code to send multiple files 
-                        to LLMs programmatically—not through a web interface, but through code that communicates directly 
-                        with AI services.
-                      </p>
-                      <pre className="text-xs bg-muted p-3 rounded overflow-x-auto">
-{`# AI-generated code sends files to LLM API in batches
-import openai
-
-files = ['essay1.txt', 'essay2.txt', ..., 'essay50.txt']
-
-for file in files:
-    with open(file, 'r') as f:
-        content = f.read()
-    
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[{
-            "role": "user",
-            "content": f"Analyze this essay: {content}"
-        }]
-    )
-    # Save results automatically
-    save_analysis(file, response.choices[0].message.content)`}
-                      </pre>
-                    </div>
-
-                    <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded">
-                      <h5 className="text-lg font-semibold text-foreground mb-2">🎯 Teaching Applications:</h5>
-                      <ul className="space-y-2 list-none">
-                        <BulletPoint icon="📝">
-                          <strong>Batch Essay Analysis:</strong> "Generate Python code to send 50 student essays to OpenAI API 
-                          in batches, analyze for grammar patterns, vocabulary complexity, and coherence. Save results to CSV."
-                        </BulletPoint>
-                        <BulletPoint icon="📚">
-                          <strong>Reading Passage Processing:</strong> "Generate code to process 100 reading passages through 
-                          Claude API, extract key vocabulary, generate comprehension questions, and create teaching materials."
-                        </BulletPoint>
-                        <BulletPoint icon="✅">
-                          <strong>Assignment Feedback:</strong> "Generate code to batch-send assignment files to LLM API, 
-                          generate personalized feedback, and email results to students automatically."
-                        </BulletPoint>
-                      </ul>
-                    </div>
-
-                    <div className="bg-background p-4 rounded border mt-4">
-                      <p className="text-sm font-semibold mb-2">⚡ The Power:</p>
-                      <p className="text-foreground">
-                        <strong>Manual processing: ~150 minutes</strong> for 50 files<br />
-                        <strong>Batch API processing: ~5 minutes</strong> for 50 files<br />
-                        <span className="text-primary font-bold">30× faster with consistent quality</span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Leveraging GitHub Projects */}
-                <div className="bg-gradient-to-r from-green-50 to-teal-50 dark:from-green-900/20 dark:to-teal-900/20 p-6 rounded-xl border-2">
-                  <h4 className="text-2xl font-semibold text-foreground mb-4">
-                    🐙 Idea 2: Leverage GitHub Projects (e.g., WordNet)
-                  </h4>
-                  
-                  <div className="space-y-4">
-                    <p className="text-foreground mb-3">
-                      <strong>The Challenge:</strong> You need advanced language tools—word relationships, synonyms, semantic 
-                      networks, corpus data—but building these from scratch would take months. How do you access professional-grade 
-                      resources instantly?
+                    <p className="text-sm text-muted-foreground">
+                      <strong>Vibe Coding:</strong> "Generate Python code to analyze text files for passive voice patterns, 
+                      average sentence length, and academic word frequency. Output as CSV."
                     </p>
-                    
-                    <div className="bg-muted p-4 rounded">
-                      <p className="text-sm font-semibold mb-2">❌ Building from Scratch (Impossible):</p>
-                      <ul className="text-sm space-y-2 list-disc list-inside text-muted-foreground">
-                        <li>Create word relationship databases</li>
-                        <li>Collect millions of text samples</li>
-                        <li>Develop semantic analysis algorithms</li>
-                        <li>Time: <strong>Months or years of development</strong></li>
-                      </ul>
-                    </div>
-
-                    <div className="bg-background p-4 rounded border">
-                      <p className="text-sm font-semibold mb-2">✅ Leveraging GitHub Projects (Vibe Coding):</p>
-                      <p className="text-foreground text-sm mb-3">
-                        <strong>GitHub</strong> hosts thousands of open-source projects—complete tools, datasets, and libraries 
-                        built by researchers and developers worldwide. Instead of building tools, you <strong>leverage existing ones</strong> 
-                        through code.
-                      </p>
-                      
-                      <div className="space-y-3">
-                        <div>
-                          <p className="text-sm font-semibold mb-1">Example: WordNet (Word Relationship Database)</p>
-                          <p className="text-xs text-muted-foreground mb-2">
-                            WordNet is a lexical database with 155,000+ words and their relationships. 
-                            <a href="https://github.com/wordnet/wordnet" target="_blank" rel="noopener noreferrer" 
-                               className="text-primary underline ml-1">
-                              https://github.com/wordnet/wordnet
-                            </a>
-                          </p>
-                          <pre className="text-xs bg-muted p-3 rounded overflow-x-auto">
-{`# AI-generated code uses WordNet from GitHub
-from nltk.corpus import wordnet as wn
-
-# Find synonyms for "happy"
-synonyms = wn.synsets('happy')
-for syn in synonyms:
-    print(f"Meaning: {syn.definition()}")
-    print(f"Synonyms: {syn.lemma_names()}")
-
-# Find word relationships
-word = wn.synset('teacher.n.01')
-print(f"Hypernyms (more general): {word.hypernyms()}")
-print(f"Hyponyms (more specific): {word.hyponyms()}")`}
-                          </pre>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded">
-                      <h5 className="text-lg font-semibold text-foreground mb-2">🎯 Teaching Applications:</h5>
-                      <ul className="space-y-2 list-none">
-                        <BulletPoint icon="📖">
-                          <strong>Vocabulary Expansion Tools:</strong> "Generate Python code using WordNet to create synonym 
-                          exercises, word relationship maps, and semantic vocabulary lists for your teaching materials."
-                        </BulletPoint>
-                        <BulletPoint icon="🔍">
-                          <strong>Corpus Analysis:</strong> "Generate code to use NLTK (Natural Language Toolkit from GitHub) 
-                          to analyze your text collection, extract collocations, and identify key phrases automatically."
-                        </BulletPoint>
-                        <BulletPoint icon="🌐">
-                          <strong>Language Datasets:</strong> "Generate code to access large text corpora from GitHub projects, 
-                          filter by topic/level, and create customized reading materials for your students."
-                        </BulletPoint>
-                      </ul>
-                    </div>
-
-                    <div className="bg-background p-4 rounded border mt-4">
-                      <p className="text-sm font-semibold mb-2">⚡ The Power:</p>
-                      <p className="text-foreground text-sm">
-                        Instead of months of development, you <strong>leverage existing GitHub projects</strong>—professional-grade 
-                        tools built by experts—through simple code that AI can generate. You get access to:
-                      </p>
-                      <ul className="text-sm space-y-1 mt-2 list-disc list-inside text-muted-foreground">
-                        <li>155,000+ word relationships (WordNet)</li>
-                        <li>Millions of text samples (various corpus projects)</li>
-                        <li>State-of-the-art NLP tools (NLTK, spaCy, etc.)</li>
-                        <li>All accessible through AI-generated code</li>
-                      </ul>
-                    </div>
                   </div>
-                </div>
 
-                {/* AI Agents Integration */}
-                <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-6 rounded-xl border-2">
-                  <h4 className="text-2xl font-semibold text-foreground mb-4">
-                    🤖 Write Code with AI Assistance: AI Agents
-                  </h4>
-                  <p className="text-foreground mb-3">
-                    You've learned how to ask AI to generate code. But what if AI could automatically plan tasks, 
-                    access your files, write code, AND execute it autonomously—all while you provide guidance?
-                  </p>
-                  <p className="text-muted-foreground text-sm mb-4">
-                    In our <strong>AI Agents</strong> lesson, discover how AI assistants can write code interactively, 
-                    access your local files, run code, and iterate based on your feedback—making vibe coding even more powerful.
-                  </p>
-                  <Link to="/lessons/ai-agents">
-                    <Button className="w-full" size="lg" variant="outline">
-                      <Code className="mr-2 h-4 w-4" />
-                      Learn: AI Agents for Interactive Code Writing →
-                    </Button>
-                  </Link>
+                  <div className="bg-gradient-to-r from-green-50 to-teal-50 dark:from-green-900/20 dark:to-teal-900/20 p-6 rounded-xl border-2">
+                    <h5 className="text-xl font-semibold text-foreground mb-3">
+                      📚 Reading Level Reports
+                    </h5>
+                    <p className="text-sm text-foreground mb-2">
+                      <strong>Task:</strong> Determine CEFR levels and readability scores for your text collection.
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      <strong>Vibe Coding:</strong> "Generate Python code using textstat to calculate readability metrics 
+                      for all .txt files and create an HTML report."
+                    </p>
+                  </div>
+
+                  <div className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 p-6 rounded-xl border-2">
+                    <h5 className="text-xl font-semibold text-foreground mb-3">
+                      🎯 Vocabulary Exercises
+                    </h5>
+                    <p className="text-sm text-foreground mb-2">
+                      <strong>Task:</strong> Create 20 fill-in-the-blank exercises with target vocabulary.
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      <strong>Vibe Coding:</strong> "Generate Python code to search a corpus for vocabulary usage, 
+                      create cloze exercises, and export to PDF."
+                    </p>
+                  </div>
+
+                  <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-6 rounded-xl border-2">
+                    <h5 className="text-xl font-semibold text-foreground mb-3">
+                      🗂️ Organize Materials
+                    </h5>
+                    <p className="text-sm text-foreground mb-2">
+                      <strong>Task:</strong> Sort 200 teaching files by topic, level, and skill.
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      <strong>Vibe Coding:</strong> "Generate Python code to scan documents, categorize by topic/level, 
+                      rename files descriptively, and organize into folders."
+                    </p>
+                  </div>
                 </div>
 
                 <div className="bg-gradient-to-r from-primary/5 to-accent/5 p-6 rounded-lg">
                   <h5 className="text-xl font-semibold text-foreground mb-3">The Pattern</h5>
                   <p className="text-foreground mb-4">
-                    These aren't coding tasks—they're teaching tasks that require time, technical skills, or access to resources 
-                    beyond manual capability.
+                    These aren't coding tasks—they're teaching tasks that require time, technical skills, or repetitive work.
                   </p>
                   <ul className="space-y-2 list-none">
                     <BulletPoint icon="⏱️">
-                      <strong>Time you don't have</strong> (processing hundreds of files manually)
+                      <strong>Time you don't have</strong> (analyzing hundreds of texts manually)
                     </BulletPoint>
                     <BulletPoint icon="🔧">
-                      <strong>Resources you can't build</strong> (massive databases, complex tools)
+                      <strong>Skills you might lack</strong> (text processing, statistics)
                     </BulletPoint>
-                    <BulletPoint icon="🌐">
-                      <strong>Scale you need</strong> (batch processing, API access, leveraging existing projects)
-                    </BulletPoint>
-                    <BulletPoint icon="🤖">
-                      <strong>AI assistance</strong> (code generation, interactive development, autonomous execution)
+                    <BulletPoint icon="♻️">
+                      <strong>Work you shouldn't do</strong> (repetitive counting, formatting)
                     </BulletPoint>
                   </ul>
                 </div>
 
                 <blockquote className="border-l-4 border-primary pl-4 italic text-muted-foreground my-6">
                   "Vibe coding lets you describe what you need, and AI generates the automation tool. You don't become 
-                  a programmer—you learn to leverage APIs, GitHub projects, and AI agents to access resources at scale."
+                  a programmer—you learn to describe tasks AI can translate into solutions."
                 </blockquote>
               </div>
 
@@ -885,12 +739,12 @@ print(f"Hyponyms (more specific): {word.hyponyms()}")`}
                 lessonSlug={lessonSlug}
                 sectionId="module5"
                 questionId="teaching-applications"
-                question="What are the two main ideas for applying vibe coding to teaching?"
+                question="What type of teaching tasks benefit most from vibe coding?"
                 options={[
-                  "Batch file processing via API and leveraging GitHub projects",
-                  "Writing code from scratch and manual file processing",
-                  "Using ChatGPT web interface and building custom tools",
-                  "Learning programming languages and software development"
+                  "Repetitive, time-consuming tasks requiring technical skills",
+                  "Creative lesson planning and interaction",
+                  "Grading subjective essays with feedback",
+                  "Teaching grammar rules to students"
                 ]}
               />
             </CollapsibleSection>
