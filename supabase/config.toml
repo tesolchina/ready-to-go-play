@@ -54,3 +54,6 @@ verify_jwt = false
 [functions.simple-activity-chat]
 verify_jwt = false
 
+[functions.wiley-ai-guidelines-chat]
+verify_jwt = false
+
