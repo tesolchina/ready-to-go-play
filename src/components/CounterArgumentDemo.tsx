@@ -50,11 +50,17 @@ export const CounterArgumentDemo = ({ onAnalyticsUpdate }: CounterArgumentDemoPr
 
   const demoArgument = `"Imposing minimum wage is an important way to ensure worker's welfare and prevent exploitation."`;
 
-  const systemPrompt = `This is a student's counter-argument to the claim: ${demoArgument}
+  const systemPrompt = `You are an experienced language teacher. The student is asked to come up with a counterargument and a rebuttal in response to the following claim:
 
-Provide constructive feedback on their reasoning, use of evidence, and clarity. Be encouraging and specific. Suggest improvements if needed.
+${demoArgument}
 
-IMPORTANT: Keep your response under 500 characters. Be concise and focus on the most important points.`;
+Your job is to first check if there is a counterargument and a rebuttal in the student's answer.
+
+Then whether the counterargument is a valid challenge. And whether the rebuttal is relevant and addresses the challenge.
+
+You should also explore other possible challenges and rebuttals in your answer.
+
+Your comments on the student's response should be critical and constructive.  You should offer actionable insights to help the student improve their writing and critical thinking skills.`;
 
   const handleSubmit = async () => {
     if (!checkAndNotify()) {
