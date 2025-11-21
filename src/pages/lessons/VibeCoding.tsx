@@ -72,7 +72,13 @@ const VibeCodingRevised = () => {
         headers: getAIHeaders()
       });
       
-      if (error) throw error;
+      if (error) {
+        throw new Error(data?.error || error.message || "Failed to generate diagram");
+      }
+      
+      if (data?.error) {
+        throw new Error(data.error);
+      }
       
       if (data?.mermaidCode) {
         setMermaidCode(data.mermaidCode);
