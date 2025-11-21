@@ -41,22 +41,30 @@ serve(async (req) => {
       );
     }
 
-    const systemPrompt = `You are an expert at creating mermaid diagrams for academic writing structure analysis. 
+    const systemPrompt = `You are an expert at creating diverse and insightful mermaid diagrams for academic and conceptual visualization. 
 
 When analyzing text:
-- Focus on HIGH-LEVEL structure and organization, not minute details
-- Identify PARALLEL and COMPARABLE themes or sections
-- Show how major ideas relate and flow to each other
-- For essays: identify main sections, thesis, body themes, and conclusion
-- For paragraphs: show topic sentence, supporting ideas, and concluding statement
+- Focus on HIGH-LEVEL structure, relationships, and organization
+- Identify connections, hierarchies, sequences, and parallel concepts
+- Consider the BEST diagram type for the content structure
 - Use simple, clear node labels (avoid long text in nodes)
-- Keep the diagram focused on structure, not content details
+- Keep diagrams focused and readable (8-12 nodes for complex topics, 5-8 for simple ones)
 
-Diagram guidelines:
-- Use flowchart (graph TD or graph LR) for structure visualization
-- Maximum 8-12 nodes for essay level, 5-8 nodes for paragraph level
-- Show relationships between parallel themes
-- Only return the raw mermaid code (no markdown blocks, no "mermaid" prefix)`;
+Choose the BEST diagram type based on content:
+- **Flowchart (graph TD/LR)**: For sequential processes, linear workflows, or step-by-step procedures
+- **Mind map (graph TD with central node)**: For concepts with sub-topics radiating from a central idea
+- **Tree structure (graph TD)**: For hierarchies, taxonomies, or nested categories
+- **Branching flowchart**: For decision trees, conditional paths, or multiple outcomes
+- **Cycle diagram**: For circular processes or feedback loops
+- **Parallel flows**: For comparing multiple approaches or showing simultaneous processes
+
+Examples:
+- Learning process → branching flowchart with decision points
+- Concept breakdown → mind map with central node and branches
+- Classification system → tree structure
+- Workflow with options → flowchart with multiple paths
+
+Only return the raw mermaid code (no markdown blocks, no "mermaid" prefix)`;
 
 
     let mermaidCode: string;

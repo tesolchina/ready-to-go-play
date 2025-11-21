@@ -5,6 +5,8 @@ import { ArrowLeft, Code, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { CollapsibleSection } from "@/components/CollapsibleSection";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChevronDown } from "lucide-react";
 import { ComprehensionCheck } from "@/components/ComprehensionCheck";
 import { BulletPoint } from "@/components/BulletPoint";
 import { OpenEndedReflection } from "@/components/OpenEndedReflection";
@@ -32,6 +34,7 @@ const VibeCodingRevised = () => {
   const [userDescription, setUserDescription] = useState("Data driven learning: students learn usage of a specific word by examining concordance lines from an expert corpus");
   const [mermaidCode, setMermaidCode] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [showSystemPrompt, setShowSystemPrompt] = useState(false);
   
   // Python exercise state
   const [wordInput, setWordInput] = useState("strawberry");
@@ -304,6 +307,25 @@ The letter '${letterInput}' appears ${count} times in '${wordInput}'`);
                       <p className="text-sm text-muted-foreground mb-2 italic">
                         💡 Try the example below or edit it to create your own Mermaid diagram!
                       </p>
+                      
+                      <Collapsible open={showSystemPrompt} onOpenChange={setShowSystemPrompt} className="mb-3">
+                        <CollapsibleTrigger className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                          <ChevronDown className={`h-4 w-4 transition-transform ${showSystemPrompt ? 'rotate-180' : ''}`} />
+                          View system prompt
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="mt-2">
+                          <div className="text-xs bg-muted p-3 rounded-md space-y-2">
+                            <p className="font-semibold">The AI uses this prompt to generate diverse diagrams:</p>
+                            <p>• <strong>Flowcharts</strong> for sequential processes</p>
+                            <p>• <strong>Mind maps</strong> for concepts with sub-topics</p>
+                            <p>• <strong>Tree structures</strong> for hierarchies</p>
+                            <p>• <strong>Branching diagrams</strong> for decisions and paths</p>
+                            <p>• <strong>Cycle diagrams</strong> for circular processes</p>
+                            <p className="text-muted-foreground italic pt-2">It analyzes your input and chooses the best visualization type automatically.</p>
+                          </div>
+                        </CollapsibleContent>
+                      </Collapsible>
+                      
                       <Textarea
                         value={userDescription}
                         onChange={(e) => setUserDescription(e.target.value)}
