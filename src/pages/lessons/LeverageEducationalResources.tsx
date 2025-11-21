@@ -520,31 +520,6 @@ const LeverageEducationalResources = () => {
                 </div>
               </div>
             </CollapsibleSection>
-
-            {/* Next Steps */}
-            <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-6 rounded-lg">
-              <div className="text-center space-y-4">
-                <h3 className="text-3xl font-bold text-foreground">🎯 Next Steps</h3>
-                <p className="text-muted-foreground text-lg">
-                  Choose one educational resource you currently recommend to students. This week, spend 30 minutes 
-                  brainstorming how the two-part enhancement approach could improve student learning: How could you add 
-                  guided practice with templates (Part 1)? How could you help students recognize and apply patterns from 
-                  authentic texts (Part 2)? Share your ideas with a colleague or in a teaching community.
-                </p>
-                <div className="flex justify-center gap-4 flex-wrap">
-                  <Link to="/lessons">
-                    <Button variant="outline">
-                      Back to Lessons
-                    </Button>
-                  </Link>
-                  <Link to="/academic-phrasebank">
-                    <Button>
-                      Try the Phrasebank Assistant
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </div>
           </div>
         </main>
       </div>

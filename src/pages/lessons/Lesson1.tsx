@@ -561,36 +561,6 @@ const Lesson1 = () => {
                 </ul>
               </div>
 
-              <div className="bg-accent/30 p-6 rounded-xl">
-                <h3 className="font-bold text-lg mb-3">Next Steps:</h3>
-                <ul className="space-y-3">
-                  <li className="flex items-start gap-2">
-                    <span className="text-xl mt-1">📝</span>
-                    <div>
-                      <span className="font-semibold">Practice regularly:</span> Apply these techniques to your daily teaching tasks
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-xl mt-1">🔄</span>
-                    <div>
-                      <span className="font-semibold">Iterate and refine:</span> Don't accept the first output—refine your prompts
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-xl mt-1">🤝</span>
-                    <div>
-                      <span className="font-semibold">Share with colleagues:</span> Build a community of practice
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-xl mt-1">📚</span>
-                    <div>
-                      <span className="font-semibold">Keep learning:</span> AI tools are constantly evolving
-                    </div>
-                  </li>
-                </ul>
-              </div>
-
               <div>
                 <h3 className="font-bold text-xl mb-4">💭 Your Feedback Matters</h3>
                 <FeedbackForm onComplete={() => handleTabComplete("5")} />

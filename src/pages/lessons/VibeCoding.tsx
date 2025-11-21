@@ -917,7 +917,7 @@ print(f"Hyponyms (more specific): {word.hyponyms()}")`}
 
             {/* Summary */}
             <CollapsibleSection
-              title="Lesson Summary & Next Steps"
+              title="Lesson Summary"
               icon="🎓"
               isOpen={openSections.module5}
               onToggle={() => toggleSection("module5")}
@@ -987,30 +987,6 @@ print(f"Hyponyms (more specific): {word.hyponyms()}")`}
                 </div>
               </div>
             </CollapsibleSection>
-
-            {/* Next Steps */}
-            <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-6 rounded-lg">
-              <div className="text-center space-y-4">
-                <h3 className="text-3xl font-bold text-foreground">🎯 Next Steps</h3>
-                <p className="text-muted-foreground text-lg">
-                  Try one experiment: Ask ChatGPT or Claude to "generate Python code to analyze a text file" 
-                  for something in your teaching. See what code it creates. You don't need to run it—just observe 
-                  how AI translates your intent into executable instructions.
-                </p>
-                <div className="flex justify-center gap-4">
-                  <Link to="/lessons">
-                    <Button variant="outline">
-                      Back to Lessons
-                    </Button>
-                  </Link>
-                  <Link to="/lessons/ai-agents">
-                    <Button>
-                      Next: AI Agents →
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </div>
           </div>
         </main>
       </div>

@@ -539,31 +539,6 @@ const AIAgents = () => {
                     </div>
                   </div>
                 </div>
-
-                {/* Next Steps */}
-                <div className="bg-gradient-to-r from-primary/5 to-accent/5 p-6 rounded-xl">
-                  <h5 className="text-xl font-semibold text-foreground mb-3">✅ You're All Set!</h5>
-                  <p className="text-foreground mb-4">
-                    Once you've completed these steps, you'll have:
-                  </p>
-                  <ul className="space-y-2 list-none">
-                    <BulletPoint icon="✓">
-                      Trae.cn installed and configured with API keys
-                    </BulletPoint>
-                    <BulletPoint icon="✓">
-                      Access to AI models (Kimi and/or Deepseek)
-                    </BulletPoint>
-                    <BulletPoint icon="✓">
-                      Your own copy of the agent template repository
-                    </BulletPoint>
-                    <BulletPoint icon="✓">
-                      Everything you need to start working with AI agents
-                    </BulletPoint>
-                  </ul>
-                  <p className="text-sm text-muted-foreground mt-4">
-                    In the next steps, you'll learn how to use these tools to create and run AI agents for your teaching tasks.
-                  </p>
-                </div>
               </div>
 
               <ComprehensionCheck
@@ -730,29 +705,6 @@ const AIAgents = () => {
                 </div>
               </div>
             </CollapsibleSection>
-
-            {/* Next Steps */}
-            <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-6 rounded-lg">
-              <div className="text-center space-y-4">
-                <h3 className="text-3xl font-bold text-foreground">🎯 Next Steps</h3>
-                <p className="text-muted-foreground text-lg">
-                  Complete the setup steps above to get started with AI agents. Once you have Trae.cn configured 
-                  and the agent template forked, you'll be ready to create your first AI agent for a teaching task.
-                </p>
-                <div className="flex justify-center gap-4 flex-wrap">
-                  <Link to="/lessons">
-                    <Button variant="outline">
-                      Back to Lessons
-                    </Button>
-                  </Link>
-                  <Link to="/lessons/vibe-coding">
-                    <Button variant="outline">
-                      ← Review: Vibe Coding
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </div>
           </div>
         </main>
       </div>

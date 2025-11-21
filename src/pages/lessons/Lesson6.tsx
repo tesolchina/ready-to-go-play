@@ -645,42 +645,6 @@ const Lesson6 = () => {
                 </ul>
               </div>
 
-              <div className="bg-accent/30 p-6 rounded-xl">
-                <h3 className="font-bold text-lg mb-3">Next Steps:</h3>
-                <ul className="space-y-3">
-                  <li className="flex items-start gap-2">
-                    <span className="text-xl mt-1">📚</span>
-                    <div>
-                      <span className="font-semibold">Review publisher policies:</span> Check the specific guidelines for journals you plan to submit to
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-xl mt-1">✍️</span>
-                    <div>
-                      <span className="font-semibold">Develop disclosure templates:</span> Create standardized disclosure statements for your research
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-xl mt-1">🤝</span>
-                    <div>
-                      <span className="font-semibold">Engage with editors:</span> Discuss AI use early in the publication process
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-xl mt-1">🔄</span>
-                    <div>
-                      <span className="font-semibold">Stay updated:</span> GenAI policies are evolving rapidly, so monitor for updates
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-xl mt-1">💡</span>
-                    <div>
-                      <span className="font-semibold">Share best practices:</span> Contribute to developing discipline-specific guidelines
-                    </div>
-                  </li>
-                </ul>
-              </div>
-
               <div>
                 <h3 className="font-bold text-xl mb-4">💭 Your Feedback Matters</h3>
                 <FeedbackForm onComplete={() => handleTabComplete("5")} />
