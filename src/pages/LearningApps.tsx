@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { BookOpen, FileText, CheckCircle, Plus } from "lucide-react";
+import { BookOpen, FileText, CheckCircle, Plus, BookMarked } from "lucide-react";
 
 const LearningApps = () => {
   const apps = [
@@ -26,6 +26,13 @@ const LearningApps = () => {
       icon: CheckCircle,
       path: "/validate-references",
       category: "Citation Tools"
+    },
+    {
+      title: "Wiley AI Guidelines",
+      description: "Explore AI guidelines from Wiley and major publishers with an interactive chatbot that answers your questions.",
+      icon: BookMarked,
+      path: "/wiley-ai-guidelines",
+      category: "Research Ethics"
     },
   ];
 

@@ -26,6 +26,7 @@ import PDFManager from "./pages/PDFManager";
 import PDFViewer from "./pages/PDFViewer";
 import EmbedChat from "./pages/EmbedChat";
 import PatternAnalyzer from "./pages/PatternAnalyzer";
+import WileyAIGuidelines from "./pages/WileyAIGuidelines";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -61,6 +62,7 @@ const App = () => (
           <Route path="/pdf/:slug" element={<PDFViewer />} />
           <Route path="/embed/kimi_AI_nature.html" element={<EmbedChat />} />
           <Route path="/pattern-analyzer" element={<PatternAnalyzer />} />
+          <Route path="/wiley-ai-guidelines" element={<WileyAIGuidelines />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
