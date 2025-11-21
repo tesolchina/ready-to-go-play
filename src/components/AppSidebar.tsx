@@ -12,6 +12,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { AIServiceIndicator } from "@/components/AIServiceIndicator";
 
 const navigation = [
   {
@@ -53,9 +54,16 @@ export function AppSidebar() {
       <SidebarContent className="px-6 py-8">
         <SidebarGroup>
           {!isCollapsed && (
-            <h1 className="text-2xl font-bold text-white mb-8">
-              AI Learning Hub for EAP
-            </h1>
+            <>
+              <div className="flex items-center justify-between mb-2">
+                <h1 className="text-2xl font-bold text-white">
+                  AI Learning Hub for EAP
+                </h1>
+              </div>
+              <div className="mb-6">
+                <AIServiceIndicator />
+              </div>
+            </>
           )}
           
           <SidebarGroupLabel className="text-white/70 text-xs uppercase tracking-wider mb-3 font-semibold">

@@ -127,6 +127,9 @@ export const BringYourOwnKey = () => {
     localStorage.setItem(storageKey, key.trim());
     setSavedKeys(prev => ({ ...prev, [provider]: true }));
     
+    // Notify context of change
+    window.dispatchEvent(new Event('ai-service-updated'));
+    
     toast({
       title: "API Key Saved",
       description: `Your ${provider === "kimi" ? "Kimi" : "DeepSeek"} API key has been saved locally`,
@@ -144,6 +147,9 @@ export const BringYourOwnKey = () => {
     }
     
     setSavedKeys(prev => ({ ...prev, [provider]: false }));
+    
+    // Notify context of change
+    window.dispatchEvent(new Event('ai-service-updated'));
     
     toast({
       title: "API Key Removed",
@@ -180,6 +186,9 @@ export const BringYourOwnKey = () => {
         setHasValidCode(true);
         setSecretCode("");
         
+        // Notify context of change
+        window.dispatchEvent(new Event('ai-service-updated'));
+        
         toast({
           title: "Success!",
           description: data.message || "You can now use platform API keys for all features.",
@@ -206,6 +215,10 @@ export const BringYourOwnKey = () => {
   const handleRevokeAccess = () => {
     localStorage.removeItem("platform_secret_session");
     setHasValidCode(false);
+    
+    // Notify context of change
+    window.dispatchEvent(new Event('ai-service-updated'));
+    
     toast({
       title: "Access Revoked",
       description: "Platform API key access has been removed.",
