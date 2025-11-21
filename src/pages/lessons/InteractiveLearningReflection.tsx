@@ -12,7 +12,7 @@ import { SimpleActivityCreator } from "@/components/SimpleActivityCreator";
 import { OpenEndedReflection } from "@/components/OpenEndedReflection";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { supabase } from "@/integrations/supabase/client";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Download, ExternalLink } from "lucide-react";
 
 const InteractiveLearningReflection = () => {
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
@@ -228,12 +228,30 @@ const InteractiveLearningReflection = () => {
                     )}
                   </CollapsibleTrigger>
                   <CollapsibleContent className="mt-3">
-                    <div className="border rounded-lg overflow-hidden bg-background">
-                      <iframe
-                        src="https://web.mit.edu/5.95/readings/bloom-two-sigma.pdf"
-                        className="w-full h-[600px] border-0"
-                        title="Bloom Two Sigma Problem PDF"
-                      />
+                    <div className="space-y-3">
+                      <div className="flex gap-2 justify-end">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          asChild
+                        >
+                          <a
+                            href="https://web.mit.edu/5.95/readings/bloom-two-sigma.pdf"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            Open in New Tab
+                          </a>
+                        </Button>
+                      </div>
+                      <div className="border rounded-lg overflow-hidden bg-background">
+                        <iframe
+                          src="https://web.mit.edu/5.95/readings/bloom-two-sigma.pdf#view=FitH"
+                          className="w-full h-[600px] border-0"
+                          title="Bloom Two Sigma Problem PDF"
+                        />
+                      </div>
                     </div>
                   </CollapsibleContent>
                 </Collapsible>
@@ -251,12 +269,43 @@ const InteractiveLearningReflection = () => {
                     )}
                   </CollapsibleTrigger>
                   <CollapsibleContent className="mt-3">
-                    <div className="border rounded-lg overflow-hidden bg-background">
-                      <iframe
-                        src="/future_of_learning.pdf"
-                        className="w-full h-[600px] border-0"
-                        title="AI and the Future of Learning PDF"
-                      />
+                    <div className="space-y-3">
+                      <div className="flex gap-2 justify-end">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          asChild
+                        >
+                          <a
+                            href="/future_of_learning.pdf"
+                            download="AI_and_the_Future_of_Learning.pdf"
+                          >
+                            <Download className="w-4 h-4 mr-2" />
+                            Download PDF
+                          </a>
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          asChild
+                        >
+                          <a
+                            href="/future_of_learning.pdf"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            Open in New Tab
+                          </a>
+                        </Button>
+                      </div>
+                      <div className="border rounded-lg overflow-hidden bg-background">
+                        <iframe
+                          src="/future_of_learning.pdf#view=FitH"
+                          className="w-full h-[600px] border-0"
+                          title="AI and the Future of Learning PDF"
+                        />
+                      </div>
                     </div>
                   </CollapsibleContent>
                 </Collapsible>
