@@ -7,8 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Loader2, Clock, Users, Copy, Check, Download, MessageSquare, Send, AlertTriangle } from "lucide-react";
-import { requestQueue } from "@/lib/requestQueue";
+import { Loader2, Copy, Check, Download, MessageSquare, Send, AlertTriangle } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAIServiceGuard } from "@/hooks/useAIServiceGuard";
@@ -17,15 +16,10 @@ import { getAIHeaders } from "@/lib/aiServiceGuard";
 
 export const SimpleActivityCreator = () => {
   const { isActivated, checkAndNotify } = useAIServiceGuard();
-  const [nickname, setNickname] = useState("");
-  const [argument, setArgument] = useState("");
-  const [feedbackGuidance, setFeedbackGuidance] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [queuePosition, setQueuePosition] = useState<{ position: number; total: number } | null>(null);
   const [systemPrompt, setSystemPrompt] = useState("");
+  const [argument, setArgument] = useState("");
+  const [generatedSystemPrompt, setGeneratedSystemPrompt] = useState("");
   const [copied, setCopied] = useState(false);
-  const [progressMessage, setProgressMessage] = useState<string>("");
-  const requestIdRef = useRef<string | null>(null);
   
   // Chatbot state
   const [showChatbot, setShowChatbot] = useState(false);
@@ -34,28 +28,20 @@ export const SimpleActivityCreator = () => {
   const [isSending, setIsSending] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    return () => {
-      if (requestIdRef.current) {
-        requestQueue.removeListener(requestIdRef.current);
-      }
-    };
-  }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!checkAndNotify()) {
       return;
     }
 
-    if (!nickname.trim() || !argument.trim()) {
-      toast.error("Please fill in your nickname and the argument");
+    if (!systemPrompt.trim() || !argument.trim()) {
+      toast.error("Please fill in the system prompt and the argument");
       return;
     }
 
-    if (nickname.length > 50) {
-      toast.error("Nickname must be less than 50 characters");
+    if (systemPrompt.length > 2000) {
+      toast.error("System prompt must be less than 2000 characters");
       return;
     }
 
@@ -64,70 +50,17 @@ export const SimpleActivityCreator = () => {
       return;
     }
 
-    setIsSubmitting(true);
-    setQueuePosition(null);
-    setProgressMessage("Preparing your request...");
-
-    try {
-      const data = await requestQueue.add(async () => {
-        requestIdRef.current = crypto.randomUUID();
-        setProgressMessage("Connecting to AI...");
-
-        requestQueue.onQueueChange(requestIdRef.current, (position, total) => {
-          if (position > 0) {
-            setQueuePosition({ position, total });
-          } else {
-            setQueuePosition(null);
-          }
-        });
-
-        setProgressMessage("Generating your activity prompt...");
-        
-        const aiHeaders = getAIHeaders();
-        const { data, error } = await supabase.functions.invoke("generate-simple-activity", {
-          body: {
-            nickname: nickname.trim(),
-            argument: argument.trim(),
-            feedbackGuidance: feedbackGuidance.trim() || "Be encouraging and specific",
-          },
-          headers: aiHeaders,
-        });
-
-        if (error) throw error;
-        return data;
-      });
-
-      setSystemPrompt(data.systemPrompt);
-      toast.success("System prompt generated successfully!");
-    } catch (error: any) {
-      console.error("Error generating system prompt:", error);
-
-      if (error?.status === 429) {
-        toast.error("System is currently busy. Your request has been queued.");
-      } else {
-        toast.error("Failed to generate system prompt. Please try again.");
-      }
-    } finally {
-      setIsSubmitting(false);
-      setQueuePosition(null);
-      setProgressMessage("");
-      if (requestIdRef.current) {
-        requestQueue.removeListener(requestIdRef.current);
-        requestIdRef.current = null;
-      }
-    }
+    setGeneratedSystemPrompt(systemPrompt.trim());
+    setShowChatbot(true);
+    setChatMessages([]);
+    toast.success("Feedback chatbot ready!");
   };
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(systemPrompt);
+    navigator.clipboard.writeText(generatedSystemPrompt || systemPrompt);
     setCopied(true);
     toast.success("System prompt copied to clipboard!");
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  const handleTestChatbot = () => {
-    setShowChatbot(true);
-    setChatMessages([]);
   };
 
   const handleSendMessage = async () => {
@@ -146,7 +79,7 @@ export const SimpleActivityCreator = () => {
       const aiHeaders = getAIHeaders();
       const { data, error } = await supabase.functions.invoke("simple-activity-chat", {
         body: {
-          systemPrompt,
+          systemPrompt: generatedSystemPrompt || systemPrompt,
           userMessage: newUserMessage.content,
           chatHistory: chatMessages,
         },
@@ -167,12 +100,10 @@ export const SimpleActivityCreator = () => {
   const handleDownload = () => {
     const downloadData = {
       activityInfo: {
-        nickname,
         argument,
-        feedbackGuidance: feedbackGuidance || "Be encouraging and specific",
         createdAt: new Date().toISOString(),
       },
-      systemPrompt,
+      systemPrompt: generatedSystemPrompt || systemPrompt,
       chatHistory: chatMessages,
     };
 
@@ -180,7 +111,7 @@ export const SimpleActivityCreator = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `activity-${nickname.replace(/\s+/g, '-')}-${Date.now()}.json`;
+    a.download = `activity-${Date.now()}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -214,42 +145,30 @@ export const SimpleActivityCreator = () => {
       
       <Alert className="bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800">
         <AlertDescription className="text-base text-foreground">
-          <strong>Now it's your turn!</strong> Create a similar counter-argument exercise for your students.
-          The system will generate an AI feedback prompt tailored to your activity.
+          <strong>Now it's your turn!</strong> Write a system prompt to customize a chatbot that offers feedback on a specific task.
+          This demonstrates how you can use AI to provide personalized feedback at scale.
         </AlertDescription>
       </Alert>
-
-      {isSubmitting && queuePosition && queuePosition.position > 0 && (
-        <Alert>
-          <Clock className="h-4 w-4" />
-          <AlertDescription className="flex items-center gap-2">
-            <Users className="h-4 w-4" />
-            <span className="text-base">
-              You are <strong>#{queuePosition.position}</strong> in queue. {queuePosition.total} total requests being processed.
-              Estimated wait time: <strong>{Math.ceil(queuePosition.position * 20)} seconds</strong>
-            </span>
-          </AlertDescription>
-        </Alert>
-      )}
 
       <Card className="p-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <Label htmlFor="nickname" className="text-lg font-semibold">
-              Your Nickname *
+            <Label htmlFor="systemPrompt" className="text-lg font-semibold">
+              System Prompt *
             </Label>
             <p className="text-sm text-muted-foreground mt-1 mb-2">
-              Your name as the activity creator
+              Write the system prompt that defines how the chatbot should behave and provide feedback
             </p>
-            <Input
-              id="nickname"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-              placeholder="e.g., Jenny"
-              className="text-base"
-              maxLength={50}
+            <Textarea
+              id="systemPrompt"
+              value={systemPrompt}
+              onChange={(e) => setSystemPrompt(e.target.value)}
+              placeholder='e.g., You are an experienced language teacher. The student is asked to come up with a counterargument and a rebuttal in response to the following claim: "Imposing minimum wage is an important way to ensure worker'\''s welfare and prevent exploitation." Your job is to check if there is a counterargument and a rebuttal in the student'\''s answer. Then whether the counterargument is a valid challenge. And whether the rebuttal is relevant and addresses the challenge.'
+              className="text-base min-h-[200px]"
+              maxLength={2000}
               required
             />
+            <p className="text-sm text-muted-foreground mt-2">{systemPrompt.length}/2000 characters</p>
           </div>
 
           <div>
@@ -271,43 +190,17 @@ export const SimpleActivityCreator = () => {
             <p className="text-sm text-muted-foreground mt-2">{argument.length}/1000 characters</p>
           </div>
 
-          <div>
-            <Label htmlFor="feedback" className="text-lg font-semibold">
-              Feedback Guidance (Optional)
-            </Label>
-            <p className="text-sm text-muted-foreground mt-1 mb-2">
-              How should AI provide feedback? What aspects should it focus on?
-            </p>
-            <Textarea
-              id="feedback"
-              value={feedbackGuidance}
-              onChange={(e) => setFeedbackGuidance(e.target.value)}
-              placeholder="e.g., Focus on logic and evidence. Encourage balanced perspectives. Suggest areas for deeper analysis."
-              className="text-base min-h-[100px]"
-              maxLength={500}
-            />
-          </div>
-
-          <Button type="submit" disabled={!isActivated || isSubmitting} size="lg" className="w-full text-base">
-            {isSubmitting ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                {queuePosition && queuePosition.position > 0
-                  ? `In Queue (${queuePosition.position}/${queuePosition.total})...`
-                  : "Generating System Prompt..."}
-              </>
-            ) : (
-              "Generate AI Feedback Prompt"
-            )}
+          <Button type="submit" disabled={!isActivated} size="lg" className="w-full text-base">
+            Generate Feedback Chatbot
           </Button>
         </form>
       </Card>
 
-      {systemPrompt && (
+      {generatedSystemPrompt && showChatbot && (
         <>
           <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-2xl font-bold">Your AI System Prompt</h3>
+              <h3 className="text-2xl font-bold">Your System Prompt</h3>
               <div className="flex gap-2">
                 <Button onClick={handleCopy} variant="outline" size="sm">
                   {copied ? (
@@ -329,98 +222,84 @@ export const SimpleActivityCreator = () => {
               </div>
             </div>
             <div className="bg-muted p-4 rounded-lg prose prose-base max-w-none">
-              <ReactMarkdown>{systemPrompt}</ReactMarkdown>
+              <ReactMarkdown>{generatedSystemPrompt}</ReactMarkdown>
             </div>
             <p className="text-sm text-muted-foreground mt-4">
               Use this prompt in your AI chatbot or teaching assistant tool to provide consistent, helpful feedback to students.
+              <strong> Note:</strong> There is more work to be done on improving this chatbot's feedback quality.
             </p>
           </Card>
 
-          {!showChatbot ? (
-            <Alert className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
-              <MessageSquare className="h-5 w-5" />
-              <AlertDescription className="flex items-center justify-between">
-                <span className="text-base text-foreground">
-                  <strong>Test your chatbot!</strong> Try it out before using with students. 
-                  Note: This is temporary - chat history will be lost when you leave this page.
-                </span>
-                <Button onClick={handleTestChatbot} size="sm" className="ml-4">
-                  Test Chatbot
-                </Button>
-              </AlertDescription>
-            </Alert>
-          ) : (
-            <Card className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-2xl font-bold">Test Chatbot (Temporary)</h3>
-                <Alert className="w-auto p-2 bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800">
-                  <AlertDescription className="text-sm">
-                    ⚠️ Session only - not saved
-                  </AlertDescription>
-                </Alert>
-              </div>
+          <Card className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-2xl font-bold">Test Chatbot (Temporary)</h3>
+              <Alert className="w-auto p-2 bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800">
+                <AlertDescription className="text-sm">
+                  ⚠️ Session only - not saved
+                </AlertDescription>
+              </Alert>
+            </div>
 
-              <ScrollArea className="h-[400px] rounded-lg border bg-background p-4 mb-4">
-                {chatMessages.length === 0 ? (
-                  <div className="flex items-center justify-center h-full text-muted-foreground">
-                    <p className="text-center">
-                      Start by typing a counter-argument to:<br />
-                      <span className="font-semibold mt-2 block">"{argument}"</span>
-                    </p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {chatMessages.map((msg, idx) => (
+            <ScrollArea className="h-[400px] rounded-lg border bg-background p-4 mb-4">
+              {chatMessages.length === 0 ? (
+                <div className="flex items-center justify-center h-full text-muted-foreground">
+                  <p className="text-center">
+                    Start by typing a counter-argument to:<br />
+                    <span className="font-semibold mt-2 block">"{argument}"</span>
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {chatMessages.map((msg, idx) => (
+                    <div
+                      key={idx}
+                      className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                    >
                       <div
-                        key={idx}
-                        className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                        className={`max-w-[80%] rounded-lg p-4 ${
+                          msg.role === 'user'
+                            ? 'bg-primary text-primary-foreground'
+                            : 'bg-muted'
+                        }`}
                       >
-                        <div
-                          className={`max-w-[80%] rounded-lg p-4 ${
-                            msg.role === 'user'
-                              ? 'bg-primary text-primary-foreground'
-                              : 'bg-muted'
-                          }`}
-                        >
-                          <div className="prose prose-sm dark:prose-invert max-w-none">
-                            <ReactMarkdown>{msg.content}</ReactMarkdown>
-                          </div>
+                        <div className="prose prose-sm dark:prose-invert max-w-none">
+                          <ReactMarkdown>{msg.content}</ReactMarkdown>
                         </div>
                       </div>
-                    ))}
-                    <div ref={chatEndRef} />
-                  </div>
-                )}
-              </ScrollArea>
+                    </div>
+                  ))}
+                  <div ref={chatEndRef} />
+                </div>
+              )}
+            </ScrollArea>
 
-              <div className="flex gap-2">
-                <Textarea
-                  value={userInput}
-                  onChange={(e) => setUserInput(e.target.value)}
-                  placeholder="Type your counter-argument here..."
-                  className="min-h-[80px]"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSendMessage();
-                    }
-                  }}
-                  disabled={isSending}
-                />
-                <Button
-                  onClick={handleSendMessage}
-                  disabled={!userInput.trim() || isSending}
-                  size="lg"
-                >
-                  {isSending ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Send className="w-4 h-4" />
-                  )}
-                </Button>
-              </div>
-            </Card>
-          )}
+            <div className="flex gap-2">
+              <Textarea
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                placeholder="Type your response here..."
+                className="min-h-[80px]"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendMessage();
+                  }
+                }}
+                disabled={isSending}
+              />
+              <Button
+                onClick={handleSendMessage}
+                disabled={!userInput.trim() || isSending || !isActivated}
+                size="lg"
+              >
+                {isSending ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Send className="w-4 h-4" />
+                )}
+              </Button>
+            </div>
+          </Card>
         </>
       )}
     </div>

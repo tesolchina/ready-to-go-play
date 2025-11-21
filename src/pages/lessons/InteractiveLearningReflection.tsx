@@ -10,7 +10,6 @@ import { BulletPoint } from "@/components/BulletPoint";
 import { CounterArgumentDemo } from "@/components/CounterArgumentDemo";
 import { SimpleActivityCreator } from "@/components/SimpleActivityCreator";
 import { OpenEndedReflection } from "@/components/OpenEndedReflection";
-import { SectionAnalytics } from "@/components/SectionAnalytics";
 import { supabase } from "@/integrations/supabase/client";
 
 const InteractiveLearningReflection = () => {
@@ -20,13 +19,8 @@ const InteractiveLearningReflection = () => {
     module3: false,
     module4: false,
   });
-  const [analyticsRefresh, setAnalyticsRefresh] = useState(0);
 
   const lessonSlug = "interactive-learning-reflection";
-
-  const handleAnalyticsRefresh = () => {
-    setAnalyticsRefresh(prev => prev + 1);
-  };
 
   useEffect(() => {
     // Track unique visitor using localStorage
@@ -243,15 +237,7 @@ const InteractiveLearningReflection = () => {
                   <h4 className="text-2xl font-semibold text-foreground mb-4">
                     Step 1: See the Demo
                   </h4>
-                  <CounterArgumentDemo onAnalyticsUpdate={handleAnalyticsRefresh} />
-                </div>
-
-                <div className="mt-6">
-                  <SectionAnalytics 
-                    lessonSlug="interactive-learning-reflection"
-                    sectionId="counter-argument-exercise"
-                    refreshTrigger={analyticsRefresh}
-                  />
+                  <CounterArgumentDemo />
                 </div>
 
                 <div className="border-t border-border pt-8">
@@ -283,10 +269,34 @@ const InteractiveLearningReflection = () => {
                       then teach AI to replicate and scale those practices
                     </BulletPoint>
                     <BulletPoint icon="🎯">
-                      <strong>Simple AI Activities:</strong> Counter-argument exercises demonstrate how focused, 
-                      AI-enhanced activities can develop critical thinking without complex technical setup
+                      <strong>Customizing AI Chatbots:</strong> This lesson demonstrates how writing system prompts 
+                      can customize chatbots to offer feedback on specific tasks. By crafting effective prompts, 
+                      you can create AI tools that provide personalized, task-specific guidance. <strong>Note:</strong> 
+                      There is more work to be done on improving chatbot feedback quality, but this represents 
+                      an important step toward scalable personalized learning.
                     </BulletPoint>
                   </ul>
+                </div>
+
+                <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-6 rounded-lg space-y-4">
+                  <h4 className="text-2xl font-semibold text-foreground mb-4">Reimagining the Classroom</h4>
+                  <p className="text-foreground text-lg leading-relaxed">
+                    The importance of reimagining our classrooms cannot be overstated. As educators, we have a responsibility 
+                    not just to respond to current needs, but to anticipate and shape the future of learning. Technology alone 
+                    is not enough—we must fundamentally rethink how we engage with students and how learning happens.
+                  </p>
+                  <blockquote className="border-l-4 border-primary pl-4 italic text-muted-foreground my-6">
+                    "Some people say, 'Give the customers what they want.' But that's not my approach. Our job is to figure out 
+                    what they're going to want before they do. I think Henry Ford once said, 'If I'd asked customers what they 
+                    wanted, they would have told me, "A faster horse!"' People don't know what they want until you show it to 
+                    them. That's why I never rely on market research. Our task is to read things that are not yet on the page."
+                    <br />— Steve Jobs
+                  </blockquote>
+                  <p className="text-foreground text-lg leading-relaxed">
+                    Just as Steve Jobs envisioned products people didn't know they needed, we must envision educational experiences 
+                    that transcend traditional boundaries. Our students may not know to ask for AI-enhanced personalized learning— 
+                    but once they experience it, they'll wonder how they ever learned without it.
+                  </p>
                 </div>
 
                 <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-6 rounded-lg space-y-4">
