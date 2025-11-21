@@ -21,6 +21,9 @@ import {
 } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import phrasebankData from "@/lib/phrasebank-data.json";
+import { useAIServiceGuard } from "@/hooks/useAIServiceGuard";
+import { getAIHeaders } from "@/lib/aiServiceGuard";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 // Moves/Steps - Research paper structure
 const MOVES_STEPS = [
@@ -96,6 +99,7 @@ const PhrasebankExercises = () => {
   const summaryIntervalRef = useRef<NodeJS.Timeout | null>(null);
   
   const { toast } = useToast();
+  const { isActivated, checkAndNotify } = useAIServiceGuard();
 
   const categories = categoryType === "moves" ? MOVES_STEPS : GENERAL_LANGUAGE_FUNCTIONS;
 
@@ -175,10 +179,16 @@ const PhrasebankExercises = () => {
       return;
     }
 
+    if (!isActivated) {
+      setCommentSummary("AI services not configured. Please configure your API key in the Lessons page to enable comment summaries.");
+      return;
+    }
+
     setIsGeneratingSummary(true);
     try {
       const { data, error } = await supabase.functions.invoke('summarize-comments', {
-        body: { comments }
+        body: { comments },
+        headers: getAIHeaders()
       });
 
       if (error) throw error;
@@ -234,6 +244,7 @@ const PhrasebankExercises = () => {
   };
 
   const handleGetExamples = async () => {
+    if (!checkAndNotify()) return;
     if (!selectedCategory) return;
 
     const categoryData = phrasebankData[selectedCategory as keyof typeof phrasebankData];
@@ -277,7 +288,8 @@ const PhrasebankExercises = () => {
           subcategory: selectedSubcategory !== "__all__" ? selectedSubcategory : null,
           discipline: discipline && discipline !== "none" ? discipline : null,
           templates: allTemplates.slice(0, 15)
-        }
+        },
+        headers: getAIHeaders()
       });
 
       if (error) throw error;
@@ -314,6 +326,7 @@ const PhrasebankExercises = () => {
   };
 
   const handleStartPractice = async () => {
+    if (!checkAndNotify()) return;
     if (selectedExampleIndex === null) return;
 
     setIsGeneratingTemplate(true);
@@ -325,7 +338,8 @@ const PhrasebankExercises = () => {
           example: examples[selectedExampleIndex],
           discipline: discipline || "General",
           category: selectedCategory,
-        }
+        },
+        headers: getAIHeaders()
       });
 
       if (error) throw error;
@@ -350,6 +364,7 @@ const PhrasebankExercises = () => {
   };
 
   const handleGetFeedback = async () => {
+    if (!checkAndNotify()) return;
     if (!studentSentence.trim() || selectedExampleIndex === null) {
       toast({
         title: "Please write a sentence",
@@ -369,7 +384,8 @@ const PhrasebankExercises = () => {
           studentSentence: studentSentence.trim(),
           discipline: discipline || "General",
           category: selectedCategory,
-        }
+        },
+        headers: getAIHeaders()
       });
 
       if (error) throw error;
@@ -534,24 +550,38 @@ const PhrasebankExercises = () => {
 
                   {/* Get Examples Button */}
                   {selectedCategory && (
-                    <Button 
-                      onClick={handleGetExamples}
-                      disabled={isGenerating}
-                      size="lg"
-                      className="w-full"
-                    >
-                      {isGenerating ? (
-                        <>
-                          <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                          Generating Examples...
-                        </>
-                      ) : (
-                        <>
-                          <Sparkles className="h-5 w-5 mr-2" />
-                          Get Examples
-                        </>
+                    <div className="space-y-3">
+                      {!isActivated && (
+                        <Alert>
+                          <AlertCircle className="h-4 w-4" />
+                          <AlertDescription>
+                            AI services not configured. Please{" "}
+                            <Link to="/lessons" className="font-medium underline">
+                              configure your API key
+                            </Link>{" "}
+                            to use AI-powered features.
+                          </AlertDescription>
+                        </Alert>
                       )}
-                    </Button>
+                      <Button 
+                        onClick={handleGetExamples}
+                        disabled={isGenerating || !isActivated}
+                        size="lg"
+                        className="w-full"
+                      >
+                        {isGenerating ? (
+                          <>
+                            <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                            Generating Examples...
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles className="h-5 w-5 mr-2" />
+                            Get Examples
+                          </>
+                        )}
+                      </Button>
+                    </div>
                   )}
                 </div>
               </CardContent>
@@ -608,7 +638,7 @@ const PhrasebankExercises = () => {
                         ) : !isPracticing ? (
                           <Button
                             onClick={handleStartPractice}
-                            disabled={isGeneratingTemplate}
+                            disabled={isGeneratingTemplate || !isActivated}
                             size="lg"
                             className="w-full"
                           >
@@ -717,7 +747,7 @@ const PhrasebankExercises = () => {
                     />
                     <Button 
                       onClick={handleGetFeedback}
-                      disabled={isAnalyzing || !studentSentence.trim()}
+                      disabled={isAnalyzing || !studentSentence.trim() || !isActivated}
                       className="w-full"
                     >
                       {isAnalyzing ? (
