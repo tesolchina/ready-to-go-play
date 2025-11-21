@@ -9,8 +9,11 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Sparkles, Copy, ArrowLeft, Send, ChevronDown, Info, Loader2 } from "lucide-react";
+import { Sparkles, Copy, ArrowLeft, Send, ChevronDown, Info, Loader2, AlertCircle } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { useAIServiceGuard } from "@/hooks/useAIServiceGuard";
+import { getAIHeaders } from "@/lib/aiServiceGuard";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface Template {
   original: string;
@@ -58,6 +61,7 @@ const CustomPhrasebankChat = () => {
   const [feedbackProgress, setFeedbackProgress] = useState<Record<string, string>>({});
   const [showSystemPrompt, setShowSystemPrompt] = useState(false);
   const { toast } = useToast();
+  const { isActivated, checkAndNotify } = useAIServiceGuard();
 
   const systemPromptText = `You are an expert in academic writing. Analyze the paragraph and identify ALL academic patterns present.
 
@@ -74,6 +78,8 @@ Instructions:
    - 3-5 practice exercises`;
 
   const handleAnalyzeParagraph = async () => {
+    if (!checkAndNotify()) return;
+    
     if (!paragraphInput.trim() || paragraphInput.length < 50) {
       toast({
         title: "Input required",
@@ -126,7 +132,8 @@ Instructions:
       setAnalysisProgress("🔎 Identifying academic patterns and categories...");
       
       const { data, error } = await supabase.functions.invoke('analyze-paragraph', {
-        body: { paragraph: paragraphInput }
+        body: { paragraph: paragraphInput },
+        headers: getAIHeaders()
       });
       
       setAnalysisProgress("✨ Generating templates and exercises...");
@@ -159,6 +166,8 @@ Instructions:
     pattern: Pattern,
     template: Template
   ) => {
+    if (!checkAndNotify()) return;
+    
     const answerKey = `${patternIdx}-${templateIdx}`;
     const userAnswer = templateAnswers[answerKey];
 
@@ -185,7 +194,8 @@ Instructions:
           patternSubcategory: pattern.subcategory,
           templateText: template.template,
           userAnswer: userAnswer
-        }
+        },
+        headers: getAIHeaders()
       });
 
       if (error) throw error;
@@ -344,6 +354,19 @@ Instructions:
                     className="min-h-[200px] text-base"
                   />
                   
+                  {!isActivated && (
+                    <Alert>
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription>
+                        AI services not configured. Please{" "}
+                        <Link to="/lessons" className="font-medium underline">
+                          configure your API key
+                        </Link>{" "}
+                        to use AI-powered features.
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                  
                   {analysisProgress && (
                     <div className="flex items-center gap-3 p-4 bg-primary/5 rounded-lg border border-primary/20">
                       <Loader2 className="h-5 w-5 animate-spin text-primary shrink-0" />
@@ -353,7 +376,7 @@ Instructions:
                   
                   <Button 
                     onClick={handleAnalyzeParagraph}
-                    disabled={isAnalyzing}
+                    disabled={isAnalyzing || !isActivated}
                     size="lg"
                     className="w-full sm:w-auto"
                   >

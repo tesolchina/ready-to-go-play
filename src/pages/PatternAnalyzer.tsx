@@ -1,16 +1,19 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, ArrowLeft, Copy, ChevronDown, ChevronUp, Info, Download, FileText, Wand2 } from "lucide-react";
+import { Loader2, ArrowLeft, Copy, ChevronDown, ChevronUp, Info, Download, FileText, Wand2, AlertCircle } from "lucide-react";
 import { MermaidDiagram } from "@/components/MermaidDiagram";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import ReactMarkdown from "react-markdown";
+import { useAIServiceGuard } from "@/hooks/useAIServiceGuard";
+import { getAIHeaders } from "@/lib/aiServiceGuard";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const DEMO_ESSAY = `The Prologue to Bertrand Russell's Autobiography
 What I Have Lived For
@@ -37,6 +40,7 @@ export default function PatternAnalyzer() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [showSystemPrompt, setShowSystemPrompt] = useState(false);
+  const { isActivated, checkAndNotify } = useAIServiceGuard();
   
   // Demo mode state
   const [demoMermaidCode, setDemoMermaidCode] = useState("");
@@ -114,6 +118,8 @@ Diagram guidelines:
   };
 
   const handleAnalyze = async (text: string, isDemo: boolean) => {
+    if (!checkAndNotify()) return;
+    
     setLoading(true);
     try {
       addToHistory('user', `Analyze essay structure:\n\n${text.substring(0, 200)}...`);
@@ -122,7 +128,8 @@ Diagram guidelines:
       const { data: mermaidData, error: mermaidError } = await supabase.functions.invoke('generate-mermaid', {
         body: { 
           description: `Analyze the MACRO-LEVEL structure of this essay and create a mermaid diagram showing the main sections and their relationships. Focus on overall organization, not paragraph details.\n\nEssay:\n${text}`
-        }
+        },
+        headers: getAIHeaders()
       });
 
       if (mermaidError) throw mermaidError;
@@ -141,7 +148,8 @@ Diagram guidelines:
         body: { 
           text,
           action: 'analyze'
-        }
+        },
+        headers: getAIHeaders()
       });
 
       if (patternError) throw patternError;
@@ -171,6 +179,7 @@ Diagram guidelines:
   };
 
   const handleGenerateOutline = async () => {
+    if (!checkAndNotify()) return;
     if (!newTopic.trim() || !analyzedPattern) return;
     
     setLoading(true);
@@ -187,7 +196,8 @@ Diagram guidelines:
           action: 'generate',
           topic: topicPrompt,
           outputType: 'outline'
-        }
+        },
+        headers: getAIHeaders()
       });
 
       if (error) throw error;
@@ -199,7 +209,8 @@ Diagram guidelines:
       const { data: mermaidData } = await supabase.functions.invoke('generate-mermaid', {
         body: { 
           description: `Create a mermaid diagram for this essay outline:\n\n${data.result}`
-        }
+        },
+        headers: getAIHeaders()
       });
       
       if (mermaidData?.mermaidCode) {
@@ -223,6 +234,7 @@ Diagram guidelines:
   };
 
   const handleGenerateEssay = async () => {
+    if (!checkAndNotify()) return;
     if (!generatedOutline) return;
     
     setLoading(true);
@@ -235,7 +247,8 @@ Diagram guidelines:
           action: 'generate',
           topic: `${newTopic}\n\nOutline to expand:\n${generatedOutline}`,
           outputType: 'essay'
-        }
+        },
+        headers: getAIHeaders()
       });
 
       if (error) throw error;
@@ -321,15 +334,27 @@ Diagram guidelines:
                 Analyze the macro-level structure of this classic essay
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
+              {!isActivated && (
+                <Alert>
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    AI services not configured. Please{" "}
+                    <Link to="/lessons" className="font-medium underline">
+                      configure your API key
+                    </Link>{" "}
+                    to use AI-powered features.
+                  </AlertDescription>
+                </Alert>
+              )}
               <Textarea
                 value={DEMO_ESSAY}
                 readOnly
-                className="min-h-[400px] font-serif text-sm mb-4"
+                className="min-h-[400px] font-serif text-sm"
               />
               <Button
                 onClick={() => handleAnalyze(DEMO_ESSAY, true)}
-                disabled={loading}
+                disabled={loading || !isActivated}
               >
                 {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
                 Visualize Essay Structure
@@ -388,7 +413,7 @@ Diagram guidelines:
               />
               <Button
                 onClick={() => handleAnalyze(userText, false)}
-                disabled={loading || !userText.trim()}
+                disabled={loading || !userText.trim() || !isActivated}
               >
                 {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
                 Visualize Essay Structure
@@ -477,7 +502,7 @@ Diagram guidelines:
 
                 <Button
                   onClick={handleGenerateOutline}
-                  disabled={loading || !newTopic.trim()}
+                  disabled={loading || !newTopic.trim() || !isActivated}
                   className="w-full"
                 >
                   {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
@@ -503,7 +528,7 @@ Diagram guidelines:
 
                       <Button
                         onClick={handleGenerateEssay}
-                        disabled={loading}
+                        disabled={loading || !isActivated}
                         className="w-full"
                         variant="secondary"
                       >
