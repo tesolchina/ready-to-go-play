@@ -322,11 +322,6 @@ const LeverageEducationalResources = () => {
                       About the Manchester Academic Phrasebank
                     </a>
                   </li>
-                  <li>
-                    • <a href="https://er.educause.edu/articles/2023/8/augmenting-not-replacing-the-role-of-ai-in-education" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                      Augmenting, Not Replacing: The Role of AI in Education (EDUCAUSE, 2023)
-                    </a>
-                  </li>
                 </ul>
               </div>
             </CollapsibleSection>
