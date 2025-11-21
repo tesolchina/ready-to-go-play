@@ -2,7 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-platform-session, x-user-kimi-key, x-user-deepseek-key',
 };
 
 serve(async (req) => {
@@ -12,10 +12,36 @@ serve(async (req) => {
 
   try {
     const { text, action, topic, outputType } = await req.json();
-    const ALIYUN_API_KEY = Deno.env.get('ALIYUN_API_KEY');
+    
+    // Get API keys from environment variables (platform keys)
+    let ALIYUN_API_KEY = Deno.env.get('ALIYUN_API_KEY');
+
+    // Check for platform session in headers
+    const platformSession = req.headers.get("x-platform-session");
+    const hasPlatformAccess = !!platformSession;
+
+    // If no platform access, check user-provided keys (currently Aliyun not supported for user keys)
+    if (!hasPlatformAccess) {
+      // For now, we only support platform Aliyun key
+      if (!ALIYUN_API_KEY) {
+        return new Response(
+          JSON.stringify({ 
+            error: "AI services not configured. Please configure your API key in the Lessons page.",
+            needsConfiguration: true 
+          }),
+          { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+    }
 
     if (!ALIYUN_API_KEY) {
-      throw new Error('ALIYUN_API_KEY not configured');
+      return new Response(
+        JSON.stringify({ 
+          error: "AI services not configured. Please configure your API key in the Lessons page.",
+          needsConfiguration: true 
+        }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
     let systemPrompt = '';
