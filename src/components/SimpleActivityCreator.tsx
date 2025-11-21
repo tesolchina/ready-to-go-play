@@ -7,12 +7,16 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Loader2, Clock, Users, Copy, Check, Download, MessageSquare, Send } from "lucide-react";
+import { Loader2, Clock, Users, Copy, Check, Download, MessageSquare, Send, AlertTriangle } from "lucide-react";
 import { requestQueue } from "@/lib/requestQueue";
 import ReactMarkdown from "react-markdown";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useAIServiceGuard } from "@/hooks/useAIServiceGuard";
+import { Link } from "react-router-dom";
+import { getAIHeaders } from "@/lib/aiServiceGuard";
 
 export const SimpleActivityCreator = () => {
+  const { isActivated, checkAndNotify } = useAIServiceGuard();
   const [nickname, setNickname] = useState("");
   const [argument, setArgument] = useState("");
   const [feedbackGuidance, setFeedbackGuidance] = useState("");
@@ -40,6 +44,10 @@ export const SimpleActivityCreator = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!checkAndNotify()) {
+      return;
+    }
 
     if (!nickname.trim() || !argument.trim()) {
       toast.error("Please fill in your nickname and the argument");
@@ -75,12 +83,14 @@ export const SimpleActivityCreator = () => {
 
         setProgressMessage("Generating your activity prompt...");
         
+        const aiHeaders = getAIHeaders();
         const { data, error } = await supabase.functions.invoke("generate-simple-activity", {
           body: {
             nickname: nickname.trim(),
             argument: argument.trim(),
             feedbackGuidance: feedbackGuidance.trim() || "Be encouraging and specific",
           },
+          headers: aiHeaders,
         });
 
         if (error) throw error;
@@ -123,18 +133,24 @@ export const SimpleActivityCreator = () => {
   const handleSendMessage = async () => {
     if (!userInput.trim() || isSending) return;
 
+    if (!checkAndNotify()) {
+      return;
+    }
+
     const newUserMessage = { role: 'user' as const, content: userInput.trim() };
     setChatMessages(prev => [...prev, newUserMessage]);
     setUserInput("");
     setIsSending(true);
 
     try {
+      const aiHeaders = getAIHeaders();
       const { data, error } = await supabase.functions.invoke("simple-activity-chat", {
         body: {
           systemPrompt,
           userMessage: newUserMessage.content,
           chatHistory: chatMessages,
         },
+        headers: aiHeaders,
       });
 
       if (error) throw error;
@@ -180,6 +196,22 @@ export const SimpleActivityCreator = () => {
 
   return (
     <div className="space-y-6">
+      {!isActivated && (
+        <Alert className="bg-destructive/10 border-destructive/30">
+          <AlertTriangle className="h-5 w-5 text-destructive" />
+          <AlertDescription className="text-base text-foreground ml-2 flex items-center justify-between">
+            <span>
+              <strong>AI services not configured.</strong> Please configure your API key to use this feature.
+            </span>
+            <Link to="/lessons">
+              <Button variant="destructive" size="sm" className="ml-4">
+                Configure Now
+              </Button>
+            </Link>
+          </AlertDescription>
+        </Alert>
+      )}
+      
       <Alert className="bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800">
         <AlertDescription className="text-base text-foreground">
           <strong>Now it's your turn!</strong> Create a similar counter-argument exercise for your students.
@@ -256,7 +288,7 @@ export const SimpleActivityCreator = () => {
             />
           </div>
 
-          <Button type="submit" disabled={isSubmitting} size="lg" className="w-full text-base">
+          <Button type="submit" disabled={!isActivated || isSubmitting} size="lg" className="w-full text-base">
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
