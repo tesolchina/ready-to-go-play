@@ -10,7 +10,9 @@ import { BulletPoint } from "@/components/BulletPoint";
 import { CounterArgumentDemo } from "@/components/CounterArgumentDemo";
 import { SimpleActivityCreator } from "@/components/SimpleActivityCreator";
 import { OpenEndedReflection } from "@/components/OpenEndedReflection";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { supabase } from "@/integrations/supabase/client";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 const InteractiveLearningReflection = () => {
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
@@ -19,6 +21,8 @@ const InteractiveLearningReflection = () => {
     module3: false,
     module4: false,
   });
+  const [showBloomPDF, setShowBloomPDF] = useState(false);
+  const [showGooglePDF, setShowGooglePDF] = useState(false);
 
   const lessonSlug = "interactive-learning-reflection";
 
@@ -208,9 +212,54 @@ const InteractiveLearningReflection = () => {
                 ]}
               />
 
-              <div className="mt-6 bg-muted/50 p-4 rounded-lg">
-                <h4 className="font-semibold text-foreground text-lg mb-2">📚 Further Reading</h4>
-                <p className="text-base text-muted-foreground">To be updated</p>
+              <div className="mt-6 bg-muted/50 p-4 rounded-lg space-y-4">
+                <h4 className="font-semibold text-foreground text-lg mb-4">📚 Further Reading</h4>
+                
+                {/* Bloom Two Sigma Problem PDF */}
+                <Collapsible open={showBloomPDF} onOpenChange={setShowBloomPDF}>
+                  <CollapsibleTrigger className="flex items-center justify-between w-full text-left hover:bg-muted/80 p-2 rounded transition-colors">
+                    <span className="font-semibold text-foreground">
+                      The 2 Sigma Problem: The Search for Methods of Group Instruction as Effective as One-to-One Tutoring
+                    </span>
+                    {showBloomPDF ? (
+                      <ChevronUp className="w-5 h-5 text-muted-foreground" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5 text-muted-foreground" />
+                    )}
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="mt-3">
+                    <div className="border rounded-lg overflow-hidden bg-background">
+                      <iframe
+                        src="https://web.mit.edu/5.95/readings/bloom-two-sigma.pdf"
+                        className="w-full h-[600px] border-0"
+                        title="Bloom Two Sigma Problem PDF"
+                      />
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+
+                {/* Google Future of Learning PDF */}
+                <Collapsible open={showGooglePDF} onOpenChange={setShowGooglePDF}>
+                  <CollapsibleTrigger className="flex items-center justify-between w-full text-left hover:bg-muted/80 p-2 rounded transition-colors">
+                    <span className="font-semibold text-foreground">
+                      AI and the Future of Learning
+                    </span>
+                    {showGooglePDF ? (
+                      <ChevronUp className="w-5 h-5 text-muted-foreground" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5 text-muted-foreground" />
+                    )}
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="mt-3">
+                    <div className="border rounded-lg overflow-hidden bg-background">
+                      <iframe
+                        src="/future_of_learning.pdf"
+                        className="w-full h-[600px] border-0"
+                        title="AI and the Future of Learning PDF"
+                      />
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
               </div>
             </CollapsibleSection>
 
