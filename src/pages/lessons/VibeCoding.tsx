@@ -304,9 +304,12 @@ The letter '${letterInput}' appears ${count} times in '${wordInput}'`);
                       <Textarea
                         value={userDescription}
                         onChange={(e) => setUserDescription(e.target.value)}
-                        placeholder="Example: A flowchart showing how students prepare for a presentation: choose topic, research, create slides, practice, present, get feedback"
+                        placeholder="Example: Data driven learning - students learn usage of a specific word by examining concordance lines from an expert corpus"
                         className="min-h-[100px]"
                       />
+                      <p className="text-xs text-muted-foreground mt-2">
+                        💡 Try: "Data driven learning: students learn usage of a specific word by examining concordance lines from an expert corpus"
+                      </p>
                     </div>
                     
                     <Button 
