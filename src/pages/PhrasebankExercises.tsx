@@ -376,9 +376,15 @@ const PhrasebankExercises = () => {
 
     setIsAnalyzing(true);
     setFeedbackData(null);
+    setProgressMessage("Analyzing your sentence...");
 
     try {
-      const { data, error } = await supabase.functions.invoke('provide-student-feedback', {
+      // Add timeout to the entire request
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
+      );
+
+      const requestPromise = supabase.functions.invoke('provide-student-feedback', {
         body: {
           selectedExample: examples[selectedExampleIndex],
           studentSentence: studentSentence.trim(),
@@ -388,19 +394,21 @@ const PhrasebankExercises = () => {
         headers: getAIHeaders()
       });
 
+      const { data, error } = await Promise.race([requestPromise, timeoutPromise]) as any;
+
       if (error) throw error;
 
-      setProgressMessage("Generating detailed feedback...");
       setFeedbackData(data);
+      setProgressMessage("");
       toast({
         title: "Feedback ready",
         description: "Review your AI feedback below!",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error getting feedback:', error);
       toast({
         title: "Error",
-        description: "Failed to get feedback. Please try again.",
+        description: error.message || "Failed to get feedback. Please try again.",
         variant: "destructive",
       });
     } finally {

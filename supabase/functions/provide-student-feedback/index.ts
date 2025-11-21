@@ -79,9 +79,27 @@ Format response as JSON:
     let content: string;
     let usedModel = "Kimi";
 
+    // Helper function to fetch with timeout
+    const fetchWithTimeout = async (url: string, options: any, timeout = 25000) => {
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeout);
+      
+      try {
+        const response = await fetch(url, {
+          ...options,
+          signal: controller.signal
+        });
+        clearTimeout(id);
+        return response;
+      } catch (error) {
+        clearTimeout(id);
+        throw error;
+      }
+    };
+
     try {
       console.log("Attempting to use Kimi API");
-      const kimiResponse = await fetch("https://api.moonshot.cn/v1/chat/completions", {
+      const kimiResponse = await fetchWithTimeout("https://api.moonshot.cn/v1/chat/completions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -101,7 +119,7 @@ Format response as JSON:
           ],
           temperature: 0.7,
         }),
-      });
+      }, 25000);
 
       if (!kimiResponse.ok) {
         const errorText = await kimiResponse.text();
@@ -116,7 +134,7 @@ Format response as JSON:
       console.error("Kimi API failed, falling back to DeepSeek:", kimiError);
       usedModel = "DeepSeek";
 
-      const deepseekResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
+      const deepseekResponse = await fetchWithTimeout("https://api.deepseek.com/v1/chat/completions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -136,7 +154,7 @@ Format response as JSON:
           ],
           temperature: 0.7,
         }),
-      });
+      }, 25000);
 
       if (!deepseekResponse.ok) {
         const errorText = await deepseekResponse.text();
