@@ -270,46 +270,38 @@ const WileyAIGuidelines = () => {
                     Source Files
                   </h3>
                   <div className="space-y-2">
-                    <a 
-                      href="https://github.com/your-repo/blob/main/supabase/functions/wiley-ai-guidelines-chat/index.ts"
-                      className="flex items-center gap-2 text-sm text-primary hover:underline p-3 bg-muted/50 rounded-lg"
-                    >
-                      <FileCode className="w-4 h-4" />
-                      <div>
-                        <div className="font-medium">wiley-ai-guidelines-chat/index.ts</div>
+                    <div className="flex items-center gap-2 text-sm p-3 bg-muted/50 rounded-lg">
+                      <FileCode className="w-4 h-4 text-primary" />
+                      <div className="flex-1">
+                        <div className="font-medium">supabase/functions/wiley-ai-guidelines-chat/index.ts</div>
                         <div className="text-xs text-muted-foreground">Edge function handling AI requests</div>
                       </div>
-                    </a>
-                    <a 
-                      href="https://github.com/your-repo/blob/main/src/pages/WileyAIGuidelines.tsx"
-                      className="flex items-center gap-2 text-sm text-primary hover:underline p-3 bg-muted/50 rounded-lg"
-                    >
-                      <FileCode className="w-4 h-4" />
-                      <div>
-                        <div className="font-medium">WileyAIGuidelines.tsx</div>
+                      <ExternalLink className="w-4 h-4 text-muted-foreground" />
+                    </div>
+                    <div className="flex items-center gap-2 text-sm p-3 bg-muted/50 rounded-lg">
+                      <FileCode className="w-4 h-4 text-primary" />
+                      <div className="flex-1">
+                        <div className="font-medium">src/pages/WileyAIGuidelines.tsx</div>
                         <div className="text-xs text-muted-foreground">Main UI component for this page</div>
                       </div>
-                    </a>
-                    <a 
-                      href="https://github.com/your-repo/blob/main/src/lib/aiServiceGuard.ts"
-                      className="flex items-center gap-2 text-sm text-primary hover:underline p-3 bg-muted/50 rounded-lg"
-                    >
-                      <FileCode className="w-4 h-4" />
-                      <div>
-                        <div className="font-medium">aiServiceGuard.ts</div>
+                      <ExternalLink className="w-4 h-4 text-muted-foreground" />
+                    </div>
+                    <div className="flex items-center gap-2 text-sm p-3 bg-muted/50 rounded-lg">
+                      <FileCode className="w-4 h-4 text-primary" />
+                      <div className="flex-1">
+                        <div className="font-medium">src/lib/aiServiceGuard.ts</div>
                         <div className="text-xs text-muted-foreground">AI service authentication and headers</div>
                       </div>
-                    </a>
-                    <a 
-                      href="https://github.com/your-repo/blob/main/src/hooks/useAIServiceGuard.ts"
-                      className="flex items-center gap-2 text-sm text-primary hover:underline p-3 bg-muted/50 rounded-lg"
-                    >
-                      <FileCode className="w-4 h-4" />
-                      <div>
-                        <div className="font-medium">useAIServiceGuard.ts</div>
+                      <ExternalLink className="w-4 h-4 text-muted-foreground" />
+                    </div>
+                    <div className="flex items-center gap-2 text-sm p-3 bg-muted/50 rounded-lg">
+                      <FileCode className="w-4 h-4 text-primary" />
+                      <div className="flex-1">
+                        <div className="font-medium">src/hooks/useAIServiceGuard.ts</div>
                         <div className="text-xs text-muted-foreground">React hook for AI service checks</div>
                       </div>
-                    </a>
+                      <ExternalLink className="w-4 h-4 text-muted-foreground" />
+                    </div>
                   </div>
                 </div>
 
