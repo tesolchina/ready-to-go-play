@@ -19,7 +19,29 @@ interface ValidationResult {
 }
 
 const ValidateReferences = () => {
-  const [references, setReferences] = useState("");
+  const [references, setReferences] = useState(`Lutz, W., Skirbekk, V., & Testa, M. R. (2006). The low fertility trap hypothesis. Vienna Yearbook of Population Research, 4, 167–192. https://doi.org/10.1553/populationyearbook2006s167
+
+Manning, W. D., & Smock, P. J. (2002). Alternative family structures: A demographic and social perspective. Journal of Marriage and Family, 64(1), 1–12.
+
+McDonald, P. (2000). Gender equity in theories of fertility transition. Population and Development Review, 26(3), 427–439. https://doi.org/10.1111/j.1728-4457.2000.00427.x
+
+Gietel-Basten, S., & Verropoulou, G. (2018). The changing relationship between marriage and childbearing in Hong Kong. PLOS ONE, 13(3), e0194948. https://doi.org/10.1371/journal.pone.0194948
+
+Sen, A. (1999). Development as freedom. Oxford University Press.
+
+Sobotka, T. (2017). Post-transitional fertility: The role of childbearing postponement. Journal of Population Research, 34(4), 327–349. https://doi.org/10.1007/s12546-017-9197-y
+
+Social Welfare Department. (2006). Financial incentives for families in Hong Kong. Hong Kong SAR Government.
+
+Stuart-Basten, S. (2019). Gender roles and family dynamics in Hong Kong. Asian Journal of Women's Studies, 25(1), 1–20. https://doi.org/10.1080/12259276.2019.1571234
+
+Sullivan, E., et al. (2016). The role of reproductive technologies in fertility trends. Reproductive Health, 13(1), 1–10. https://doi.org/10.1186/s12978-016-0174-5
+
+Wang, F., Zhang, Y., & Chen, L. (2020). Comparative analysis of fertility trends in East Asia: Lessons from Hong Kong. Asian Journal of Population Studies, 6(1), 15–30.
+
+Wong, C. (2022). The cost of living in Hong Kong: Implications for family planning. Asian Economic Policy Review, 17(2), 234–250.
+
+Cheung, A. K.-L., & Kim, E. H.-W. (2022). Domestic outsourcing in an ultra-low fertility context: Employing live-in domestic help and fertility in Hong Kong. Population Research and Policy Review, 41(4), 1597–1618. https://doi.org/10.1007/s11113-022-09709-3.`);
   const [isValidating, setIsValidating] = useState(false);
   const [results, setResults] = useState<ValidationResult[]>([]);
   const [progress, setProgress] = useState({ current: 0, total: 0, currentRef: "" });
@@ -305,6 +327,9 @@ const ValidateReferences = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground bg-primary/5 p-3 rounded-md border border-primary/10">
+              💡 <strong>Try the example references below or edit/replace with your own</strong> to test the validation tool!
+            </p>
             <Textarea
               placeholder="Paste your references here, one per line..."
               value={references}
