@@ -5,8 +5,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Loader2, ChevronDown, ChevronUp, RefreshCw, BarChart } from "lucide-react";
+import { Loader2, ChevronDown, ChevronUp, RefreshCw, BarChart, AlertTriangle } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { useAIServiceGuard } from "@/hooks/useAIServiceGuard";
+import { Link } from "react-router-dom";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { getAIHeaders } from "@/lib/aiServiceGuard";
 
 interface OpenEndedReflectionProps {
   lessonSlug: string;
@@ -21,6 +25,7 @@ export const OpenEndedReflection = ({
   questionId,
   question,
 }: OpenEndedReflectionProps) => {
+  const { isActivated } = useAIServiceGuard();
   const [response, setResponse] = useState("");
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -87,19 +92,23 @@ export const OpenEndedReflection = ({
       setResponseCount(responses.length);
 
       // Generate thematic analysis
-      if (responses.length > 0) {
+      if (responses.length > 0 && isActivated) {
         setProgressMessage("Analyzing themes and patterns...");
         
+        const aiHeaders = getAIHeaders();
         const { data: analysisData, error: analysisError } = await supabase.functions.invoke(
           "analyze-reflections",
           {
             body: { responses, question },
+            headers: aiHeaders,
           }
         );
 
         if (analysisError) throw analysisError;
 
         setThematicAnalysis(analysisData.analysis);
+      } else if (!isActivated) {
+        setThematicAnalysis("*AI analysis requires API key configuration. Configure your API key in the Lessons page to enable thematic analysis.*");
       }
 
       setShowResults(true);
@@ -114,6 +123,22 @@ export const OpenEndedReflection = ({
 
   return (
     <div className="space-y-6">
+      {!isActivated && (
+        <Alert className="bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800">
+          <AlertTriangle className="h-5 w-5 text-yellow-600" />
+          <AlertDescription className="text-base text-foreground ml-2 flex items-center justify-between">
+            <span>
+              AI thematic analysis requires API key configuration.
+            </span>
+            <Link to="/lessons">
+              <Button variant="outline" size="sm" className="ml-4">
+                Configure Now
+              </Button>
+            </Link>
+          </AlertDescription>
+        </Alert>
+      )}
+      
       <Card className="p-6 space-y-4">
         <h4 className="text-xl font-semibold text-foreground">{question}</h4>
         

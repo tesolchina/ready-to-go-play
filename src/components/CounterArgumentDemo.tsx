@@ -6,8 +6,11 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Loader2, Lightbulb, MessageSquare, ChevronDown, ChevronUp } from "lucide-react";
+import { Loader2, Lightbulb, MessageSquare, ChevronDown, ChevronUp, AlertTriangle } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { useAIServiceGuard } from "@/hooks/useAIServiceGuard";
+import { Link } from "react-router-dom";
+import { getAIHeaders } from "@/lib/aiServiceGuard";
 
 const LESSON_SLUG = "interactive-learning-reflection";
 const SECTION_ID = "counter-argument-exercise";
@@ -17,6 +20,7 @@ interface CounterArgumentDemoProps {
 }
 
 export const CounterArgumentDemo = ({ onAnalyticsUpdate }: CounterArgumentDemoProps = {}) => {
+  const { isActivated, checkAndNotify } = useAIServiceGuard();
   const [response, setResponse] = useState("");
   const [feedback, setFeedback] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -53,6 +57,10 @@ Provide constructive feedback on their reasoning, use of evidence, and clarity. 
 IMPORTANT: Keep your response under 500 characters. Be concise and focus on the most important points.`;
 
   const handleSubmit = async () => {
+    if (!checkAndNotify()) {
+      return;
+    }
+
     if (!response.trim()) {
       toast.error("Please write your counter-argument first");
       return;
@@ -70,23 +78,26 @@ IMPORTANT: Keep your response under 500 characters. Be concise and focus on the 
       await new Promise(resolve => setTimeout(resolve, 300));
       setProgressMessage("Analyzing your argument...");
       
-      // Get feedback
+      // Get feedback with AI service headers
+      const aiHeaders = getAIHeaders();
       const { data: feedbackData, error: feedbackError } = await supabase.functions.invoke("provide-feedback", {
         body: {
           paragraph: response.trim(),
           context: systemPrompt,
         },
+        headers: aiHeaders,
       });
 
       if (feedbackError) throw feedbackError;
 
       setProgressMessage("Performing semantic analysis...");
       
-      // Perform semantic analysis
+      // Perform semantic analysis with AI service headers
       const { data: semanticData, error: semanticError } = await supabase.functions.invoke("semantic-analysis", {
         body: {
           text: response.trim(),
         },
+        headers: aiHeaders,
       });
 
       if (semanticError) {
@@ -125,6 +136,22 @@ IMPORTANT: Keep your response under 500 characters. Be concise and focus on the 
 
   return (
     <div className="space-y-6">
+      {!isActivated && (
+        <Alert className="bg-destructive/10 border-destructive/30">
+          <AlertTriangle className="h-5 w-5 text-destructive" />
+          <AlertDescription className="text-base text-foreground ml-2 flex items-center justify-between">
+            <span>
+              <strong>AI services not configured.</strong> Please configure your API key to use this feature.
+            </span>
+            <Link to="/lessons">
+              <Button variant="destructive" size="sm" className="ml-4">
+                Configure Now
+              </Button>
+            </Link>
+          </AlertDescription>
+        </Alert>
+      )}
+      
       <Alert className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
         <Lightbulb className="h-5 w-5 text-blue-600 dark:text-blue-400" />
         <AlertDescription className="text-base text-foreground ml-2">
@@ -192,7 +219,7 @@ IMPORTANT: Keep your response under 500 characters. Be concise and focus on the 
         <div className="flex gap-3">
           <Button
             onClick={handleSubmit}
-            disabled={isSubmitting || !response.trim()}
+            disabled={!isActivated || isSubmitting || !response.trim()}
             className="flex-1 text-base"
             size="lg"
           >
