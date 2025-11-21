@@ -393,6 +393,14 @@ The letter '${letterInput}' appears ${count} times in '${wordInput}'`);
                     A famous AI test: "How many times does the letter 'r' appear in 'strawberry'?" Many AI models 
                     get this wrong when using natural language reasoning. But with code generation...
                   </p>
+                  <a 
+                    href="https://prompt.16x.engineer/blog/why-chatgpt-cant-count-rs-in-strawberry" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-primary hover:underline text-base mt-2"
+                  >
+                    Read more about why ChatGPT can't count r's in strawberry →
+                  </a>
                 </div>
 
                 <div className="bg-gradient-to-r from-green-50 to-teal-50 dark:from-green-900/20 dark:to-teal-900/20 p-6 rounded-xl border-2">
