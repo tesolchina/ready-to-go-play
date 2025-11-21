@@ -284,6 +284,42 @@ export type Database = {
         }
         Relationships: []
       }
+      reflection_analyses: {
+        Row: {
+          analysis: string
+          created_at: string | null
+          id: string
+          lesson_slug: string
+          question: string
+          question_id: string
+          response_count: number
+          section_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          analysis: string
+          created_at?: string | null
+          id?: string
+          lesson_slug: string
+          question: string
+          question_id: string
+          response_count?: number
+          section_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          analysis?: string
+          created_at?: string | null
+          id?: string
+          lesson_slug?: string
+          question?: string
+          question_id?: string
+          response_count?: number
+          section_id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       response_analytics: {
         Row: {
           created_at: string
