@@ -71,8 +71,13 @@ const LeverageEducationalResources = () => {
             >
               <div className="space-y-6">
                 <div className="prose prose-lg max-w-none">
-                  <h4 className="text-2xl font-semibold text-foreground mb-4">Hidden Gems in Education</h4>
-                  <p className="text-foreground text-lg leading-relaxed">
+                  <h4 className="text-2xl font-semibold text-foreground mb-4">Existing Quality Resources</h4>
+                  <p className="text-foreground text-lg leading-relaxed mt-4">
+                    <strong>AI in education is evolution, not revolution.</strong> Rather than replacing 
+                    everything, we enhance proven resources that have stood the test of time, combining 
+                    expert knowledge with AI capabilities for personalization and interaction.
+                  </p>
+                  <p className="text-foreground text-lg leading-relaxed mt-4">
                     The internet is filled with excellent educational resources developed by dedicated educators and researchers. 
                     One such resource is the <strong>Manchester Academic Phrasebank</strong>, created by Dr. John Morley at the University of 
                     of Manchester. Since 2009, it has helped millions of students and researchers write academic English more effectively.
@@ -128,7 +133,11 @@ const LeverageEducationalResources = () => {
                   </BulletPoint>
                   <BulletPoint icon="🤖">
                     <strong>AI as Enhancement Tool:</strong> AI can transform static resources into interactive learning experiences 
-                    while preserving the original pedagogical structure
+                    while preserving the original pedagogical structure. This is evolution, not revolution—building on proven expertise.
+                  </BulletPoint>
+                  <BulletPoint icon="🎯">
+                    <strong>Context Over Chatbot:</strong> Instead of directing students to an AI chatbot, 
+                    embed AI directly into the learning context where students already work
                   </BulletPoint>
                 </ul>
 
@@ -162,9 +171,9 @@ const LeverageEducationalResources = () => {
               <div className="space-y-6">
                 <div className="prose prose-lg max-w-none">
                   <p className="text-foreground text-lg leading-relaxed">
-                    <strong>The most effective use of AI in education is not creating everything from scratch, 
-                    but enhancing proven resources.</strong> This approach combines the expertise embedded in existing 
-                    materials with AI's capability for personalization, interaction, and feedback.
+                    <strong>The most effective use of AI in education is enhancement, not recreation.</strong> 
+                    Combine proven resources with AI's capabilities for personalization, interaction, and feedback. 
+                    This is evolution—amplifying expertise rather than replacing it.
                   </p>
                 </div>
 
@@ -193,9 +202,10 @@ const LeverageEducationalResources = () => {
 
                 <div className="prose prose-lg max-w-none">
                   <h4 className="text-2xl font-semibold text-foreground mt-6 mb-3">The Two-Part Enhancement Approach</h4>
-                  <p className="text-foreground text-lg leading-relaxed">
-                    When enhancing existing resources with AI, we follow a pedagogically sound two-part approach that 
-                    preserves the original resource's structure while adding powerful interactive capabilities:
+                  <p className="text-foreground text-lg leading-relaxed mb-4">
+                    <strong>Move from guidance to independence:</strong> This two-part approach preserves the original 
+                    resource's structure while adding interactive capabilities that help students progress from scaffolded 
+                    practice to independent application.
                   </p>
                 </div>
 
@@ -216,82 +226,48 @@ const LeverageEducationalResources = () => {
                   </BulletPoint>
                 </ul>
 
-                <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg mt-4">
-                  <h5 className="text-lg font-semibold text-foreground mb-3">💡 The General Enhancement Principle</h5>
-                  <p className="text-foreground leading-relaxed">
-                    This two-part structure reflects a broader principle for AI-enhanced learning: <strong>move from 
-                    guidance to independence</strong>. First, provide scaffolded examples and structured practice (Part 1). 
-                    Then, help students recognize and apply patterns in authentic contexts (Part 2). This progression mirrors 
-                    effective pedagogy while leveraging AI's ability to personalize content and provide instant feedback.
+                <div className="bg-gradient-to-r from-primary/10 to-accent/10 p-6 rounded-lg mt-4 border-2 border-primary/20">
+                  <h5 className="text-xl font-bold text-foreground mb-3">🎯 Core Principle: Guidance to Independence</h5>
+                  <p className="text-foreground leading-relaxed font-medium mb-3">
+                    First, provide scaffolded examples and structured practice (Part 1). Then, help students recognize 
+                    and apply patterns in authentic contexts (Part 2). This progression mirrors effective pedagogy while 
+                    leveraging AI's ability to personalize content and provide instant feedback.
                   </p>
-                  <p className="text-foreground leading-relaxed mt-3">
-                    The key is that <strong>AI augments rather than replaces</strong> the original resource's pedagogical structure. 
-                    The Academic Phrasebank's expert-crafted categories remain the foundation; AI adds the interactivity, 
-                    personalization, and practice opportunities that static resources cannot provide.
+                  <p className="text-foreground leading-relaxed">
+                    <strong>AI augments rather than replaces</strong> the original resource's pedagogical structure. 
+                    Expert-crafted frameworks remain the foundation; AI adds interactivity, personalization, and practice 
+                    opportunities that static resources cannot provide.
                   </p>
                 </div>
 
                 <div className="prose prose-lg max-w-none">
                   <h4 className="text-2xl font-semibold text-foreground mt-6 mb-3">Academic Phrasebank Enhancement: A Case Study</h4>
                   <p className="text-foreground text-lg leading-relaxed">
-                    The original Academic Phrasebank is organized into:
+                    The original Academic Phrasebank is organized into <strong>section-specific functions</strong> (introducing work, 
+                    referring to sources, describing methods, etc.) and <strong>general language functions</strong> (being cautious, 
+                    comparing, defining terms, etc.). This expert-crafted framework provides the structure; AI adds interactivity 
+                    and personalization.
                   </p>
                 </div>
 
-                <div className="bg-muted/50 p-6 rounded-lg space-y-4">
-                  <div>
-                    <h5 className="font-semibold text-foreground mb-2">📝 Section-Specific Functions (Moves/Steps)</h5>
-                    <ul className="text-sm text-foreground space-y-1 ml-6 list-disc">
-                      <li>Introducing work</li>
-                      <li>Referring to sources</li>
-                      <li>Describing methods</li>
-                      <li>Reporting results</li>
-                      <li>Discussing findings</li>
-                      <li>Writing conclusions</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h5 className="font-semibold text-foreground mb-2">🔤 General Language Functions</h5>
-                    <ul className="text-sm text-foreground space-y-1 ml-6 list-disc">
-                      <li>Being cautious (hedging)</li>
-                      <li>Being critical</li>
-                      <li>Classifying and listing</li>
-                      <li>Comparing and contrasting</li>
-                      <li>Defining terms</li>
-                      <li>Describing trends</li>
-                      <li>Explaining causality</li>
-                      <li>Giving examples</li>
-                      <li>And more...</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="prose prose-lg max-w-none">
-                  <p className="text-foreground text-lg leading-relaxed">
-                    <strong>How does the AI-enhanced version work in practice?</strong>
+                <div className="prose prose-lg max-w-none mt-4">
+                  <p className="text-foreground text-lg leading-relaxed mb-4">
+                    <strong>How does the AI-enhanced version work?</strong>
                   </p>
                 </div>
 
-                <ul className="space-y-4 list-none">
+                <ul className="space-y-3 list-none">
                   <BulletPoint icon="📝">
-                    <strong>Part 1 - Template-Based Generation:</strong> Select a category (e.g., "Introducing Work" → 
-                    "Establishing a territory") and your discipline (e.g., Education, Biology). The AI generates 
-                    discipline-specific example sentences using the Phrasebank templates, then provides imitation 
-                    exercises where you practice writing similar sentences for your own research topic.
+                    <strong>Part 1 - Template Generation:</strong> Select a category and your discipline. AI generates 
+                    discipline-specific examples using Phrasebank templates, then provides imitation exercises.
                   </BulletPoint>
                   <BulletPoint icon="🔍">
-                    <strong>Part 2 - Text Analysis & Pattern Recognition:</strong> Paste a model paragraph from an academic 
-                    text in your field. The AI analyzes it using the Phrasebank framework, identifying which academic 
-                    functions and language patterns are present (e.g., "The author uses hedging language and cites sources 
-                    to establish credibility"). You then get targeted exercises to practice the identified patterns.
+                    <strong>Part 2 - Text Analysis:</strong> Paste a model paragraph. AI analyzes it using the Phrasebank 
+                    framework and generates targeted exercises based on identified patterns.
                   </BulletPoint>
                   <BulletPoint icon="🎯">
-                    <strong>Personalization at Scale:</strong> Every interaction is customized—discipline-specific examples, 
-                    analysis of your actual texts, exercises based on your needs—something impossible with the static resource alone.
-                  </BulletPoint>
-                  <BulletPoint icon="💬">
-                    <strong>Conversational Exploration:</strong> Instead of browsing categories manually, you can ask questions 
-                    like "How do I introduce a research gap in educational research?" and get contextual guidance.
+                    <strong>Personalization & Context:</strong> Every interaction is customized with discipline-specific 
+                    examples and analysis of your actual texts. AI is embedded in the learning context, not a separate chatbot.
                   </BulletPoint>
                 </ul>
 
@@ -299,6 +275,21 @@ const LeverageEducationalResources = () => {
                   "Standing on the shoulders of giants means using what experts have built, then reaching even higher. 
                   AI lets us amplify expert knowledge without replacing expert judgment."
                 </blockquote>
+
+                <div className="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-lg mt-6">
+                  <h5 className="text-lg font-semibold text-foreground mb-3">
+                    ⚠️ Quality Control: Are AI-Generated Sentences Reliable?
+                  </h5>
+                  <p className="text-foreground leading-relaxed mb-3">
+                    This is a valid concern. When using AI-enhanced resources, consider:
+                  </p>
+                  <ul className="list-disc list-inside text-foreground space-y-2">
+                    <li>AI generates examples based on patterns—review and validate outputs</li>
+                    <li>Use AI as a starting point, not a final authority</li>
+                    <li>Combine AI suggestions with expert judgment and peer review</li>
+                    <li>The framework provides structure, but human evaluation is essential</li>
+                  </ul>
+                </div>
               </div>
 
               <ComprehensionCheck
@@ -411,6 +402,14 @@ const LeverageEducationalResources = () => {
                   <p className="text-sm text-muted-foreground mt-4 text-center">
                     The app will open in a new tab. Try using it for 5-10 minutes, then return to complete this lesson.
                   </p>
+
+                  <div className="bg-muted/50 p-4 rounded-lg mt-4">
+                    <p className="text-sm text-foreground">
+                      <strong>Note:</strong> AI responses may occasionally take longer due to API 
+                      limitations, and text analysis may not always work perfectly. If you encounter 
+                      issues, try refreshing or simplifying your input.
+                    </p>
+                  </div>
                 </div>
 
                 <div className="border-t border-border pt-8">
@@ -451,14 +450,19 @@ const LeverageEducationalResources = () => {
                   <ul className="space-y-3 list-none">
                     <BulletPoint icon="📚">
                       <strong>Leverage Existing Quality:</strong> Excellent educational resources already exist. 
-                      Don't recreate from scratch—find, evaluate, and enhance what experts have built.
+                      Don't recreate from scratch—find, evaluate, and enhance what experts have built. This is 
+                      <strong> evolution, not revolution</strong>.
                     </BulletPoint>
                     <BulletPoint icon="🔄">
-                      <strong>Two-Part Enhancement Approach:</strong> First, help students understand templates through 
-                      guided examples and imitation. Then, help them recognize patterns in authentic texts and apply 
-                      them through targeted practice.
+                      <strong>Two-Part Enhancement Approach:</strong> Move from guidance to independence. First, 
+                      help students understand templates through guided examples and imitation. Then, help them 
+                      recognize patterns in authentic texts and apply them through targeted practice.
                     </BulletPoint>
                     <BulletPoint icon="🎯">
+                      <strong>Context Over Chatbot:</strong> Embed AI directly into the learning context rather than 
+                      directing students to separate AI chatbots. Bring AI to where students already work.
+                    </BulletPoint>
+                    <BulletPoint icon="🔬">
                       <strong>AI as Amplifier:</strong> AI transforms static resources into dynamic learning tools 
                       while maintaining pedagogical soundness. It amplifies expertise, doesn't replace it.
                     </BulletPoint>
