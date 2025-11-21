@@ -6,8 +6,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, ArrowLeft, Copy, ChevronDown, ChevronUp, Info } from "lucide-react";
+import { Loader2, ArrowLeft, Copy, ChevronDown, ChevronUp, Info, Download, FileText, Wand2 } from "lucide-react";
 import { MermaidDiagram } from "@/components/MermaidDiagram";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import ReactMarkdown from "react-markdown";
 
 const DEMO_ESSAY = `The Prologue to Bertrand Russell's Autobiography
 What I Have Lived For
@@ -24,6 +27,12 @@ This has been my life. I have found it worth living, and would gladly live it ag
 
 Bertrand Russell (1872-1970) won the Nobel prize for literature for his History of Western Philosophy and was the co-author of Principia Mathematica.`;
 
+interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+}
+
 export default function PatternAnalyzer() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -35,6 +44,17 @@ export default function PatternAnalyzer() {
   // User mode state
   const [userText, setUserText] = useState("");
   const [userMermaidCode, setUserMermaidCode] = useState("");
+  const [analyzedPattern, setAnalyzedPattern] = useState("");
+  
+  // New topic generation state
+  const [newTopic, setNewTopic] = useState("");
+  const [topicDetails, setTopicDetails] = useState("");
+  const [generatedOutline, setGeneratedOutline] = useState("");
+  const [generatedOutlineMermaid, setGeneratedOutlineMermaid] = useState("");
+  const [generatedEssay, setGeneratedEssay] = useState("");
+  
+  // Chat history
+  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   
   const { toast } = useToast();
 
@@ -63,30 +83,75 @@ Diagram guidelines:
     });
   };
 
+  const addToHistory = (role: 'user' | 'assistant', content: string) => {
+    setChatHistory(prev => [...prev, { role, content, timestamp: new Date() }]);
+  };
+
+  const downloadChatHistory = () => {
+    let markdown = "# Essay Structure Analysis Chat History\n\n";
+    markdown += `*Generated on ${new Date().toLocaleString()}*\n\n---\n\n`;
+    
+    chatHistory.forEach((msg, idx) => {
+      const role = msg.role === 'user' ? '**User**' : '**AI Assistant**';
+      markdown += `### ${role} - ${msg.timestamp.toLocaleTimeString()}\n\n`;
+      markdown += `${msg.content}\n\n---\n\n`;
+    });
+    
+    const blob = new Blob([markdown], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `essay-analysis-${Date.now()}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    toast({
+      title: "Downloaded",
+      description: "Chat history saved as markdown file",
+    });
+  };
+
   const handleAnalyze = async (text: string, isDemo: boolean) => {
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('generate-mermaid', {
+      addToHistory('user', `Analyze essay structure:\n\n${text.substring(0, 200)}...`);
+      
+      // First, get the mermaid diagram
+      const { data: mermaidData, error: mermaidError } = await supabase.functions.invoke('generate-mermaid', {
         body: { 
           description: `Analyze the MACRO-LEVEL structure of this essay and create a mermaid diagram showing the main sections and their relationships. Focus on overall organization, not paragraph details.\n\nEssay:\n${text}`
         }
       });
 
-      if (error) throw error;
+      if (mermaidError) throw mermaidError;
 
-      if (data.error) {
+      if (mermaidData.error) {
         toast({
           title: "Error",
-          description: data.error,
+          description: mermaidData.error,
           variant: "destructive",
         });
         return;
       }
 
+      // Then, get the pattern analysis
+      const { data: patternData, error: patternError } = await supabase.functions.invoke('pattern-analyzer', {
+        body: { 
+          text,
+          action: 'analyze'
+        }
+      });
+
+      if (patternError) throw patternError;
+
       if (isDemo) {
-        setDemoMermaidCode(data.mermaidCode);
+        setDemoMermaidCode(mermaidData.mermaidCode);
       } else {
-        setUserMermaidCode(data.mermaidCode);
+        setUserMermaidCode(mermaidData.mermaidCode);
+        setAnalyzedPattern(patternData.result);
+        addToHistory('assistant', `Structure Analysis:\n\n${patternData.result}\n\n[Mermaid diagram generated]`);
       }
 
       toast({
@@ -98,6 +163,95 @@ Diagram guidelines:
       toast({
         title: "Error",
         description: "Failed to analyze text. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGenerateOutline = async () => {
+    if (!newTopic.trim() || !analyzedPattern) return;
+    
+    setLoading(true);
+    try {
+      const topicPrompt = topicDetails.trim() 
+        ? `${newTopic}\n\nAdditional details: ${topicDetails}`
+        : newTopic;
+      
+      addToHistory('user', `Generate outline for new topic: "${topicPrompt}"`);
+      
+      const { data, error } = await supabase.functions.invoke('pattern-analyzer', {
+        body: {
+          text: analyzedPattern,
+          action: 'generate',
+          topic: topicPrompt,
+          outputType: 'outline'
+        }
+      });
+
+      if (error) throw error;
+
+      setGeneratedOutline(data.result);
+      addToHistory('assistant', `Generated Outline:\n\n${data.result}`);
+      
+      // Generate mermaid for the outline
+      const { data: mermaidData } = await supabase.functions.invoke('generate-mermaid', {
+        body: { 
+          description: `Create a mermaid diagram for this essay outline:\n\n${data.result}`
+        }
+      });
+      
+      if (mermaidData?.mermaidCode) {
+        setGeneratedOutlineMermaid(mermaidData.mermaidCode);
+      }
+
+      toast({
+        title: "Outline Generated",
+        description: "New essay outline created using identified patterns!",
+      });
+    } catch (error) {
+      console.error('Error generating outline:', error);
+      toast({
+        title: "Error",
+        description: "Failed to generate outline. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGenerateEssay = async () => {
+    if (!generatedOutline) return;
+    
+    setLoading(true);
+    try {
+      addToHistory('user', 'Generate full essay from outline');
+      
+      const { data, error } = await supabase.functions.invoke('pattern-analyzer', {
+        body: {
+          text: analyzedPattern,
+          action: 'generate',
+          topic: `${newTopic}\n\nOutline to expand:\n${generatedOutline}`,
+          outputType: 'essay'
+        }
+      });
+
+      if (error) throw error;
+
+      setGeneratedEssay(data.result);
+      addToHistory('assistant', `Generated Essay:\n\n${data.result}`);
+
+      toast({
+        title: "Essay Generated",
+        description: "Full essay draft created successfully!",
+      });
+    } catch (error) {
+      console.error('Error generating essay:', error);
+      toast({
+        title: "Error",
+        description: "Failed to generate essay. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -266,8 +420,131 @@ Diagram guidelines:
                   </div>
                 </div>
               )}
+
+              {analyzedPattern && (
+                <Card className="mt-6 border-primary/20">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <FileText className="w-5 h-5" />
+                      Structure Analysis
+                    </CardTitle>
+                    <CardDescription>
+                      Identified organizational patterns from your essay
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="prose prose-sm max-w-none bg-muted/30 p-4 rounded-lg">
+                      <ReactMarkdown>{analyzedPattern}</ReactMarkdown>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </CardContent>
           </Card>
+
+          {analyzedPattern && (
+            <Card className="mt-6 border-accent">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Wand2 className="w-5 h-5" />
+                  Generate New Content with Same Pattern
+                </CardTitle>
+                <CardDescription>
+                  Create an outline or essay on a new topic using the identified structure
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="newTopic">New Topic</Label>
+                  <Input
+                    id="newTopic"
+                    value={newTopic}
+                    onChange={(e) => setNewTopic(e.target.value)}
+                    placeholder="Enter your new essay topic..."
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="topicDetails">Additional Details (Optional)</Label>
+                  <Textarea
+                    id="topicDetails"
+                    value={topicDetails}
+                    onChange={(e) => setTopicDetails(e.target.value)}
+                    placeholder="Add any specific points, arguments, or details you want to include..."
+                    className="min-h-[100px]"
+                  />
+                </div>
+
+                <Button
+                  onClick={handleGenerateOutline}
+                  disabled={loading || !newTopic.trim()}
+                  className="w-full"
+                >
+                  {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+                  Generate Outline
+                </Button>
+
+                {generatedOutline && (
+                  <Card className="mt-6">
+                    <CardHeader>
+                      <CardTitle className="text-lg">Generated Outline</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="prose prose-sm max-w-none bg-muted/30 p-4 rounded-lg">
+                        <ReactMarkdown>{generatedOutline}</ReactMarkdown>
+                      </div>
+
+                      {generatedOutlineMermaid && (
+                        <div className="bg-muted/30 p-4 rounded-lg">
+                          <h5 className="font-semibold text-sm mb-4">Outline Structure</h5>
+                          <MermaidDiagram chart={generatedOutlineMermaid} />
+                        </div>
+                      )}
+
+                      <Button
+                        onClick={handleGenerateEssay}
+                        disabled={loading}
+                        className="w-full"
+                        variant="secondary"
+                      >
+                        {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+                        Generate Full Essay
+                      </Button>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {generatedEssay && (
+                  <Card className="mt-6 border-primary">
+                    <CardHeader>
+                      <CardTitle className="text-lg">Generated Essay Draft</CardTitle>
+                      <CardDescription>
+                        Complete essay based on your topic and the identified pattern
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="prose prose-sm max-w-none bg-muted/30 p-6 rounded-lg">
+                        <ReactMarkdown>{generatedEssay}</ReactMarkdown>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
+          {chatHistory.length > 0 && (
+            <div className="mt-6 flex justify-end">
+              <Button
+                onClick={downloadChatHistory}
+                variant="outline"
+                className="gap-2"
+              >
+                <Download className="w-4 h-4" />
+                Download Chat History
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>
