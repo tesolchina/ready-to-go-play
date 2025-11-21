@@ -19,11 +19,16 @@ import {
   MessageSquare,
   BookOpen,
   HelpCircle,
-  AlertCircle
+  AlertCircle,
+  ChevronDown,
+  ChevronUp,
+  Code,
+  FileCode
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useAIServiceGuard } from "@/hooks/useAIServiceGuard";
 import { getAIHeaders } from "@/lib/aiServiceGuard";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -51,6 +56,8 @@ const WileyAIGuidelines = () => {
   const [isSharing, setIsSharing] = useState(false);
   const [shareLink, setShareLink] = useState<string | null>(null);
   const [isCopied, setIsCopied] = useState(false);
+  const [isOverviewOpen, setIsOverviewOpen] = useState(true);
+  const [isHowItWorksOpen, setIsHowItWorksOpen] = useState(false);
   const { toast } = useToast();
   const { isActivated, checkAndNotify } = useAIServiceGuard();
 
@@ -211,20 +218,163 @@ const WileyAIGuidelines = () => {
           </div>
         </div>
 
+        {/* How This App Works Section */}
+        <Card className="mb-6">
+          <Collapsible open={isHowItWorksOpen} onOpenChange={setIsHowItWorksOpen}>
+            <CardHeader>
+              <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80 transition-opacity">
+                <div className="flex items-center gap-2">
+                  <Code className="w-5 h-5 text-primary" />
+                  <CardTitle>How This App Works</CardTitle>
+                </div>
+                {isHowItWorksOpen ? (
+                  <ChevronUp className="w-5 h-5" />
+                ) : (
+                  <ChevronDown className="w-5 h-5" />
+                )}
+              </CollapsibleTrigger>
+              <CardDescription>
+                Technical details about this application's implementation
+              </CardDescription>
+            </CardHeader>
+            <CollapsibleContent>
+              <CardContent className="space-y-6">
+                {/* Explanation */}
+                <div className="space-y-3">
+                  <h3 className="text-lg font-semibold flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4" />
+                    Application Overview
+                  </h3>
+                  <div className="text-sm text-muted-foreground space-y-2 bg-muted/50 p-4 rounded-lg">
+                    <p>
+                      This application is a chatbot interface that helps researchers understand AI usage guidelines 
+                      from major academic publishers including Wiley, Elsevier, Oxford University Press, Sage, 
+                      Springer Nature, and Taylor & Francis.
+                    </p>
+                    <p>
+                      When you ask a question, it's sent to a Supabase Edge Function that communicates with AI models 
+                      (Kimi or DeepSeek) to provide accurate responses based on the comprehensive system prompt containing 
+                      all publisher guidelines. The AI is instructed to cite guidelines with direct quotations for transparency.
+                    </p>
+                    <p>
+                      The chat history is maintained in your browser session, and you can download your conversation 
+                      as a markdown file for future reference.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Source Files */}
+                <div className="space-y-3">
+                  <h3 className="text-lg font-semibold flex items-center gap-2">
+                    <FileCode className="w-4 h-4" />
+                    Source Files
+                  </h3>
+                  <div className="space-y-2">
+                    <a 
+                      href="https://github.com/your-repo/blob/main/supabase/functions/wiley-ai-guidelines-chat/index.ts"
+                      className="flex items-center gap-2 text-sm text-primary hover:underline p-3 bg-muted/50 rounded-lg"
+                    >
+                      <FileCode className="w-4 h-4" />
+                      <div>
+                        <div className="font-medium">wiley-ai-guidelines-chat/index.ts</div>
+                        <div className="text-xs text-muted-foreground">Edge function handling AI requests</div>
+                      </div>
+                    </a>
+                    <a 
+                      href="https://github.com/your-repo/blob/main/src/pages/WileyAIGuidelines.tsx"
+                      className="flex items-center gap-2 text-sm text-primary hover:underline p-3 bg-muted/50 rounded-lg"
+                    >
+                      <FileCode className="w-4 h-4" />
+                      <div>
+                        <div className="font-medium">WileyAIGuidelines.tsx</div>
+                        <div className="text-xs text-muted-foreground">Main UI component for this page</div>
+                      </div>
+                    </a>
+                    <a 
+                      href="https://github.com/your-repo/blob/main/src/lib/aiServiceGuard.ts"
+                      className="flex items-center gap-2 text-sm text-primary hover:underline p-3 bg-muted/50 rounded-lg"
+                    >
+                      <FileCode className="w-4 h-4" />
+                      <div>
+                        <div className="font-medium">aiServiceGuard.ts</div>
+                        <div className="text-xs text-muted-foreground">AI service authentication and headers</div>
+                      </div>
+                    </a>
+                    <a 
+                      href="https://github.com/your-repo/blob/main/src/hooks/useAIServiceGuard.ts"
+                      className="flex items-center gap-2 text-sm text-primary hover:underline p-3 bg-muted/50 rounded-lg"
+                    >
+                      <FileCode className="w-4 h-4" />
+                      <div>
+                        <div className="font-medium">useAIServiceGuard.ts</div>
+                        <div className="text-xs text-muted-foreground">React hook for AI service checks</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+
+                {/* System Prompt */}
+                <div className="space-y-3">
+                  <h3 className="text-lg font-semibold flex items-center gap-2">
+                    <BookOpen className="w-4 h-4" />
+                    System Prompt
+                  </h3>
+                  <div className="text-xs font-mono bg-muted/80 p-4 rounded-lg overflow-x-auto">
+                    <pre className="whitespace-pre-wrap">
+{`You are an expert assistant specializing in AI guidelines for academic publishing. 
+You have comprehensive knowledge of AI policies from major academic publishers including 
+Wiley, Elsevier, Oxford University Press, Sage, Springer Nature, and Taylor & Francis.
+
+CRITICAL INSTRUCTION: When referencing any guideline or policy, you MUST cite it with 
+a direct quotation using quotation marks. Always attribute the quote to the specific 
+publisher (e.g., "According to Wiley: '[exact quote]'").
+
+Your knowledge base includes:
+
+- Wiley AI Guidelines (key principles on disclosure, human oversight, IP protection)
+- Elsevier AI Policy (privacy, verification, disclosure requirements)
+- Oxford University Press Guidelines (authorship, accountability, transparency)
+- Sage AI Policy (disclosure requirements, editorial confidentiality)
+- Springer Nature Principles (LLM documentation, image restrictions)
+- Taylor & Francis Guidelines (responsible use, acknowledgment requirements)
+- Moorhouse 2025 Research Insights (applied linguistics editors' perspectives)
+
+When answering:
+1. ALWAYS cite guidelines with direct quotations
+2. Attribute each quote to the specific publisher
+3. Compare policies across publishers when relevant
+4. Emphasize transparency and author accountability`}
+                    </pre>
+                  </div>
+                </div>
+              </CardContent>
+            </CollapsibleContent>
+          </Collapsible>
+        </Card>
+
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Guidelines Display Section */}
           <Card className="lg:col-span-1">
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-primary" />
-                <CardTitle>AI Guidelines Overview</CardTitle>
-              </div>
-              <CardDescription>
-                Key principles and best practices for using AI in research
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+            <Collapsible open={isOverviewOpen} onOpenChange={setIsOverviewOpen}>
+              <CardHeader>
+                <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80 transition-opacity">
+                  <div className="flex items-center gap-2">
+                    <BookOpen className="w-5 h-5 text-primary" />
+                    <CardTitle>AI Guidelines Overview</CardTitle>
+                  </div>
+                  {isOverviewOpen ? (
+                    <ChevronUp className="w-5 h-5" />
+                  ) : (
+                    <ChevronDown className="w-5 h-5" />
+                  )}
+                </CollapsibleTrigger>
+                <CardDescription>
+                  Key principles and best practices for using AI in research
+                </CardDescription>
+              </CardHeader>
+              <CollapsibleContent>
+                <CardContent>
               <ScrollArea className="h-[600px] pr-4">
                 <div className="prose prose-sm max-w-none dark:prose-invert">
                   <ReactMarkdown
@@ -293,7 +443,9 @@ Use AI Technology in a manner that aligns with privacy, confidentiality, and com
                   </ReactMarkdown>
                 </div>
               </ScrollArea>
-            </CardContent>
+                </CardContent>
+              </CollapsibleContent>
+            </Collapsible>
           </Card>
 
           {/* Chatbot Section */}
