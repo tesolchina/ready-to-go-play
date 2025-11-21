@@ -58,6 +58,14 @@ export const OpenEndedReflection = ({
       setHasSubmitted(true);
       toast.success("Thank you for sharing your reflection!");
       
+      // Trigger background analysis generation on the server
+      supabase.functions.invoke("analyze-reflections", {
+        body: { lessonSlug, sectionId, questionId, question }
+      }).catch(err => {
+        console.error("Background analysis failed:", err);
+        // Don't show error to user - this is background processing
+      });
+      
       // Automatically load results after submission
       loadResults();
     } catch (error) {
@@ -87,20 +95,24 @@ export const OpenEndedReflection = ({
       setAllResponses(responses);
       setResponseCount(responses.length);
 
-      // Generate thematic analysis
+      // Fetch pre-computed thematic analysis from database
       if (responses.length > 0) {
-        setProgressMessage("Analyzing themes and patterns...");
+        setProgressMessage("Loading analysis...");
         
-        const { data: analysisData, error: analysisError } = await supabase.functions.invoke(
-          "analyze-reflections",
-          {
-            body: { responses, question },
-          }
-        );
+        const { data: analysisData, error: analysisError } = await supabase
+          .from("reflection_analyses")
+          .select("analysis")
+          .eq("lesson_slug", lessonSlug)
+          .eq("section_id", sectionId)
+          .eq("question_id", questionId)
+          .single();
 
-        if (analysisError) throw analysisError;
-
-        setThematicAnalysis(analysisData.analysis);
+        if (!analysisError && analysisData) {
+          setThematicAnalysis(analysisData.analysis);
+        } else if (responses.length >= 3) {
+          // If no analysis exists and we have enough responses, show a message
+          setThematicAnalysis("Analysis will be available shortly after more reflections are submitted.");
+        }
       }
 
       setShowResults(true);

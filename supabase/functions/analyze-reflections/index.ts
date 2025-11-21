@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.76.1";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -11,7 +12,27 @@ serve(async (req) => {
   }
 
   try {
-    const { responses, question } = await req.json();
+    const { lessonSlug, sectionId, questionId, question } = await req.json();
+
+    // Initialize Supabase client
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Fetch all responses for this question from database
+    const { data: responseData, error: fetchError } = await supabase
+      .from("lesson_interactions")
+      .select("response_option")
+      .eq("lesson_slug", lessonSlug)
+      .eq("section_id", sectionId)
+      .eq("question_id", questionId);
+
+    if (fetchError) {
+      console.error("Error fetching responses:", fetchError);
+      throw fetchError;
+    }
+
+    const responses = responseData?.map((r) => r.response_option) || [];
 
     if (!responses || !Array.isArray(responses) || responses.length === 0) {
       return new Response(
@@ -121,8 +142,28 @@ Be concise and focus on actionable insights for the teacher.`;
       analysis = analysis.substring(0, 397) + "...";
     }
 
+    // Store analysis in database (upsert)
+    const { error: upsertError } = await supabase
+      .from("reflection_analyses")
+      .upsert({
+        lesson_slug: lessonSlug,
+        section_id: sectionId,
+        question_id: questionId,
+        question: question,
+        analysis: analysis,
+        response_count: totalCount,
+        updated_at: new Date().toISOString(),
+      }, {
+        onConflict: "lesson_slug,section_id,question_id"
+      });
+
+    if (upsertError) {
+      console.error("Error storing analysis:", upsertError);
+      // Continue anyway, return the analysis even if storage failed
+    }
+
     return new Response(
-      JSON.stringify({ analysis }),
+      JSON.stringify({ analysis, response_count: totalCount }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error) {
