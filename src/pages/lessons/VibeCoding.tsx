@@ -29,7 +29,7 @@ const VibeCodingRevised = () => {
     module5: false,
   });
   
-  const [userDescription, setUserDescription] = useState("");
+  const [userDescription, setUserDescription] = useState("Data driven learning: students learn usage of a specific word by examining concordance lines from an expert corpus");
   const [mermaidCode, setMermaidCode] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   
@@ -301,6 +301,9 @@ The letter '${letterInput}' appears ${count} times in '${wordInput}'`);
                       <label className="text-sm font-semibold mb-2 block">
                         Describe your diagram:
                       </label>
+                      <p className="text-sm text-muted-foreground mb-2 italic">
+                        💡 Try the example below or edit it to create your own Mermaid diagram!
+                      </p>
                       <Textarea
                         value={userDescription}
                         onChange={(e) => setUserDescription(e.target.value)}
