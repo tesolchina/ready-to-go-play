@@ -121,7 +121,7 @@ export const ComprehensionCheck = ({
               <div key={index} className="relative">
                 <Button
                   variant={selectedAnswer === option ? "default" : "outline"}
-                  className="w-full justify-start text-left h-auto py-3 relative overflow-hidden"
+                  className="w-full justify-start text-left h-auto py-3 relative overflow-hidden whitespace-normal min-h-[3rem]"
                   onClick={() => !hasAnswered && setSelectedAnswer(option)}
                   disabled={hasAnswered}
                 >
@@ -131,9 +131,9 @@ export const ComprehensionCheck = ({
                       style={{ width: `${percentage}%` }}
                     />
                   )}
-                  <span className="relative z-10 flex justify-between w-full">
-                    <span>{option}</span>
-                    {hasAnswered && <span className="font-semibold">{percentage}%</span>}
+                  <span className="relative z-10 flex flex-col sm:flex-row sm:justify-between w-full gap-2">
+                    <span className="flex-1 break-words">{option}</span>
+                    {hasAnswered && <span className="font-semibold whitespace-nowrap">{percentage}%</span>}
                   </span>
                 </Button>
               </div>
