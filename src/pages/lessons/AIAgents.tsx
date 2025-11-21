@@ -424,45 +424,38 @@ const AIAgents = () => {
                     </div>
                   </div>
 
-                {/* Step 3: Get API Keys */}
+                {/* Step 3: Store Your API Key */}
                   <div className="bg-gradient-to-r from-green-50 to-teal-50 dark:from-green-900/20 dark:to-teal-900/20 p-6 rounded-xl border-2">
                   <div className="flex items-start gap-4 mb-4">
                     <div className="bg-green-100 dark:bg-green-900 p-3 rounded-lg">
                       <Key className="h-6 w-6 text-green-600 dark:text-green-400" />
                     </div>
                       <div className="flex-1">
-                      <h5 className="text-xl font-semibold text-foreground mb-2">Step 3: Get API Keys from Kimi and Deepseek</h5>
+                      <h5 className="text-xl font-semibold text-foreground mb-2">Step 3: Store Your API Key in a File</h5>
                       <p className="text-sm text-muted-foreground mb-3">
-                        API keys allow Trae.cn to connect to AI models. You'll need keys from at least one service.
+                        Save your API key in a secure configuration file for easy access by the agent.
                       </p>
                       
                       <div className="space-y-4">
                         <div className="bg-background p-4 rounded border">
-                          <h6 className="font-semibold mb-2">Getting Kimi API Key:</h6>
-                          <ol className="list-decimal list-inside space-y-1 text-sm">
-                            <li>Visit the Kimi website (moonshot.cn or similar)</li>
-                            <li>Sign up for an account or log in</li>
-                            <li>Navigate to the API section or Developer settings</li>
-                            <li>Generate a new API key</li>
-                            <li>Copy the API key (you'll need it in Trae.cn)</li>
+                          <ol className="list-decimal list-inside space-y-2 text-sm">
+                            <li>Create a new text file named <code className="bg-muted px-2 py-1 rounded">api_keys.txt</code> in your working directory</li>
+                            <li>Add your API key to the file in this format:</li>
                           </ol>
-                        </div>
-
-                        <div className="bg-background p-4 rounded border">
-                          <h6 className="font-semibold mb-2">Getting Deepseek API Key:</h6>
-                          <ol className="list-decimal list-inside space-y-1 text-sm">
-                            <li>Visit the Deepseek website (deepseek.com)</li>
-                            <li>Sign up for an account or log in</li>
-                            <li>Go to the API or Developer section</li>
-                            <li>Create a new API key</li>
-                            <li>Copy the API key (you'll need it in Trae.cn)</li>
+                          <div className="mt-3 p-3 bg-muted/50 rounded font-mono text-xs">
+                            KIMI_API_KEY=your_api_key_here<br/>
+                            DEEPSEEK_API_KEY=your_api_key_here
+                          </div>
+                          <ol start={3} className="list-decimal list-inside space-y-2 text-sm mt-3">
+                            <li>Save the file in a secure location</li>
+                            <li>The agent will read the API key from this file when needed</li>
                           </ol>
                         </div>
 
                         <div className="bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded border-l-4 border-yellow-500">
                           <p className="text-xs text-foreground">
-                            <strong>Tip:</strong> Keep your API keys secure. Don't share them publicly. You can use either 
-                            Kimi or Deepseek, or both. Having multiple options gives you flexibility.
+                            <strong>Security Tip:</strong> Never share this file or commit it to public repositories. 
+                            Keep your API keys private and secure.
                           </p>
                         </div>
                         </div>
@@ -470,71 +463,50 @@ const AIAgents = () => {
                     </div>
                   </div>
 
-                {/* Step 4: Configure API Keys in Trae.cn */}
-                  <div className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 p-6 rounded-xl border-2">
+                {/* Download Sample Materials */}
+                <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-6 rounded-xl border-2">
                   <div className="flex items-start gap-4 mb-4">
-                    <div className="bg-orange-100 dark:bg-orange-900 p-3 rounded-lg">
-                      <Zap className="h-6 w-6 text-orange-600 dark:text-orange-400" />
-                    </div>
-                      <div className="flex-1">
-                      <h5 className="text-xl font-semibold text-foreground mb-2">Step 4: Configure API Keys in Trae.cn</h5>
-                      <ol className="list-decimal list-inside space-y-2 text-sm text-foreground">
-                        <li>Open Trae.cn settings or preferences</li>
-                        <li>Navigate to "API Keys" or "AI Model Settings"</li>
-                        <li>Paste your Kimi API key in the appropriate field</li>
-                        <li>Paste your Deepseek API key in the appropriate field (if using both)</li>
-                        <li>Save the settings</li>
-                        <li>Test the connection to ensure the API keys are working</li>
-                      </ol>
-                    </div>
-                        </div>
-                </div>
-
-                {/* Step 5: Sign Up for Gitee.com */}
-                <div className="bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20 p-6 rounded-xl border-2">
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className="bg-cyan-100 dark:bg-cyan-900 p-3 rounded-lg">
-                      <Terminal className="h-6 w-6 text-cyan-600 dark:text-cyan-400" />
+                    <div className="bg-purple-100 dark:bg-purple-900 p-3 rounded-lg">
+                      <Download className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                     </div>
                     <div className="flex-1">
-                      <h5 className="text-xl font-semibold text-foreground mb-2">Step 5: Sign Up for Gitee.com Account</h5>
+                      <h5 className="text-xl font-semibold text-foreground mb-2">Download Sample Teaching Materials</h5>
                       <p className="text-sm text-muted-foreground mb-3">
-                        Gitee.com is a code hosting platform (similar to GitHub) that we'll use to access agent templates.
+                        We've prepared sample academic papers, student essays, rubrics, and instructions for you to practice with.
                       </p>
-                      <ol className="list-decimal list-inside space-y-2 text-sm text-foreground">
-                        <li>Visit gitee.com</li>
-                        <li>Click "Sign Up" or "注册"</li>
-                        <li>Create an account using your email address</li>
-                        <li>Verify your email if required</li>
-                        <li>Complete your profile</li>
-                      </ol>
-                      </div>
-                    </div>
-                  </div>
+                      
+                      <div className="space-y-3">
+                        <div className="bg-background p-3 rounded border">
+                          <a href="/sample_academic_paper.pdf" download className="flex items-center gap-2 text-primary hover:underline">
+                            <Download className="h-4 w-4" />
+                            <span className="font-medium">Sample Academic Paper (PDF)</span>
+                          </a>
+                          <p className="text-xs text-muted-foreground mt-1">Research paper on AI in education</p>
+                        </div>
 
-                {/* Step 6: Fork the Agent Repository */}
-                <div className="bg-gradient-to-r from-teal-50 to-green-50 dark:from-teal-900/20 dark:to-green-900/20 p-6 rounded-xl border-2">
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className="bg-teal-100 dark:bg-teal-900 p-3 rounded-lg">
-                      <GitFork className="h-6 w-6 text-teal-600 dark:text-teal-400" />
-                    </div>
-                      <div className="flex-1">
-                      <h5 className="text-xl font-semibold text-foreground mb-2">Step 6: Fork the Agent Repository</h5>
-                      <p className="text-sm text-muted-foreground mb-3">
-                        Forking creates your own copy of the agent template repository that you can customize.
-                      </p>
-                      <ol className="list-decimal list-inside space-y-2 text-sm text-foreground">
-                        <li>Log in to your Gitee.com account</li>
-                        <li>Visit: <a href="https://gitee.com/simonwanghk/agent4eap" target="_blank" rel="noopener noreferrer" className="text-primary underline">https://gitee.com/simonwanghk/agent4eap</a></li>
-                        <li>Click the "Fork" button (fork按钮) in the top right corner</li>
-                        <li>Confirm the fork—this creates your own copy of the repository</li>
-                        <li>You now have access to the agent template in your Gitee account</li>
-                      </ol>
-                      <div className="bg-background p-3 rounded border mt-3">
-                        <p className="text-xs text-muted-foreground">
-                          <strong>What is agent4eap?</strong> This is a template repository designed for educational 
-                          AI agent projects. It provides a starting point for creating AI agents for teaching and learning tasks.
-                        </p>
+                        <div className="bg-background p-3 rounded border">
+                          <a href="/sample_student_essay.pdf" download className="flex items-center gap-2 text-primary hover:underline">
+                            <Download className="h-4 w-4" />
+                            <span className="font-medium">Sample Student Essay (PDF)</span>
+                          </a>
+                          <p className="text-xs text-muted-foreground mt-1">B2 level argumentative essay</p>
+                        </div>
+
+                        <div className="bg-background p-3 rounded border">
+                          <a href="/essay_rubric.pdf" download className="flex items-center gap-2 text-primary hover:underline">
+                            <Download className="h-4 w-4" />
+                            <span className="font-medium">Essay Grading Rubric (PDF)</span>
+                          </a>
+                          <p className="text-xs text-muted-foreground mt-1">Comprehensive assessment criteria</p>
+                        </div>
+
+                        <div className="bg-background p-3 rounded border">
+                          <a href="/agent_instructions.pdf" download className="flex items-center gap-2 text-primary hover:underline">
+                            <Download className="h-4 w-4" />
+                            <span className="font-medium">AI Agent Instructions (PDF)</span>
+                          </a>
+                          <p className="text-xs text-muted-foreground mt-1">Guide for using agents with these materials</p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -545,12 +517,12 @@ const AIAgents = () => {
                 lessonSlug={lessonSlug}
                 sectionId="module3"
                 questionId="setup-steps"
-                question="What is the purpose of forking the agent4eap repository?"
+                question="Why is it important to keep your API keys in a secure file?"
                 options={[
-                  "To delete the original repository",
-                  "To create your own copy of the agent template that you can customize",
-                  "To share your API keys with others",
-                  "To install Trae.cn automatically"
+                  "To make them easier to remember",
+                  "To prevent unauthorized access and protect your account",
+                  "To speed up the AI agent",
+                  "To share them with other teachers"
                 ]}
               />
             </CollapsibleSection>

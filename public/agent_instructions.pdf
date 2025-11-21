@@ -1,0 +1,185 @@
+%PDF-1.4
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+2 0 obj
+<<
+/Type /Pages
+/Kids [3 0 R]
+/Count 1
+>>
+endobj
+3 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/Resources <<
+/Font <<
+/F1 4 0 R
+/F2 5 0 R
+>>
+>>
+/MediaBox [0 0 612 792]
+/Contents 6 0 R
+>>
+endobj
+4 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Times-Bold
+>>
+endobj
+5 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Times-Roman
+>>
+endobj
+6 0 obj
+<<
+/Length 2600
+>>
+stream
+BT
+/F1 18 Tf
+50 720 Td
+(AI Agent Instructions for Academic Assessment) Tj
+0 -30 Td
+/F2 11 Tf
+(A Guide for Teachers Using AI Agents to Analyze Student Work) Tj
+0 -50 Td
+/F1 14 Tf
+(Overview) Tj
+0 -25 Td
+/F2 10 Tf
+(This guide provides instructions for using AI agents to analyze student essays) Tj
+0 -15 Td
+(and academic papers. The agent will evaluate student work against provided) Tj
+0 -15 Td
+(rubrics and generate detailed feedback for improvement.) Tj
+0 -35 Td
+/F1 14 Tf
+(Required Materials) Tj
+0 -25 Td
+/F2 10 Tf
+(1. Student essay or paper \(PDF format\)) Tj
+0 -15 Td
+(2. Grading rubric \(PDF format\)) Tj
+0 -15 Td
+(3. Sample academic paper for comparison \(optional\)) Tj
+0 -15 Td
+(4. Your API key stored in api_keys.txt file) Tj
+0 -35 Td
+/F1 14 Tf
+(Setup Instructions) Tj
+0 -25 Td
+/F1 11 Tf
+(Step 1: Organize Your Files) Tj
+0 -20 Td
+/F2 10 Tf
+(Create a working directory with the following structure:) Tj
+0 -15 Td
+(  /TeachingMaterials/) Tj
+0 -12 Td
+(    /StudentWork/) Tj
+0 -12 Td
+(      - sample_student_essay.pdf) Tj
+0 -12 Td
+(    /Rubrics/) Tj
+0 -12 Td
+(      - essay_rubric.pdf) Tj
+0 -12 Td
+(    /References/) Tj
+0 -12 Td
+(      - sample_academic_paper.pdf) Tj
+0 -12 Td
+(    /Output/) Tj
+0 -12 Td
+(      - \(Agent will create feedback files here\)) Tj
+0 -25 Td
+/F1 11 Tf
+(Step 2: Prepare Your Agent Prompt) Tj
+0 -20 Td
+/F2 10 Tf
+(Use natural language to instruct the agent. Example prompts:) Tj
+0 -20 Td
+/F1 10 Tf
+(Example 1: Basic Assessment) Tj
+0 -15 Td
+/F2 9 Tf
+("Analyze the student essay in /StudentWork/ using the rubric in /Rubrics/.) Tj
+0 -12 Td
+(Evaluate the essay across all rubric categories. Provide specific scores) Tj
+0 -12 Td
+(and detailed feedback for each criterion. Identify strengths and areas for) Tj
+0 -12 Td
+(improvement. Save the feedback report to /Output/feedback_report.pdf") Tj
+0 -20 Td
+/F1 10 Tf
+(Example 2: Comparative Analysis) Tj
+0 -15 Td
+/F2 9 Tf
+("Compare the student essay in /StudentWork/ with the academic paper in) Tj
+0 -12 Td
+(/References/. Identify differences in structure, argumentation, and writing) Tj
+0 -12 Td
+(style. Provide specific examples of how the student can improve their work) Tj
+0 -12 Td
+(to meet academic standards. Use the rubric in /Rubrics/ as evaluation) Tj
+0 -12 Td
+(criteria. Generate a detailed comparison report in /Output/") Tj
+0 -20 Td
+/F1 10 Tf
+(Example 3: Targeted Feedback) Tj
+0 -15 Td
+/F2 9 Tf
+("Focus on evaluating the student essay's argumentation and use of evidence.) Tj
+0 -12 Td
+(Assess how effectively the student supports their claims with specific examples.) Tj
+0 -12 Td
+(Reference the rubric's content criteria. Provide 3-5 specific suggestions for) Tj
+0 -12 Td
+(strengthening arguments. Save feedback to /Output/argument_feedback.txt") Tj
+0 -30 Td
+/F1 14 Tf
+(Expected Output) Tj
+0 -25 Td
+/F2 10 Tf
+(The agent will generate:) Tj
+0 -15 Td
+(- Numerical scores for each rubric category) Tj
+0 -12 Td
+(- Specific feedback highlighting strengths) Tj
+0 -12 Td
+(- Detailed suggestions for improvement) Tj
+0 -12 Td
+(- Examples from the student's work) Tj
+0 -12 Td
+(- Comparison with academic standards \(if requested\)) Tj
+0 -12 Td
+(- Overall assessment and next steps for the student) Tj
+ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f
+0000000009 00000 n
+0000000058 00000 n
+0000000115 00000 n
+0000000274 00000 n
+0000000353 00000 n
+0000000433 00000 n
+trailer
+<<
+/Size 7
+/Root 1 0 R
+>>
+startxref
+3085
+%%EOF
