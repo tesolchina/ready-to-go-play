@@ -247,7 +247,7 @@ export const SimpleActivityCreator = () => {
             </div>
             <p className="text-sm text-muted-foreground mt-4">
               Use this prompt in your AI chatbot or teaching assistant tool to provide consistent, helpful feedback to students.
-              <strong> Note:</strong> There is more work to be done on improving this chatbot's feedback quality.
+              <strong>Note:</strong> There is more work to be done on improving this chatbot's feedback quality.
             </p>
           </Card>
 

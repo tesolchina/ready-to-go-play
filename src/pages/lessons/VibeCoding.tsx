@@ -154,7 +154,7 @@ The letter '${letterInput}' appears ${count} times in '${wordInput}'`);
                   <h4 className="text-2xl font-semibold text-foreground mb-4">Natural Language: For Humans, Not Machines</h4>
                   <p className="text-foreground text-lg leading-relaxed">
                     When ChatGPT launched, the world marveled at how naturally it conversed. But here's the paradox: 
-                    <strong> natural language evolved for human-to-human communication, not for human-to-machine communication.</strong>
+                    <strong>natural language evolved for human-to-human communication, not for human-to-machine communication.</strong>
                   </p>
                   <p className="text-foreground text-lg leading-relaxed mt-4">
                     When you want AI to create a diagram, analyze data, or automate a process, describing it in English 
@@ -486,7 +486,7 @@ print(f"'{letter}' appears {count} times")`}</pre>
                 <div className="prose prose-lg max-w-none">
                   <p className="text-foreground text-lg leading-relaxed">
                     Now let's explore a real-world application that demonstrates the power of vibe coding: 
-                    <strong> the Academic Reference Validator</strong>. This tool shows how AI-generated code can 
+                    <strong>the Academic Reference Validator</strong>. This tool shows how AI-generated code can 
                     automate complex, repetitive tasks and leverage external computing resources at scale.
                   </p>
                 </div>
