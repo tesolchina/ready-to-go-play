@@ -13,9 +13,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useAIServiceGuard } from "@/hooks/useAIServiceGuard";
+import { getAIHeaders } from "@/lib/aiServiceGuard";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 const VibeCodingRevised = () => {
   const { toast } = useToast();
+  const { isActivated, checkAndNotify } = useAIServiceGuard();
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     module1: false,
     module2: false,
@@ -49,6 +54,8 @@ const VibeCodingRevised = () => {
   };
   
   const handleGenerateMermaid = async () => {
+    if (!checkAndNotify()) return;
+    
     if (!userDescription.trim()) {
       toast({
         title: "Input Required",
@@ -61,7 +68,8 @@ const VibeCodingRevised = () => {
     setIsGenerating(true);
     try {
       const { data, error } = await supabase.functions.invoke('generate-mermaid', {
-        body: { description: userDescription }
+        body: { description: userDescription },
+        headers: getAIHeaders()
       });
       
       if (error) throw error;
@@ -223,6 +231,18 @@ The letter '${letterInput}' appears ${count} times in '${wordInput}'`);
               onToggle={() => toggleSection("module2")}
             >
               <div className="space-y-6">
+                {!isActivated && (
+                  <Alert>
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>
+                      AI services are not configured. Please{" "}
+                      <Link to="/lessons" className="underline font-semibold">
+                        configure your API key
+                      </Link>{" "}
+                      to use diagram generation features.
+                    </AlertDescription>
+                  </Alert>
+                )}
                 <div className="prose prose-lg max-w-none">
                   <p className="text-foreground text-lg leading-relaxed">
                     <strong>Mermaid</strong> is a simple language for creating diagrams using text. Instead of using 
@@ -285,7 +305,7 @@ The letter '${letterInput}' appears ${count} times in '${wordInput}'`);
                     
                     <Button 
                       onClick={handleGenerateMermaid}
-                      disabled={isGenerating}
+                      disabled={isGenerating || !isActivated}
                       className="w-full"
                     >
                       {isGenerating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
