@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import { BookOpen, GraduationCap, Plus, Sparkles, FileText, Brain, Zap, CheckCircle2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { CollapsibleSection } from "@/components/CollapsibleSection";
+import { getAllBlogPosts, type BlogPost as BlogPostType } from "@/lib/blogLoader";
 
 interface Lesson {
   id: string;
@@ -16,52 +17,32 @@ interface Lesson {
   created_at: string;
 }
 
-interface BlogPost {
-  id: string;
-  slug: string;
-  title: string;
-  excerpt: string;
-  author: string;
-  published_date: string;
-  category: string;
-}
 
 const Index = () => {
   const [lessons, setLessons] = useState<Lesson[]>([]);
-  const [latestBlogPost, setLatestBlogPost] = useState<BlogPost | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+  const latestBlogPost = useMemo(() => {
+    const posts = getAllBlogPosts();
+    return posts[0] || null;
+  }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchLessons = async () => {
       try {
         const supabaseAny = supabase as any;
-        
-        // Fetch lessons
-        const { data: lessonsData, error: lessonsError } = await supabaseAny
+        const { data, error } = await supabaseAny
           .from('lessons')
           .select('id, slug, title, subject, grade_level, learning_objectives, created_at')
           .order('created_at', { ascending: false });
 
-        if (lessonsError) throw lessonsError;
-        setLessons(lessonsData || []);
-
-        // Fetch latest blog post
-        const { data: blogData, error: blogError } = await supabaseAny
-          .from('blog_posts')
-          .select('id, slug, title, excerpt, author, published_date, category')
-          .order('published_date', { ascending: false })
-          .limit(1)
-          .single();
-
-        if (!blogError && blogData) {
-          setLatestBlogPost(blogData);
-        }
+        if (error) throw error;
+        setLessons(data || []);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching lessons:", error);
         toast({
           title: "Error",
-          description: "Failed to load data",
+          description: "Failed to load lessons",
           variant: "destructive",
         });
       } finally {
@@ -69,7 +50,7 @@ const Index = () => {
       }
     };
 
-    fetchData();
+    fetchLessons();
   }, [toast]);
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-primary/5">
