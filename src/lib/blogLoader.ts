@@ -19,12 +19,12 @@ const blogModules = import.meta.glob('/src/content/blog/*.md', {
 });
 
 // Parse frontmatter from markdown
-function parseFrontmatter(markdown: string): { metadata: BlogPostMetadata; content: string } {
+function parseFrontmatter(markdown: string): { metadata: BlogPostMetadata; content: string } | null {
   const frontmatterRegex = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/;
   const match = markdown.match(frontmatterRegex);
   
   if (!match) {
-    throw new Error('Invalid markdown format: missing frontmatter');
+    return null; // Skip files without frontmatter (like README.md)
   }
   
   const [, frontmatterStr, content] = match;
@@ -50,8 +50,12 @@ export function getAllBlogPosts(): BlogPost[] {
   
   for (const path in blogModules) {
     const markdown = blogModules[path] as string;
-    const { metadata, content } = parseFrontmatter(markdown);
-    posts.push({ ...metadata, content });
+    const result = parseFrontmatter(markdown);
+    
+    // Skip files without proper frontmatter (like README.md)
+    if (result) {
+      posts.push({ ...result.metadata, content: result.content });
+    }
   }
   
   // Sort by published date (newest first)
