@@ -48,22 +48,15 @@ function parseFrontmatter(markdown: string): { metadata: BlogPostMetadata; conte
 export function getAllBlogPosts(): BlogPost[] {
   const posts: BlogPost[] = [];
   
-  console.log('Loading blog posts. Found modules:', Object.keys(blogModules).length);
-  
   for (const path in blogModules) {
     const markdown = blogModules[path] as string;
     const result = parseFrontmatter(markdown);
     
     // Skip files without proper frontmatter (like README.md)
     if (result) {
-      console.log('Loaded post:', result.metadata.title, 'slug:', result.metadata.slug);
       posts.push({ ...result.metadata, content: result.content });
-    } else {
-      console.log('Skipped file without frontmatter:', path);
     }
   }
-  
-  console.log('Total posts loaded:', posts.length);
   
   // Sort by published date (newest first)
   return posts.sort((a, b) => 
