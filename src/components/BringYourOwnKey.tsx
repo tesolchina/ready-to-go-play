@@ -70,7 +70,7 @@ export const BringYourOwnKey = () => {
     try {
       const endpoint = provider === "kimi" 
         ? "https://api.moonshot.cn/v1/chat/completions"
-        : "https://api.deepseek.com/chat/completions";
+        : "https://api.deepseek.com/v1/chat/completions";
       
       const response = await fetch(endpoint, {
         method: "POST",
