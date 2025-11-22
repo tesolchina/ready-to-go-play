@@ -304,15 +304,19 @@ Diagram guidelines:
     setLoading(true);
     try {
       toast({
-        title: "Starting Analysis",
-        description: "Analyzing essay structure...",
+        title: "Step 1: Starting Analysis",
+        description: "Reading and processing your essay...",
+        duration: 3000,
       });
       
       addToHistory('user', `Analyze essay structure:\n\n${text.substring(0, 200)}...`);
       
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
       toast({
-        title: "Generating Diagram",
+        title: "Step 2: Generating Diagram",
         description: "Creating visual structure diagram...",
+        duration: 3000,
       });
       
       // First, get the mermaid diagram
@@ -335,9 +339,12 @@ Diagram guidelines:
       }
 
       toast({
-        title: "Diagram Generated",
-        description: "Now analyzing structural patterns...",
+        title: "Step 3: Diagram Complete",
+        description: "Now analyzing structural patterns and rhetorical strategies...",
+        duration: 3000,
       });
+
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       // Then, get the pattern analysis
       const { data: patternData, error: patternError } = await supabase.functions.invoke('pattern-analyzer', {
@@ -351,9 +358,12 @@ Diagram guidelines:
       if (patternError) throw patternError;
 
       toast({
-        title: "Pattern Analysis Complete",
-        description: "Finalizing results...",
+        title: "Step 4: Pattern Analysis Complete",
+        description: "Finalizing and formatting results...",
+        duration: 3000,
       });
+
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       if (isDemo) {
         setDemoMermaidCode(mermaidData.mermaidCode);
@@ -364,8 +374,9 @@ Diagram guidelines:
       }
 
       toast({
-        title: "Analysis Complete!",
-        description: "Essay structure visualization ready.",
+        title: "✓ Analysis Complete!",
+        description: "Your essay structure visualization is ready to view.",
+        duration: 4000,
       });
     } catch (error) {
       console.error('Error analyzing text:', error);
@@ -391,6 +402,12 @@ Diagram guidelines:
       
       addToHistory('user', `Generate outline for new topic: "${topicPrompt}"`);
       
+      toast({
+        title: "Step 1: Analyzing Structure",
+        description: "Applying identified patterns to your new topic...",
+        duration: 3000,
+      });
+      
       const { data, error } = await supabase.functions.invoke('pattern-analyzer', {
         body: {
           text: analyzedPattern,
@@ -406,6 +423,14 @@ Diagram guidelines:
       setGeneratedOutline(data.result);
       addToHistory('assistant', `Generated Outline:\n\n${data.result}`);
       
+      toast({
+        title: "Step 2: Creating Diagram",
+        description: "Generating visual structure for your outline...",
+        duration: 3000,
+      });
+      
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
       // Generate mermaid for the outline
       const { data: mermaidData } = await supabase.functions.invoke('generate-mermaid', {
         body: { 
@@ -419,8 +444,9 @@ Diagram guidelines:
       }
 
       toast({
-        title: "Outline Generated",
-        description: "New essay outline created using identified patterns!",
+        title: "✓ Outline Generated!",
+        description: "New essay outline created using identified patterns.",
+        duration: 4000,
       });
     } catch (error) {
       console.error('Error generating outline:', error);
@@ -442,6 +468,20 @@ Diagram guidelines:
     try {
       addToHistory('user', 'Generate full essay from outline');
       
+      toast({
+        title: "Step 1: Processing Outline",
+        description: "Preparing to generate full essay...",
+        duration: 3000,
+      });
+      
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      toast({
+        title: "Step 2: Writing Essay",
+        description: "Generating content using structural patterns...",
+        duration: 3000,
+      });
+      
       const { data, error } = await supabase.functions.invoke('pattern-analyzer', {
         body: {
           text: analyzedPattern,
@@ -458,8 +498,9 @@ Diagram guidelines:
       addToHistory('assistant', `Generated Essay:\n\n${data.result}`);
 
       toast({
-        title: "Essay Generated",
-        description: "Full essay draft created successfully!",
+        title: "✓ Essay Generated!",
+        description: "Full essay draft created successfully using structural patterns.",
+        duration: 4000,
       });
     } catch (error) {
       console.error('Error generating essay:', error);
