@@ -1,6 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1';
+import { schemas, validateRequest } from "../_shared/validation.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -13,20 +14,24 @@ serve(async (req) => {
   }
 
   try {
+    const body = await req.json();
+    
+    // Validate input with zod schema
+    const validation = validateRequest(schemas.templateFeedback, body);
+    if (!validation.success) {
+      return new Response(
+        JSON.stringify({ error: validation.error }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const { 
       paragraphText, 
       patternCategory, 
       patternSubcategory, 
       templateText, 
       userAnswer 
-    } = await req.json();
-
-    if (!userAnswer || userAnswer.trim().length < 10) {
-      return new Response(
-        JSON.stringify({ error: 'Answer must be at least 10 characters' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
+    } = validation.data;
 
     // Get API keys from environment variables (platform keys)
     let KIMI_API_KEY = Deno.env.get('KIMI_API_KEY');
