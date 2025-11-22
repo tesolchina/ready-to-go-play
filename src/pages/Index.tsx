@@ -16,27 +16,52 @@ interface Lesson {
   created_at: string;
 }
 
+interface BlogPost {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  author: string;
+  published_date: string;
+  category: string;
+}
+
 const Index = () => {
   const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [latestBlogPost, setLatestBlogPost] = useState<BlogPost | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
   useEffect(() => {
-    const fetchLessons = async () => {
+    const fetchData = async () => {
       try {
         const supabaseAny = supabase as any;
-        const { data, error } = await supabaseAny
+        
+        // Fetch lessons
+        const { data: lessonsData, error: lessonsError } = await supabaseAny
           .from('lessons')
           .select('id, slug, title, subject, grade_level, learning_objectives, created_at')
           .order('created_at', { ascending: false });
 
-        if (error) throw error;
-        setLessons(data || []);
+        if (lessonsError) throw lessonsError;
+        setLessons(lessonsData || []);
+
+        // Fetch latest blog post
+        const { data: blogData, error: blogError } = await supabaseAny
+          .from('blog_posts')
+          .select('id, slug, title, excerpt, author, published_date, category')
+          .order('published_date', { ascending: false })
+          .limit(1)
+          .single();
+
+        if (!blogError && blogData) {
+          setLatestBlogPost(blogData);
+        }
       } catch (error) {
-        console.error("Error fetching lessons:", error);
+        console.error("Error fetching data:", error);
         toast({
           title: "Error",
-          description: "Failed to load lessons",
+          description: "Failed to load data",
           variant: "destructive",
         });
       } finally {
@@ -44,7 +69,7 @@ const Index = () => {
       }
     };
 
-    fetchLessons();
+    fetchData();
   }, [toast]);
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-primary/5">
@@ -222,6 +247,55 @@ const Index = () => {
               </Card>
             </Link>
           </section>
+
+          {/* Latest Blog Post */}
+          {latestBlogPost && (
+            <section>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-bold text-foreground">Latest from the Blog</h2>
+                <Link to="/blog" className="text-primary hover:underline text-sm font-medium">
+                  View all posts →
+                </Link>
+              </div>
+              <Link to={`/blog/${latestBlogPost.slug}`} className="group block">
+                <Card className="transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-2 hover:border-primary/50 bg-gradient-to-br from-primary/5 to-primary/10">
+                  <CardHeader>
+                    <div className="flex items-start gap-4">
+                      <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center flex-shrink-0">
+                        <FileText className="w-8 h-8 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        {latestBlogPost.category && (
+                          <span className="px-2 py-1 bg-primary/10 text-primary rounded-md text-xs font-medium mb-2 inline-block">
+                            {latestBlogPost.category}
+                          </span>
+                        )}
+                        <CardTitle className="text-2xl mb-2 group-hover:text-primary transition-colors">
+                          {latestBlogPost.title}
+                        </CardTitle>
+                        {latestBlogPost.excerpt && (
+                          <CardDescription className="text-base">
+                            {latestBlogPost.excerpt}
+                          </CardDescription>
+                        )}
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <span>{latestBlogPost.author}</span>
+                      <span>•</span>
+                      <span>{new Date(latestBlogPost.published_date).toLocaleDateString('zh-CN', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            </section>
+          )}
 
           {/* Lesson Creator */}
           <section>
