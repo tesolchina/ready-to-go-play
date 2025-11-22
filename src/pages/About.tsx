@@ -82,6 +82,17 @@ const About = () => {
                 </div>
               </CardContent>
             </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Acknowledgement</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-foreground">
+                  The preparation of this website was partially supported by the General Research Fund of the Research Grants Council of the Hong Kong Special Administrative Region, China (Project Code: 17618424).
+                </p>
+              </CardContent>
+            </Card>
           </div>
           </div>
         </main>
