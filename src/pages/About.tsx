@@ -1,9 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { Mail, ExternalLink, MessageCircle } from "lucide-react";
+import { Mail, ExternalLink, MessageCircle, QrCode } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import QRCode from "react-qr-code";
 
 const About = () => {
+  const [showQR, setShowQR] = useState(false);
+  
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
@@ -16,7 +21,34 @@ const About = () => {
           <div className="p-8">
           <div className="max-w-4xl mx-auto space-y-8">
             <div className="space-y-4">
-              <h1 className="text-4xl font-bold tracking-tight">About AI Learning Hub</h1>
+              <div className="flex items-center justify-between">
+                <h1 className="text-4xl font-bold tracking-tight">About AI Learning Hub</h1>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowQR(!showQR)}
+                  className="gap-2"
+                >
+                  <QrCode className="h-4 w-4" />
+                  {showQR ? "Hide" : "Show"} QR Code
+                </Button>
+              </div>
+              
+              {showQR && (
+                <Card>
+                  <CardContent className="pt-6 flex flex-col items-center gap-4">
+                    <QRCode
+                      value="https://eapteacher.smartutor.me/"
+                      size={200}
+                      level="H"
+                    />
+                    <p className="text-sm text-muted-foreground">
+                      Scan to visit: <a href="https://eapteacher.smartutor.me/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">eapteacher.smartutor.me</a>
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
+              
               <p className="text-xl text-muted-foreground">
                 A platform for workshops and training on AI technologies and literacies for EAP university teachers and students
               </p>
