@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const Blog = () => {
-  const { data: blogPosts, isLoading } = useQuery({
+  const { data: blogPosts, isLoading, error } = useQuery({
     queryKey: ['blog-posts'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -33,13 +33,17 @@ const Blog = () => {
           <div className="p-8">
           <div className="max-w-6xl mx-auto space-y-8">
             <div className="space-y-4">
-              <h1 className="text-4xl font-bold tracking-tight">Blog & Resources</h1>
+              <h1 className="text-4xl font-bold tracking-tight">博客与资源</h1>
               <p className="text-xl text-muted-foreground">
-                Insights, tips, and updates for EAP educators
+                EAP教育者的见解、技巧和更新 | Insights, tips, and updates for EAP educators
               </p>
             </div>
 
-            {isLoading ? (
+            {error ? (
+              <div className="text-center py-12">
+                <p className="text-destructive text-lg">加载博客文章时出错，请稍后重试</p>
+              </div>
+            ) : isLoading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {[1, 2, 3, 4].map((i) => (
                   <Card key={i}>
@@ -76,7 +80,11 @@ const Blog = () => {
                         <div className="flex items-center gap-4 text-sm text-muted-foreground">
                           <div className="flex items-center gap-1">
                             <Calendar className="w-4 h-4" />
-                            <span>{new Date(post.published_date).toLocaleDateString('zh-CN')}</span>
+                            <span>{new Date(post.published_date).toLocaleDateString('zh-CN', {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric'
+                            })}</span>
                           </div>
                           <div className="flex items-center gap-1">
                             <User className="w-4 h-4" />
