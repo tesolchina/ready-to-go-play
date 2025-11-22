@@ -32,16 +32,90 @@
 
 这个过程本身就是一个很好的例子，展示了如何负责任地使用AI：AI帮助我组织思路和表达，但所有的观点、论据和最终立场都是我自己的。这与HKU事件中作者的做法形成了鲜明对比——他们使用AI生成了虚假内容，却没有声明。
 
+### AI辅助写作过程总结
+
+我使用AI工具（主要是Gemini 2.5 Pro和DeepSeek-V3）来协助起草这封信的过程包括：
+
+1. **初始大纲**：AI帮助我创建了信件的结构大纲，包括引言、主体段落和结论。AI建议采用"同意社论核心关切但提出更深入解决方案"的角度。
+
+2. **论点完善**：AI提供了多个角度的建议，包括：
+   - 将指南审查比作"在船上张贴安全警告而非修复结构缺陷"
+   - 提出两方面的解决方案：强制性AI素养教育和评估方法现代化
+   - 强调从"监管"转向"教育"的重要性
+
+3. **证据整合**：当我发现GPTZero扫描结果显示论文可能包含AI生成内容时，AI帮助我将这一证据整合到论证中，同时保持专业和平衡的语调。
+
+4. **语言优化**：AI协助我改进表达方式，使论点更加清晰有力，同时避免过于指责性的语言。
+
+5. **结构调整**：根据我的反馈，AI帮助我重新组织信件结构，将重点从政策讨论转向基于证据的论证，强调培训需求和技能提升。
+
+关键的是，在整个过程中，我始终：
+- 保持对论点的控制
+- 确保所有事实的准确性
+- 根据编辑反馈调整措辞
+- 在最终版本中声明了AI的使用
+- 对最终内容承担全部责任
+
 ### 编辑的修订：从指责到建设性
 
 在提交信件后，SCMP的编辑Tse Chueen提出了一个重要的反馈：原稿中对作者使用AI生成文本的指控可能过于强烈。编辑指出，媒体报道主要集中在AI生成引用的问题上，并没有明确证据表明整篇论文的内容都是AI生成的。
 
-经过与编辑的讨论，我调整了信件的措辞，使其更加平衡和建设性：
+编辑的关切是合理的：AI检测工具（如GPTZero）并非绝对可靠，而且我的原始措辞可能过于确定。经过与编辑的讨论，我调整了信件的措辞，使其更加平衡和建设性：
 
 - **原稿**："Results showed significant portions were likely AI-generated"（结果显示大部分内容可能是AI生成的）
 - **修订稿**："Results showed significant portions were flagged as likely to have been AI-generated. If true, the authors had made no declaration"（结果显示大部分内容被标记为可能由AI生成。如果属实，作者没有做出声明）
 
-这个修订过程让我深刻理解了负责任的沟通的重要性：我们的目标不是指责，而是促进对话和改进。
+这个修订过程让我深刻理解了负责任的沟通的重要性：我们的目标不是指责，而是促进对话和改进。编辑的反馈帮助我学会了如何在保持论点的同时，使用更加谨慎和专业的语言。
+
+### 最终发表的信件全文
+
+以下是最终在《南华早报》发表的信件全文：
+
+---
+
+**Publishers have AI rules. Researchers should follow them**
+
+Your editorial on artificial intelligence guidelines at Hong Kong universities rightly highlights concerns about academic integrity ("Timely review of AI guidelines at Hong Kong universities essential", November 13). However, publishers already have clear policies that researchers should follow.
+
+The recent scandal involving an academic paper containing AI-generated references prompted me to scan the manuscript using multiple AI detection tools. Significant portions of the article were flagged as likely to have been AI-generated. If true, the authors had made no declaration – violating their publisher's own policies.
+
+Springer, publisher of the journal in question, requires transparency for any generative AI use beyond basic copy-editing. Authors must document AI assistance in their methods section and remain fully accountable for their work's accuracy and integrity. The fake citations in this paper demonstrate what happens when this accountability fails.
+
+It has become commonplace these days for students and academic authors to write papers using AI. Authors might collaborate with AI to co-create the texts, for example. But transparency must be upheld.
+
+To practise what I preach, I declare my use of AI to draft this letter.
+
+Instead of using AI to generate unreliable citations, researchers should harness it to strengthen verification processes. They could learn to write programs with AI that automate database searches through APIs, retrieve authentic papers directly from publishers, and systematically validate citations by checking source URLs with web crawlers. These tools would help authors fulfill their accountability obligations by ensuring every citation is real and accessible.
+
+Therefore, rather than merely reviewing internal guidelines as your editorial suggests, Hong Kong's universities must fundamentally reframe their approach: enforce existing publisher standards while equipping scholars with AI skills that strengthen human oversight. This is how we truly "set good examples" in the AI era – ensuring technology reinforces, not replaces, scholarly accountability.
+
+Simon Wang, Kowloon Tong
+
+---
+
+### 原始版本（提交给编辑前）
+
+以下是我最初提交给编辑的版本，后来根据编辑的反馈进行了修订：
+
+---
+
+**Publishers have AI rules. Researchers should follow them**
+
+Your editorial on artificial intelligence guidelines at Hong Kong universities rightly highlights concerns about academic integrity ("Timely review of AI guidelines at Hong Kong universities essential", November 13). However, publishers already have clear policies that researchers should follow.
+
+The recent scandal involving an academic paper containing AI-generated references prompted me to scan the manuscript using multiple AI detection tools. Significant portions of the article were flagged for attention. If AI was used, the authors should have declared it, as per the publisher's policies.
+
+Springer, the publisher of the journal that published the paper, requires transparency for any generative AI use beyond basic copy-editing. Authors must document AI assistance in their methods section and remain fully accountable for their work's accuracy and integrity. The fake citations in this paper demonstrate what happens when this accountability fails.
+
+It has become commonplace these days for students and academic authors to write papers using AI. Authors might collaborate with AI to co-create the texts, for example. But transparency must be upheld. To practise what I preach, I declare my use of AI to draft this letter.
+
+Instead of using AI to generate unreliable citations, researchers should harness it to strengthen verification processes. They could learn to write programs with AI that automate database searches through APIs, retrieve authentic papers directly from publishers, and systematically validate citations by checking source URLs with web crawlers. These tools would help authors fulfil their accountability obligations by ensuring every citation is real and accessible.
+
+Therefore, rather than merely reviewing internal guidelines as your editorial suggests, Hong Kong's universities must fundamentally reframe their approach: enforce existing publisher standards while equipping scholars with AI skills that strengthen human oversight. This is how we truly "set good examples" in the AI era – ensuring technology reinforces, not replaces, scholarly accountability.
+
+Simon Wang, Kowloon Tong
+
+---
 
 ### 信件的核心论点
 
