@@ -15,10 +15,12 @@ slug: "importance-of-imagination"
 
 ## 从想象到现实
 
-<video controls className="w-full rounded-lg my-8" style={{maxWidth: '100%'}}>
-  <source src="/HKT_ad.mp4" type="video/mp4" />
-  您的浏览器不支持视频播放。
-</video>
+<div className="my-8">
+  <video controls className="w-full rounded-lg shadow-lg" style={{maxWidth: '100%'}}>
+    <source src="/HKT_ad.mp4" type="video/mp4" />
+    您的浏览器不支持视频播放。
+  </video>
+</div>
 
 这段视频展示了想象力如何转化为现实。正如1994年的标语所预示的，我们今天能够实现三十年前只能想象的教育技术。
 
