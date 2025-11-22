@@ -1,5 +1,6 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { schemas, validateRequest } from "../_shared/validation.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -12,15 +13,18 @@ serve(async (req) => {
   }
 
   try {
-    const lessonData = await req.json();
+    const body = await req.json();
     
-    // Validate lesson data
-    const requiredFields = ['problem', 'audience', 'undesirableSolutions', 'framework', 'howItWorks', 'practice', 'reflection'];
-    for (const field of requiredFields) {
-      if (!lessonData[field]) {
-        throw new Error(`Missing required field: ${field}`);
-      }
+    // Validate input with zod schema
+    const validation = validateRequest(schemas.lessonData, body);
+    if (!validation.success) {
+      return new Response(
+        JSON.stringify({ error: validation.error }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
+
+    const lessonData = validation.data;
 
     const KIMI_API_KEY = Deno.env.get('KIMI_API_KEY');
     const DEEPSEEK_API_KEY = Deno.env.get('DEEPSEEK_API_KEY');

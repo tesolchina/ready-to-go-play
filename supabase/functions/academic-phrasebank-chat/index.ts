@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { schemas, validateRequest } from "../_shared/validation.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -11,7 +12,18 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, category, subcategory, discipline, examples, model = "aliyun" } = await req.json();
+    const body = await req.json();
+    
+    // Validate input
+    const validation = validateRequest(schemas.chatMessages, body);
+    if (!validation.success) {
+      return new Response(
+        JSON.stringify({ error: validation.error }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const { messages, category, subcategory, discipline, examples, model = "aliyun" } = validation.data;
     
     const KIMI_API_KEY = Deno.env.get("KIMI_API_KEY");
     const ALIYUN_API_KEY = Deno.env.get("ALIYUN_API_KEY");

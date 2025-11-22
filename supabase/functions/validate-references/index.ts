@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { schemas, validateRequest } from "../_shared/validation.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -254,7 +255,18 @@ serve(async (req) => {
   }
 
   try {
-    const { references } = await req.json();
+    const body = await req.json();
+    
+    // Validate input
+    const validation = validateRequest(schemas.references, body);
+    if (!validation.success) {
+      return new Response(
+        JSON.stringify({ error: validation.error }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const { references } = validation.data;
     console.log('Starting reference validation');
 
     const SEMANTIC_SCHOLAR_API_KEY = Deno.env.get('SEMANTIC_SCHOLAR_API_KEY');
