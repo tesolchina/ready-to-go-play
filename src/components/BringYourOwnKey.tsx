@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Key, CheckCircle2, XCircle, Loader2, Shield } from "lucide-react";
+import { ExternalLink, Key, CheckCircle2, XCircle, Loader2, Shield, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -22,6 +22,10 @@ export const BringYourOwnKey = () => {
   const [secretCode, setSecretCode] = useState("");
   const [validatingCode, setValidatingCode] = useState(false);
   const [hasValidCode, setHasValidCode] = useState(false);
+  const [showKeys, setShowKeys] = useState<Record<ApiProvider, boolean>>({
+    kimi: false,
+    deepseek: false,
+  });
   const { toast } = useToast();
 
   useEffect(() => {
@@ -361,14 +365,31 @@ export const BringYourOwnKey = () => {
           </p>
           
           <div className="flex gap-2">
-            <Input
-              id="kimi-key"
-              type="password"
-              value={kimiKey}
-              onChange={(e) => setKimiKey(e.target.value)}
-              placeholder="sk-..."
-              className="flex-1"
-            />
+            <div className="relative flex-1">
+              <Input
+                id="kimi-key"
+                type={showKeys.kimi ? "text" : "password"}
+                value={kimiKey}
+                onChange={(e) => setKimiKey(e.target.value)}
+                placeholder="sk-..."
+                className="pr-10"
+              />
+              {kimiKey && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  onClick={() => setShowKeys(prev => ({ ...prev, kimi: !prev.kimi }))}
+                >
+                  {showKeys.kimi ? (
+                    <EyeOff className="h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </Button>
+              )}
+            </div>
             {savedKeys.kimi ? (
               <Button
                 variant="destructive"
@@ -431,14 +452,31 @@ export const BringYourOwnKey = () => {
           </p>
           
           <div className="flex gap-2">
-            <Input
-              id="deepseek-key"
-              type="password"
-              value={deepseekKey}
-              onChange={(e) => setDeepseekKey(e.target.value)}
-              placeholder="sk-..."
-              className="flex-1"
-            />
+            <div className="relative flex-1">
+              <Input
+                id="deepseek-key"
+                type={showKeys.deepseek ? "text" : "password"}
+                value={deepseekKey}
+                onChange={(e) => setDeepseekKey(e.target.value)}
+                placeholder="sk-..."
+                className="pr-10"
+              />
+              {deepseekKey && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  onClick={() => setShowKeys(prev => ({ ...prev, deepseek: !prev.deepseek }))}
+                >
+                  {showKeys.deepseek ? (
+                    <EyeOff className="h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </Button>
+              )}
+            </div>
             {savedKeys.deepseek ? (
               <Button
                 variant="destructive"
