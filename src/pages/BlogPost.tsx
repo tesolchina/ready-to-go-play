@@ -1,30 +1,17 @@
 import { useParams, Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Calendar, User, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from 'remark-gfm';
 import { MermaidDiagram } from "@/components/MermaidDiagram";
+import { getBlogPostBySlug } from "@/lib/blogLoader";
+import { useMemo } from "react";
 
 const BlogPost = () => {
   const { slug } = useParams();
-  
-  const { data: post, isLoading } = useQuery({
-    queryKey: ['blog-post', slug],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('blog_posts')
-        .select('*')
-        .eq('slug', slug)
-        .maybeSingle();
-      
-      if (error) throw error;
-      return data;
-    }
-  });
+  const post = useMemo(() => slug ? getBlogPostBySlug(slug) : null, [slug]);
 
   return (
     <SidebarProvider>
@@ -44,13 +31,7 @@ const BlogPost = () => {
               </Button>
             </Link>
 
-            {isLoading ? (
-              <div className="space-y-6">
-                <Skeleton className="h-12 w-3/4" />
-                <Skeleton className="h-6 w-1/2" />
-                <Skeleton className="h-96 w-full" />
-              </div>
-            ) : post ? (
+            {post ? (
               <article className="space-y-6">
                 <header className="space-y-4 border-b pb-6">
                   {post.category && (
@@ -78,6 +59,7 @@ const BlogPost = () => {
 
                 <div className="prose prose-lg max-w-none">
                   <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
                     components={{
                       h2: ({ children }) => (
                         <h2 className="text-3xl font-bold mt-8 mb-4 text-foreground">{children}</h2>

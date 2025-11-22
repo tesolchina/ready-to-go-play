@@ -2,24 +2,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Calendar, User } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
-import { Skeleton } from "@/components/ui/skeleton";
+import { getAllBlogPosts } from "@/lib/blogLoader";
+import { useMemo } from "react";
 
 const Blog = () => {
-  const { data: blogPosts, isLoading, error } = useQuery({
-    queryKey: ['blog-posts'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('blog_posts')
-        .select('*')
-        .order('published_date', { ascending: false });
-      
-      if (error) throw error;
-      return data;
-    }
-  });
+  const blogPosts = useMemo(() => getAllBlogPosts(), []);
 
   return (
     <SidebarProvider>
@@ -39,29 +27,10 @@ const Blog = () => {
               </p>
             </div>
 
-            {error ? (
-              <div className="text-center py-12">
-                <p className="text-destructive text-lg">加载博客文章时出错，请稍后重试</p>
-              </div>
-            ) : isLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {[1, 2, 3, 4].map((i) => (
-                  <Card key={i}>
-                    <CardHeader>
-                      <Skeleton className="h-6 w-20 mb-2" />
-                      <Skeleton className="h-8 w-3/4 mb-2" />
-                      <Skeleton className="h-4 w-full" />
-                    </CardHeader>
-                    <CardContent>
-                      <Skeleton className="h-4 w-2/3" />
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            ) : blogPosts && blogPosts.length > 0 ? (
+            {blogPosts && blogPosts.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {blogPosts.map((post) => (
-                  <Link to={`/blog/${post.slug}`} key={post.id}>
+                  <Link to={`/blog/${post.slug}`} key={post.slug}>
                     <Card className="hover:shadow-lg transition-all hover:scale-[1.02] h-full">
                       <CardHeader>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
