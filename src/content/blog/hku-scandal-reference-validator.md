@@ -3,7 +3,7 @@ title: "港大学术丑闻引发的思考：为什么我们需要引用验证工
 excerpt: "从近期港大学术不端事件出发，探讨AI时代学术写作中引用验证的重要性以及我们开发的解决方案"
 author: "EAP Teacher Team"
 category: "学术诚信"
-published_date: "2025-01-10"
+published_date: "2025-11-22"
 slug: "hku-scandal-reference-validator"
 ---
 

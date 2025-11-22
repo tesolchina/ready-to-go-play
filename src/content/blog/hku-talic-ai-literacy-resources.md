@@ -3,7 +3,7 @@ title: "香港大学TALIC AI素养资源：大学英语教师的实用指南"
 excerpt: "介绍香港大学TALIC开发的AI教育资源，评估其对大学英语教师的实用性和相关性"
 author: "EAP Teacher Team"
 category: "教学资源"
-published_date: "2025-01-20"
+published_date: "2025-11-22"
 slug: "hku-talic-ai-literacy-resources"
 ---
 
