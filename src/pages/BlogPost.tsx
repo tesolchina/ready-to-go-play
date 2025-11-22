@@ -108,6 +108,19 @@ const BlogPost = () => {
                           {children}
                         </pre>
                       ),
+                      video: ({ src, ...props }) => (
+                        <div className="my-8">
+                          <video 
+                            controls 
+                            className="w-full rounded-lg shadow-lg"
+                            style={{ maxWidth: '100%' }}
+                            {...props}
+                          >
+                            <source src={src} type="video/mp4" />
+                            您的浏览器不支持视频播放。
+                          </video>
+                        </div>
+                      ),
                     }}
                   >
                     {post.content}
