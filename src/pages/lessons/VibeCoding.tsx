@@ -379,6 +379,27 @@ The letter '${letterInput}' appears ${count} times in '${wordInput}'`);
               />
             </CollapsibleSection>
 
+            {/* Real-World Application: Pattern Analyzer */}
+            <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-6 rounded-xl border-2 border-primary/20">
+              <h4 className="text-2xl font-semibold text-foreground mb-4">
+                🚀 Real-World Application: Pattern Analyzer
+              </h4>
+              <p className="text-foreground text-lg leading-relaxed mb-4">
+                Ready to see Mermaid generation tackle a complex task? The Pattern Analyzer uses the same AI-powered 
+                diagram generation you just learned, but applies it to analyzing essay structures and rhetorical patterns.
+              </p>
+              <ul className="space-y-2 mb-4 text-foreground">
+                <li>📝 Analyze any essay's structure</li>
+                <li>📊 Generate visual Mermaid diagrams showing patterns</li>
+                <li>✨ Apply identified patterns to new topics</li>
+              </ul>
+              <Link to="/pattern-analyzer">
+                <Button className="w-full md:w-auto">
+                  Try Pattern Analyzer →
+                </Button>
+              </Link>
+            </div>
+
             {/* Module 3: Hands-On with Python */}
             <CollapsibleSection
               title="Hands-On: Generate Python Code"
