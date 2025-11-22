@@ -3,7 +3,7 @@ title: "从传统讲授到互动学习：重新思考教学方式"
 excerpt: "探索从传统讲授到互动学习的转变，以及AI如何帮助实现个性化教育的规模化"
 author: "AI与人工编辑"
 category: "教学方法"
-published_date: "2025-01-15"
+published_date: "2025-11-22"
 slug: "interactive-learning"
 ---
 
