@@ -124,7 +124,7 @@ const Lessons = () => {
 
                 {/* Lesson: Leverage Educational Resources */}
                 <Link to="/lessons/leverage-educational-resources">
-                  <Card className="border-2 border-accent hover:shadow-lg transition-all h-full">
+                  <Card className="border-3 border-primary hover:shadow-lg transition-all h-full">
                     <CardHeader className="space-y-2 pb-3">
                       <div className="flex items-center gap-2">
                         <CardTitle className="text-lg flex-1">
