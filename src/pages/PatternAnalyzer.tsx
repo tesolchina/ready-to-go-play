@@ -92,15 +92,58 @@ Diagram guidelines:
   };
 
   const downloadChatHistory = () => {
-    let markdown = "# Essay Structure Analysis Chat History\n\n";
+    let markdown = "# Essay Structure Analysis Session\n\n";
     markdown += `*Generated on ${new Date().toLocaleString()}*\n\n---\n\n`;
     
-    chatHistory.forEach((msg, idx) => {
-      const role = msg.role === 'user' ? '**User**' : '**AI Assistant**';
-      markdown += `### ${role} - ${msg.timestamp.toLocaleTimeString()}\n\n`;
-      markdown += `${msg.content}\n\n---\n\n`;
-    });
+    // Include original essay if analyzed
+    if (userText) {
+      markdown += "## Your Essay\n\n";
+      markdown += userText + "\n\n---\n\n";
+    }
     
+    // Include structural analysis
+    if (analyzedPattern) {
+      markdown += "## Structural Analysis\n\n";
+      markdown += analyzedPattern + "\n\n";
+      
+      if (userMermaidCode) {
+        markdown += "### Structure Diagram (Mermaid Code)\n\n";
+        markdown += "```mermaid\n" + userMermaidCode + "\n```\n\n---\n\n";
+      }
+    }
+    
+    // Include generated outline
+    if (generatedOutline) {
+      markdown += "## Generated Outline\n\n";
+      markdown += `**Topic:** ${newTopic}\n\n`;
+      if (topicDetails) {
+        markdown += `**Details:** ${topicDetails}\n\n`;
+      }
+      markdown += generatedOutline + "\n\n";
+      
+      if (generatedOutlineMermaid) {
+        markdown += "### Outline Diagram (Mermaid Code)\n\n";
+        markdown += "```mermaid\n" + generatedOutlineMermaid + "\n```\n\n---\n\n";
+      }
+    }
+    
+    // Include generated essay
+    if (generatedEssay) {
+      markdown += "## Generated Essay\n\n";
+      markdown += generatedEssay + "\n\n---\n\n";
+    }
+    
+    // Include conversation history
+    if (chatHistory.length > 0) {
+      markdown += "## Conversation History\n\n";
+      chatHistory.forEach((msg, idx) => {
+        const role = msg.role === 'user' ? '**User**' : '**AI Assistant**';
+        markdown += `### ${role} - ${msg.timestamp.toLocaleTimeString()}\n\n`;
+        markdown += `${msg.content}\n\n---\n\n`;
+      });
+    }
+    
+    // Download markdown
     const blob = new Blob([markdown], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -112,9 +155,147 @@ Diagram guidelines:
     URL.revokeObjectURL(url);
     
     toast({
-      title: "Downloaded",
-      description: "Chat history saved as markdown file",
+      title: "Markdown Downloaded",
+      description: "Complete session saved as markdown file",
     });
+  };
+
+  const downloadAsPDF = () => {
+    // Create HTML content for PDF
+    let html = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Essay Structure Analysis Session</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      line-height: 1.6;
+      color: #333;
+    }
+    h1 { color: #1a1a1a; border-bottom: 3px solid #333; padding-bottom: 10px; }
+    h2 { color: #2a2a2a; margin-top: 30px; border-bottom: 2px solid #666; padding-bottom: 8px; }
+    h3 { color: #3a3a3a; margin-top: 20px; }
+    .metadata { color: #666; font-style: italic; margin-bottom: 30px; }
+    .section { margin-bottom: 40px; page-break-inside: avoid; }
+    pre { background: #f5f5f5; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    code { background: #f5f5f5; padding: 2px 6px; border-radius: 3px; }
+    hr { border: none; border-top: 1px solid #ddd; margin: 30px 0; }
+    .timestamp { color: #888; font-size: 0.9em; }
+    @media print {
+      body { margin: 0; padding: 15px; }
+      .no-print { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Essay Structure Analysis Session</h1>
+  <p class="metadata">Generated on ${new Date().toLocaleString()}</p>
+`;
+    
+    if (userText) {
+      html += `
+  <div class="section">
+    <h2>Your Essay</h2>
+    <pre>${userText.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>
+  </div>
+`;
+    }
+    
+    if (analyzedPattern) {
+      html += `
+  <div class="section">
+    <h2>Structural Analysis</h2>
+    <pre>${analyzedPattern.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>
+  </div>
+`;
+      
+      if (userMermaidCode) {
+        html += `
+  <div class="section">
+    <h3>Structure Diagram Code</h3>
+    <pre><code>${userMermaidCode.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>
+  </div>
+`;
+      }
+    }
+    
+    if (generatedOutline) {
+      html += `
+  <div class="section">
+    <h2>Generated Outline</h2>
+    <p><strong>Topic:</strong> ${newTopic}</p>
+`;
+      if (topicDetails) {
+        html += `    <p><strong>Details:</strong> ${topicDetails}</p>\n`;
+      }
+      html += `    <pre>${generatedOutline.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>
+  </div>
+`;
+      
+      if (generatedOutlineMermaid) {
+        html += `
+  <div class="section">
+    <h3>Outline Diagram Code</h3>
+    <pre><code>${generatedOutlineMermaid.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>
+  </div>
+`;
+      }
+    }
+    
+    if (generatedEssay) {
+      html += `
+  <div class="section">
+    <h2>Generated Essay</h2>
+    <pre>${generatedEssay.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>
+  </div>
+`;
+    }
+    
+    if (chatHistory.length > 0) {
+      html += `
+  <div class="section">
+    <h2>Conversation History</h2>
+`;
+      chatHistory.forEach((msg) => {
+        const role = msg.role === 'user' ? 'User' : 'AI Assistant';
+        html += `
+    <div style="margin-bottom: 20px;">
+      <h3>${role} <span class="timestamp">${msg.timestamp.toLocaleTimeString()}</span></h3>
+      <pre>${msg.content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>
+    </div>
+`;
+      });
+      html += `  </div>\n`;
+    }
+    
+    html += `
+  <div class="no-print" style="margin-top: 40px; padding: 20px; background: #f0f0f0; border-radius: 5px;">
+    <p><strong>To save as PDF:</strong> Use your browser's Print function (Ctrl+P or Cmd+P) and select "Save as PDF"</p>
+  </div>
+</body>
+</html>`;
+    
+    // Open in new window for printing
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(html);
+      printWindow.document.close();
+      
+      toast({
+        title: "PDF Preview Ready",
+        description: "Use Print (Ctrl+P) to save as PDF",
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: "Please allow popups to generate PDF",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleAnalyze = async (text: string, isDemo: boolean) => {
@@ -579,14 +760,22 @@ Diagram guidelines:
           )}
 
           {chatHistory.length > 0 && (
-            <div className="mt-6 flex justify-end">
+            <div className="mt-6 flex justify-end gap-2">
               <Button
                 onClick={downloadChatHistory}
                 variant="outline"
                 className="gap-2"
               >
                 <Download className="w-4 h-4" />
-                Download Chat History
+                Download as Markdown
+              </Button>
+              <Button
+                onClick={downloadAsPDF}
+                variant="outline"
+                className="gap-2"
+              >
+                <FileText className="w-4 h-4" />
+                Export as PDF
               </Button>
             </div>
           )}
