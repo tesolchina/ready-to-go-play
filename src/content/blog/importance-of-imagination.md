@@ -3,7 +3,7 @@ title: "想象力的重要性：重塑教学与学习的基础设施"
 excerpt: "探讨想象力如何推动教学与学习基础设施的重塑，以及AI时代下从'代码昂贵'到'想法珍贵'的转变"
 author: "EAP Teacher Team"
 category: "教学理念"
-published_date: "2025-01-23"
+published_date: "2025-11-22"
 slug: "importance-of-imagination"
 ---
 
