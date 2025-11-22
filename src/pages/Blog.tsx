@@ -31,7 +31,23 @@ const Blog = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {blogPosts.map((post) => (
                   <Link to={`/blog/${post.slug}`} key={post.slug}>
-                    <Card className="hover:shadow-lg transition-all hover:scale-[1.02] h-full">
+                    <Card className="hover:shadow-lg transition-all hover:scale-[1.02] h-full overflow-hidden group">
+                      {post.content.includes('<video') && post.content.match(/src="([^"]+\.mp4)"/) && (
+                        <div className="aspect-video bg-muted relative overflow-hidden">
+                          <video 
+                            className="w-full h-full object-cover"
+                            src={post.content.match(/src="([^"]+\.mp4)"/)?.[1]}
+                            preload="metadata"
+                          />
+                          <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="bg-white/90 rounded-full p-3">
+                              <svg className="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                       <CardHeader>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
                           {post.category && (
