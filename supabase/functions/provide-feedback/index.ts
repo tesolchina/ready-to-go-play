@@ -1,8 +1,41 @@
+import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-platform-session, x-user-kimi-key, x-user-deepseek-key',
+};
+
+// Input validation schema
+const requestSchema = z.object({
+  userPrompt: z.string().max(5000).optional(),
+  userInputs: z.record(z.string().max(2000)).optional(),
+  conversationHistory: z.array(z.object({
+    role: z.enum(['user', 'assistant', 'system']),
+    content: z.string().max(10000)
+  })).max(20).optional(),
+  systemPrompt: z.string().max(5000).optional(),
+  paragraph: z.string().max(5000).optional(),
+  context: z.string().max(5000).optional(),
+});
+
+// Helper function to fetch with timeout
+const fetchWithTimeout = async (url: string, options: RequestInit, timeoutMs: number = 10000) => {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+    return response;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    throw error;
+  }
 };
 
 serve(async (req) => {
@@ -11,7 +44,18 @@ serve(async (req) => {
   }
 
   try {
-    const { userPrompt, userInputs, conversationHistory, systemPrompt, paragraph, context } = await req.json();
+    const body = await req.json();
+    
+    // Validate input
+    const validation = requestSchema.safeParse(body);
+    if (!validation.success) {
+      return new Response(
+        JSON.stringify({ error: "Invalid request: " + validation.error.message }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
+    const { userPrompt, userInputs, conversationHistory, systemPrompt, paragraph, context } = validation.data;
     
     // Get API keys from environment variables (platform keys)
     let KIMI_API_KEY = Deno.env.get("KIMI_API_KEY");
@@ -90,9 +134,9 @@ serve(async (req) => {
     let usedModel = "Kimi";
 
     try {
-      console.log("Attempting to use Kimi API");
+      console.log("Attempting to use Kimi API with 10s timeout");
       console.log("Messages being sent:", JSON.stringify(messages));
-      const kimiResponse = await fetch("https://api.moonshot.cn/v1/chat/completions", {
+      const kimiResponse = await fetchWithTimeout("https://api.moonshot.cn/v1/chat/completions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -103,7 +147,7 @@ serve(async (req) => {
           messages,
           temperature: 0.7,
         }),
-      });
+      }, 10000); // 10 second timeout
 
       if (!kimiResponse.ok) {
         const errorText = await kimiResponse.text();
@@ -115,10 +159,10 @@ serve(async (req) => {
       feedback = kimiData.choices?.[0]?.message?.content || "Unable to generate feedback";
       console.log("Successfully used Kimi API");
     } catch (kimiError) {
-      console.error("Kimi API failed, falling back to DeepSeek:", kimiError);
+      console.error("Kimi API failed (timeout or error), falling back to DeepSeek:", kimiError);
       usedModel = "DeepSeek";
 
-      const deepseekResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
+      const deepseekResponse = await fetchWithTimeout("https://api.deepseek.com/v1/chat/completions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -129,7 +173,7 @@ serve(async (req) => {
           messages,
           temperature: 0.7,
         }),
-      });
+      }, 12000); // 12 second timeout for fallback
 
       if (!deepseekResponse.ok) {
         const errorText = await deepseekResponse.text();
