@@ -122,7 +122,17 @@ Diagram guidelines:
     
     setLoading(true);
     try {
+      toast({
+        title: "Starting Analysis",
+        description: "Analyzing essay structure...",
+      });
+      
       addToHistory('user', `Analyze essay structure:\n\n${text.substring(0, 200)}...`);
+      
+      toast({
+        title: "Generating Diagram",
+        description: "Creating visual structure diagram...",
+      });
       
       // First, get the mermaid diagram
       const { data: mermaidData, error: mermaidError } = await supabase.functions.invoke('generate-mermaid', {
@@ -143,6 +153,11 @@ Diagram guidelines:
         return;
       }
 
+      toast({
+        title: "Diagram Generated",
+        description: "Now analyzing structural patterns...",
+      });
+
       // Then, get the pattern analysis
       const { data: patternData, error: patternError } = await supabase.functions.invoke('pattern-analyzer', {
         body: { 
@@ -154,6 +169,11 @@ Diagram guidelines:
 
       if (patternError) throw patternError;
 
+      toast({
+        title: "Pattern Analysis Complete",
+        description: "Finalizing results...",
+      });
+
       if (isDemo) {
         setDemoMermaidCode(mermaidData.mermaidCode);
       } else {
@@ -163,8 +183,8 @@ Diagram guidelines:
       }
 
       toast({
-        title: "Structure Visualized",
-        description: "Essay structure diagram generated successfully!",
+        title: "Analysis Complete!",
+        description: "Essay structure visualization ready.",
       });
     } catch (error) {
       console.error('Error analyzing text:', error);
