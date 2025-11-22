@@ -68,26 +68,22 @@ export const BringYourOwnKey = () => {
     setTestingKey(provider);
     
     try {
-      const endpoint = provider === "kimi" 
-        ? "https://api.moonshot.cn/v1/chat/completions"
-        : "https://api.deepseek.com/v1/chat/completions";
-      
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${key.trim()}`
-        },
-        body: JSON.stringify({
-          model: provider === "kimi" ? "moonshot-v1-8k" : "deepseek-chat",
-          messages: [{ role: "user", content: "test" }],
-          max_tokens: 10
-        })
+      const { data, error } = await supabase.functions.invoke('test-api-key', {
+        body: { provider, apiKey: key.trim() }
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`${provider} API test failed:`, response.status, errorText);
+      if (error) {
+        console.error(`Error testing ${provider} API key:`, error);
+        toast({
+          title: "Connection Failed",
+          description: `Could not connect to validation service. Please try again.`,
+          variant: "destructive",
+        });
+        return false;
+      }
+
+      if (!data.valid) {
+        console.error(`${provider} API test failed:`, data.error, data.details);
         
         toast({
           title: "Invalid API Key",
@@ -107,7 +103,7 @@ export const BringYourOwnKey = () => {
       console.error(`Error testing ${provider} API key:`, error);
       toast({
         title: "Connection Failed",
-        description: `Could not connect to ${provider === "kimi" ? "Kimi" : "DeepSeek"}. Please check your internet connection and try again.`,
+        description: `Could not connect to validation service. Please try again.`,
         variant: "destructive",
       });
       return false;
