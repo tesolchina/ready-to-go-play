@@ -5,6 +5,7 @@ import { Calendar, User, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 import { MermaidDiagram } from "@/components/MermaidDiagram";
 import { getBlogPostBySlug } from "@/lib/blogLoader";
 import { useMemo } from "react";
@@ -60,6 +61,7 @@ const BlogPost = () => {
                 <div className="prose prose-lg max-w-none">
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
+                    rehypePlugins={[rehypeRaw]}
                     components={{
                       h2: ({ children }) => (
                         <h2 className="text-3xl font-bold mt-8 mb-4 text-foreground">{children}</h2>
@@ -107,19 +109,6 @@ const BlogPost = () => {
                         <pre className="bg-muted p-4 rounded-lg overflow-x-auto my-4">
                           {children}
                         </pre>
-                      ),
-                      video: ({ src, ...props }) => (
-                        <div className="my-8">
-                          <video 
-                            controls 
-                            className="w-full rounded-lg shadow-lg"
-                            style={{ maxWidth: '100%' }}
-                            {...props}
-                          >
-                            <source src={src} type="video/mp4" />
-                            您的浏览器不支持视频播放。
-                          </video>
-                        </div>
                       ),
                     }}
                   >

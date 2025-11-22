@@ -15,8 +15,8 @@ slug: "importance-of-imagination"
 
 ## 从想象到现实
 
-<div className="my-8">
-  <video controls className="w-full rounded-lg shadow-lg" style={{maxWidth: '100%'}}>
+<div class="my-8">
+  <video controls class="w-full rounded-lg shadow-lg" style="max-width: 100%;">
     <source src="/HKT_ad.mp4" type="video/mp4" />
     您的浏览器不支持视频播放。
   </video>
