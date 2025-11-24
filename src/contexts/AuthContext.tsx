@@ -52,12 +52,41 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     );
 
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    const initSession = async () => {
+      try {
+        const hash = window.location.hash;
+
+        // Handle password recovery / magic link redirects with tokens in URL hash
+        if (hash && hash.includes('access_token')) {
+          const params = new URLSearchParams(hash.substring(1));
+          const access_token = params.get('access_token');
+          const refresh_token = params.get('refresh_token');
+
+          if (access_token && refresh_token) {
+            const { data, error } = await supabase.auth.setSession({
+              access_token,
+              refresh_token,
+            });
+
+            if (!error) {
+              setSession(data.session);
+              setUser(data.session?.user ?? null);
+            }
+          }
+
+          // Clean up URL hash so we don't re-process on refresh
+          window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+        } else {
+          const { data: { session } } = await supabase.auth.getSession();
+          setSession(session);
+          setUser(session?.user ?? null);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    void initSession();
 
     return () => subscription.unsubscribe();
   }, [toast]);
