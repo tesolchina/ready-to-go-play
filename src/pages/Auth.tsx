@@ -31,10 +31,35 @@ const Auth = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
+  const [hashError, setHashError] = useState<string | null>(null);
+  const [hashErrorCode, setHashErrorCode] = useState<string | null>(null);
+  const [allowResetMode, setAllowResetMode] = useState(true);
+
   const [searchParams] = useSearchParams();
   const isResetMode = searchParams.get("reset") === "true";
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const hash = window.location.hash;
+
+      if (hash && hash.includes("error=")) {
+        const params = new URLSearchParams(hash.substring(1));
+        const error = params.get("error");
+        const errorCode = params.get("error_code");
+        const errorDescription = params.get("error_description");
+
+        if (error || errorDescription) {
+          setHashError(errorDescription || error);
+          setHashErrorCode(errorCode);
+        }
+
+        if (errorCode === "otp_expired") {
+          setAllowResetMode(false);
+          setShowForgotPassword(true);
+        }
+      }
+    }
+
     if (isAuthenticated && !authLoading && !isResetMode) {
       navigate("/");
     }
