@@ -149,9 +149,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     if (error) {
+      const description =
+        error.message === "Auth session missing!"
+          ? "Your reset link is invalid or has expired. Please request a new password reset email and use the latest link from the same browser."
+          : error.message;
+
       toast({
         title: "Password update failed",
-        description: error.message,
+        description,
         variant: "destructive",
       });
     } else {

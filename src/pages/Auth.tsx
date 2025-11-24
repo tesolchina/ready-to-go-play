@@ -11,7 +11,7 @@ import { Loader2, Mail, Lock, User, AlertCircle } from "lucide-react";
 
 const Auth = () => {
   const navigate = useNavigate();
-  const { signIn, signUp, resetPassword, resendConfirmation, isAuthenticated, loading: authLoading, updatePassword } = useAuth();
+  const { signIn, signUp, resetPassword, resendConfirmation, isAuthenticated, loading: authLoading, updatePassword, session } = useAuth();
   const [loading, setLoading] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showResendConfirmation, setShowResendConfirmation] = useState(false);
@@ -129,75 +129,105 @@ const Auth = () => {
         </div>
 
         {isResetMode ? (
-          <Card>
-            <CardHeader>
-              <CardTitle>Set New Password</CardTitle>
-              <CardDescription>
-                Please enter a new password for your account
-              </CardDescription>
-            </CardHeader>
-            <form onSubmit={handleUpdatePassword}>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="new-password">New Password</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="new-password"
-                      type="password"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      className="pl-10"
-                      required
-                      minLength={6}
-                    />
+          session ? (
+            <Card>
+              <CardHeader>
+                <CardTitle>Set New Password</CardTitle>
+                <CardDescription>
+                  Please enter a new password for your account
+                </CardDescription>
+              </CardHeader>
+              <form onSubmit={handleUpdatePassword}>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="new-password">New Password</Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="new-password"
+                        type="password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        className="pl-10"
+                        required
+                        minLength={6}
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="confirm-new-password">Confirm New Password</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="confirm-new-password"
-                      type="password"
-                      value={confirmNewPassword}
-                      onChange={(e) => setConfirmNewPassword(e.target.value)}
-                      className="pl-10"
-                      required
-                      minLength={6}
-                    />
+                  <div className="space-y-2">
+                    <Label htmlFor="confirm-new-password">Confirm New Password</Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="confirm-new-password"
+                        type="password"
+                        value={confirmNewPassword}
+                        onChange={(e) => setConfirmNewPassword(e.target.value)}
+                        className="pl-10"
+                        required
+                        minLength={6}
+                      />
+                    </div>
+                    {newPassword !== confirmNewPassword && confirmNewPassword && (
+                      <p className="text-sm text-destructive">Passwords do not match</p>
+                    )}
                   </div>
-                  {newPassword !== confirmNewPassword && confirmNewPassword && (
-                    <p className="text-sm text-destructive">Passwords do not match</p>
-                  )}
-                </div>
-              </CardContent>
+                </CardContent>
+                <CardFooter className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => navigate("/auth")}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="flex-1"
+                    disabled={loading || newPassword !== confirmNewPassword}
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Updating...
+                      </>
+                    ) : (
+                      "Update Password"
+                    )}
+                  </Button>
+                </CardFooter>
+              </form>
+            </Card>
+          ) : (
+            <Card>
+              <CardHeader>
+                <CardTitle>Reset link expired</CardTitle>
+                <CardDescription>
+                  Your password reset link is invalid or has expired. Please request a new password reset email.
+                </CardDescription>
+              </CardHeader>
               <CardFooter className="flex gap-2">
                 <Button
                   type="button"
                   variant="outline"
                   className="flex-1"
-                  onClick={() => navigate("/auth")}
+                  onClick={() => {
+                    setShowForgotPassword(true);
+                  }}
                 >
-                  Cancel
+                  Request new link
                 </Button>
                 <Button
-                  type="submit"
+                  type="button"
                   className="flex-1"
-                  disabled={loading || newPassword !== confirmNewPassword}
+                  onClick={() => navigate("/auth")}
                 >
-                  {loading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Updating...
-                    </>
-                  ) : (
-                    "Update Password"
-                  )}
+                  Back to login
                 </Button>
               </CardFooter>
-            </form>
-          </Card>
+            </Card>
+          )
         ) : showForgotPassword ? (
           <Card>
             <CardHeader>
