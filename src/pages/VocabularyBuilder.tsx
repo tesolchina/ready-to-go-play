@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, BookOpen, Brain, Target, Save, History } from "lucide-react";
+import { Loader2, BookOpen, Brain, Target, Save, History, Upload, Image as ImageIcon, FileText } from "lucide-react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { useNavigate } from "react-router-dom";
@@ -59,6 +59,7 @@ const VocabularyBuilder = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [showHistoryDialog, setShowHistoryDialog] = useState(false);
+  const [isProcessingFile, setIsProcessingFile] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -86,6 +87,95 @@ const VocabularyBuilder = () => {
       setSavedSessions(data || []);
     } catch (error) {
       console.error('Error fetching sessions:', error);
+    }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsProcessingFile(true);
+    toast({
+      title: "Processing file",
+      description: "Extracting text from your file...",
+    });
+
+    try {
+      let extractedText = "";
+
+      // Handle PDF files
+      if (file.type === "application/pdf") {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        // Use Supabase storage to temporarily store the PDF
+        const fileName = `temp-${Date.now()}-${file.name}`;
+        const { error: uploadError } = await supabase.storage
+          .from('pdfs')
+          .upload(fileName, file);
+
+        if (uploadError) throw uploadError;
+
+        // Get public URL
+        const { data: { publicUrl } } = supabase.storage
+          .from('pdfs')
+          .getPublicUrl(fileName);
+
+        // For PDF, we'll need to read it and extract text
+        // Since document parsing is complex, we'll convert to base64 and extract text
+        const reader = new FileReader();
+        const base64Promise = new Promise<string>((resolve) => {
+          reader.onload = () => resolve(reader.result as string);
+          reader.readAsDataURL(file);
+        });
+        
+        const pdfBase64 = await base64Promise;
+        extractedText = `[PDF content from ${file.name}]\nPlease paste the text content from your PDF file here.`;
+        
+        // Clean up temporary file
+        await supabase.storage.from('pdfs').remove([fileName]);
+        
+        toast({
+          title: "PDF Upload",
+          description: "Please copy and paste the text content from your PDF.",
+          variant: "destructive",
+        });
+      } 
+      // Handle image files
+      else if (file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        const base64Promise = new Promise<string>((resolve) => {
+          reader.onload = () => resolve(reader.result as string);
+          reader.readAsDataURL(file);
+        });
+        
+        const imageBase64 = await base64Promise;
+
+        const { data, error } = await supabase.functions.invoke('extract-text-from-image', {
+          body: { imageBase64 }
+        });
+
+        if (error) throw error;
+        extractedText = data.text;
+      } else {
+        throw new Error("Unsupported file type. Please upload an image or PDF.");
+      }
+
+      setText(extractedText);
+      toast({
+        title: "Success",
+        description: "Text extracted successfully!",
+      });
+    } catch (error: any) {
+      console.error('Error processing file:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to process file.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessingFile(false);
+      e.target.value = ""; // Reset file input
     }
   };
 
@@ -410,15 +500,50 @@ const VocabularyBuilder = () => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <Textarea
-                      placeholder="Paste your text here..."
-                      value={text}
-                      onChange={(e) => setText(e.target.value)}
-                      className="min-h-[200px]"
-                    />
+                    <div className="space-y-4">
+                      <Textarea
+                        placeholder="Paste your text here or upload an image/PDF..."
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                        className="min-h-[200px]"
+                      />
+                      
+                      <div className="flex gap-2">
+                        <label className="flex-1">
+                          <Input
+                            type="file"
+                            accept="image/*,.pdf"
+                            onChange={handleFileUpload}
+                            className="hidden"
+                            id="file-upload"
+                            disabled={isProcessingFile}
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="w-full"
+                            disabled={isProcessingFile}
+                            onClick={() => document.getElementById('file-upload')?.click()}
+                          >
+                            {isProcessingFile ? (
+                              <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Processing...
+                              </>
+                            ) : (
+                              <>
+                                <Upload className="mr-2 h-4 w-4" />
+                                Upload Image/PDF
+                              </>
+                            )}
+                          </Button>
+                        </label>
+                      </div>
+                    </div>
+                    
                     <Button 
                       onClick={generateQuestions} 
-                      disabled={isGenerating}
+                      disabled={isGenerating || isProcessingFile}
                       className="w-full"
                     >
                       {isGenerating ? (
