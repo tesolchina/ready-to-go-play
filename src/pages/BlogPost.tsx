@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, Navigate } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Calendar, User, ArrowLeft } from "lucide-react";
@@ -9,10 +9,24 @@ import rehypeRaw from 'rehype-raw';
 import { MermaidDiagram } from "@/components/MermaidDiagram";
 import { getBlogPostBySlug } from "@/lib/blogLoader";
 import { useMemo } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const BlogPost = () => {
   const { slug } = useParams();
   const post = useMemo(() => slug ? getBlogPostBySlug(slug) : null, [slug]);
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/auth" replace />;
+  }
 
   return (
     <SidebarProvider>

@@ -8,10 +8,12 @@ import { Badge } from "@/components/ui/badge";
 import { ExternalLink, Key, CheckCircle2, XCircle, Loader2, Shield, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 type ApiProvider = "kimi" | "deepseek";
 
 export const BringYourOwnKey = () => {
+  const { user, isAuthenticated } = useAuth();
   const [kimiKey, setKimiKey] = useState("");
   const [deepseekKey, setDeepseekKey] = useState("");
   const [savedKeys, setSavedKeys] = useState<Record<ApiProvider, boolean>>({
@@ -29,35 +31,65 @@ export const BringYourOwnKey = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Load saved keys from localStorage
-    const storedKimiKey = localStorage.getItem("user_kimi_api_key");
-    const storedDeepseekKey = localStorage.getItem("user_deepseek_api_key");
-    const storedSecretCodeSession = localStorage.getItem("platform_secret_session");
-    
-    if (storedKimiKey) {
-      setKimiKey(storedKimiKey);
-      setSavedKeys(prev => ({ ...prev, kimi: true }));
-    }
-    if (storedDeepseekKey) {
-      setDeepseekKey(storedDeepseekKey);
-      setSavedKeys(prev => ({ ...prev, deepseek: true }));
-    }
-    if (storedSecretCodeSession) {
-      try {
-        const session = JSON.parse(storedSecretCodeSession);
-        // Check if session is still valid (within 24 hours)
-        const sessionAge = Date.now() - session.timestamp;
-        if (sessionAge < 24 * 60 * 60 * 1000) {
-          setHasValidCode(true);
-        } else {
+    const loadKeys = async () => {
+      if (isAuthenticated && user) {
+        // Load from database for authenticated users
+        try {
+          const { data, error } = await supabase
+            .from('user_api_keys')
+            .select('provider, encrypted_key')
+            .eq('user_id', user.id);
+
+          if (!error && data) {
+            data.forEach((item) => {
+              const decryptedKey = atob(item.encrypted_key);
+              if (item.provider === 'kimi') {
+                setKimiKey(decryptedKey);
+                setSavedKeys(prev => ({ ...prev, kimi: true }));
+              } else if (item.provider === 'deepseek') {
+                setDeepseekKey(decryptedKey);
+                setSavedKeys(prev => ({ ...prev, deepseek: true }));
+              }
+            });
+          }
+        } catch (error) {
+          console.error('Error loading API keys from database:', error);
+        }
+      } else {
+        // Load from localStorage for guest users
+        const storedKimiKey = localStorage.getItem("user_kimi_api_key");
+        const storedDeepseekKey = localStorage.getItem("user_deepseek_api_key");
+        
+        if (storedKimiKey) {
+          setKimiKey(storedKimiKey);
+          setSavedKeys(prev => ({ ...prev, kimi: true }));
+        }
+        if (storedDeepseekKey) {
+          setDeepseekKey(storedDeepseekKey);
+          setSavedKeys(prev => ({ ...prev, deepseek: true }));
+        }
+      }
+
+      // Load secret code session
+      const storedSecretCodeSession = localStorage.getItem("platform_secret_session");
+      if (storedSecretCodeSession) {
+        try {
+          const session = JSON.parse(storedSecretCodeSession);
+          const sessionAge = Date.now() - session.timestamp;
+          if (sessionAge < 24 * 60 * 60 * 1000) {
+            setHasValidCode(true);
+          } else {
+            localStorage.removeItem("platform_secret_session");
+          }
+        } catch (e) {
+          console.error("Invalid session data:", e);
           localStorage.removeItem("platform_secret_session");
         }
-      } catch (e) {
-        console.error("Invalid session data:", e);
-        localStorage.removeItem("platform_secret_session");
       }
-    }
-  }, []);
+    };
+
+    loadKeys();
+  }, [user, isAuthenticated]);
 
   const testApiKey = async (provider: ApiProvider, key: string) => {
     if (!key.trim()) {
@@ -123,38 +155,103 @@ export const BringYourOwnKey = () => {
       return;
     }
 
-    const storageKey = `user_${provider}_api_key`;
-    localStorage.setItem(storageKey, key.trim());
-    setSavedKeys(prev => ({ ...prev, [provider]: true }));
-    
-    // Notify context of change
-    window.dispatchEvent(new Event('ai-service-updated'));
-    
-    toast({
-      title: "API Key Saved",
-      description: `Your ${provider === "kimi" ? "Kimi" : "DeepSeek"} API key has been saved locally`,
-    });
+    if (isAuthenticated && user) {
+      // Save to database for authenticated users
+      try {
+        const encryptedKey = btoa(key.trim());
+        const { error } = await supabase
+          .from('user_api_keys')
+          .upsert({
+            user_id: user.id,
+            provider,
+            encrypted_key: encryptedKey,
+          }, {
+            onConflict: 'user_id,provider'
+          });
+
+        if (error) throw error;
+
+        setSavedKeys(prev => ({ ...prev, [provider]: true }));
+        window.dispatchEvent(new Event('ai-service-updated'));
+        
+        toast({
+          title: "API Key Saved",
+          description: `Your ${provider === "kimi" ? "Kimi" : "DeepSeek"} API key has been saved securely to your account`,
+        });
+      } catch (error) {
+        console.error('Error saving API key to database:', error);
+        toast({
+          title: "Error",
+          description: "Failed to save API key. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } else {
+      // Save to localStorage for guest users
+      const storageKey = `user_${provider}_api_key`;
+      localStorage.setItem(storageKey, key.trim());
+      setSavedKeys(prev => ({ ...prev, [provider]: true }));
+      window.dispatchEvent(new Event('ai-service-updated'));
+      
+      toast({
+        title: "API Key Saved",
+        description: `Your ${provider === "kimi" ? "Kimi" : "DeepSeek"} API key has been saved locally. Sign in to save it permanently.`,
+      });
+    }
   };
 
-  const handleRemoveKey = (provider: ApiProvider) => {
-    const storageKey = `user_${provider}_api_key`;
-    localStorage.removeItem(storageKey);
-    
-    if (provider === "kimi") {
-      setKimiKey("");
+  const handleRemoveKey = async (provider: ApiProvider) => {
+    if (isAuthenticated && user) {
+      // Remove from database for authenticated users
+      try {
+        const { error } = await supabase
+          .from('user_api_keys')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('provider', provider);
+
+        if (error) throw error;
+
+        if (provider === "kimi") {
+          setKimiKey("");
+        } else {
+          setDeepseekKey("");
+        }
+        
+        setSavedKeys(prev => ({ ...prev, [provider]: false }));
+        window.dispatchEvent(new Event('ai-service-updated'));
+        
+        toast({
+          title: "API Key Removed",
+          description: `Your ${provider === "kimi" ? "Kimi" : "DeepSeek"} API key has been removed from your account`,
+        });
+      } catch (error) {
+        console.error('Error removing API key from database:', error);
+        toast({
+          title: "Error",
+          description: "Failed to remove API key. Please try again.",
+          variant: "destructive",
+        });
+      }
     } else {
-      setDeepseekKey("");
+      // Remove from localStorage for guest users
+      const storageKey = `user_${provider}_api_key`;
+      localStorage.removeItem(storageKey);
+      
+      if (provider === "kimi") {
+        setKimiKey("");
+      } else {
+        setDeepseekKey("");
+      }
+      
+      setSavedKeys(prev => ({ ...prev, [provider]: false }));
+      window.dispatchEvent(new Event('ai-service-updated'));
+      
+      toast({
+        title: "API Key Removed",
+        description: `Your ${provider === "kimi" ? "Kimi" : "DeepSeek"} API key has been removed`,
+      });
     }
-    
-    setSavedKeys(prev => ({ ...prev, [provider]: false }));
-    
-    // Notify context of change
-    window.dispatchEvent(new Event('ai-service-updated'));
-    
-    toast({
-      title: "API Key Removed",
-      description: `Your ${provider === "kimi" ? "Kimi" : "DeepSeek"} API key has been removed`,
-    });
   };
 
   const validateSecretCode = async () => {

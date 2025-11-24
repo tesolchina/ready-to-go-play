@@ -1,5 +1,5 @@
-import { BookOpen, GraduationCap, Target, FileCheck, Lightbulb, MessageSquare, Plus, CheckSquare, Info, Newspaper, Library, Zap } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { BookOpen, GraduationCap, Target, FileCheck, Lightbulb, MessageSquare, Plus, CheckSquare, Info, Newspaper, Library, Zap, LogIn, LogOut, User } from "lucide-react";
+import { NavLink, Link } from "react-router-dom";
 
 import {
   Sidebar,
@@ -13,6 +13,9 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { AIServiceIndicator } from "@/components/AIServiceIndicator";
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 const navigation = [
   {
@@ -45,6 +48,7 @@ const navigation = [
 export function AppSidebar() {
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
+  const { user, signOut, isAuthenticated } = useAuth();
 
   return (
     <Sidebar 
@@ -99,6 +103,43 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {!isCollapsed && (
+          <div className="mt-auto pt-4">
+            <Separator className="mb-4 bg-white/10" />
+            {isAuthenticated ? (
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5">
+                  <User className="h-4 w-4 text-white/70" />
+                  <span className="text-sm text-white/90 truncate">
+                    {user?.email}
+                  </span>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full bg-white/10 text-white border-white/20 hover:bg-white/20"
+                  onClick={signOut}
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sign Out
+                </Button>
+              </div>
+            ) : (
+              <Button
+                asChild
+                size="sm"
+                className="w-full bg-white/10 text-white border-white/20 hover:bg-white/20"
+                variant="outline"
+              >
+                <Link to="/auth">
+                  <LogIn className="h-4 w-4 mr-2" />
+                  Sign In
+                </Link>
+              </Button>
+            )}
+          </div>
+        )}
       </SidebarContent>
     </Sidebar>
   );

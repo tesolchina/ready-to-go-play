@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { CollapsibleSection } from "@/components/CollapsibleSection";
 import { getAllBlogPosts, type BlogPost as BlogPostType } from "@/lib/blogLoader";
+import { GuestReminder } from "@/components/GuestReminder";
 
 interface Lesson {
   id: string;
@@ -55,7 +56,9 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-primary/5">
       <div className="container max-w-4xl mx-auto px-4 py-16">
-        <header className="text-center mb-12">
+        <GuestReminder />
+        
+        <header className="text-center mb-12 mt-6">
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-primary/80 mb-6">
             <GraduationCap className="w-10 h-10 text-white" />
           </div>
