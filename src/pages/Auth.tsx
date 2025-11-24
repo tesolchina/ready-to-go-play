@@ -11,8 +11,10 @@ import { Loader2, Mail, Lock, User, AlertCircle } from "lucide-react";
 
 const Auth = () => {
   const navigate = useNavigate();
-  const { signIn, signUp, isAuthenticated, loading: authLoading } = useAuth();
+  const { signIn, signUp, resetPassword, resendConfirmation, isAuthenticated, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [showResendConfirmation, setShowResendConfirmation] = useState(false);
   
   // Sign In Form
   const [signInEmail, setSignInEmail] = useState("");
@@ -23,6 +25,9 @@ const Auth = () => {
   const [signUpPassword, setSignUpPassword] = useState("");
   const [signUpFullName, setSignUpFullName] = useState("");
   const [signUpConfirmPassword, setSignUpConfirmPassword] = useState("");
+  
+  // Forgot Password / Resend Confirmation
+  const [resetEmail, setResetEmail] = useState("");
 
   useEffect(() => {
     if (isAuthenticated && !authLoading) {
@@ -53,8 +58,31 @@ const Auth = () => {
     setLoading(true);
     
     await signUp(signUpEmail, signUpPassword, signUpFullName);
+    setShowResendConfirmation(true);
     
     setLoading(false);
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    await resetPassword(resetEmail);
+    
+    setLoading(false);
+    setShowForgotPassword(false);
+    setResetEmail("");
+  };
+
+  const handleResendConfirmation = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    await resendConfirmation(resetEmail);
+    
+    setLoading(false);
+    setShowResendConfirmation(false);
+    setResetEmail("");
   };
 
   if (authLoading) {
@@ -79,13 +107,110 @@ const Auth = () => {
           </p>
         </div>
 
-        <Tabs defaultValue="signin" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="signin">Sign In</TabsTrigger>
-            <TabsTrigger value="signup">Sign Up</TabsTrigger>
-          </TabsList>
+        {showForgotPassword ? (
+          <Card>
+            <CardHeader>
+              <CardTitle>Reset Password</CardTitle>
+              <CardDescription>
+                Enter your email to receive a password reset link
+              </CardDescription>
+            </CardHeader>
+            <form onSubmit={handleForgotPassword}>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="reset-email">Email</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="reset-email"
+                      type="email"
+                      placeholder="your.name@university.edu"
+                      value={resetEmail}
+                      onChange={(e) => setResetEmail(e.target.value)}
+                      className="pl-10"
+                      required
+                    />
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => setShowForgotPassword(false)}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" className="flex-1" disabled={loading}>
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    "Send Reset Link"
+                  )}
+                </Button>
+              </CardFooter>
+            </form>
+          </Card>
+        ) : showResendConfirmation ? (
+          <Card>
+            <CardHeader>
+              <CardTitle>Resend Confirmation</CardTitle>
+              <CardDescription>
+                Enter your email to resend the confirmation link
+              </CardDescription>
+            </CardHeader>
+            <form onSubmit={handleResendConfirmation}>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="resend-email">Email</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="resend-email"
+                      type="email"
+                      placeholder="your.name@university.edu"
+                      value={resetEmail}
+                      onChange={(e) => setResetEmail(e.target.value)}
+                      className="pl-10"
+                      required
+                    />
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => setShowResendConfirmation(false)}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" className="flex-1" disabled={loading}>
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    "Resend Email"
+                  )}
+                </Button>
+              </CardFooter>
+            </form>
+          </Card>
+        ) : (
+          <Tabs defaultValue="signin" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="signin">Sign In</TabsTrigger>
+              <TabsTrigger value="signup">Sign Up</TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="signin">
+            <TabsContent value="signin">
             <Card>
               <CardHeader>
                 <CardTitle>Welcome Back</CardTitle>
@@ -125,7 +250,7 @@ const Auth = () => {
                     </div>
                   </div>
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="flex flex-col gap-2">
                   <Button
                     type="submit"
                     className="w-full"
@@ -139,6 +264,14 @@ const Auth = () => {
                     ) : (
                       "Sign In"
                     )}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="link"
+                    className="w-full text-sm"
+                    onClick={() => setShowForgotPassword(true)}
+                  >
+                    Forgot password?
                   </Button>
                 </CardFooter>
               </form>
@@ -250,11 +383,23 @@ const Auth = () => {
             </Card>
           </TabsContent>
         </Tabs>
+        )}
 
         <p className="text-center text-sm text-muted-foreground mt-4">
-          <Link to="/" className="hover:text-primary underline">
-            Continue as guest
-          </Link>
+          {!showForgotPassword && !showResendConfirmation && (
+            <>
+              <Link to="/" className="hover:text-primary underline">
+                Continue as guest
+              </Link>
+              {" · "}
+              <button
+                onClick={() => setShowResendConfirmation(true)}
+                className="hover:text-primary underline"
+              >
+                Resend confirmation
+              </button>
+            </>
+          )}
         </p>
       </div>
     </div>
