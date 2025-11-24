@@ -2,12 +2,27 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Calendar, User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { getAllBlogPosts } from "@/lib/blogLoader";
 import { useMemo } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { GuestReminder } from "@/components/GuestReminder";
 
 const Blog = () => {
   const blogPosts = useMemo(() => getAllBlogPosts(), []);
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/auth" replace />;
+  }
 
   return (
     <SidebarProvider>
