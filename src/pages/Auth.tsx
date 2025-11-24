@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,7 +11,7 @@ import { Loader2, Mail, Lock, User, AlertCircle } from "lucide-react";
 
 const Auth = () => {
   const navigate = useNavigate();
-  const { signIn, signUp, resetPassword, resendConfirmation, isAuthenticated, loading: authLoading } = useAuth();
+  const { signIn, signUp, resetPassword, resendConfirmation, isAuthenticated, loading: authLoading, updatePassword } = useAuth();
   const [loading, setLoading] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showResendConfirmation, setShowResendConfirmation] = useState(false);
@@ -28,12 +28,17 @@ const Auth = () => {
   
   // Forgot Password / Resend Confirmation
   const [resetEmail, setResetEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+
+  const [searchParams] = useSearchParams();
+  const isResetMode = searchParams.get("reset") === "true";
 
   useEffect(() => {
-    if (isAuthenticated && !authLoading) {
+    if (isAuthenticated && !authLoading && !isResetMode) {
       navigate("/");
     }
-  }, [isAuthenticated, authLoading, navigate]);
+  }, [isAuthenticated, authLoading, navigate, isResetMode]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,6 +90,22 @@ const Auth = () => {
     setResetEmail("");
   };
 
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (newPassword !== confirmNewPassword) {
+      return;
+    }
+
+    setLoading(true);
+    const { error } = await updatePassword(newPassword);
+    setLoading(false);
+
+    if (!error) {
+      navigate("/");
+    }
+  };
+
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -107,7 +128,77 @@ const Auth = () => {
           </p>
         </div>
 
-        {showForgotPassword ? (
+        {isResetMode ? (
+          <Card>
+            <CardHeader>
+              <CardTitle>Set New Password</CardTitle>
+              <CardDescription>
+                Please enter a new password for your account
+              </CardDescription>
+            </CardHeader>
+            <form onSubmit={handleUpdatePassword}>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="new-password">New Password</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="new-password"
+                      type="password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="pl-10"
+                      required
+                      minLength={6}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="confirm-new-password">Confirm New Password</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="confirm-new-password"
+                      type="password"
+                      value={confirmNewPassword}
+                      onChange={(e) => setConfirmNewPassword(e.target.value)}
+                      className="pl-10"
+                      required
+                      minLength={6}
+                    />
+                  </div>
+                  {newPassword !== confirmNewPassword && confirmNewPassword && (
+                    <p className="text-sm text-destructive">Passwords do not match</p>
+                  )}
+                </div>
+              </CardContent>
+              <CardFooter className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => navigate("/auth")}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  className="flex-1"
+                  disabled={loading || newPassword !== confirmNewPassword}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Updating...
+                    </>
+                  ) : (
+                    "Update Password"
+                  )}
+                </Button>
+              </CardFooter>
+            </form>
+          </Card>
+        ) : showForgotPassword ? (
           <Card>
             <CardHeader>
               <CardTitle>Reset Password</CardTitle>
@@ -386,7 +477,7 @@ const Auth = () => {
         )}
 
         <p className="text-center text-sm text-muted-foreground mt-4">
-          {!showForgotPassword && !showResendConfirmation && (
+          {!isResetMode && !showForgotPassword && !showResendConfirmation && (
             <>
               <Link to="/" className="hover:text-primary underline">
                 Continue as guest
