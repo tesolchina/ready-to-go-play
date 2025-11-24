@@ -471,6 +471,42 @@ export type Database = {
         }
         Relationships: []
       }
+      teacher_students: {
+        Row: {
+          created_at: string
+          id: string
+          student_id: string
+          teacher_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          student_id: string
+          teacher_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          student_id?: string
+          teacher_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teacher_students_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teacher_students_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       template_submissions: {
         Row: {
           ai_feedback: Json | null
@@ -591,6 +627,148 @@ export type Database = {
           validation_results?: Json
         }
         Relationships: []
+      }
+      vocabulary_exercises: {
+        Row: {
+          correct_answer: string
+          created_at: string
+          difficulty: string
+          id: string
+          is_correct: boolean
+          question: string
+          question_type: string
+          session_id: string
+          user_answer: string | null
+          user_id: string
+          word: string
+          word_family: string[] | null
+        }
+        Insert: {
+          correct_answer: string
+          created_at?: string
+          difficulty: string
+          id?: string
+          is_correct: boolean
+          question: string
+          question_type: string
+          session_id: string
+          user_answer?: string | null
+          user_id: string
+          word: string
+          word_family?: string[] | null
+        }
+        Update: {
+          correct_answer?: string
+          created_at?: string
+          difficulty?: string
+          id?: string
+          is_correct?: boolean
+          question?: string
+          question_type?: string
+          session_id?: string
+          user_answer?: string | null
+          user_id?: string
+          word?: string
+          word_family?: string[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vocabulary_exercises_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "vocabulary_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vocabulary_exercises_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vocabulary_sessions: {
+        Row: {
+          created_at: string
+          id: string
+          last_accessed: string | null
+          text_content: string
+          title: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_accessed?: string | null
+          text_content: string
+          title?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_accessed?: string | null
+          text_content?: string
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vocabulary_sessions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      word_progress: {
+        Row: {
+          correct_count: number
+          created_at: string
+          id: string
+          incorrect_count: number
+          last_practiced: string | null
+          mastery_level: string | null
+          updated_at: string
+          user_id: string
+          word: string
+        }
+        Insert: {
+          correct_count?: number
+          created_at?: string
+          id?: string
+          incorrect_count?: number
+          last_practiced?: string | null
+          mastery_level?: string | null
+          updated_at?: string
+          user_id: string
+          word: string
+        }
+        Update: {
+          correct_count?: number
+          created_at?: string
+          id?: string
+          incorrect_count?: number
+          last_practiced?: string | null
+          mastery_level?: string | null
+          updated_at?: string
+          user_id?: string
+          word?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "word_progress_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
