@@ -11,6 +11,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: any }>;
+  updatePassword: (newPassword: string) => Promise<{ error: any }>;
   resendConfirmation: (email: string) => Promise<{ error: any }>;
   isAuthenticated: boolean;
 }
@@ -23,6 +24,7 @@ const AuthContext = createContext<AuthContextType>({
   signIn: async () => ({ error: null }),
   signOut: async () => {},
   resetPassword: async () => ({ error: null }),
+  updatePassword: async () => ({ error: null }),
   resendConfirmation: async () => ({ error: null }),
   isAuthenticated: false,
 });
@@ -141,6 +143,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error };
   };
 
+  const updatePassword = async (newPassword: string) => {
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+
+    if (error) {
+      toast({
+        title: "Password update failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Password updated",
+        description: "Your password has been changed successfully.",
+      });
+    }
+
+    return { error };
+  };
+
   const resendConfirmation = async (email: string) => {
     const { error } = await supabase.auth.resend({
       type: 'signup',
@@ -176,6 +199,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         signIn,
         signOut,
         resetPassword,
+        updatePassword,
         resendConfirmation,
         isAuthenticated: !!user,
       }}
