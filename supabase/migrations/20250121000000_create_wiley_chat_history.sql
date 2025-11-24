@@ -23,3 +23,4 @@ WITH CHECK (true);
 -- Create index for faster lookups
 CREATE INDEX idx_wiley_chat_history_created_at ON public.wiley_chat_history(created_at DESC);
 
+
