@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { BookOpen, FileText, CheckCircle, Plus, BookMarked } from "lucide-react";
+import { BookOpen, FileText, CheckCircle, Plus, BookMarked, Book } from "lucide-react";
 
 const LearningApps = () => {
   const apps = [
@@ -33,6 +33,13 @@ const LearningApps = () => {
       icon: BookMarked,
       path: "/wiley-ai-guidelines",
       category: "Research Ethics"
+    },
+    {
+      title: "Vocabulary Builder",
+      description: "Adaptive vocabulary learning from essays or paragraphs with multiple-choice, fill-in-the-blank, and short-answer questions that progress based on your performance.",
+      icon: Book,
+      path: "/vocabulary-builder",
+      category: "Language Learning"
     },
   ];
 
