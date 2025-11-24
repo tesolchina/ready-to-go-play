@@ -69,6 +69,25 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Student account created successfully:", authData.user.id);
 
+    // Ensure teacher has a profile (in case they signed up before profiles were set up)
+    const { data: teacherProfile, error: teacherProfileError } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('id', teacherId)
+      .single();
+
+    if (teacherProfileError || !teacherProfile) {
+      console.log("Teacher profile not found, creating one");
+      const { data: teacherAuth } = await supabase.auth.admin.getUserById(teacherId);
+      if (teacherAuth?.user) {
+        await supabase.from('profiles').insert({
+          id: teacherId,
+          email: teacherAuth.user.email || '',
+          full_name: teacherAuth.user.user_metadata?.full_name || ''
+        });
+      }
+    }
+
     // Assign student role
     const { error: roleError } = await supabase
       .from('user_roles')
