@@ -213,6 +213,7 @@ const Auth = () => {
                   variant="outline"
                   className="flex-1"
                   onClick={() => {
+                    navigate("/auth");
                     setShowForgotPassword(true);
                   }}
                 >
