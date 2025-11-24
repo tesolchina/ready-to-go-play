@@ -129,106 +129,75 @@ const Auth = () => {
         </div>
 
         {isResetMode ? (
-          session ? (
-            <Card>
-              <CardHeader>
-                <CardTitle>Set New Password</CardTitle>
-                <CardDescription>
-                  Please enter a new password for your account
-                </CardDescription>
-              </CardHeader>
-              <form onSubmit={handleUpdatePassword}>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="new-password">New Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="new-password"
-                        type="password"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        className="pl-10"
-                        required
-                        minLength={6}
-                      />
-                    </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Set New Password</CardTitle>
+              <CardDescription>
+                Please enter a new password for your account
+              </CardDescription>
+            </CardHeader>
+            <form onSubmit={handleUpdatePassword}>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="new-password">New Password</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="new-password"
+                      type="password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="pl-10"
+                      required
+                      minLength={6}
+                    />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="confirm-new-password">Confirm New Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="confirm-new-password"
-                        type="password"
-                        value={confirmNewPassword}
-                        onChange={(e) => setConfirmNewPassword(e.target.value)}
-                        className="pl-10"
-                        required
-                        minLength={6}
-                      />
-                    </div>
-                    {newPassword !== confirmNewPassword && confirmNewPassword && (
-                      <p className="text-sm text-destructive">Passwords do not match</p>
-                    )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="confirm-new-password">Confirm New Password</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="confirm-new-password"
+                      type="password"
+                      value={confirmNewPassword}
+                      onChange={(e) => setConfirmNewPassword(e.target.value)}
+                      className="pl-10"
+                      required
+                      minLength={6}
+                    />
                   </div>
-                </CardContent>
-                <CardFooter className="flex gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="flex-1"
-                    onClick={() => navigate("/auth")}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    className="flex-1"
-                    disabled={loading || newPassword !== confirmNewPassword}
-                  >
-                    {loading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Updating...
-                      </>
-                    ) : (
-                      "Update Password"
-                    )}
-                  </Button>
-                </CardFooter>
-              </form>
-            </Card>
-          ) : (
-            <Card>
-              <CardHeader>
-                <CardTitle>Reset link expired</CardTitle>
-                <CardDescription>
-                  Your password reset link is invalid or has expired. Please request a new password reset email.
-                </CardDescription>
-              </CardHeader>
+                  {newPassword !== confirmNewPassword && confirmNewPassword && (
+                    <p className="text-sm text-destructive">Passwords do not match</p>
+                  )}
+                </div>
+              </CardContent>
               <CardFooter className="flex gap-2">
                 <Button
                   type="button"
                   variant="outline"
                   className="flex-1"
-                  onClick={() => {
-                    navigate("/auth");
-                    setShowForgotPassword(true);
-                  }}
-                >
-                  Request new link
-                </Button>
-                <Button
-                  type="button"
-                  className="flex-1"
                   onClick={() => navigate("/auth")}
                 >
-                  Back to login
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  className="flex-1"
+                  disabled={loading || newPassword !== confirmNewPassword}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Updating...
+                    </>
+                  ) : (
+                    "Update Password"
+                  )}
                 </Button>
               </CardFooter>
-            </Card>
-          )
+            </form>
+          </Card>
         ) : showForgotPassword ? (
           <Card>
             <CardHeader>
