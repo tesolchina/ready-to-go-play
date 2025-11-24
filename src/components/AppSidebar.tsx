@@ -1,4 +1,4 @@
-import { BookOpen, GraduationCap, Target, FileCheck, Lightbulb, MessageSquare, Plus, CheckSquare, Info, Newspaper, Library, Zap, LogIn, LogOut, User } from "lucide-react";
+import { BookOpen, GraduationCap, Target, FileCheck, Lightbulb, MessageSquare, Plus, CheckSquare, Info, Newspaper, Library, Zap, LogIn, LogOut, User, Users } from "lucide-react";
 import { NavLink, Link } from "react-router-dom";
 
 import {
@@ -41,6 +41,12 @@ const navigation = [
     url: "/learning-apps",
     icon: Zap,
     description: "AI-powered tools"
+  },
+  {
+    title: "Teacher Dashboard",
+    url: "/teacher-dashboard",
+    icon: Users,
+    description: "Manage students"
   },
 ];
 
