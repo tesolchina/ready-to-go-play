@@ -42,6 +42,12 @@ const navigation = [
     icon: Zap,
     description: "AI-powered tools"
   },
+  {
+    title: "Vocabulary Builder",
+    url: "/vocabulary-builder",
+    icon: BookOpen,
+    description: "Adaptive vocabulary learning"
+  },
 ];
 
 
