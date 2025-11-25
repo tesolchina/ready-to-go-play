@@ -60,15 +60,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             description: "You've successfully signed in.",
           });
         }
-
-        // Log PASSWORD_RECOVERY event specifically
-        if (event === 'PASSWORD_RECOVERY') {
-          passwordResetLogger.info('AuthContext', 'onAuthStateChange', 'PASSWORD_RECOVERY event detected', {
-            hasSession: !!session,
-            hasUser: !!session?.user,
-            userId: session?.user?.id,
-          });
-        }
       }
     );
 
@@ -86,94 +77,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           pathname,
         });
 
-        // Check for errors in hash first
-        if (hash && hash.includes('error=')) {
+        // Check for custom password reset token in hash
+        if (hash && hash.includes('token=')) {
           const params = new URLSearchParams(hash.substring(1));
-          const error = params.get('error');
-          const errorCode = params.get('error_code');
-          const errorDescription = params.get('error_description');
-
-          passwordResetLogger.error('AuthContext', 'initSession', 'Error detected in URL hash', {
-            error,
-            errorCode,
-            errorDescription,
-            fullHash: hash,
-          });
-
-          // Handle OTP expired error specifically
-          if (errorCode === 'otp_expired') {
-            toast({
-              title: "Reset link expired or already used",
-              description: "Your password reset link has expired or was already used. Email clients may automatically scan links. Please request a new reset link and click it immediately after receiving the email.",
-              variant: "destructive",
-              duration: 10000,
-            });
-            
-            // Clean up URL and redirect to auth page
-            window.history.replaceState({}, document.title, '/auth?reset=expired');
+          const resetToken = params.get('token');
+          
+          if (resetToken) {
+            passwordResetLogger.info('AuthContext', 'initSession', 'Password reset token found in URL');
+            // Store token in sessionStorage for the reset form to use
+            sessionStorage.setItem('password_reset_token', resetToken);
+            // Clean up URL and redirect to reset page
+            window.history.replaceState({}, document.title, '/auth?reset=true');
+            setLoading(false);
             return;
           }
         }
 
-        // Handle password recovery / magic link redirects with tokens in URL hash
+        // Handle standard Supabase auth session
         if (hash && hash.includes('access_token')) {
-          passwordResetLogger.info('AuthContext', 'initSession', 'Access token found in hash, parsing...');
-
-          const params = new URLSearchParams(hash.substring(1));
-          const access_token = params.get('access_token');
-          const refresh_token = params.get('refresh_token');
-          const type = params.get('type');
-
-          passwordResetLogger.debug('AuthContext', 'initSession', 'Extracted tokens from hash', {
-            hasAccessToken: !!access_token,
-            hasRefreshToken: !!refresh_token,
-            accessTokenLength: access_token?.length,
-            refreshTokenLength: refresh_token?.length,
-            type,
-            allHashParams: Object.fromEntries(params.entries()),
-          });
-
-          if (access_token && refresh_token) {
-            passwordResetLogger.info('AuthContext', 'initSession', 'Calling setSession with tokens');
-
-            const { data, error } = await supabase.auth.setSession({
-              access_token,
-              refresh_token,
-            });
-
-            passwordResetLogger.info('AuthContext', 'initSession', 'setSession result', {
-              hasError: !!error,
-              errorMessage: error?.message,
-              errorStatus: error?.status,
-              hasSession: !!data?.session,
-              hasUser: !!data?.session?.user,
-              userId: data?.session?.user?.id,
-              userEmail: data?.session?.user?.email,
-              sessionExpiresAt: data?.session?.expires_at,
-            });
-
-            if (!error) {
-              passwordResetLogger.info('AuthContext', 'initSession', 'Session set successfully');
-              setSession(data.session);
-              setUser(data.session?.user ?? null);
-            } else {
-              passwordResetLogger.error('AuthContext', 'initSession', 'Failed to set session', {
-                error: error.message,
-                errorStatus: error.status,
-                errorName: error.name,
-              });
-            }
-          } else {
-            passwordResetLogger.warn('AuthContext', 'initSession', 'Hash contains access_token but tokens are missing', {
-              hasAccessToken: !!access_token,
-              hasRefreshToken: !!refresh_token,
-            });
-          }
-
-          // Clean up URL hash so we don't re-process on refresh
-          window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
-          passwordResetLogger.debug('AuthContext', 'initSession', 'Cleaned up URL hash');
-        } else {
           passwordResetLogger.info('AuthContext', 'initSession', 'No access_token in hash, checking existing session');
           const { data: { session } } = await supabase.auth.getSession();
           
@@ -265,121 +186,119 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const resetPassword = async (email: string) => {
     const redirectUrl = `${window.location.origin}/auth?reset=true`;
     
-    passwordResetLogger.info('AuthContext', 'resetPassword', 'Starting password reset request', {
+    passwordResetLogger.info('AuthContext', 'resetPassword', 'Starting custom password reset request', {
       email,
       redirectUrl,
-      origin: window.location.origin,
       timestamp: new Date().toISOString(),
     });
 
-    const { error, data } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: redirectUrl,
-    });
+    try {
+      const { data, error } = await supabase.functions.invoke('request-password-reset', {
+        body: { email, redirectUrl }
+      });
 
-    passwordResetLogger.info('AuthContext', 'resetPassword', 'resetPasswordForEmail response', {
-      hasError: !!error,
-      errorMessage: error?.message,
-      errorStatus: error?.status,
-      errorName: error?.name,
-      hasData: !!data,
-      timestamp: new Date().toISOString(),
-    });
+      passwordResetLogger.info('AuthContext', 'resetPassword', 'Custom reset response', {
+        hasError: !!error,
+        hasData: !!data,
+        timestamp: new Date().toISOString(),
+      });
 
-    if (error) {
+      if (error) {
+        throw error;
+      }
+
+      passwordResetLogger.info('AuthContext', 'resetPassword', 'Password reset email sent successfully');
+      toast({
+        title: "Check your email",
+        description: "We've sent you a password reset link. This link will work even if your email client scans it. Simply click the link when you're ready to reset your password.",
+        duration: 10000,
+      });
+
+      return { error: null };
+    } catch (error: any) {
       passwordResetLogger.error('AuthContext', 'resetPassword', 'Password reset request failed', {
         error: error.message,
-        errorStatus: error.status,
-        errorName: error.name,
       });
 
       toast({
         title: "Password reset failed",
-        description: error.message,
+        description: error.message || 'Failed to send reset email',
         variant: "destructive",
       });
-    } else {
-      passwordResetLogger.info('AuthContext', 'resetPassword', 'Password reset email sent successfully');
-      toast({
-        title: "Check your email",
-        description: "We've sent you a password reset link. Important: Click the link immediately after receiving it. If you're using an email client like Outlook, copy the link and open it in a web browser instead.",
-        duration: 10000,
-      });
-    }
 
-    return { error };
+      return { error };
+    }
   };
 
   const updatePassword = async (newPassword: string) => {
-    passwordResetLogger.info('AuthContext', 'updatePassword', 'Starting password update', {
-      passwordLength: newPassword.length,
-      hasSession: !!session,
-      hasUser: !!user,
-      userId: user?.id,
-      userEmail: user?.email,
-      sessionExpiresAt: session?.expires_at,
-      currentUrl: window.location.href,
-      currentHash: window.location.hash,
-      currentSearch: window.location.search,
-    });
-
-    // Check session before attempting update
-    if (!session) {
-      passwordResetLogger.warn('AuthContext', 'updatePassword', 'No session available, attempting to get session');
-      const { data: { session: currentSession } } = await supabase.auth.getSession();
+    // Check if we have a custom reset token
+    const resetToken = sessionStorage.getItem('password_reset_token');
+    
+    if (resetToken) {
+      passwordResetLogger.info('AuthContext', 'updatePassword', 'Using custom reset token');
       
-      passwordResetLogger.info('AuthContext', 'updatePassword', 'getSession result', {
-        hasSession: !!currentSession,
-        hasUser: !!currentSession?.user,
-        userId: currentSession?.user?.id,
-      });
+      try {
+        const { data, error } = await supabase.functions.invoke('reset-password', {
+          body: { token: resetToken, newPassword }
+        });
 
-      if (!currentSession) {
-        passwordResetLogger.error('AuthContext', 'updatePassword', 'No session available for password update');
-        const error = { message: 'Auth session missing!' };
+        if (error) {
+          throw error;
+        }
+
+        // Clear the token
+        sessionStorage.removeItem('password_reset_token');
+
+        passwordResetLogger.info('AuthContext', 'updatePassword', 'Password updated successfully with custom token');
+        
+        toast({
+          title: "Password updated",
+          description: "Your password has been changed successfully. You can now sign in with your new password.",
+        });
+
+        return { error: null };
+      } catch (error: any) {
+        passwordResetLogger.error('AuthContext', 'updatePassword', 'Custom token password update failed', {
+          error: error.message,
+        });
+
         toast({
           title: "Password update failed",
-          description: "Your reset link is invalid or has expired. Please request a new password reset email and use the latest link from the same browser.",
+          description: error.message || 'Failed to update password',
           variant: "destructive",
         });
+
         return { error };
       }
     }
 
-    passwordResetLogger.debug('AuthContext', 'updatePassword', 'Calling updateUser with new password');
+    // Fallback to standard Supabase password update (for authenticated users)
+    passwordResetLogger.info('AuthContext', 'updatePassword', 'Using standard password update', {
+      hasSession: !!session,
+      hasUser: !!user,
+    });
+
+    if (!session) {
+      const error = { message: 'Please sign in to change your password' };
+      toast({
+        title: "Not authenticated",
+        description: error.message,
+        variant: "destructive",
+      });
+      return { error };
+    }
+
     const { error, data } = await supabase.auth.updateUser({
       password: newPassword,
     });
 
-    passwordResetLogger.info('AuthContext', 'updatePassword', 'updateUser response', {
-      hasError: !!error,
-      errorMessage: error?.message,
-      errorStatus: error?.status,
-      errorName: error?.name,
-      hasData: !!data,
-      hasUser: !!data?.user,
-      userId: data?.user?.id,
-    });
-
     if (error) {
-      passwordResetLogger.error('AuthContext', 'updatePassword', 'Password update failed', {
-        error: error.message,
-        errorStatus: error.status,
-        errorName: error.name,
-        isSessionMissing: error.message === "Auth session missing!",
-      });
-
-      const description =
-        error.message === "Auth session missing!"
-          ? "Your reset link is invalid or has expired. Please request a new password reset email and use the latest link from the same browser."
-          : error.message;
-
       toast({
         title: "Password update failed",
-        description,
+        description: error.message,
         variant: "destructive",
       });
     } else {
-      passwordResetLogger.info('AuthContext', 'updatePassword', 'Password updated successfully');
       toast({
         title: "Password updated",
         description: "Your password has been changed successfully.",
