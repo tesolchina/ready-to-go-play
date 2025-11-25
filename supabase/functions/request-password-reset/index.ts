@@ -107,7 +107,7 @@ serve(async (req: Request) => {
     const resetLink = `${redirectUrl}#token=${token}`;
     
     const emailResponse = await resend.sendEmail({
-      from: 'Academic EAP Platform <noreply@jre.aitutor.ink>',
+      from: 'Academic EAP Platform <noreply@eapteacher.smartutor.me>',
       to: [email],
       subject: 'Reset Your Password',
       html: `
