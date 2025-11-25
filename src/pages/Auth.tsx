@@ -265,9 +265,16 @@ const Auth = () => {
             <CardContent className="space-y-4">
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
-                <AlertDescription>
-                  The password reset link you clicked has expired or is invalid. 
-                  Password reset links are valid for 1 hour. Please request a new reset link below.
+                <AlertDescription className="space-y-2">
+                  <p className="font-semibold">Your password reset link has expired or was already used.</p>
+                  <p className="text-sm">
+                    <strong>Common cause:</strong> Email clients (like Outlook or Gmail) automatically scan links for security, 
+                    which consumes the one-time reset token before you can use it.
+                  </p>
+                  <p className="text-sm">
+                    <strong>To fix:</strong> Request a new link below, then open it immediately in a web browser 
+                    (not in your email client preview). Use only the most recent link.
+                  </p>
                 </AlertDescription>
               </Alert>
               <form onSubmit={handleForgotPassword}>
