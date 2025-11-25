@@ -105,7 +105,7 @@ serve(async (req) => {
     `;
 
     const result = await resend.sendEmail({
-      from: "Academic EAP Platform <onboarding@resend.dev>",
+      from: "Academic EAP Platform <noreply@eapteacher.smartutor.me>",
       to: [user.email],
       subject: "Confirm Your Email - Academic EAP Platform",
       html: emailContent,
