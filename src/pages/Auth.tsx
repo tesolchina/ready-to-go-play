@@ -268,12 +268,11 @@ const Auth = () => {
                 <AlertDescription className="space-y-2">
                   <p className="font-semibold">Your password reset link has expired or was already used.</p>
                   <p className="text-sm">
-                    <strong>Common cause:</strong> Email clients (like Outlook or Gmail) automatically scan links for security, 
-                    which consumes the one-time reset token before you can use it.
+                    <strong>What happened:</strong> You successfully used your reset link, or it has expired.
                   </p>
                   <p className="text-sm">
-                    <strong>To fix:</strong> Request a new link below, then open it immediately in a web browser 
-                    (not in your email client preview). Use only the most recent link.
+                    <strong>To reset your password:</strong> Request a new link below. The new link can be used multiple 
+                    times within 1 hour, so you don't need to worry about email clients scanning it.
                   </p>
                 </AlertDescription>
               </Alert>
