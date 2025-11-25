@@ -106,10 +106,8 @@ serve(async (req: Request) => {
     // Send email using Resend
     const resetLink = `${redirectUrl}#token=${token}`;
     
-    // TODO: Update the 'from' address to use your verified domain (e.g., 'noreply@yourdomain.com')
-    // Currently using test domain which only sends to account owner email
     const emailResponse = await resend.sendEmail({
-      from: 'Academic EAP Platform <onboarding@resend.dev>',
+      from: 'Academic EAP Platform <noreply@jre.aitutor.ink>',
       to: [email],
       subject: 'Reset Your Password',
       html: `
