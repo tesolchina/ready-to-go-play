@@ -35,6 +35,8 @@ const Auth = () => {
   const [hashError, setHashError] = useState<string | null>(null);
   const [hashErrorCode, setHashErrorCode] = useState<string | null>(null);
   const [allowResetMode, setAllowResetMode] = useState(true);
+  const [isTokenExpired, setIsTokenExpired] = useState(false);
+  const [expiredTokenEmail, setExpiredTokenEmail] = useState<string>("");
 
   const [searchParams] = useSearchParams();
   const isResetMode = searchParams.get("reset") === "true";
@@ -81,13 +83,19 @@ const Auth = () => {
           setHashErrorCode(errorCode);
         }
 
-        if (errorCode === "otp_expired") {
-          passwordResetLogger.warn('Auth', 'useEffect', 'OTP expired - disabling reset mode', {
+        if (errorCode === "otp_expired" || errorCode === "access_denied") {
+          passwordResetLogger.warn('Auth', 'useEffect', 'Token expired or access denied - showing expired token UI', {
             errorCode,
             errorDescription,
           });
+          setIsTokenExpired(true);
           setAllowResetMode(false);
-          setShowForgotPassword(true);
+          
+          // Try to extract email from URL if available, or show forgot password form
+          // Note: Email might not be in URL, so we'll show input field
+          
+          // Clean up URL hash to remove error after processing
+          window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
         }
       } else if (hash && hash.includes("access_token")) {
         passwordResetLogger.info('Auth', 'useEffect', 'Access token found in hash (no error)', {
@@ -100,11 +108,22 @@ const Auth = () => {
       }
     }
 
+    // Check if we're in reset mode but have no session (token might have expired silently)
+    // Only check after auth loading is complete
+    if (isResetMode && !authLoading && !session && !isTokenExpired) {
+      const currentHash = window.location.hash;
+      // If no error in hash and no session, token might have expired or been invalid
+      if (!currentHash.includes("error=") && !currentHash.includes("access_token")) {
+        passwordResetLogger.warn('Auth', 'useEffect', 'Reset mode but no session and no tokens in hash, showing expired token UI');
+        setIsTokenExpired(true);
+      }
+    }
+
     if (isAuthenticated && !authLoading && !isResetMode) {
       passwordResetLogger.info('Auth', 'useEffect', 'User authenticated, navigating to home');
       navigate("/");
     }
-  }, [isAuthenticated, authLoading, navigate, isResetMode, session]);
+  }, [isAuthenticated, authLoading, navigate, isResetMode, session, isTokenExpired]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -180,6 +199,15 @@ const Auth = () => {
       return;
     }
 
+    // Check if session exists before attempting update
+    if (!session) {
+      passwordResetLogger.error('Auth', 'handleUpdatePassword', 'No session available, showing expired token UI');
+      setIsTokenExpired(true);
+      setHashError("Your reset link is invalid or has expired. Please request a new password reset link.");
+      setHashErrorCode("session_missing");
+      return;
+    }
+
     setLoading(true);
     passwordResetLogger.debug('Auth', 'handleUpdatePassword', 'Calling updatePassword function');
     
@@ -226,7 +254,66 @@ const Auth = () => {
           </p>
         </div>
 
-        {isResetMode ? (
+        {isResetMode && isTokenExpired ? (
+          <Card>
+            <CardHeader>
+              <CardTitle>Reset Link Expired</CardTitle>
+              <CardDescription>
+                Your password reset link has expired. Please request a new one.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>
+                  The password reset link you clicked has expired or is invalid. 
+                  Password reset links are valid for 1 hour. Please request a new reset link below.
+                </AlertDescription>
+              </Alert>
+              <form onSubmit={handleForgotPassword}>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="expired-reset-email">Email</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="expired-reset-email"
+                        type="email"
+                        placeholder="your.name@university.edu"
+                        value={resetEmail}
+                        onChange={(e) => setResetEmail(e.target.value)}
+                        className="pl-10"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <Button type="submit" className="w-full" disabled={loading}>
+                    {loading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      "Send New Reset Link"
+                    )}
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+            <CardFooter>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => {
+                  setIsTokenExpired(false);
+                  navigate("/auth");
+                }}
+              >
+                Back to Sign In
+              </Button>
+            </CardFooter>
+          </Card>
+        ) : isResetMode && !isTokenExpired && session ? (
           <Card>
             <CardHeader>
               <CardTitle>Set New Password</CardTitle>
