@@ -37,6 +37,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { toast } = useToast();
 
   useEffect(() => {
+    // Track if we're doing an email confirmation check to prevent race conditions
+    let isCheckingEmailConfirmation = false;
+
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
@@ -50,15 +53,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           accessToken: session?.access_token ? `${session.access_token.substring(0, 20)}...` : null,
         });
 
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
+        // For SIGNED_IN events, check email confirmation first
+        if (event === 'SIGNED_IN' && session?.user && !isCheckingEmailConfirmation) {
+          isCheckingEmailConfirmation = true;
+          
+          // Defer the Supabase call to avoid deadlock
+          setTimeout(async () => {
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('email_confirmed')
+              .eq('id', session.user.id)
+              .single();
 
-        if (event === 'SIGNED_IN') {
-          toast({
-            title: "Welcome back!",
-            description: "You've successfully signed in.",
-          });
+            if (!profile?.email_confirmed) {
+              // Email not confirmed - sign out
+              await supabase.auth.signOut();
+              setSession(null);
+              setUser(null);
+              setLoading(false);
+              toast({
+                title: "Email not confirmed",
+                description: "Please check your email and click the confirmation link before signing in.",
+                variant: "destructive",
+              });
+            } else {
+              // Email confirmed - allow sign in
+              setSession(session);
+              setUser(session.user);
+              setLoading(false);
+              toast({
+                title: "Welcome back!",
+                description: "You've successfully signed in.",
+              });
+            }
+            isCheckingEmailConfirmation = false;
+          }, 0);
+        } else if (event !== 'SIGNED_IN') {
+          // For other events (SIGNED_OUT, TOKEN_REFRESHED, etc.), update state normally
+          setSession(session);
+          setUser(session?.user ?? null);
+          setLoading(false);
         }
       }
     );
