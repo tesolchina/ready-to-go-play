@@ -7,8 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, Mail, Lock, User, AlertCircle } from "lucide-react";
+import { Loader2, Mail, Lock, User, AlertCircle, CheckCircle2 } from "lucide-react";
 import { passwordResetLogger } from "@/utils/passwordResetLogger";
+import { supabase } from "@/integrations/supabase/client";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -38,9 +39,55 @@ const Auth = () => {
   const [isTokenExpired, setIsTokenExpired] = useState(false);
   const [expiredTokenEmail, setExpiredTokenEmail] = useState<string>("");
   const [hasCustomToken, setHasCustomToken] = useState(false);
+  const [emailConfirmationStatus, setEmailConfirmationStatus] = useState<'pending' | 'success' | 'error' | null>(null);
+  const [emailConfirmationMessage, setEmailConfirmationMessage] = useState<string>("");
 
   const [searchParams] = useSearchParams();
   const isResetMode = searchParams.get("reset") === "true";
+  const isConfirmMode = searchParams.get("confirm") === "true";
+
+  // Handle email confirmation
+  useEffect(() => {
+    const handleEmailConfirmation = async () => {
+      if (!isConfirmMode) return;
+      
+      const hash = window.location.hash;
+      if (!hash.includes('token=')) return;
+      
+      const params = new URLSearchParams(hash.substring(1));
+      const confirmToken = params.get('token');
+      
+      if (!confirmToken) return;
+      
+      setEmailConfirmationStatus('pending');
+      
+      try {
+        const { data, error } = await supabase.functions.invoke('verify-email', {
+          body: { token: confirmToken }
+        });
+        
+        if (error) throw error;
+        
+        if (data.alreadyConfirmed) {
+          setEmailConfirmationStatus('success');
+          setEmailConfirmationMessage('Your email is already confirmed. You can sign in.');
+        } else {
+          setEmailConfirmationStatus('success');
+          setEmailConfirmationMessage('Your email has been confirmed! You can now sign in.');
+        }
+        
+        // Clean up URL
+        window.history.replaceState({}, document.title, '/auth');
+      } catch (e: any) {
+        console.error('Email confirmation error:', e);
+        setEmailConfirmationStatus('error');
+        setEmailConfirmationMessage(e.message || 'Failed to confirm email. Please try requesting a new confirmation link.');
+        window.history.replaceState({}, document.title, '/auth');
+      }
+    };
+    
+    handleEmailConfirmation();
+  }, [isConfirmMode]);
 
   useEffect(() => {
     const fullUrl = window.location.href;
@@ -63,6 +110,7 @@ const Auth = () => {
       search,
       pathname,
       isResetMode,
+      isConfirmMode,
       isAuthenticated,
       authLoading,
       hasSession: !!session,
@@ -266,6 +314,28 @@ const Auth = () => {
             Professional EAP tools for educators
           </p>
         </div>
+
+        {/* Email confirmation status */}
+        {emailConfirmationStatus && (
+          <Alert className={`mb-4 ${emailConfirmationStatus === 'success' ? 'border-green-500 bg-green-50 dark:bg-green-950' : emailConfirmationStatus === 'error' ? 'border-destructive' : ''}`}>
+            {emailConfirmationStatus === 'pending' ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <AlertDescription>Confirming your email...</AlertDescription>
+              </>
+            ) : emailConfirmationStatus === 'success' ? (
+              <>
+                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <AlertDescription className="text-green-700 dark:text-green-400">{emailConfirmationMessage}</AlertDescription>
+              </>
+            ) : (
+              <>
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{emailConfirmationMessage}</AlertDescription>
+              </>
+            )}
+          </Alert>
+        )}
 
         {isResetMode && isTokenExpired ? (
           <Card>

@@ -123,6 +123,33 @@ export type Database = {
           },
         ]
       }
+      email_confirmation_tokens: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          token: string
+          used_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          id?: string
+          token: string
+          used_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          token?: string
+          used_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       lesson_interactions: {
         Row: {
           created_at: string
@@ -385,6 +412,7 @@ export type Database = {
         Row: {
           created_at: string
           email: string
+          email_confirmed: boolean | null
           full_name: string | null
           id: string
           institution: string | null
@@ -393,6 +421,7 @@ export type Database = {
         Insert: {
           created_at?: string
           email: string
+          email_confirmed?: boolean | null
           full_name?: string | null
           id: string
           institution?: string | null
@@ -401,6 +430,7 @@ export type Database = {
         Update: {
           created_at?: string
           email?: string
+          email_confirmed?: boolean | null
           full_name?: string | null
           id?: string
           institution?: string | null
