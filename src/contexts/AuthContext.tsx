@@ -119,13 +119,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [toast]);
 
   const signUp = async (email: string, password: string, fullName: string) => {
-    const redirectUrl = `${window.location.origin}/`;
-    
-    const { error } = await supabase.auth.signUp({
+    // Use auto_confirm since we handle confirmation ourselves
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: redirectUrl,
         data: {
           full_name: fullName,
         }
@@ -138,18 +136,48 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         description: error.message,
         variant: "destructive",
       });
-    } else {
-      toast({
-        title: "Check your email",
-        description: "We've sent you a confirmation link. Please check your institutional email.",
-      });
+      return { error };
     }
 
-    return { error };
+    // Sign out immediately - user must confirm email before logging in
+    await supabase.auth.signOut();
+    setUser(null);
+    setSession(null);
+
+    // Send custom confirmation email
+    if (data.user) {
+      try {
+        const { error: emailError } = await supabase.functions.invoke('request-email-confirmation', {
+          body: { 
+            email, 
+            userId: data.user.id,
+            fullName 
+          }
+        });
+
+        if (emailError) {
+          console.error('Failed to send confirmation email:', emailError);
+          toast({
+            title: "Account created",
+            description: "Account created but we couldn't send the confirmation email. Please use 'Resend confirmation'.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Check your email",
+            description: "We've sent you a confirmation link. Please check your institutional email to activate your account.",
+          });
+        }
+      } catch (e) {
+        console.error('Error sending confirmation email:', e);
+      }
+    }
+
+    return { error: null };
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -160,9 +188,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         description: error.message,
         variant: "destructive",
       });
+      return { error };
     }
 
-    return { error };
+    // Check if email is confirmed
+    if (data.user) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('email_confirmed')
+        .eq('id', data.user.id)
+        .single();
+
+      if (!profile?.email_confirmed) {
+        // Sign out and show message
+        await supabase.auth.signOut();
+        setUser(null);
+        setSession(null);
+        
+        toast({
+          title: "Email not confirmed",
+          description: "Please check your email and click the confirmation link before signing in.",
+          variant: "destructive",
+        });
+        return { error: { message: "Email not confirmed" } };
+      }
+    }
+
+    return { error: null };
   };
 
   const signOut = async () => {
@@ -302,28 +354,58 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const resendConfirmation = async (email: string) => {
-    const { error } = await supabase.auth.resend({
-      type: 'signup',
-      email: email,
-      options: {
-        emailRedirectTo: `${window.location.origin}/`,
-      }
-    });
+    try {
+      // First, find the user by email
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('id, email_confirmed')
+        .eq('email', email)
+        .single();
 
-    if (error) {
-      toast({
-        title: "Resend failed",
-        description: error.message,
-        variant: "destructive",
+      if (!profile) {
+        toast({
+          title: "Email not found",
+          description: "No account found with this email address.",
+          variant: "destructive",
+        });
+        return { error: { message: "Email not found" } };
+      }
+
+      if (profile.email_confirmed) {
+        toast({
+          title: "Already confirmed",
+          description: "Your email is already confirmed. You can sign in.",
+        });
+        return { error: null };
+      }
+
+      // Send new confirmation email
+      const { error } = await supabase.functions.invoke('request-email-confirmation', {
+        body: { email, userId: profile.id }
       });
-    } else {
+
+      if (error) {
+        toast({
+          title: "Resend failed",
+          description: error.message,
+          variant: "destructive",
+        });
+        return { error };
+      }
+
       toast({
         title: "Email sent",
         description: "We've sent you a new confirmation email.",
       });
+      return { error: null };
+    } catch (e: any) {
+      toast({
+        title: "Resend failed",
+        description: e.message || "Failed to resend confirmation email",
+        variant: "destructive",
+      });
+      return { error: e };
     }
-
-    return { error };
   };
 
   return (
