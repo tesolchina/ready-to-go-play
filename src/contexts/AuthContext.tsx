@@ -73,8 +73,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               setLoading(false);
               toast({
                 title: "Email not confirmed",
-                description: "Please check your email and click the confirmation link before signing in.",
+                description: "Please check your email (and spam folder) for a message from noreply@eapteacher.smartutor.me and click the confirmation link.",
                 variant: "destructive",
+                duration: 10000,
               });
             } else {
               // Email confirmed - allow sign in
@@ -199,7 +200,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } else {
           toast({
             title: "Check your email",
-            description: "We've sent you a confirmation link. Please check your institutional email to activate your account.",
+            description: "We've sent a confirmation link from noreply@eapteacher.smartutor.me. Please check your inbox (and spam folder) to activate your account.",
+            duration: 10000,
           });
         }
       } catch (e) {
@@ -429,7 +431,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       toast({
         title: "Email sent",
-        description: "We've sent you a new confirmation email.",
+        description: "We've sent a new confirmation email from noreply@eapteacher.smartutor.me. Please check your inbox and spam folder.",
+        duration: 10000,
       });
       return { error: null };
     } catch (e: any) {
