@@ -106,6 +106,8 @@ serve(async (req: Request) => {
     // Send email using Resend
     const resetLink = `${redirectUrl}#token=${token}`;
     
+    // TODO: Update the 'from' address to use your verified domain (e.g., 'noreply@yourdomain.com')
+    // Currently using test domain which only sends to account owner email
     const emailResponse = await resend.sendEmail({
       from: 'Academic EAP Platform <onboarding@resend.dev>',
       to: [email],
@@ -122,7 +124,12 @@ serve(async (req: Request) => {
       `,
     });
 
-    console.log('Email sent:', emailResponse);
+    if (emailResponse.error) {
+      console.error('Resend API error:', emailResponse.error);
+      throw new Error(`Failed to send email: ${emailResponse.error.message}`);
+    }
+
+    console.log('Email sent successfully:', emailResponse);
 
     return new Response(
       JSON.stringify({ success: true, message: 'Password reset email sent' }),
