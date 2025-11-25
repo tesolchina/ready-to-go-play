@@ -99,6 +99,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             errorDescription,
             fullHash: hash,
           });
+
+          // Handle OTP expired error specifically
+          if (errorCode === 'otp_expired') {
+            toast({
+              title: "Reset link expired or already used",
+              description: "Your password reset link has expired or was already used. Email clients may automatically scan links. Please request a new reset link and click it immediately after receiving the email.",
+              variant: "destructive",
+              duration: 10000,
+            });
+            
+            // Clean up URL and redirect to auth page
+            window.history.replaceState({}, document.title, '/auth?reset=expired');
+            return;
+          }
         }
 
         // Handle password recovery / magic link redirects with tokens in URL hash
@@ -255,6 +269,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       email,
       redirectUrl,
       origin: window.location.origin,
+      timestamp: new Date().toISOString(),
     });
 
     const { error, data } = await supabase.auth.resetPasswordForEmail(email, {
@@ -267,6 +282,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       errorStatus: error?.status,
       errorName: error?.name,
       hasData: !!data,
+      timestamp: new Date().toISOString(),
     });
 
     if (error) {
@@ -285,7 +301,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       passwordResetLogger.info('AuthContext', 'resetPassword', 'Password reset email sent successfully');
       toast({
         title: "Check your email",
-        description: "We've sent you a password reset link.",
+        description: "We've sent you a password reset link. Important: Click the link immediately after receiving it. If you're using an email client like Outlook, copy the link and open it in a web browser instead.",
+        duration: 10000,
       });
     }
 
