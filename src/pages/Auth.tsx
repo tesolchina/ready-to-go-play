@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2, Mail, Lock, User, AlertCircle } from "lucide-react";
+import { passwordResetLogger } from "@/utils/passwordResetLogger";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -39,14 +40,41 @@ const Auth = () => {
   const isResetMode = searchParams.get("reset") === "true";
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const hash = window.location.hash;
+    const fullUrl = window.location.href;
+    const hash = window.location.hash;
+    const search = window.location.search;
+    const pathname = window.location.pathname;
 
+    passwordResetLogger.info('Auth', 'useEffect', 'Component mounted/updated', {
+      fullUrl,
+      hash,
+      search,
+      pathname,
+      isResetMode,
+      isAuthenticated,
+      authLoading,
+      hasSession: !!session,
+      userId: session?.user?.id,
+    });
+
+    if (typeof window !== "undefined") {
       if (hash && hash.includes("error=")) {
+        passwordResetLogger.error('Auth', 'useEffect', 'Error detected in URL hash', {
+          hash,
+        });
+
         const params = new URLSearchParams(hash.substring(1));
         const error = params.get("error");
         const errorCode = params.get("error_code");
         const errorDescription = params.get("error_description");
+        const allParams = Object.fromEntries(params.entries());
+
+        passwordResetLogger.error('Auth', 'useEffect', 'Parsed error from hash', {
+          error,
+          errorCode,
+          errorDescription,
+          allParams,
+        });
 
         if (error || errorDescription) {
           setHashError(errorDescription || error);
@@ -54,16 +82,29 @@ const Auth = () => {
         }
 
         if (errorCode === "otp_expired") {
+          passwordResetLogger.warn('Auth', 'useEffect', 'OTP expired - disabling reset mode', {
+            errorCode,
+            errorDescription,
+          });
           setAllowResetMode(false);
           setShowForgotPassword(true);
         }
+      } else if (hash && hash.includes("access_token")) {
+        passwordResetLogger.info('Auth', 'useEffect', 'Access token found in hash (no error)', {
+          hashLength: hash.length,
+        });
+      } else if (hash) {
+        passwordResetLogger.debug('Auth', 'useEffect', 'Hash present but no error or access_token', {
+          hash,
+        });
       }
     }
 
     if (isAuthenticated && !authLoading && !isResetMode) {
+      passwordResetLogger.info('Auth', 'useEffect', 'User authenticated, navigating to home');
       navigate("/");
     }
-  }, [isAuthenticated, authLoading, navigate, isResetMode]);
+  }, [isAuthenticated, authLoading, navigate, isResetMode, session]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,6 +138,10 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
     
+    passwordResetLogger.info('Auth', 'handleForgotPassword', 'Password reset requested', {
+      email: resetEmail,
+    });
+    
     await resetPassword(resetEmail);
     
     setLoading(false);
@@ -118,16 +163,44 @@ const Auth = () => {
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    passwordResetLogger.info('Auth', 'handleUpdatePassword', 'Password update form submitted', {
+      passwordLength: newPassword.length,
+      passwordsMatch: newPassword === confirmNewPassword,
+      isResetMode,
+      isAuthenticated,
+      hasSession: !!session,
+      userId: session?.user?.id,
+      currentUrl: window.location.href,
+      currentHash: window.location.hash,
+      currentSearch: window.location.search,
+    });
+
     if (newPassword !== confirmNewPassword) {
+      passwordResetLogger.warn('Auth', 'handleUpdatePassword', 'Passwords do not match');
       return;
     }
 
     setLoading(true);
+    passwordResetLogger.debug('Auth', 'handleUpdatePassword', 'Calling updatePassword function');
+    
     const { error } = await updatePassword(newPassword);
+    
+    passwordResetLogger.info('Auth', 'handleUpdatePassword', 'updatePassword completed', {
+      hasError: !!error,
+      errorMessage: error?.message,
+      errorStatus: error?.status,
+    });
+    
     setLoading(false);
 
     if (!error) {
+      passwordResetLogger.info('Auth', 'handleUpdatePassword', 'Password updated successfully, navigating to home');
       navigate("/");
+    } else {
+      passwordResetLogger.error('Auth', 'handleUpdatePassword', 'Password update failed', {
+        error: error.message,
+        errorStatus: error.status,
+      });
     }
   };
 
