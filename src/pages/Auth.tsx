@@ -37,7 +37,7 @@ const Auth = () => {
   const [allowResetMode, setAllowResetMode] = useState(true);
   const [isTokenExpired, setIsTokenExpired] = useState(false);
   const [expiredTokenEmail, setExpiredTokenEmail] = useState<string>("");
-  
+  const [hasCustomToken, setHasCustomToken] = useState(false);
 
   const [searchParams] = useSearchParams();
   const isResetMode = searchParams.get("reset") === "true";
@@ -48,6 +48,14 @@ const Auth = () => {
     const search = window.location.search;
     const pathname = window.location.pathname;
     
+    // Check for custom token in sessionStorage
+    const customToken = sessionStorage.getItem('password_reset_token');
+    if (customToken) {
+      setHasCustomToken(true);
+      passwordResetLogger.info('Auth', 'useEffect', 'Custom token found in sessionStorage', {
+        tokenLength: customToken.length,
+      });
+    }
 
     passwordResetLogger.info('Auth', 'useEffect', 'Component mounted/updated', {
       fullUrl,
@@ -58,6 +66,7 @@ const Auth = () => {
       isAuthenticated,
       authLoading,
       hasSession: !!session,
+      hasCustomToken: !!customToken,
       userId: session?.user?.id,
     });
 
@@ -110,13 +119,14 @@ const Auth = () => {
       }
     }
 
-    // Check if we're in reset mode but have no session (token might have expired silently)
+    // Check if we're in reset mode but have no session AND no custom token
     // Only check after auth loading is complete
-    if (isResetMode && !authLoading && !session && !isTokenExpired) {
+    const currentCustomToken = sessionStorage.getItem('password_reset_token');
+    if (isResetMode && !authLoading && !session && !currentCustomToken && !isTokenExpired) {
       const currentHash = window.location.hash;
-      // If no error in hash and no session, token might have expired or been invalid
+      // If no error in hash and no session and no custom token, token might have expired
       if (!currentHash.includes("error=") && !currentHash.includes("access_token")) {
-        passwordResetLogger.warn('Auth', 'useEffect', 'Reset mode but no session, showing expired token UI');
+        passwordResetLogger.warn('Auth', 'useEffect', 'Reset mode but no session and no custom token, showing expired token UI');
         setIsTokenExpired(true);
       }
     }
@@ -201,9 +211,10 @@ const Auth = () => {
       return;
     }
 
-    // Check if session exists before attempting update
-    if (!session) {
-      passwordResetLogger.error('Auth', 'handleUpdatePassword', 'No session available, showing expired token UI');
+    // Check if session or custom token exists before attempting update
+    const customToken = sessionStorage.getItem('password_reset_token');
+    if (!session && !customToken) {
+      passwordResetLogger.error('Auth', 'handleUpdatePassword', 'No session and no custom token available, showing expired token UI');
       setIsTokenExpired(true);
       setHashError("Your reset link is invalid or has expired. Please request a new password reset link.");
       setHashErrorCode("session_missing");
@@ -321,7 +332,7 @@ const Auth = () => {
               </Button>
             </CardFooter>
           </Card>
-        ) : isResetMode && !isTokenExpired && session ? (
+        ) : isResetMode && !isTokenExpired && (session || hasCustomToken) ? (
           <Card>
             <CardHeader>
               <CardTitle>Set New Password</CardTitle>

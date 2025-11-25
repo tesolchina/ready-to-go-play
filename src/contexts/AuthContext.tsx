@@ -73,6 +73,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           hash,
         });
 
+        // Check for custom password reset token in hash
+        if (hash && hash.includes('token=')) {
+          const params = new URLSearchParams(hash.substring(1));
+          const resetToken = params.get('token');
+          
+          if (resetToken) {
+            passwordResetLogger.info('AuthContext', 'initSession', 'Password reset token found in URL');
+            // Store token in sessionStorage for the reset form to use
+            sessionStorage.setItem('password_reset_token', resetToken);
+            // Clean up URL and redirect to reset page
+            window.history.replaceState({}, document.title, '/auth?reset=true');
+            setLoading(false);
+            return;
+          }
+        }
+
         // Check for existing session
         const { data: { session } } = await supabase.auth.getSession();
         
@@ -163,51 +179,100 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const resetPassword = async (email: string) => {
     const redirectUrl = `${window.location.origin}/auth?reset=true`;
     
-    passwordResetLogger.info('AuthContext', 'resetPassword', 'Starting Supabase password reset request', {
+    passwordResetLogger.info('AuthContext', 'resetPassword', 'Starting custom password reset request', {
       email,
       redirectUrl,
       timestamp: new Date().toISOString(),
     });
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: redirectUrl,
-    });
+    try {
+      const { data, error } = await supabase.functions.invoke('request-password-reset', {
+        body: { email, redirectUrl }
+      });
 
-    passwordResetLogger.info('AuthContext', 'resetPassword', 'Supabase reset response', {
-      hasError: !!error,
-      timestamp: new Date().toISOString(),
-    });
+      passwordResetLogger.info('AuthContext', 'resetPassword', 'Custom reset response', {
+        hasError: !!error,
+        hasData: !!data,
+        timestamp: new Date().toISOString(),
+      });
 
-    if (error) {
+      if (error) {
+        throw error;
+      }
+
+      passwordResetLogger.info('AuthContext', 'resetPassword', 'Password reset email sent successfully');
+      toast({
+        title: "Check your email",
+        description: "We've sent you a password reset link. This link will work even if your email client scans it.",
+        duration: 10000,
+      });
+
+      return { error: null };
+    } catch (error: any) {
       passwordResetLogger.error('AuthContext', 'resetPassword', 'Password reset request failed', {
         error: error.message,
       });
 
       toast({
         title: "Password reset failed",
-        description: error.message,
+        description: error.message || 'Failed to send reset email',
         variant: "destructive",
       });
-    } else {
-      passwordResetLogger.info('AuthContext', 'resetPassword', 'Password reset email sent successfully');
-      toast({
-        title: "Check your email",
-        description: "We've sent you a password reset link.",
-        duration: 10000,
-      });
-    }
 
-    return { error };
+      return { error };
+    }
   };
 
   const updatePassword = async (newPassword: string) => {
-    passwordResetLogger.info('AuthContext', 'updatePassword', 'Updating password', {
+    // Check if we have a custom reset token
+    const resetToken = sessionStorage.getItem('password_reset_token');
+    
+    if (resetToken) {
+      passwordResetLogger.info('AuthContext', 'updatePassword', 'Using custom reset token');
+      
+      try {
+        const { data, error } = await supabase.functions.invoke('reset-password', {
+          body: { token: resetToken, newPassword }
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        // Clear the token
+        sessionStorage.removeItem('password_reset_token');
+
+        passwordResetLogger.info('AuthContext', 'updatePassword', 'Password updated successfully with custom token');
+        
+        toast({
+          title: "Password updated",
+          description: "Your password has been changed successfully. You can now sign in with your new password.",
+        });
+
+        return { error: null };
+      } catch (error: any) {
+        passwordResetLogger.error('AuthContext', 'updatePassword', 'Custom token password update failed', {
+          error: error.message,
+        });
+
+        toast({
+          title: "Password update failed",
+          description: error.message || 'Failed to update password',
+          variant: "destructive",
+        });
+
+        return { error };
+      }
+    }
+
+    // Fallback to standard Supabase password update (for authenticated users)
+    passwordResetLogger.info('AuthContext', 'updatePassword', 'Using standard password update', {
       hasSession: !!session,
       hasUser: !!user,
     });
 
     if (!session) {
-      const error = { message: 'No active session. Please use the reset link from your email.' };
+      const error = { message: 'Please sign in to change your password' };
       toast({
         title: "Not authenticated",
         description: error.message,
@@ -221,16 +286,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     if (error) {
-      passwordResetLogger.error('AuthContext', 'updatePassword', 'Password update failed', {
-        error: error.message,
-      });
       toast({
         title: "Password update failed",
         description: error.message,
         variant: "destructive",
       });
     } else {
-      passwordResetLogger.info('AuthContext', 'updatePassword', 'Password updated successfully');
       toast({
         title: "Password updated",
         description: "Your password has been changed successfully.",
