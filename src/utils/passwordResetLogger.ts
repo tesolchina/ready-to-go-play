@@ -189,5 +189,12 @@ export const passwordResetLogger = new PasswordResetLogger();
 // Make it available globally for debugging
 if (typeof window !== 'undefined') {
   (window as any).passwordResetLogger = passwordResetLogger;
+  
+  // Dynamically import exportLogsToRepo to avoid circular dependencies
+  import('./exportLogsToRepo').then((module) => {
+    (window as any).exportLogsToRepo = module.exportLogsToRepo;
+  }).catch(() => {
+    // Silently fail if module not available
+  });
 }
 
