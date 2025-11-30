@@ -159,6 +159,11 @@ const WorkshopAIAgentDelivery = () => {
                             <strong>Budget Estimate:</strong> RMB/HKD 20 should be sufficient for workshop activities and experimentation with API-based language models.
                           </p>
                         </div>
+                        <div className="mt-3 p-4 bg-destructive/10 rounded-lg border-l-4 border-destructive">
+                          <p className="text-sm font-semibold text-destructive">
+                            ⚠️ Important: Save your API key immediately after generation! You will not be able to view it again. Store it in a secure location such as a password manager.
+                          </p>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -167,6 +172,12 @@ const WorkshopAIAgentDelivery = () => {
 
                 {/* ACTIVITIES TAB */}
                 <TabsContent value="activities" className="space-y-6">
+                  <Alert>
+                    <Lightbulb className="h-4 w-4" />
+                    <AlertDescription>
+                      <strong>Work in Progress:</strong> Workshop activities are being finalized. Please check back soon for updates!
+                    </AlertDescription>
+                  </Alert>
                   <Card>
                     <CardHeader>
                       <CardTitle>Workshop Schedule (10:30 - 13:30)</CardTitle>
@@ -327,6 +338,12 @@ const WorkshopAIAgentDelivery = () => {
 
                 {/* REFLECTION TAB */}
                 <TabsContent value="reflection" className="space-y-6">
+                  <Alert>
+                    <MessageSquare className="h-4 w-4" />
+                    <AlertDescription>
+                      <strong>Work in Progress:</strong> Post-workshop reflection materials are being prepared. Please check back soon for updates!
+                    </AlertDescription>
+                  </Alert>
                   <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
