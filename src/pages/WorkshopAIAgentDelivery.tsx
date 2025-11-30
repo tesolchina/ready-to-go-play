@@ -67,38 +67,62 @@ const WorkshopAIAgentDelivery = () => {
                           <li className="flex gap-3">
                             <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                             <div>
-                              <strong>Visual Studio Code</strong> - Download from <a href="https://code.visualstudio.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">code.visualstudio.com</a>
+                              <strong>Trae IDE</strong> (Required) - Download and install from:
+                              <ul className="mt-2 ml-4 space-y-1">
+                                <li>• <strong>Mainland China:</strong> <a href="https://trae.cn" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">trae.cn</a></li>
+                                <li>• <strong>Outside Mainland China:</strong> <a href="https://trae.ai" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">trae.ai</a></li>
+                              </ul>
                             </div>
                           </li>
                           <li className="flex gap-3">
                             <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                             <div>
-                              <strong>Cursor IDE</strong> (Alternative) - Download from <a href="https://cursor.sh" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">cursor.sh</a>
-                            </div>
-                          </li>
-                          <li className="flex gap-3">
-                            <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                            <div>
-                              <strong>GitHub Copilot</strong> or <strong>Claude/ChatGPT API</strong> access (we'll cover free alternatives during the workshop)
+                              <strong>Trae Account</strong> - Sign up for a free account at the website above, then log in from your local computer
                             </div>
                           </li>
                         </ul>
                       </div>
 
+                      <div className="p-4 bg-primary/5 rounded-lg border-l-4 border-primary">
+                        <h4 className="font-semibold mb-2">Installation Steps</h4>
+                        <ol className="space-y-2 text-sm">
+                          <li className="flex gap-2">
+                            <span className="font-semibold">1.</span>
+                            <span>Visit the appropriate Trae website for your location</span>
+                          </li>
+                          <li className="flex gap-2">
+                            <span className="font-semibold">2.</span>
+                            <span>Download the installer for your operating system (Windows/Mac/Linux)</span>
+                          </li>
+                          <li className="flex gap-2">
+                            <span className="font-semibold">3.</span>
+                            <span>Run the installer and follow the setup instructions</span>
+                          </li>
+                          <li className="flex gap-2">
+                            <span className="font-semibold">4.</span>
+                            <span>Create a Trae account or log in with your existing account</span>
+                          </li>
+                          <li className="flex gap-2">
+                            <span className="font-semibold">5.</span>
+                            <span>Complete the initial setup and familiarize yourself with the interface</span>
+                          </li>
+                        </ol>
+                      </div>
+
                       <div>
-                        <h3 className="font-semibold mb-2">Recommended Extensions (VS Code)</h3>
+                        <h3 className="font-semibold mb-2">Optional Tools</h3>
                         <ul className="space-y-2 text-foreground">
                           <li className="flex gap-3">
                             <span className="text-primary">•</span>
-                            <span>GitHub Copilot</span>
+                            <div>
+                              <strong>Visual Studio Code</strong> - Alternative IDE (<a href="https://code.visualstudio.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">code.visualstudio.com</a>)
+                            </div>
                           </li>
                           <li className="flex gap-3">
                             <span className="text-primary">•</span>
-                            <span>Continue (Open-source AI coding assistant)</span>
-                          </li>
-                          <li className="flex gap-3">
-                            <span className="text-primary">•</span>
-                            <span>Python (if working with Python projects)</span>
+                            <div>
+                              <strong>Cursor IDE</strong> - Another alternative (<a href="https://cursor.sh" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">cursor.sh</a>)
+                            </div>
                           </li>
                         </ul>
                       </div>

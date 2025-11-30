@@ -149,6 +149,22 @@ export function AppSidebar() {
                           </NavLink>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
+                      <SidebarMenuSubItem>
+                        <SidebarMenuSubButton asChild>
+                          <NavLink
+                            to="/workshops/ai-agent-workshop/delivery"
+                            className={({ isActive }) =>
+                              `block rounded-lg px-3 py-2 ml-8 transition-all duration-200 ${
+                                isActive
+                                  ? "bg-sidebar-accent text-white"
+                                  : "text-white/70 hover:bg-white/10 hover:text-white"
+                              }`
+                            }
+                          >
+                            <span className="text-sm">Workshop Delivery</span>
+                          </NavLink>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
                     </SidebarMenuSub>
                   </CollapsibleContent>
                 </SidebarMenuItem>
