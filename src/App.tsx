@@ -30,6 +30,7 @@ import PatternAnalyzer from "./pages/PatternAnalyzer";
 import WileyAIGuidelines from "./pages/WileyAIGuidelines";
 import VocabularyBuilder from "./pages/VocabularyBuilder";
 import TeacherDashboard from "./pages/TeacherDashboard";
+import WorkshopAIAgent from "./pages/WorkshopAIAgent";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -69,6 +70,7 @@ const App = () => (
           <Route path="/wiley-ai-guidelines" element={<WileyAIGuidelines />} />
           <Route path="/vocabulary-builder" element={<VocabularyBuilder />} />
           <Route path="/teacher-dashboard" element={<TeacherDashboard />} />
+          <Route path="/workshops/ai-agent-workshop" element={<WorkshopAIAgent />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -1,4 +1,4 @@
-import { BookOpen, GraduationCap, Target, FileCheck, Lightbulb, MessageSquare, Plus, CheckSquare, Info, Newspaper, Library, Zap, LogIn, LogOut, User, Users } from "lucide-react";
+import { BookOpen, GraduationCap, Target, FileCheck, Lightbulb, MessageSquare, Plus, CheckSquare, Info, Newspaper, Library, Zap, Users, Calendar, ChevronDown } from "lucide-react";
 import { NavLink, Link } from "react-router-dom";
 
 import {
@@ -10,12 +10,14 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
   useSidebar,
 } from "@/components/ui/sidebar";
 import { AIServiceIndicator } from "@/components/AIServiceIndicator";
-import { useAuth } from "@/contexts/AuthContext";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { useState } from "react";
 
 const navigation = [
   {
@@ -54,7 +56,7 @@ const navigation = [
 export function AppSidebar() {
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
-  const { user, signOut, isAuthenticated } = useAuth();
+  const [workshopsOpen, setWorkshopsOpen] = useState(true);
 
   return (
     <Sidebar 
@@ -110,42 +112,50 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {!isCollapsed && (
-          <div className="mt-auto pt-4">
-            <Separator className="mb-4 bg-white/10" />
-            {isAuthenticated ? (
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5">
-                  <User className="h-4 w-4 text-white/70" />
-                  <span className="text-sm text-white/90 truncate">
-                    {user?.email}
-                  </span>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full bg-white/10 text-white border-white/20 hover:bg-white/20"
-                  onClick={signOut}
-                >
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Sign Out
-                </Button>
-              </div>
-            ) : (
-              <Button
-                asChild
-                size="sm"
-                className="w-full bg-white/10 text-white border-white/20 hover:bg-white/20"
-                variant="outline"
-              >
-                <Link to="/auth">
-                  <LogIn className="h-4 w-4 mr-2" />
-                  Sign In
-                </Link>
-              </Button>
-            )}
-          </div>
-        )}
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-white/70 text-xs uppercase tracking-wider mb-3 font-semibold">
+            Workshops
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="gap-2">
+              <Collapsible open={workshopsOpen} onOpenChange={setWorkshopsOpen}>
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton className="h-auto p-0">
+                      <div className="flex items-center justify-between w-full rounded-lg p-3 text-white/80 hover:bg-white/10 hover:text-white transition-all duration-200">
+                        <div className="flex items-center gap-3">
+                          <Calendar className="h-5 w-5 flex-shrink-0" />
+                          <span className="text-sm font-medium">Workshops</span>
+                        </div>
+                        <ChevronDown className={`h-4 w-4 transition-transform ${workshopsOpen ? 'rotate-180' : ''}`} />
+                      </div>
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      <SidebarMenuSubItem>
+                        <SidebarMenuSubButton asChild>
+                          <NavLink
+                            to="/workshops/ai-agent-workshop"
+                            className={({ isActive }) =>
+                              `block rounded-lg px-3 py-2 ml-8 transition-all duration-200 ${
+                                isActive
+                                  ? "bg-sidebar-accent text-white"
+                                  : "text-white/70 hover:bg-white/10 hover:text-white"
+                              }`
+                            }
+                          >
+                            <span className="text-sm">AI agent workshop 3 Dec 2025</span>
+                          </NavLink>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
     </Sidebar>
   );
