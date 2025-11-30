@@ -168,6 +168,31 @@ const WorkshopAIAgentDelivery = () => {
                     </CardContent>
                   </Card>
 
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Laptop className="h-5 w-5" />
+                        Important Notice for Mainland China Users
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <Alert>
+                        <CheckCircle2 className="h-4 w-4" />
+                        <AlertDescription>
+                          <p className="font-semibold mb-2">VPN Access Required</p>
+                          <p className="text-sm">
+                            Accessing <strong>Lovable</strong> and <strong>OpenRouter</strong> from Mainland China may require a VPN connection.
+                          </p>
+                        </AlertDescription>
+                      </Alert>
+                      <div className="p-4 bg-muted rounded-lg border-l-4 border-muted-foreground">
+                        <p className="text-sm text-muted-foreground">
+                          <strong>Important:</strong> Always respect and comply with local laws and regulations on Internet use. Limit legitimate use of VPN for teaching and research purposes only.
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+
                 </TabsContent>
 
                 {/* ACTIVITIES TAB */}
