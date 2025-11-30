@@ -90,6 +90,32 @@ const WorkshopAIAgent = () => {
                 </CardContent>
               </Card>
 
+              {/* Microsoft Teams Notice */}
+              <Card className="border-primary/20 bg-muted/50">
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-3">
+                    <Monitor className="h-5 w-5 mt-1 text-primary flex-shrink-0" />
+                    <div>
+                      <h3 className="font-semibold mb-2">Online Workshop via Microsoft Teams</h3>
+                      <p className="text-muted-foreground mb-3">
+                        The online workshop will be conducted on Microsoft Teams. Please download and install Microsoft Teams for online meetings in advance.
+                      </p>
+                      <Button variant="outline" size="sm" asChild>
+                        <a 
+                          href="https://www.microsoft.com/microsoft-teams/download-app" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="gap-2"
+                        >
+                          Download Microsoft Teams
+                          <ExternalLink className="h-4 w-4" />
+                        </a>
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* QR Code Section */}
               {qrCodeVisible && (
                 <Card>
@@ -174,6 +200,9 @@ const WorkshopAIAgent = () => {
                             <div>
                               <p className="font-medium">Format</p>
                               <p className="text-muted-foreground">In-person or online via Microsoft Teams</p>
+                              <p className="text-sm text-muted-foreground mt-1">
+                                Please download and install Microsoft Teams in advance for online participation
+                              </p>
                             </div>
                           </div>
 
