@@ -1,19 +1,22 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Clock, MapPin, Users, Mail, Phone, Globe, Monitor, ChevronDown, ExternalLink } from "lucide-react";
+import { Calendar, Clock, MapPin, Users, Mail, Phone, Globe, Monitor, ChevronDown, ExternalLink, QrCode } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import workshopPoster from "@/assets/ai-agent-workshop-poster.jpg";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import QRCode from "react-qr-code";
 
 const WorkshopAIAgent = () => {
   const [registrationOpen, setRegistrationOpen] = useState(false);
+  const [qrCodeVisible, setQrCodeVisible] = useState(false);
   const { toast } = useToast();
 
   const REGISTRATION_URL = "https://forms.office.com/Pages/ResponsePage.aspx?id=tB4mbr-DhUWMwhMNAYjggaBKEVCldlxKurWKuh9GSZRUMDFTWFpaMkQ5VjhTT1RCRk4xVzFNRDgzOS4u&origin=QRCode";
+  const WORKSHOP_PAGE_URL = "https://eapteacher.smartutor.me/workshops/ai-agent-workshop";
 
   const trackRegistrationClick = async () => {
     try {
@@ -63,17 +66,50 @@ const WorkshopAIAgent = () => {
                       <h2 className="text-2xl font-bold mb-2">Register Now</h2>
                       <p className="text-muted-foreground">Free registration • All are welcome</p>
                     </div>
-                    <Button 
-                      size="lg" 
-                      onClick={handleRegistrationClick}
-                      className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2"
-                    >
-                      Register for Workshop
-                      <ExternalLink className="h-4 w-4" />
-                    </Button>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <Button 
+                        size="lg" 
+                        onClick={handleRegistrationClick}
+                        className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2"
+                      >
+                        Register for Workshop
+                        <ExternalLink className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        size="lg" 
+                        variant="outline"
+                        onClick={() => setQrCodeVisible(!qrCodeVisible)}
+                        className="gap-2"
+                      >
+                        <QrCode className="h-4 w-4" />
+                        {qrCodeVisible ? 'Hide' : 'Show'} QR Code
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
+
+              {/* QR Code Section */}
+              {qrCodeVisible && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Share this Workshop</CardTitle>
+                    <CardDescription>Scan the QR code to visit this workshop page</CardDescription>
+                  </CardHeader>
+                  <CardContent className="flex flex-col items-center gap-4">
+                    <div className="p-6 bg-white rounded-lg">
+                      <QRCode 
+                        value={WORKSHOP_PAGE_URL}
+                        size={256}
+                        level="H"
+                      />
+                    </div>
+                    <p className="text-sm text-muted-foreground text-center max-w-md">
+                      {WORKSHOP_PAGE_URL}
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
 
               {/* Registration Info Collapsible */}
               <Card>
