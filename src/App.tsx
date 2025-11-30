@@ -31,6 +31,7 @@ import WileyAIGuidelines from "./pages/WileyAIGuidelines";
 import VocabularyBuilder from "./pages/VocabularyBuilder";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import WorkshopAIAgent from "./pages/WorkshopAIAgent";
+import WorkshopAIAgentDelivery from "./pages/WorkshopAIAgentDelivery";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -71,6 +72,7 @@ const App = () => (
           <Route path="/vocabulary-builder" element={<VocabularyBuilder />} />
           <Route path="/teacher-dashboard" element={<TeacherDashboard />} />
           <Route path="/workshops/ai-agent-workshop" element={<WorkshopAIAgent />} />
+          <Route path="/workshops/ai-agent-workshop/delivery" element={<WorkshopAIAgentDelivery />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -1,7 +1,7 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Clock, MapPin, Users, Mail, Phone, Globe, Monitor, ChevronDown, ExternalLink, QrCode } from "lucide-react";
+import { Calendar, Clock, MapPin, Users, Mail, Phone, Globe, Monitor, ChevronDown, ExternalLink, QrCode, BookOpen } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -9,6 +9,7 @@ import workshopPoster from "@/assets/ai-agent-workshop-poster.jpg";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import QRCode from "react-qr-code";
+import { Link } from "react-router-dom";
 
 const WorkshopAIAgent = () => {
   const [registrationOpen, setRegistrationOpen] = useState(false);
@@ -286,6 +287,25 @@ const WorkshopAIAgent = () => {
                   <p className="text-muted-foreground">
                     Head of Department (Business), Hong Kong Institute of Vocational Education
                   </p>
+                </CardContent>
+              </Card>
+
+              {/* Workshop Materials for Participants */}
+              <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10">
+                <CardHeader>
+                  <CardTitle>For Registered Participants</CardTitle>
+                  <CardDescription>Access workshop materials and activities</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground mb-4">
+                    If you've registered for this workshop, access the complete participant guide including preparation materials, workshop activities, and post-workshop resources.
+                  </p>
+                  <Button asChild className="w-full sm:w-auto">
+                    <Link to="/workshops/ai-agent-workshop/delivery">
+                      <BookOpen className="h-4 w-4 mr-2" />
+                      Access Workshop Materials
+                    </Link>
+                  </Button>
                 </CardContent>
               </Card>
             </div>
