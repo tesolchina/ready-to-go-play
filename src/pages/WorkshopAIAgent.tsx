@@ -1,14 +1,36 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Clock, MapPin, Users, Mail, Phone, Globe, Monitor, ChevronDown } from "lucide-react";
+import { Calendar, Clock, MapPin, Users, Mail, Phone, Globe, Monitor, ChevronDown, ExternalLink } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import workshopPoster from "@/assets/ai-agent-workshop-poster.jpg";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const WorkshopAIAgent = () => {
   const [registrationOpen, setRegistrationOpen] = useState(false);
+  const { toast } = useToast();
+
+  const REGISTRATION_URL = "https://forms.office.com/Pages/ResponsePage.aspx?id=tB4mbr-DhUWMwhMNAYjggaBKEVCldlxKurWKuh9GSZRUMDFTWFpaMkQ5VjhTT1RCRk4xVzFNRDgzOS4u&origin=QRCode";
+
+  const trackRegistrationClick = async () => {
+    try {
+      await supabase.from('workshop_registration_clicks').insert({
+        workshop_id: 'ai-agent-workshop-dec-2025',
+        user_agent: navigator.userAgent,
+        referrer: document.referrer || null
+      });
+    } catch (error) {
+      console.error('Error tracking click:', error);
+    }
+  };
+
+  const handleRegistrationClick = () => {
+    trackRegistrationClick();
+    window.open(REGISTRATION_URL, '_blank');
+  };
 
   return (
     <SidebarProvider>
@@ -33,13 +55,24 @@ const WorkshopAIAgent = () => {
                 </div>
               </div>
 
-              {/* Workshop Poster */}
-              <Card className="overflow-hidden">
-                <img 
-                  src={workshopPoster} 
-                  alt="AI Agent Workshop Poster" 
-                  className="w-full h-auto"
-                />
+              {/* Registration CTA */}
+              <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
+                <CardContent className="p-6">
+                  <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div>
+                      <h2 className="text-2xl font-bold mb-2">Register Now</h2>
+                      <p className="text-muted-foreground">Free registration • All are welcome</p>
+                    </div>
+                    <Button 
+                      size="lg" 
+                      onClick={handleRegistrationClick}
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2"
+                    >
+                      Register for Workshop
+                      <ExternalLink className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardContent>
               </Card>
 
               {/* Registration Info Collapsible */}
@@ -52,13 +85,22 @@ const WorkshopAIAgent = () => {
                     >
                       <div className="flex items-center gap-3">
                         <Users className="h-5 w-5" />
-                        <span className="text-lg font-semibold">Registration Information</span>
+                        <span className="text-lg font-semibold">Event Details & Registration Information</span>
                       </div>
                       <ChevronDown className={`h-5 w-5 transition-transform ${registrationOpen ? 'rotate-180' : ''}`} />
                     </Button>
                   </CollapsibleTrigger>
                   <CollapsibleContent>
                     <CardContent className="space-y-6 pt-0">
+                      {/* Workshop Poster */}
+                      <div className="rounded-lg overflow-hidden border">
+                        <img 
+                          src={workshopPoster} 
+                          alt="AI Agent Workshop Poster" 
+                          className="w-full h-auto"
+                        />
+                      </div>
+
                       <div className="space-y-4">
                         <div className="p-4 bg-primary/5 rounded-lg border-l-4 border-primary">
                           <p className="text-lg font-semibold mb-2">Free Registration</p>

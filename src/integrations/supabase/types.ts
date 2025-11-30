@@ -827,6 +827,30 @@ export type Database = {
           },
         ]
       }
+      workshop_registration_clicks: {
+        Row: {
+          clicked_at: string
+          id: string
+          referrer: string | null
+          user_agent: string | null
+          workshop_id: string
+        }
+        Insert: {
+          clicked_at?: string
+          id?: string
+          referrer?: string | null
+          user_agent?: string | null
+          workshop_id: string
+        }
+        Update: {
+          clicked_at?: string
+          id?: string
+          referrer?: string | null
+          user_agent?: string | null
+          workshop_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
