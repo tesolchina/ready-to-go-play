@@ -125,6 +125,41 @@ const WorkshopAIAgentDelivery = () => {
                           </p>
                         </div>
                       </div>
+
+                      <div>
+                        <h3 className="font-semibold mb-2">AI Platform API Keys</h3>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          Choose one of the following platforms to obtain an API key for accessing AI language models:
+                        </p>
+                        <ul className="space-y-3 text-foreground">
+                          <li className="flex gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                            <div>
+                              <strong>Kimi (Moonshot AI)</strong> - <a href="https://platform.moonshot.cn/console/api-keys" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">platform.moonshot.cn/console/api-keys</a>
+                              <p className="text-sm text-muted-foreground mt-1">Offers CNY ¥15 in free credits</p>
+                            </div>
+                          </li>
+                          <li className="flex gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                            <div>
+                              <strong>DeepSeek</strong> - <a href="https://platform.deepseek.com/api_keys" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">platform.deepseek.com/api_keys</a>
+                              <p className="text-sm text-muted-foreground mt-1">May require payment</p>
+                            </div>
+                          </li>
+                          <li className="flex gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                            <div>
+                              <strong>OpenRouter</strong> - <a href="https://openrouter.ai/settings/keys" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">openrouter.ai/settings/keys</a>
+                              <p className="text-sm text-muted-foreground mt-1">May require payment</p>
+                            </div>
+                          </li>
+                        </ul>
+                        <div className="mt-3 p-4 bg-muted rounded-lg">
+                          <p className="text-sm">
+                            <strong>Budget Estimate:</strong> RMB/HKD 20 should be sufficient for workshop activities and experimentation with API-based language models.
+                          </p>
+                        </div>
+                      </div>
                     </CardContent>
                   </Card>
 
