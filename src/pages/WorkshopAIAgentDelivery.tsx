@@ -2,7 +2,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle2, Laptop, Download, BookOpen, Lightbulb, MessageSquare, FileText, ArrowLeft, Mail } from "lucide-react";
+import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -110,98 +110,24 @@ const WorkshopAIAgentDelivery = () => {
                       </div>
 
                       <div>
-                        <h3 className="font-semibold mb-2">Optional Tools</h3>
+                        <h3 className="font-semibold mb-2">Lovable Account Setup</h3>
                         <ul className="space-y-2 text-foreground">
                           <li className="flex gap-3">
-                            <span className="text-primary">•</span>
+                            <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                             <div>
-                              <strong>Visual Studio Code</strong> - Alternative IDE (<a href="https://code.visualstudio.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">code.visualstudio.com</a>)
-                            </div>
-                          </li>
-                          <li className="flex gap-3">
-                            <span className="text-primary">•</span>
-                            <div>
-                              <strong>Cursor IDE</strong> - Another alternative (<a href="https://cursor.sh" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">cursor.sh</a>)
+                              <strong>Create Lovable Account</strong> - Sign up with your university email at: <a href="https://lovable.dev/invite/C2CWJG8" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-semibold">lovable.dev/invite/C2CWJG8</a>
                             </div>
                           </li>
                         </ul>
+                        <div className="mt-3 p-4 bg-primary/5 rounded-lg border-l-4 border-primary">
+                          <p className="text-sm">
+                            <strong>Bonus:</strong> You will receive <strong>10 extra credits</strong> when you sign up through this invitation link with your university email!
+                          </p>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
 
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <BookOpen className="h-5 w-5" />
-                        Pre-Workshop Reading
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <h3 className="font-semibold mb-2">Essential Concepts</h3>
-                        <ul className="space-y-3 text-foreground">
-                          <li className="flex gap-3">
-                            <span className="text-primary font-bold">1.</span>
-                            <div>
-                              <strong>What are AI Agents?</strong> - Understand the difference between chatbots and autonomous AI agents that can interact with your development environment
-                            </div>
-                          </li>
-                          <li className="flex gap-3">
-                            <span className="text-primary font-bold">2.</span>
-                            <div>
-                              <strong>Integrated Development Environments (IDEs)</strong> - Learn how modern IDEs can host AI capabilities directly in your workspace
-                            </div>
-                          </li>
-                          <li className="flex gap-3">
-                            <span className="text-primary font-bold">3.</span>
-                            <div>
-                              <strong>Context in AI Systems</strong> - Why having AI directly in your project files matters for research workflows
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-
-                      <div className="p-4 bg-muted rounded-lg">
-                        <p className="text-sm text-muted-foreground">
-                          <strong>Optional:</strong> Bring a specific research task or project you'd like to explore during hands-on activities
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Download className="h-5 w-5" />
-                        Workshop Materials
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <p className="text-muted-foreground">
-                        Download these materials before the workshop:
-                      </p>
-                      <div className="space-y-2">
-                        <Button variant="outline" className="w-full justify-start" asChild>
-                          <a href="#" download>
-                            <FileText className="h-4 w-4 mr-2" />
-                            Workshop Slides (PDF)
-                          </a>
-                        </Button>
-                        <Button variant="outline" className="w-full justify-start" asChild>
-                          <a href="#" download>
-                            <FileText className="h-4 w-4 mr-2" />
-                            Sample Project Files (ZIP)
-                          </a>
-                        </Button>
-                        <Button variant="outline" className="w-full justify-start" asChild>
-                          <a href="#" download>
-                            <FileText className="h-4 w-4 mr-2" />
-                            Quick Reference Guide (PDF)
-                          </a>
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
                 </TabsContent>
 
                 {/* ACTIVITIES TAB */}
