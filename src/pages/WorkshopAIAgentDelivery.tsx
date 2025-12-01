@@ -451,9 +451,9 @@ const WorkshopAIAgentDelivery = () => {
                           <div className="p-6 bg-muted/30 rounded-lg border-2 border-muted">
                             <h3 className="text-xl font-semibold mb-4">A Typical IDE Has Four Main Areas:</h3>
                             
-                            <div className="grid md:grid-cols-3 gap-4 mb-4">
-                              {/* Left Panel */}
-                              <div className="p-4 bg-background rounded-lg border-2 border-primary">
+                            <div className="grid grid-cols-3 gap-4">
+                              {/* Left Panel - Full Height */}
+                              <div className="row-span-2 p-4 bg-background rounded-lg border-2 border-primary">
                                 <div className="flex items-center gap-2 mb-3">
                                   <div className="w-3 h-3 rounded-full bg-primary" />
                                   <h4 className="font-semibold text-primary">Left Panel</h4>
@@ -466,7 +466,7 @@ const WorkshopAIAgentDelivery = () => {
                                 </ul>
                               </div>
 
-                              {/* Middle Panel */}
+                              {/* Middle Panel - Top */}
                               <div className="p-4 bg-background rounded-lg border-4 border-accent shadow-lg">
                                 <div className="flex items-center gap-2 mb-3">
                                   <div className="w-3 h-3 rounded-full bg-accent" />
@@ -480,8 +480,8 @@ const WorkshopAIAgentDelivery = () => {
                                 </ul>
                               </div>
 
-                              {/* Right Panel */}
-                              <div className="p-4 bg-background rounded-lg border-4 border-secondary shadow-lg">
+                              {/* Right Panel - Full Height */}
+                              <div className="row-span-2 p-4 bg-background rounded-lg border-4 border-secondary shadow-lg">
                                 <div className="flex items-center gap-2 mb-3">
                                   <div className="w-3 h-3 rounded-full bg-secondary" />
                                   <h4 className="font-bold text-secondary">Right Panel</h4>
@@ -493,20 +493,20 @@ const WorkshopAIAgentDelivery = () => {
                                   <li>⚡ Commands & prompts</li>
                                 </ul>
                               </div>
-                            </div>
 
-                            {/* Terminal Panel */}
-                            <div className="p-4 bg-background rounded-lg border-2 border-muted-foreground">
-                              <div className="flex items-center gap-2 mb-3">
-                                <Terminal className="h-4 w-4 text-muted-foreground" />
-                                <h4 className="font-semibold text-muted-foreground">Bottom Middle Area</h4>
+                              {/* Bottom Middle Area - Aligned with Middle Panel */}
+                              <div className="p-4 bg-background rounded-lg border-2 border-muted-foreground">
+                                <div className="flex items-center gap-2 mb-3">
+                                  <Terminal className="h-4 w-4 text-muted-foreground" />
+                                  <h4 className="font-semibold text-muted-foreground">Bottom Middle Area</h4>
+                                </div>
+                                <p className="text-sm text-muted-foreground mb-2">Terminal / Console</p>
+                                <ul className="space-y-1 text-sm">
+                                  <li>⌨️ Command line interface</li>
+                                  <li>🔍 Debug console</li>
+                                  <li>📋 Output messages</li>
+                                </ul>
                               </div>
-                              <p className="text-sm text-muted-foreground mb-2">Terminal / Console</p>
-                              <ul className="space-y-1 text-sm">
-                                <li>⌨️ Command line interface</li>
-                                <li>🔍 Debug console</li>
-                                <li>📋 Output messages</li>
-                              </ul>
                             </div>
                           </div>
 
