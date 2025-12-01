@@ -2,7 +2,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail, ChevronDown, Terminal, Zap, ChevronUp, FileText, BookOpen, Key, AlertCircle, Info, Cpu, FolderOpen, GraduationCap, FileEdit, Microscope, PenTool, Sparkles } from "lucide-react";
+import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail, ChevronDown, Terminal, Zap, ChevronUp, FileText, BookOpen, Key, AlertCircle, Info, Cpu, FolderOpen, GraduationCap, FileEdit, Microscope, PenTool, Sparkles, Monitor, ExternalLink, Play } from "lucide-react";
 import traeIdeInterface from "@/assets/trae-ide-interface.png";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -2205,6 +2205,271 @@ graph LR
                                   then send the file path to Builder to begin!
                                 </p>
                               </div>
+                            </div>
+                          </div>
+                        </div>
+                      </CollapsibleContent>
+                    </Card>
+                  </Collapsible>
+
+                  {/* Module 7: Learning to Build a GUI using Lovable */}
+                  <Collapsible defaultOpen={true} className="mt-6">
+                    <Card className="border-2 border-primary">
+                      <CollapsibleTrigger asChild>
+                        <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
+                          <h3 className="font-semibold text-left flex items-center gap-2 text-xl">
+                            <Monitor className="h-6 w-6" />
+                            Module 7: Learning to Build a GUI using Lovable
+                          </h3>
+                          <ChevronDown className="h-5 w-5 flex-shrink-0 transition-transform duration-300 ui-state-open:rotate-180" />
+                        </button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="p-5 bg-card">
+                        <div className="space-y-6">
+                          <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-6 rounded-xl border-2">
+                            <h4 className="text-2xl font-bold text-foreground mb-4">🎨 From CLI Automation to Interactive Web Apps</h4>
+                            <p className="text-foreground mb-4">
+                              So far, we've learned how AI agents in IDEs can automate file operations and batch processing via APIs. 
+                              But what if we want to create <strong>interactive web applications</strong> that allow users to interact with AI models 
+                              through a graphical interface? This is where <strong>Lovable</strong> comes in.
+                            </p>
+                            
+                            <div className="bg-background p-5 rounded-lg border-2 mb-4">
+                              <h5 className="font-bold text-foreground mb-3">🌐 Introducing the LLM Tester App</h5>
+                              <p className="text-sm text-foreground mb-3">
+                                Before we build our own GUI, let's examine a working example that demonstrates key concepts:
+                              </p>
+                              <div className="bg-primary/5 p-4 rounded-lg border flex items-center justify-between">
+                                <div>
+                                  <p className="font-semibold text-foreground">LLM Tester by OpenRouter Hub</p>
+                                  <p className="text-xs text-muted-foreground mt-1">Test and compare multiple AI models simultaneously</p>
+                                </div>
+                                <Button asChild variant="default" size="sm" className="ml-4">
+                                  <a 
+                                    href="https://openrouter-hub.lovable.app" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2"
+                                  >
+                                    <ExternalLink className="h-4 w-4" />
+                                    Visit App
+                                  </a>
+                                </Button>
+                              </div>
+                            </div>
+
+                            <Alert className="border-l-4 border-purple-500 bg-purple-50 dark:bg-purple-900/20">
+                              <Info className="h-5 w-5 text-purple-600" />
+                              <AlertDescription className="ml-2">
+                                <p className="font-semibold mb-2">🎯 Learning Objective</p>
+                                <p className="text-sm text-foreground">
+                                  Understand how the LLM Tester works and identify UI elements that can be adapted 
+                                  to build engaging tools for student learning and assessment.
+                                </p>
+                              </AlertDescription>
+                            </Alert>
+                          </div>
+
+                          {/* How the LLM Tester Works */}
+                          <div className="bg-background p-6 rounded-lg border-2">
+                            <h5 className="text-xl font-bold text-foreground mb-4">⚙️ How the LLM Tester Works</h5>
+                            
+                            <div className="space-y-4">
+                              {/* Step 1: Select Models */}
+                              <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg border-l-4 border-purple-600">
+                                <h6 className="font-bold text-foreground mb-2 flex items-center gap-2">
+                                  <span className="bg-purple-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">1</span>
+                                  Select Multiple AI Models
+                                </h6>
+                                <p className="text-sm text-foreground ml-8">
+                                  The app provides a <strong>UI with checkboxes</strong> to select which models from OpenRouter you want to test. 
+                                  You can choose 2, 5, or even 10+ models to compare side-by-side.
+                                </p>
+                                <div className="ml-8 mt-2 text-xs text-muted-foreground">
+                                  <p><strong>Example models:</strong> GPT-4, Claude 3, Gemini Pro, Llama 3, Mistral, etc.</p>
+                                </div>
+                              </div>
+
+                              {/* Step 2: Enter Task */}
+                              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border-l-4 border-blue-600">
+                                <h6 className="font-bold text-foreground mb-2 flex items-center gap-2">
+                                  <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">2</span>
+                                  Enter Your Task/Question
+                                </h6>
+                                <p className="text-sm text-foreground ml-8 mb-2">
+                                  You type a task or question into a <strong>text input field</strong>, and the app sends this same prompt 
+                                  to all selected models via the OpenRouter API.
+                                </p>
+                                <div className="ml-8 bg-background p-3 rounded border">
+                                  <p className="text-xs font-semibold text-foreground mb-1">Example Task We'll Use:</p>
+                                  <code className="text-xs text-primary">
+                                    "Compute 24 out of 5, 5, 5, and 1. Show your work step-by-step."
+                                  </code>
+                                  <p className="text-xs text-muted-foreground mt-2">
+                                    <strong>Correct Answer:</strong> 5 - (1/5) = 4.8, then 4.8 × 5 = 24
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Step 3: Get Responses */}
+                              <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border-l-4 border-green-600">
+                                <h6 className="font-bold text-foreground mb-2 flex items-center gap-2">
+                                  <span className="bg-green-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">3</span>
+                                  Receive and Display Model Responses
+                                </h6>
+                                <p className="text-sm text-foreground ml-8">
+                                  Each model returns its response, and the app displays them in <strong>separate cards or columns</strong> 
+                                  so you can visually compare the quality, accuracy, and reasoning of each model.
+                                </p>
+                              </div>
+
+                              {/* Step 4: Judge Responses */}
+                              <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg border-l-4 border-amber-600">
+                                <h6 className="font-bold text-foreground mb-2 flex items-center gap-2">
+                                  <span className="bg-amber-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">4</span>
+                                  AI-Powered Evaluation (Meta-Model as Judge)
+                                </h6>
+                                <p className="text-sm text-foreground ml-8 mb-2">
+                                  The app can send all the model responses to <strong>another AI model</strong> (the "judge") to evaluate 
+                                  which response is most accurate, well-reasoned, or helpful.
+                                </p>
+                                <p className="text-xs text-muted-foreground ml-8">
+                                  This demonstrates the concept of <strong>"AI evaluating AI"</strong> - a powerful technique for automated assessment.
+                                </p>
+                              </div>
+
+                              {/* Step 5: Download Results */}
+                              <div className="bg-cyan-50 dark:bg-cyan-900/20 p-4 rounded-lg border-l-4 border-cyan-600">
+                                <h6 className="font-bold text-foreground mb-2 flex items-center gap-2">
+                                  <span className="bg-cyan-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">5</span>
+                                  View and Download Results
+                                </h6>
+                                <p className="text-sm text-foreground ml-8">
+                                  The app provides options to <strong>download the comparison results</strong> as a CSV or JSON file 
+                                  for further analysis, record-keeping, or reporting.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Example Task: Compute 24 */}
+                          <div className="bg-gradient-to-r from-rose-50 to-orange-50 dark:from-rose-900/20 dark:to-orange-900/20 p-6 rounded-xl border-2">
+                            <h5 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+                              <Play className="h-5 w-5 text-rose-600" />
+                              Let's Test: "Compute 24" Challenge
+                            </h5>
+                            
+                            <div className="bg-background p-5 rounded-lg border mb-4">
+                              <h6 className="font-semibold text-foreground mb-3">🧮 The Task</h6>
+                              <div className="bg-rose-50 dark:bg-rose-900/20 p-4 rounded-lg">
+                                <p className="text-foreground mb-2">
+                                  <strong>Problem:</strong> Using the numbers <code className="bg-background px-2 py-1 rounded">5, 5, 5, 1</code>, 
+                                  compute 24. You can use +, -, ×, ÷ and parentheses.
+                                </p>
+                                <div className="mt-3 p-3 bg-background rounded border">
+                                  <p className="text-sm font-semibold text-foreground mb-2">✅ Correct Answer:</p>
+                                  <code className="text-sm text-primary block">
+                                    5 - (1/5) = 4.8<br/>
+                                    4.8 × 5 = 24
+                                  </code>
+                                  <p className="text-xs text-muted-foreground mt-2">
+                                    Or written more formally: (5 - 1÷5) × 5 = 24
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+
+                            <Alert className="border-l-4 border-rose-500 bg-rose-50 dark:bg-rose-900/20">
+                              <AlertCircle className="h-5 w-5 text-rose-600" />
+                              <AlertDescription className="ml-2">
+                                <p className="font-semibold mb-2">🎯 Your Task</p>
+                                <ol className="text-sm text-foreground space-y-2 list-decimal ml-6">
+                                  <li>Visit the <a href="https://openrouter-hub.lovable.app" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-semibold">LLM Tester app</a></li>
+                                  <li>Select 3-5 different AI models from OpenRouter</li>
+                                  <li>Enter the "Compute 24 out of 5, 5, 5, and 1" task</li>
+                                  <li>Compare how each model approaches the problem</li>
+                                  <li>Use the judge feature to evaluate which model performed best</li>
+                                  <li>Download the results</li>
+                                </ol>
+                                <p className="text-sm text-foreground mt-3 italic">
+                                  <strong>Discussion Point:</strong> Which models got it right? Which made calculation errors? 
+                                  What does this tell us about AI's mathematical reasoning abilities?
+                                </p>
+                              </AlertDescription>
+                            </Alert>
+                          </div>
+
+                          {/* UI Elements for Student Engagement */}
+                          <div className="bg-background p-6 rounded-lg border-2">
+                            <h5 className="text-xl font-bold text-foreground mb-4">🎓 Adapting UI Elements for Student Engagement</h5>
+                            
+                            <p className="text-foreground mb-4">
+                              Now that you've explored the LLM Tester, consider how similar UI patterns can be used to create 
+                              engaging learning tools for students:
+                            </p>
+
+                            <div className="grid md:grid-cols-2 gap-4">
+                              <div className="bg-primary/5 p-4 rounded-lg border">
+                                <p className="font-semibold text-primary mb-2 flex items-center gap-2">
+                                  <CheckCircle2 className="h-4 w-4" />
+                                  Model Selection Interface
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                  <strong>Adapt for:</strong> Multiple feedback styles (encouraging, critical, analytical) 
+                                  or different rubric criteria for essay grading
+                                </p>
+                              </div>
+
+                              <div className="bg-primary/5 p-4 rounded-lg border">
+                                <p className="font-semibold text-primary mb-2 flex items-center gap-2">
+                                  <CheckCircle2 className="h-4 w-4" />
+                                  Side-by-Side Comparison
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                  <strong>Adapt for:</strong> Showing students multiple revision suggestions for their writing, 
+                                  or comparing different approaches to solving a problem
+                                </p>
+                              </div>
+
+                              <div className="bg-primary/5 p-4 rounded-lg border">
+                                <p className="font-semibold text-primary mb-2 flex items-center gap-2">
+                                  <CheckCircle2 className="h-4 w-4" />
+                                  AI Judge/Evaluator
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                  <strong>Adapt for:</strong> Automated scoring of student responses with detailed feedback, 
+                                  or peer review simulation where AI provides evaluation criteria
+                                </p>
+                              </div>
+
+                              <div className="bg-primary/5 p-4 rounded-lg border">
+                                <p className="font-semibold text-primary mb-2 flex items-center gap-2">
+                                  <CheckCircle2 className="h-4 w-4" />
+                                  Download/Export Results
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                  <strong>Adapt for:</strong> Students downloading their progress reports, 
+                                  or teachers exporting class analytics and individual feedback
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="mt-6 bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 p-5 rounded-lg border-2">
+                              <h6 className="font-bold text-foreground mb-3">💡 Brainstorm Session</h6>
+                              <p className="text-sm text-foreground mb-3">
+                                Think about your own teaching context. What kind of interactive GUI could you build using Lovable 
+                                that would benefit your students? Consider:
+                              </p>
+                              <ul className="text-sm text-foreground space-y-2 list-disc ml-6">
+                                <li>Automated essay feedback with multiple rubric criteria</li>
+                                <li>Grammar practice exercises with instant AI corrections</li>
+                                <li>Vocabulary quiz generator from student-uploaded texts</li>
+                                <li>Research question validator for literature reviews</li>
+                                <li>Citation format checker and corrector</li>
+                              </ul>
+                              <p className="text-sm text-foreground mt-4 italic">
+                                In the next module, we'll explore how to use Lovable to turn these ideas into reality!
+                              </p>
                             </div>
                           </div>
                         </div>
