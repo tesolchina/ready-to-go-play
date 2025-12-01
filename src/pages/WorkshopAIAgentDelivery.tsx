@@ -2,11 +2,11 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail, ChevronDown, Terminal, Zap, ChevronUp, FileText, BookOpen } from "lucide-react";
+import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail, ChevronDown, Terminal, Zap, ChevronUp, FileText, BookOpen, Key, AlertCircle, Info, Cpu, FolderOpen } from "lucide-react";
 import traeIdeInterface from "@/assets/trae-ide-interface.png";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useEffect, useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { MermaidDiagram } from "@/components/MermaidDiagram";
@@ -1204,19 +1204,19 @@ graph TD
                     </CardContent>
                   </Card>
 
-                  {/* Module 4: API Keys and Multiple Files */}
+                  {/* Module 4: Understanding API */}
                   <Collapsible defaultOpen={false}>
                     <Card>
                       <CardHeader>
                         <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80 transition-opacity">
                           <div className="flex items-center gap-2">
-                            <Terminal className="h-5 w-5" />
-                            <CardTitle>Module 4: Setting Up API Keys & Sending Multiple Files</CardTitle>
+                            <Info className="h-5 w-5" />
+                            <CardTitle>Module 4: Understanding API - A Powerful Way to Automate Human-AI Communication</CardTitle>
                           </div>
                           <ChevronDown className="h-5 w-5 transition-transform duration-200 data-[state=open]:rotate-180" />
                         </CollapsibleTrigger>
                         <p className="text-lg text-muted-foreground mt-2">
-                          Connect to LLM services and scale up your AI agent capabilities
+                          Learn the conceptual foundation of APIs and how they enable automation
                         </p>
                       </CardHeader>
                       <CollapsibleContent>
@@ -1403,17 +1403,211 @@ graph TD
                             </div>
                           </div>
 
-                          {/* Setting Up API Keys - Coming in hands-on activity */}
+                          {/* Why This Matters */}
+                          <div className="bg-primary/10 rounded-lg p-6 border-l-4 border-primary">
+                            <h4 className="font-semibold text-lg mb-3">🎯 Why This Matters for AI Agents</h4>
+                            <p className="text-foreground">
+                              Understanding APIs is crucial because AI agents like Trae's Builder use API keys to communicate 
+                              with LLM providers on your behalf. This automation is what makes AI agents powerful - they can 
+                              send multiple requests, process large amounts of data, and integrate AI capabilities into your 
+                              workflows without manual intervention.
+                            </p>
+                          </div>
+
+                          {/* Setting Up API Keys - Next Module Preview */}
                           <Alert className="border-l-4 border-primary bg-primary/5">
                             <Terminal className="h-5 w-5 text-primary" />
                             <AlertDescription className="ml-2">
-                              <p className="font-semibold mb-2">⏭️ Next Steps</p>
+                              <p className="font-semibold mb-2">⏭️ Next: Hands-On Practice</p>
                               <p className="text-sm text-foreground">
-                                In the next hands-on activity, we'll guide you through setting up your API keys in Trae and 
-                                using Builder to work with multiple files simultaneously. This will unlock more powerful workflows!
+                                Now that you understand what APIs are, in Module 5 we'll guide you through the practical steps 
+                                of obtaining API keys from LLM providers and setting them up securely in your local environment.
                               </p>
                             </AlertDescription>
                           </Alert>
+                        </CardContent>
+                      </CollapsibleContent>
+                    </Card>
+                  </Collapsible>
+
+                  {/* Module 5: Hands-On API Key Setup */}
+                  <Collapsible defaultOpen={false}>
+                    <Card>
+                      <CardHeader>
+                        <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80 transition-opacity">
+                          <div className="flex items-center gap-2">
+                            <Key className="h-5 w-5" />
+                            <CardTitle>Module 5: Hands-On - Setting Up Your API Keys</CardTitle>
+                          </div>
+                          <ChevronDown className="h-5 w-5 transition-transform duration-200 data-[state=open]:rotate-180" />
+                        </CollapsibleTrigger>
+                        <p className="text-lg text-muted-foreground mt-2">
+                          Get your API keys and store them securely
+                        </p>
+                      </CardHeader>
+                      <CollapsibleContent>
+                        <CardContent className="space-y-6">
+                          <Alert>
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertDescription>
+                              <strong>Important Setup:</strong> In this module, you'll obtain API keys from LLM providers and store them securely in your local project folder.
+                            </AlertDescription>
+                          </Alert>
+
+                          {/* Step 1: Prepare Your API Keys Folder */}
+                          <div className="bg-muted/50 rounded-lg p-6">
+                            <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                              <FolderOpen className="h-5 w-5" />
+                              Step 1: Prepare Your API Keys Folder
+                            </h4>
+                            <div className="space-y-4">
+                              <p className="text-foreground">
+                                First, create the folder structure to store your API keys:
+                              </p>
+                              <div className="bg-background rounded-lg p-4 border font-mono text-sm">
+                                <div>Data/</div>
+                                <div className="ml-4">└── APIkeys/</div>
+                                <div className="ml-8">├── Kimi.md</div>
+                                <div className="ml-8">├── DeepSeek.md</div>
+                                <div className="ml-8">└── openrouter.md</div>
+                              </div>
+                              <p className="text-sm text-muted-foreground">
+                                You can create this structure manually or ask Builder to create these folders and files for you.
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Step 2: Obtain API Keys */}
+                          <div className="bg-muted/50 rounded-lg p-6">
+                            <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                              <Key className="h-5 w-5" />
+                              Step 2: Obtain API Keys from Providers
+                            </h4>
+                            <div className="space-y-6">
+                              <div className="border-l-4 border-primary pl-4">
+                                <h5 className="font-semibold mb-2">Kimi (Moonshot AI)</h5>
+                                <ul className="list-disc list-inside space-y-2 text-foreground ml-4 text-sm">
+                                  <li>Visit: <code className="bg-background px-2 py-1 rounded">https://platform.moonshot.cn</code></li>
+                                  <li>Sign up or log in to your account</li>
+                                  <li>Navigate to API Keys section</li>
+                                  <li>Create a new API key</li>
+                                  <li>Copy the key (CNY ¥15 free credits available)</li>
+                                </ul>
+                              </div>
+
+                              <div className="border-l-4 border-primary pl-4">
+                                <h5 className="font-semibold mb-2">DeepSeek</h5>
+                                <ul className="list-disc list-inside space-y-2 text-foreground ml-4 text-sm">
+                                  <li>Visit: <code className="bg-background px-2 py-1 rounded">https://platform.deepseek.com</code></li>
+                                  <li>Create an account or sign in</li>
+                                  <li>Go to API Keys management</li>
+                                  <li>Generate a new API key</li>
+                                  <li>Copy the key (Free credits available)</li>
+                                </ul>
+                              </div>
+
+                              <div className="border-l-4 border-primary pl-4">
+                                <h5 className="font-semibold mb-2">OpenRouter</h5>
+                                <ul className="list-disc list-inside space-y-2 text-foreground ml-4 text-sm">
+                                  <li>Visit: <code className="bg-background px-2 py-1 rounded">https://openrouter.ai</code></li>
+                                  <li>Sign up with your account</li>
+                                  <li>Navigate to Keys section</li>
+                                  <li>Create a new API key</li>
+                                  <li>Copy the key (Approximately RMB/HKD 20 recommended)</li>
+                                </ul>
+                              </div>
+
+                              <div className="bg-background rounded-lg p-4 border">
+                                <p className="text-sm font-medium mb-2 flex items-center gap-2">
+                                  <AlertCircle className="h-4 w-4" />
+                                  Cost Estimate:
+                                </p>
+                                <p className="text-sm text-foreground">
+                                  For this workshop, approximately CNY/HKD 20-30 total across all providers should be sufficient 
+                                  for experimentation and practice. Kimi and DeepSeek offer free starting credits.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Step 3: Store Your API Keys */}
+                          <div className="bg-muted/50 rounded-lg p-6">
+                            <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                              <FileText className="h-5 w-5" />
+                              Step 3: Store Your API Keys in Local Files
+                            </h4>
+                            <div className="space-y-4">
+                              <p className="text-foreground">
+                                Once you have obtained your API keys, update the corresponding files in your project:
+                              </p>
+                              
+                              <div className="bg-background rounded-lg p-4 border">
+                                <p className="text-sm font-medium mb-2">Data/APIkeys/Kimi.md</p>
+                                <pre className="text-xs bg-muted p-3 rounded overflow-x-auto">
+{`sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`}
+                                </pre>
+                              </div>
+
+                              <div className="bg-background rounded-lg p-4 border">
+                                <p className="text-sm font-medium mb-2">Data/APIkeys/DeepSeek.md</p>
+                                <pre className="text-xs bg-muted p-3 rounded overflow-x-auto">
+{`sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`}
+                                </pre>
+                              </div>
+
+                              <div className="bg-background rounded-lg p-4 border">
+                                <p className="text-sm font-medium mb-2">Data/APIkeys/openrouter.md</p>
+                                <pre className="text-xs bg-muted p-3 rounded overflow-x-auto">
+{`sk-or-v1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`}
+                                </pre>
+                              </div>
+
+                              <p className="text-sm text-muted-foreground">
+                                Simply open each file and paste your API key, replacing the placeholder text.
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Critical Security Warning */}
+                          <Alert variant="destructive">
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertDescription className="space-y-3">
+                              <div>
+                                <p className="font-bold text-lg mb-2">🔐 Critical Security Warning</p>
+                                <p className="mb-2">
+                                  <strong>Never sync API keys to GitHub or Gitee!</strong> These keys are confidential and should never be shared publicly.
+                                </p>
+                              </div>
+                              <div className="bg-destructive/10 p-3 rounded">
+                                <p className="font-semibold mb-2">Protect Your API Keys:</p>
+                                <ul className="list-disc list-inside space-y-1 text-sm">
+                                  <li>Add <code className="bg-background/50 px-2 py-0.5 rounded">Data/APIkeys/</code> to your <code className="bg-background/50 px-2 py-0.5 rounded">.gitignore</code> file</li>
+                                  <li>Double-check before pushing to remote repositories</li>
+                                  <li>If accidentally exposed, regenerate your API keys immediately</li>
+                                  <li>Never commit files containing API keys to version control</li>
+                                </ul>
+                              </div>
+                              <p className="text-sm italic">
+                                When syncing your project folder with GitHub or Gitee, make sure these files are excluded from being pushed to the remote repository.
+                              </p>
+                            </AlertDescription>
+                          </Alert>
+
+                          {/* Verification */}
+                          <div className="bg-primary/10 rounded-lg p-6 border-l-4 border-primary">
+                            <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                              <CheckCircle2 className="h-5 w-5" />
+                              Verification
+                            </h4>
+                            <p className="text-foreground mb-4">
+                              After setting up your API keys, you can verify they work by asking Builder to:
+                            </p>
+                            <ul className="list-disc list-inside space-y-2 text-foreground ml-4">
+                              <li>Read the API key files to confirm they're properly stored</li>
+                              <li>Make a simple test request to one of the LLM providers</li>
+                              <li>Report back on the connection status</li>
+                            </ul>
+                          </div>
                         </CardContent>
                       </CollapsibleContent>
                     </Card>
