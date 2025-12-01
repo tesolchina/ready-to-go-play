@@ -2,13 +2,14 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail, ChevronDown, Terminal } from "lucide-react";
+import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail, ChevronDown, Terminal, Zap, ChevronUp, FileText, BookOpen } from "lucide-react";
 import traeIdeInterface from "@/assets/trae-ide-interface.png";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useEffect, useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { MermaidDiagram } from "@/components/MermaidDiagram";
 
 const WorkshopAIAgentDelivery = () => {
   const location = useLocation();
@@ -581,6 +582,301 @@ const WorkshopAIAgentDelivery = () => {
                               <p className="text-sm text-foreground">
                                 Enable auto-save in Trae to automatically save your changes. This prevents losing work and ensures Builder always has access to your latest code. Look for the auto-save setting in Trae's preferences or settings menu.
                               </p>
+                            </AlertDescription>
+                          </Alert>
+                        </CardContent>
+                      </CollapsibleContent>
+                    </Card>
+                  </Collapsible>
+
+                  {/* Module 3: The Input-Process-Output Model */}
+                  <Collapsible defaultOpen={false}>
+                    <Card>
+                      <CardHeader>
+                        <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80 transition-opacity">
+                          <div className="flex items-center gap-2">
+                            <Zap className="h-5 w-5" />
+                            <CardTitle>Module 3: Hands-On Lab - The Input-Process-Output Model</CardTitle>
+                          </div>
+                          <ChevronDown className="h-5 w-5 transition-transform duration-200 data-[state=open]:rotate-180" />
+                        </CollapsibleTrigger>
+                        <p className="text-lg text-muted-foreground mt-2">
+                          Apply the Input-Process-Output model with real data
+                        </p>
+                      </CardHeader>
+                      <CollapsibleContent>
+                        <CardContent className="space-y-6">
+                          {/* Introduction to the Model */}
+                          <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 p-6 rounded-xl border-2">
+                            <h4 className="text-xl font-bold text-foreground mb-4">Understanding the Basic Model</h4>
+                            <p className="text-foreground mb-4">
+                              Every AI Agent task follows a simple three-step model. Understanding this model helps you communicate effectively with Builder and structure your requests clearly.
+                            </p>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                              {/* Input */}
+                              <div className="bg-background p-4 rounded-lg border-2 border-purple-200 dark:border-purple-800">
+                                <div className="flex items-center gap-2 mb-3">
+                                  <div className="w-3 h-3 rounded-full bg-purple-600" />
+                                  <h5 className="font-bold text-purple-600">Input</h5>
+                                </div>
+                                <p className="text-sm text-foreground">
+                                  <strong>📥 File/Folder Paths</strong>
+                                </p>
+                                <p className="text-xs text-muted-foreground mt-2">
+                                  The source data or files the agent will work with. Right-click to copy paths easily.
+                                </p>
+                              </div>
+
+                              {/* Process */}
+                              <div className="bg-background p-4 rounded-lg border-2 border-blue-200 dark:border-blue-800">
+                                <div className="flex items-center gap-2 mb-3">
+                                  <div className="w-3 h-3 rounded-full bg-blue-600" />
+                                  <h5 className="font-bold text-blue-600">Process</h5>
+                                </div>
+                                <p className="text-sm text-foreground">
+                                  <strong>⚙️ Natural Language Instructions</strong>
+                                </p>
+                                <p className="text-xs text-muted-foreground mt-2">
+                                  What you want the agent to do with the input. Write clear instructions in plain English.
+                                </p>
+                              </div>
+
+                              {/* Output */}
+                              <div className="bg-background p-4 rounded-lg border-2 border-green-200 dark:border-green-800">
+                                <div className="flex items-center gap-2 mb-3">
+                                  <div className="w-3 h-3 rounded-full bg-green-600" />
+                                  <h5 className="font-bold text-green-600">Output</h5>
+                                </div>
+                                <p className="text-sm text-foreground">
+                                  <strong>📤 Destination Folder</strong>
+                                </p>
+                                <p className="text-xs text-muted-foreground mt-2">
+                                  Where results will be saved. Can be a new or existing folder. Right-click to get path.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Lab 1: Explore BAWE Corpus */}
+                          <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 p-6 rounded-xl border-2">
+                            <h4 className="text-xl font-bold text-foreground mb-4">🔬 Lab 1: Explore BAWE (British Academic Written English Corpus)</h4>
+                            
+                            <p className="text-foreground mb-4">
+                              In this hands-on lab, you'll use Builder to explore a learner corpus, generate insights, and create visualizations.
+                            </p>
+
+                            <Alert className="mb-4 border-l-4 border-amber-500 bg-amber-50 dark:bg-amber-900/20">
+                              <FileText className="h-5 w-5 text-amber-600" />
+                              <AlertDescription className="ml-2">
+                                <p className="font-semibold text-foreground">📁 Locate Your Lab Files</p>
+                                <p className="text-sm text-foreground mt-1">
+                                  In your Trae workspace, navigate to <code className="bg-muted px-2 py-1 rounded text-xs">Lab1_Explore_BAWE</code> folder. You'll find an <code className="bg-muted px-2 py-1 rounded text-xs">instructions.md</code> file that contains the basic template structure.
+                                </p>
+                              </AlertDescription>
+                            </Alert>
+
+                            <h5 className="font-bold text-foreground mb-3">Step-by-Step Instructions</h5>
+                            
+                            <div className="space-y-4">
+                              {/* Step 1: Set Up Instructions File */}
+                              <div className="bg-background p-4 rounded-lg border-l-4 border-purple-600">
+                                <h6 className="font-bold text-foreground mb-2">Step 1: Open and Edit instructions.md</h6>
+                                <p className="text-sm text-foreground mb-2">
+                                  Open <code className="bg-muted px-2 py-1 rounded text-xs">Lab1_Explore_BAWE/instructions.md</code> in Trae. You'll see a simple template:
+                                </p>
+                                <div className="bg-muted p-3 rounded text-xs font-mono mt-2">
+                                  <div>Input:</div>
+                                  <div className="text-muted-foreground">(empty for now)</div>
+                                  <div className="mt-2">Process:</div>
+                                  <div className="text-muted-foreground">(empty for now)</div>
+                                  <div className="mt-2">Output:</div>
+                                  <div className="text-muted-foreground">(empty for now)</div>
+                                </div>
+                              </div>
+
+                              {/* Step 2: Define Input */}
+                              <div className="bg-background p-4 rounded-lg border-l-4 border-purple-600">
+                                <h6 className="font-bold text-foreground mb-2">Step 2: Define Your Input (Source Data)</h6>
+                                <ul className="space-y-2 text-sm text-foreground list-none">
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-purple-600 font-bold">1.</span>
+                                    <span>In the Left Panel (File Explorer), navigate to <code className="bg-muted px-2 py-1 rounded text-xs">Data/BAWE/CORPUS_ByDiscipline</code></span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-purple-600 font-bold">2.</span>
+                                    <span><strong>Right-click</strong> on the <code className="bg-muted px-2 py-1 rounded text-xs">CORPUS_ByDiscipline</code> folder</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-purple-600 font-bold">3.</span>
+                                    <span>Select <strong>"Copy Path"</strong> or <strong>"Copy Relative Path"</strong> from the context menu</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-purple-600 font-bold">4.</span>
+                                    <span>Paste the path into the <code className="bg-muted px-2 py-1 rounded text-xs">Input:</code> section of your instructions.md file</span>
+                                  </li>
+                                </ul>
+                                <div className="bg-muted p-3 rounded text-xs font-mono mt-3">
+                                  <div>Input:</div>
+                                  <div className="text-foreground">Data/BAWE/CORPUS_ByDiscipline</div>
+                                </div>
+                              </div>
+
+                              {/* Step 3: Write Process Instructions */}
+                              <div className="bg-background p-4 rounded-lg border-l-4 border-blue-600">
+                                <h6 className="font-bold text-foreground mb-2">Step 3: Write Process Instructions (What to Do)</h6>
+                                <p className="text-sm text-foreground mb-2">
+                                  In the <code className="bg-muted px-2 py-1 rounded text-xs">Process:</code> section, write natural language instructions describing what you want Builder to do:
+                                </p>
+                                <div className="bg-muted p-3 rounded text-xs mt-2">
+                                  <div className="font-mono text-muted-foreground">Process:</div>
+                                  <div className="text-foreground mt-1 italic">
+                                    Explore the folders in the CORPUS_ByDiscipline directory and analyze the text files within each discipline folder. Generate:
+                                    <ul className="list-disc ml-6 mt-2 space-y-1">
+                                      <li>A summary report showing the number of documents per discipline</li>
+                                      <li>Basic statistics (word count, file count) for each discipline</li>
+                                      <li>A bar chart visualizing document distribution across disciplines</li>
+                                      <li>A simple analysis report highlighting the top 3 disciplines by document count</li>
+                                    </ul>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Step 4: Define Output */}
+                              <div className="bg-background p-4 rounded-lg border-l-4 border-green-600">
+                                <h6 className="font-bold text-foreground mb-2">Step 4: Define Your Output (Where to Save Results)</h6>
+                                <p className="text-sm text-foreground mb-2">
+                                  You can ask Builder to create a new folder for the results:
+                                </p>
+                                <div className="bg-muted p-3 rounded text-xs font-mono mt-2">
+                                  <div>Output:</div>
+                                  <div className="text-foreground mt-1">Create a new folder called "Lab1_Results" and save all reports, charts, and analysis files there.</div>
+                                </div>
+                                <p className="text-xs text-muted-foreground mt-2">
+                                  <strong>Tip:</strong> You can also right-click an existing folder and copy its path if you want to save results to a specific location.
+                                </p>
+                              </div>
+
+                              {/* Step 5: Send to Builder */}
+                              <div className="bg-background p-4 rounded-lg border-l-4 border-primary">
+                                <h6 className="font-bold text-foreground mb-2">Step 5: Send Instructions to Builder</h6>
+                                <ul className="space-y-2 text-sm text-foreground list-none">
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-primary font-bold">1.</span>
+                                    <span>Save your <code className="bg-muted px-2 py-1 rounded text-xs">instructions.md</code> file (auto-save should handle this)</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-primary font-bold">2.</span>
+                                    <span><strong>Right-click</strong> on the <code className="bg-muted px-2 py-1 rounded text-xs">instructions.md</code> file in the File Explorer</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-primary font-bold">3.</span>
+                                    <span>Select <strong>"Copy Path"</strong></span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-primary font-bold">4.</span>
+                                    <span>In the Right Panel (AI Agent Chat), type: <em>"Please follow the instructions in [paste file path here]"</em></span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-primary font-bold">5.</span>
+                                    <span>Press <strong>Enter</strong> to send the message to Builder</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-primary font-bold">6.</span>
+                                    <span>Watch as Builder reads your instructions, accesses the data, and generates the reports and visualizations!</span>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Workflow Flowchart */}
+                          <div className="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 p-6 rounded-xl border-2">
+                            <h4 className="text-xl font-bold text-foreground mb-4">📊 Complete Workflow Visualization</h4>
+                            <p className="text-sm text-muted-foreground mb-4">
+                              This flowchart shows the complete process from setting up your instructions to getting results from Builder.
+                            </p>
+                            <MermaidDiagram chart={`
+graph TD
+    A[📁 Locate Lab1_Explore_BAWE Folder] --> B[📝 Open instructions.md File]
+    B --> C[📥 Define Input: Right-click CORPUS_ByDiscipline folder]
+    C --> D[📋 Copy Folder Path]
+    D --> E[✏️ Paste Path in Input Section]
+    E --> F[⚙️ Write Process Instructions in Natural Language]
+    F --> G[📤 Define Output Destination]
+    G --> H[💾 Save instructions.md File]
+    H --> I[📄 Right-click instructions.md File]
+    I --> J[📋 Copy File Path]
+    J --> K[💬 Open Right Panel - AI Agent Chat]
+    K --> L["🤖 Type: 'Please follow the instructions in [file path]'"]
+    L --> M[⏎ Send Message to Builder]
+    M --> N[🔍 Builder Reads Instructions]
+    N --> O[📊 Builder Accesses Input Data]
+    O --> P[⚡ Builder Processes & Analyzes]
+    P --> Q[✅ Builder Creates Output Folder & Files]
+    Q --> R[🎉 View Results in Lab1_Results Folder]
+    
+    style A fill:#e3f2fd
+    style B fill:#e3f2fd
+    style C fill:#f3e5f5
+    style D fill:#f3e5f5
+    style E fill:#f3e5f5
+    style F fill:#e1f5fe
+    style G fill:#e8f5e9
+    style H fill:#fff3e0
+    style I fill:#fff3e0
+    style J fill:#fff3e0
+    style K fill:#fce4ec
+    style L fill:#fce4ec
+    style M fill:#fce4ec
+    style N fill:#e0f2f1
+    style O fill:#e0f2f1
+    style P fill:#e0f2f1
+    style Q fill:#f1f8e9
+    style R fill:#c8e6c9
+            `} />
+                          </div>
+
+                          {/* Key Takeaways */}
+                          <Alert className="border-l-4 border-primary bg-primary/5">
+                            <CheckCircle2 className="h-5 w-5 text-primary" />
+                            <AlertDescription className="ml-2">
+                              <p className="font-semibold mb-2">🎯 Key Takeaways from Lab 1</p>
+                              <ul className="space-y-1 text-sm text-foreground list-none">
+                                <li className="flex items-start gap-2">
+                                  <span className="text-primary">✓</span>
+                                  <span><strong>Right-click is your friend:</strong> Use it to copy file and folder paths quickly</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <span className="text-primary">✓</span>
+                                  <span><strong>Structured instructions work best:</strong> The Input-Process-Output model helps organize your requests</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <span className="text-primary">✓</span>
+                                  <span><strong>Natural language is powerful:</strong> You don't need to know code; just describe what you want clearly</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <span className="text-primary">✓</span>
+                                  <span><strong>Builder does the heavy lifting:</strong> The agent reads, analyzes, generates, and saves results automatically</span>
+                                </li>
+                              </ul>
+                            </AlertDescription>
+                          </Alert>
+
+                          {/* Reference to Detailed Lesson */}
+                          <Alert className="border-l-4 border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20">
+                            <BookOpen className="h-5 w-5 text-indigo-600" />
+                            <AlertDescription className="ml-2">
+                              <p className="font-semibold mb-2">📚 Want to Learn More?</p>
+                              <p className="text-sm text-foreground mb-2">
+                                For a deeper understanding of how AI Agents work and the Input-Process-Output model, check out our comprehensive lesson:
+                              </p>
+                              <Button variant="outline" size="sm" asChild className="mt-2">
+                                <Link to="/lessons/ai-agents">
+                                  <BookOpen className="h-4 w-4 mr-2" />
+                                  Go to AI Agents Lesson
+                                </Link>
+                              </Button>
                             </AlertDescription>
                           </Alert>
                         </CardContent>
