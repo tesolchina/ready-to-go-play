@@ -278,6 +278,38 @@ const WorkshopAIAgentDelivery = () => {
                     </CardContent>
                   </Card>
 
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Laptop className="h-5 w-5" />
+                        Remix Lovable Project
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div>
+                        <h3 className="font-semibold mb-2">Get Started with Lovable</h3>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          Visit the workshop project on Lovable and create your own remix to experiment with:
+                        </p>
+                        <ul className="space-y-3 text-foreground">
+                          <li className="flex gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                            <div>
+                              <strong>Workshop Project:</strong> <a href="https://lovable.dev/projects/6b74967a-bc71-434d-a398-74a0e8c7d669?remixed=true" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-mono text-sm">Visit and Remix</a>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div className="p-4 bg-primary/5 rounded-lg border-l-4 border-primary">
+                        <h4 className="font-semibold mb-2">What is Remixing?</h4>
+                        <p className="text-sm">
+                          Remixing creates your own copy of the project that you can modify and experiment with. This allows you to follow along with workshop activities in your own Lovable workspace without affecting the original project.
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+
                 </TabsContent>
 
                 {/* ACTIVITIES TAB */}
