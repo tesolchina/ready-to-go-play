@@ -467,10 +467,10 @@ const WorkshopAIAgentDelivery = () => {
                               </div>
 
                               {/* Middle Panel - Top */}
-                              <div className="p-4 bg-background rounded-lg border-4 border-accent shadow-lg">
+                              <div className="p-4 bg-background rounded-lg border-4 border-blue-600 shadow-lg">
                                 <div className="flex items-center gap-2 mb-3">
-                                  <div className="w-3 h-3 rounded-full bg-accent" />
-                                  <h4 className="font-bold text-accent">Middle Panel</h4>
+                                  <div className="w-3 h-3 rounded-full bg-blue-600" />
+                                  <h4 className="font-bold text-blue-600">Middle Panel</h4>
                                 </div>
                                 <p className="text-base font-bold mb-2 text-foreground">Editor Area</p>
                                 <ul className="space-y-1 text-sm font-semibold text-foreground">
