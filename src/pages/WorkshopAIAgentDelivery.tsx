@@ -1458,11 +1458,20 @@ graph TD
                           <div className="bg-muted/50 rounded-lg p-6">
                             <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
                               <FolderOpen className="h-5 w-5" />
-                              Step 1: Prepare Your API Keys Folder
+                              Step 1: Locate Your API Keys Folder
                             </h4>
                             <div className="space-y-4">
+                              <Alert className="border-l-4 border-green-600 bg-green-50 dark:bg-green-900/20">
+                                <CheckCircle2 className="h-5 w-5 text-green-600" />
+                                <AlertDescription className="ml-2">
+                                  <p className="font-semibold mb-2">✅ Good News!</p>
+                                  <p className="text-sm text-foreground">
+                                    The folder structure is already set up in the workshop repository. You don't need to create it manually!
+                                  </p>
+                                </AlertDescription>
+                              </Alert>
                               <p className="text-foreground">
-                                First, create the folder structure to store your API keys:
+                                In your cloned repository, you'll find the following folder structure ready to use:
                               </p>
                               <div className="bg-background rounded-lg p-4 border font-mono text-sm">
                                 <div>Data/</div>
@@ -1472,7 +1481,7 @@ graph TD
                                 <div className="ml-8">└── openrouter.md</div>
                               </div>
                               <p className="text-sm text-muted-foreground">
-                                You can create this structure manually or ask Builder to create these folders and files for you.
+                                Navigate to this folder in Trae's File Explorer to verify it exists.
                               </p>
                             </div>
                           </div>
@@ -1607,6 +1616,210 @@ graph TD
                               <li>Make a simple test request to one of the LLM providers</li>
                               <li>Report back on the connection status</li>
                             </ul>
+                          </div>
+
+                          {/* Lab 2: Analyze BAWE in Batches */}
+                          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 p-6 rounded-xl border-2 mt-8">
+                            <h4 className="text-2xl font-bold text-foreground mb-4">🧪 Lab 2: Analyze BAWE in Batches</h4>
+                            <p className="text-foreground mb-6">
+                              Now that you have your API keys set up, let's use them to automate a real analysis task! 
+                              In this lab, you'll see the power of API automation - sending multiple files to an LLM and collecting results automatically.
+                            </p>
+
+                            {/* The Power of API Automation */}
+                            <Alert className="mb-6 border-l-4 border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20">
+                              <Zap className="h-5 w-5 text-indigo-600" />
+                              <AlertDescription className="ml-2">
+                                <p className="font-semibold mb-2">💡 What Makes This Powerful?</p>
+                                <p className="text-sm text-foreground mb-2">
+                                  With a chatbot, you'd need to manually:
+                                </p>
+                                <ul className="text-sm text-foreground space-y-1 list-none ml-4">
+                                  <li>• Open each file, copy the text</li>
+                                  <li>• Switch to browser, paste into chatbot</li>
+                                  <li>• Copy the response, switch back</li>
+                                  <li>• Paste into a document, repeat 5 times</li>
+                                </ul>
+                                <p className="text-sm text-foreground mt-2 font-semibold">
+                                  With API and AI agents: <span className="text-indigo-600">One instruction, automatic processing!</span>
+                                </p>
+                              </AlertDescription>
+                            </Alert>
+
+                            {/* Lab Instructions */}
+                            <div className="space-y-6">
+                              <div className="bg-background p-6 rounded-lg border-2">
+                                <h5 className="text-xl font-bold text-foreground mb-4">📋 Lab Task Overview</h5>
+                                <p className="text-foreground mb-4">
+                                  You'll use the Input-Process-Output model to instruct Builder to analyze 5 text files from the BAWE corpus using an LLM API.
+                                </p>
+
+                                {/* Input Section */}
+                                <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg border-l-4 border-purple-600 mb-4">
+                                  <h6 className="font-bold text-foreground mb-2">📥 Input</h6>
+                                  <p className="text-sm text-foreground mb-2">
+                                    Folder path containing the text files to analyze:
+                                  </p>
+                                  <code className="bg-background px-3 py-2 rounded block text-sm">
+                                    Data/BAWE/CORPUS_ByDiscipline
+                                  </code>
+                                </div>
+
+                                {/* Process Section */}
+                                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border-l-4 border-blue-600 mb-4">
+                                  <h6 className="font-bold text-foreground mb-2">⚙️ Process</h6>
+                                  <p className="text-sm text-foreground mb-3">
+                                    Ask Builder to:
+                                  </p>
+                                  <ul className="space-y-2 text-sm text-foreground list-none ml-4">
+                                    <li className="flex items-start gap-2">
+                                      <span className="text-blue-600 font-bold">1.</span>
+                                      <span>Select 5 text files from the CORPUS_ByDiscipline folder</span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                      <span className="text-blue-600 font-bold">2.</span>
+                                      <span>Send each file <strong>one at a time</strong> to an LLM (using your API key)</span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                      <span className="text-blue-600 font-bold">3.</span>
+                                      <span>Include a prompt file (to be created separately) that asks the LLM to analyze the text</span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                      <span className="text-blue-600 font-bold">4.</span>
+                                      <span>Collect the responses from the LLM for each file</span>
+                                    </li>
+                                  </ul>
+                                  <div className="mt-3 p-3 bg-background rounded border">
+                                    <p className="text-xs text-muted-foreground italic">
+                                      <strong>Tip:</strong> Create a prompt.md file that contains your analysis instructions 
+                                      (e.g., "Summarize the main argument of this academic text in 2-3 sentences and identify the discipline.")
+                                    </p>
+                                  </div>
+                                </div>
+
+                                {/* Output Section */}
+                                <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border-l-4 border-green-600">
+                                  <h6 className="font-bold text-foreground mb-2">📤 Output</h6>
+                                  <p className="text-sm text-foreground mb-2">
+                                    Save all LLM responses to a CSV file:
+                                  </p>
+                                  <code className="bg-background px-3 py-2 rounded block text-sm">
+                                    Lab2_Results/analysis_results.csv
+                                  </code>
+                                  <p className="text-xs text-muted-foreground mt-2">
+                                    The CSV should include columns: File Name, Original Text (excerpt), LLM Analysis
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Workflow Visualization */}
+                              <div className="bg-background p-6 rounded-lg border-2">
+                                <h5 className="text-xl font-bold text-foreground mb-4">📊 Automation Workflow</h5>
+                                <p className="text-sm text-muted-foreground mb-4">
+                                  This flowchart shows how API enables automation and eliminates the manual copy-paste-switch cycle of chatbots:
+                                </p>
+                                <MermaidDiagram chart={`
+graph TD
+    A[📁 Start: CORPUS_ByDiscipline Folder] --> B[📄 File 1: Read Text]
+    B --> C[📤 API Call to LLM with Prompt]
+    C --> D[📥 Receive Response 1]
+    D --> E[💾 Store in Memory]
+    
+    E --> F[📄 File 2: Read Text]
+    F --> G[📤 API Call to LLM with Prompt]
+    G --> H[📥 Receive Response 2]
+    H --> I[💾 Store in Memory]
+    
+    I --> J[📄 File 3: Read Text]
+    J --> K[📤 API Call to LLM with Prompt]
+    K --> L[📥 Receive Response 3]
+    L --> M[💾 Store in Memory]
+    
+    M --> N[📄 File 4 & 5: Repeat Process]
+    N --> O[📊 Compile All Results]
+    O --> P[✅ Generate CSV File]
+    P --> Q[🎉 Lab2_Results/analysis_results.csv]
+    
+    style A fill:#e3f2fd
+    style B fill:#f3e5f5
+    style C fill:#fff3e0
+    style D fill:#e8f5e9
+    style E fill:#fce4ec
+    style F fill:#f3e5f5
+    style G fill:#fff3e0
+    style H fill:#e8f5e9
+    style I fill:#fce4ec
+    style J fill:#f3e5f5
+    style K fill:#fff3e0
+    style L fill:#e8f5e9
+    style M fill:#fce4ec
+    style N fill:#e1f5fe
+    style O fill:#fff9c4
+    style P fill:#c8e6c9
+    style Q fill:#81c784
+                                `} />
+                                
+                                <Alert className="mt-4 border-l-4 border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20">
+                                  <Zap className="h-5 w-5 text-indigo-600" />
+                                  <AlertDescription className="ml-2">
+                                    <p className="font-semibold mb-2">🚀 The Power of API Automation</p>
+                                    <div className="text-sm text-foreground space-y-2">
+                                      <p className="flex items-start gap-2">
+                                        <span className="text-indigo-600 font-bold">✓</span>
+                                        <span><strong>No context switching:</strong> AI agent handles all file operations and API calls automatically</span>
+                                      </p>
+                                      <p className="flex items-start gap-2">
+                                        <span className="text-indigo-600 font-bold">✓</span>
+                                        <span><strong>No manual copy-paste:</strong> Builder reads files, sends to LLM, and stores results - all programmatically</span>
+                                      </p>
+                                      <p className="flex items-start gap-2">
+                                        <span className="text-indigo-600 font-bold">✓</span>
+                                        <span><strong>Scalable:</strong> 5 files or 500 files - the same instruction works (just adjust the number)</span>
+                                      </p>
+                                      <p className="flex items-start gap-2">
+                                        <span className="text-indigo-600 font-bold">✓</span>
+                                        <span><strong>Repeatable:</strong> Save the instruction, run it anytime with different data</span>
+                                      </p>
+                                    </div>
+                                  </AlertDescription>
+                                </Alert>
+                              </div>
+
+                              {/* Implementation Steps */}
+                              <div className="bg-background p-6 rounded-lg border-2">
+                                <h5 className="text-xl font-bold text-foreground mb-4">🛠️ Implementation Steps</h5>
+                                <div className="space-y-4">
+                                  <div className="flex items-start gap-3">
+                                    <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">1</span>
+                                    <div>
+                                      <p className="font-semibold text-foreground">Create a prompt.md file</p>
+                                      <p className="text-sm text-muted-foreground">Write the analysis instructions for the LLM (e.g., "Summarize and identify discipline")</p>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-start gap-3">
+                                    <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">2</span>
+                                    <div>
+                                      <p className="font-semibold text-foreground">Create Lab2_instructions.md</p>
+                                      <p className="text-sm text-muted-foreground">Use the Input-Process-Output structure to describe the batch analysis task</p>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-start gap-3">
+                                    <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">3</span>
+                                    <div>
+                                      <p className="font-semibold text-foreground">Send to Builder</p>
+                                      <p className="text-sm text-muted-foreground">Right-click Lab2_instructions.md, copy path, and send to Builder</p>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-start gap-3">
+                                    <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">4</span>
+                                    <div>
+                                      <p className="font-semibold text-foreground">Watch the magic happen!</p>
+                                      <p className="text-sm text-muted-foreground">Builder will read files, call the API multiple times, and generate your CSV automatically</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </CardContent>
                       </CollapsibleContent>
