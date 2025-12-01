@@ -1713,51 +1713,30 @@ graph TD
                                 </div>
                               </div>
 
-                              {/* Workflow Visualization */}
                               <div className="bg-background p-6 rounded-lg border-2">
                                 <h5 className="text-xl font-bold text-foreground mb-4">📊 Automation Workflow</h5>
                                 <p className="text-sm text-muted-foreground mb-4">
                                   This flowchart shows how API enables automation and eliminates the manual copy-paste-switch cycle of chatbots:
                                 </p>
                                 <MermaidDiagram chart={`
-graph TD
-    A[📁 Start: CORPUS_ByDiscipline Folder] --> B[📄 File 1: Read Text]
-    B --> C[📤 API Call to LLM with Prompt]
-    C --> D[📥 Receive Response 1]
-    D --> E[💾 Store in Memory]
+graph LR
+    A[📁 Input<br/>CORPUS_ByDiscipline<br/>5 files] --> B{🔄 For Each File}
+    B --> C[📖 Read]
+    C --> D[📤 API + Prompt]
+    D --> E[📥 Response]
+    E --> F[💾 Store]
+    F --> B
+    B --> G[📊 Compile Results]
+    G --> H[✅ CSV Output<br/>Lab2_Results]
     
-    E --> F[📄 File 2: Read Text]
-    F --> G[📤 API Call to LLM with Prompt]
-    G --> H[📥 Receive Response 2]
-    H --> I[💾 Store in Memory]
-    
-    I --> J[📄 File 3: Read Text]
-    J --> K[📤 API Call to LLM with Prompt]
-    K --> L[📥 Receive Response 3]
-    L --> M[💾 Store in Memory]
-    
-    M --> N[📄 File 4 & 5: Repeat Process]
-    N --> O[📊 Compile All Results]
-    O --> P[✅ Generate CSV File]
-    P --> Q[🎉 Lab2_Results/analysis_results.csv]
-    
-    style A fill:#e3f2fd
-    style B fill:#f3e5f5
-    style C fill:#fff3e0
-    style D fill:#e8f5e9
-    style E fill:#fce4ec
-    style F fill:#f3e5f5
-    style G fill:#fff3e0
-    style H fill:#e8f5e9
-    style I fill:#fce4ec
-    style J fill:#f3e5f5
-    style K fill:#fff3e0
-    style L fill:#e8f5e9
-    style M fill:#fce4ec
-    style N fill:#e1f5fe
-    style O fill:#fff9c4
-    style P fill:#c8e6c9
-    style Q fill:#81c784
+    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
+    style B fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style G fill:#fff9c4,stroke:#fbc02d,stroke-width:2px
+    style H fill:#c8e6c9,stroke:#388e3c,stroke-width:3px
+    style C fill:#f3e5f5
+    style D fill:#ffebee
+    style E fill:#e8f5e9
+    style F fill:#fce4ec
                                 `} />
                                 
                                 <Alert className="mt-4 border-l-4 border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20">
