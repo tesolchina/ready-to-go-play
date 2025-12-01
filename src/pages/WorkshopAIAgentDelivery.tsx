@@ -2,7 +2,8 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail, ChevronDown } from "lucide-react";
+import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail, ChevronDown, Terminal } from "lucide-react";
+import traeIdeInterface from "@/assets/trae-ide-interface.png";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -448,9 +449,9 @@ const WorkshopAIAgentDelivery = () => {
                         <CardContent className="space-y-6">
                           {/* IDE Structure Explanation */}
                           <div className="p-6 bg-muted/30 rounded-lg border-2 border-muted">
-                            <h3 className="text-xl font-semibold mb-4">A Typical IDE Has Three Main Parts:</h3>
+                            <h3 className="text-xl font-semibold mb-4">A Typical IDE Has Four Main Areas:</h3>
                             
-                            <div className="grid md:grid-cols-3 gap-4">
+                            <div className="grid md:grid-cols-3 gap-4 mb-4">
                               {/* Left Panel */}
                               <div className="p-4 bg-background rounded-lg border-2 border-primary">
                                 <div className="flex items-center gap-2 mb-3">
@@ -466,13 +467,13 @@ const WorkshopAIAgentDelivery = () => {
                               </div>
 
                               {/* Middle Panel */}
-                              <div className="p-4 bg-background rounded-lg border-2 border-accent">
+                              <div className="p-4 bg-background rounded-lg border-4 border-accent shadow-lg">
                                 <div className="flex items-center gap-2 mb-3">
                                   <div className="w-3 h-3 rounded-full bg-accent" />
-                                  <h4 className="font-semibold text-accent">Middle Panel</h4>
+                                  <h4 className="font-bold text-accent">Middle Panel</h4>
                                 </div>
-                                <p className="text-sm text-muted-foreground mb-2">Editor Area</p>
-                                <ul className="space-y-1 text-sm">
+                                <p className="text-sm font-semibold mb-2">Editor Area</p>
+                                <ul className="space-y-1 text-sm font-medium">
                                   <li>✏️ Read files</li>
                                   <li>📝 Edit files</li>
                                   <li>💾 Save changes</li>
@@ -480,17 +481,56 @@ const WorkshopAIAgentDelivery = () => {
                               </div>
 
                               {/* Right Panel */}
-                              <div className="p-4 bg-background rounded-lg border-2 border-secondary">
+                              <div className="p-4 bg-background rounded-lg border-4 border-secondary shadow-lg">
                                 <div className="flex items-center gap-2 mb-3">
                                   <div className="w-3 h-3 rounded-full bg-secondary" />
-                                  <h4 className="font-semibold text-secondary">Right Panel</h4>
+                                  <h4 className="font-bold text-secondary">Right Panel</h4>
                                 </div>
-                                <p className="text-sm text-muted-foreground mb-2">AI Agent Chat</p>
-                                <ul className="space-y-1 text-sm">
+                                <p className="text-sm font-semibold mb-2">AI Agent Chat</p>
+                                <ul className="space-y-1 text-sm font-medium">
                                   <li>💬 Chat interface</li>
                                   <li>🤖 AI agent ("Builder")</li>
                                   <li>⚡ Commands & prompts</li>
                                 </ul>
+                              </div>
+                            </div>
+
+                            {/* Terminal Panel */}
+                            <div className="p-4 bg-background rounded-lg border-2 border-muted-foreground">
+                              <div className="flex items-center gap-2 mb-3">
+                                <Terminal className="h-4 w-4 text-muted-foreground" />
+                                <h4 className="font-semibold text-muted-foreground">Bottom Middle Area</h4>
+                              </div>
+                              <p className="text-sm text-muted-foreground mb-2">Terminal / Console</p>
+                              <ul className="space-y-1 text-sm">
+                                <li>⌨️ Command line interface</li>
+                                <li>🔍 Debug console</li>
+                                <li>📋 Output messages</li>
+                              </ul>
+                            </div>
+                          </div>
+
+                          {/* IDE Screenshot with Labels */}
+                          <div className="space-y-3">
+                            <h3 className="text-lg font-semibold">IDE Interface Reference</h3>
+                            <div className="relative rounded-lg overflow-hidden border-2 border-muted">
+                              <img 
+                                src={traeIdeInterface} 
+                                alt="Trae IDE interface showing left panel with file explorer, middle panel with code editor, right panel with AI chat, and terminal at the bottom"
+                                className="w-full"
+                              />
+                              {/* Labels overlay */}
+                              <div className="absolute top-4 left-4 bg-primary/90 text-primary-foreground px-3 py-1 rounded-md text-sm font-semibold shadow-lg">
+                                Left: Files & Folders
+                              </div>
+                              <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-accent/90 text-accent-foreground px-3 py-1 rounded-md text-sm font-semibold shadow-lg">
+                                Middle: Editor
+                              </div>
+                              <div className="absolute top-4 right-4 bg-secondary/90 text-secondary-foreground px-3 py-1 rounded-md text-sm font-semibold shadow-lg">
+                                Right: AI Chat
+                              </div>
+                              <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 bg-muted-foreground/90 text-background px-3 py-1 rounded-md text-sm font-semibold shadow-lg">
+                                Bottom: Terminal
                               </div>
                             </div>
                           </div>
