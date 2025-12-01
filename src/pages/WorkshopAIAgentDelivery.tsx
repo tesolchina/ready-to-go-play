@@ -481,10 +481,10 @@ const WorkshopAIAgentDelivery = () => {
                               </div>
 
                               {/* Right Panel - Full Height */}
-                              <div className="row-span-2 p-4 bg-background rounded-lg border-4 border-secondary shadow-lg">
+                              <div className="row-span-2 p-4 bg-background rounded-lg border-4 border-green-600 shadow-lg">
                                 <div className="flex items-center gap-2 mb-3">
-                                  <div className="w-3 h-3 rounded-full bg-secondary" />
-                                  <h4 className="font-bold text-secondary">Right Panel</h4>
+                                  <div className="w-3 h-3 rounded-full bg-green-600" />
+                                  <h4 className="font-bold text-green-600">Right Panel</h4>
                                 </div>
                                 <p className="text-base font-bold mb-2 text-foreground">AI Agent Chat</p>
                                 <ul className="space-y-1 text-sm font-semibold text-foreground">
@@ -572,6 +572,17 @@ const WorkshopAIAgentDelivery = () => {
                               <strong>💡 Reminder:</strong> The AI agent in Trae is called <strong>"Builder"</strong>. Don't hesitate to ask Builder questions as you explore the interface!
                             </p>
                           </div>
+
+                          {/* Auto-Save Tip */}
+                          <Alert className="border-l-4 border-primary bg-primary/5">
+                            <CheckCircle2 className="h-5 w-5 text-primary" />
+                            <AlertDescription className="ml-2">
+                              <p className="font-semibold mb-2">💾 Important Tip: Turn On Auto-Save</p>
+                              <p className="text-sm text-foreground">
+                                Enable auto-save in Trae to automatically save your changes. This prevents losing work and ensures Builder always has access to your latest code. Look for the auto-save setting in Trae's preferences or settings menu.
+                              </p>
+                            </AlertDescription>
+                          </Alert>
                         </CardContent>
                       </CollapsibleContent>
                     </Card>
