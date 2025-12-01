@@ -13,6 +13,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
   SidebarMenuSubButton,
+  SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
 import { AIServiceIndicator } from "@/components/AIServiceIndicator";
