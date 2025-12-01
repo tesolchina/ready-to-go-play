@@ -472,8 +472,8 @@ const WorkshopAIAgentDelivery = () => {
                                   <div className="w-3 h-3 rounded-full bg-accent" />
                                   <h4 className="font-bold text-accent">Middle Panel</h4>
                                 </div>
-                                <p className="text-sm font-semibold mb-2">Editor Area</p>
-                                <ul className="space-y-1 text-sm font-medium">
+                                <p className="text-base font-bold mb-2 text-foreground">Editor Area</p>
+                                <ul className="space-y-1 text-sm font-semibold text-foreground">
                                   <li>✏️ Read files</li>
                                   <li>📝 Edit files</li>
                                   <li>💾 Save changes</li>
@@ -486,8 +486,8 @@ const WorkshopAIAgentDelivery = () => {
                                   <div className="w-3 h-3 rounded-full bg-secondary" />
                                   <h4 className="font-bold text-secondary">Right Panel</h4>
                                 </div>
-                                <p className="text-sm font-semibold mb-2">AI Agent Chat</p>
-                                <ul className="space-y-1 text-sm font-medium">
+                                <p className="text-base font-bold mb-2 text-foreground">AI Agent Chat</p>
+                                <ul className="space-y-1 text-sm font-semibold text-foreground">
                                   <li>💬 Chat interface</li>
                                   <li>🤖 AI agent ("Builder")</li>
                                   <li>⚡ Commands & prompts</li>
