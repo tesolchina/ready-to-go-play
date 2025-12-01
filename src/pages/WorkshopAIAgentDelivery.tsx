@@ -2,11 +2,12 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail } from "lucide-react";
+import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useEffect, useState } from "react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 const WorkshopAIAgentDelivery = () => {
   const location = useLocation();
@@ -315,111 +316,118 @@ const WorkshopAIAgentDelivery = () => {
                 {/* ACTIVITIES TAB */}
                 <TabsContent value="activities" className="space-y-6">
                   {/* Module 1: Conceptual Understanding */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Lightbulb className="h-5 w-5" />
-                        Module 1: Conceptual Understanding
-                      </CardTitle>
-                      <p className="text-lg text-muted-foreground mt-2">
-                        Two Ways to Communicate with AI
-                      </p>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      {/* Comparison Grid */}
-                      <div className="grid md:grid-cols-2 gap-6">
-                        {/* Chatbot Card */}
-                        <div className="relative overflow-hidden rounded-lg border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-background p-6">
-                          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full -mr-16 -mt-16" />
-                          <div className="relative z-10">
-                            <div className="flex items-center gap-3 mb-4">
-                              <div className="p-3 rounded-lg bg-primary/10">
-                                <MessageSquare className="h-6 w-6 text-primary" />
-                              </div>
-                              <h3 className="text-2xl font-bold">Chatbot</h3>
-                            </div>
-                            <ul className="space-y-3">
-                              <li className="flex items-start gap-2">
-                                <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                                <span><strong>Browser-based</strong> interface</span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                                <span><strong>More intuitive</strong> to use</span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                                <span><strong>Natural language</strong> interaction</span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <span className="text-muted-foreground">⚠️</span>
-                                <span className="text-muted-foreground">Requires <strong>context switching</strong></span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <span className="text-muted-foreground">⚠️</span>
-                                <span className="text-muted-foreground">Can be <strong>time-consuming</strong></span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <span className="text-muted-foreground">⚠️</span>
-                                <span className="text-muted-foreground">AI produces only <strong>textual responses</strong> (multimodal)</span>
-                              </li>
-                            </ul>
+                  <Collapsible defaultOpen>
+                    <Card>
+                      <CardHeader>
+                        <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80 transition-opacity">
+                          <div className="flex items-center gap-2">
+                            <Lightbulb className="h-5 w-5" />
+                            <CardTitle>Module 1: Conceptual Understanding</CardTitle>
                           </div>
-                        </div>
-
-                        {/* AI Agent Card */}
-                        <div className="relative overflow-hidden rounded-lg border-2 border-accent/20 bg-gradient-to-br from-accent/5 to-background p-6">
-                          <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 rounded-full -mr-16 -mt-16" />
-                          <div className="relative z-10">
-                            <div className="flex items-center gap-3 mb-4">
-                              <div className="p-3 rounded-lg bg-accent/10">
-                                <Laptop className="h-6 w-6 text-accent" />
+                          <ChevronDown className="h-5 w-5 transition-transform duration-200 data-[state=open]:rotate-180" />
+                        </CollapsibleTrigger>
+                        <p className="text-lg text-muted-foreground mt-2">
+                          Two Ways to Communicate with AI
+                        </p>
+                      </CardHeader>
+                      <CollapsibleContent>
+                        <CardContent className="space-y-6">
+                          {/* Comparison Grid */}
+                          <div className="grid md:grid-cols-2 gap-6">
+                            {/* Chatbot Card */}
+                            <div className="relative overflow-hidden rounded-lg border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-background p-6">
+                              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full -mr-16 -mt-16" />
+                              <div className="relative z-10">
+                                <div className="flex items-center gap-3 mb-4">
+                                  <div className="p-3 rounded-lg bg-primary/10">
+                                    <MessageSquare className="h-6 w-6 text-primary" />
+                                  </div>
+                                  <h3 className="text-2xl font-bold">Chatbot</h3>
+                                </div>
+                                <ul className="space-y-3">
+                                  <li className="flex items-start gap-2">
+                                    <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                                    <span><strong>Browser-based</strong> interface</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                                    <span><strong>More intuitive</strong> to use</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                                    <span><strong>Natural language</strong> interaction</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-muted-foreground">⚠️</span>
+                                    <span className="text-muted-foreground">Requires <strong>context switching</strong></span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-muted-foreground">⚠️</span>
+                                    <span className="text-muted-foreground">Can be <strong>time-consuming</strong></span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-muted-foreground">⚠️</span>
+                                    <span className="text-muted-foreground">AI produces only <strong>textual responses</strong> (multimodal)</span>
+                                  </li>
+                                </ul>
                               </div>
-                              <h3 className="text-2xl font-bold">AI Agent</h3>
                             </div>
-                            <ul className="space-y-3">
-                              <li className="flex items-start gap-2">
-                                <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
-                                <span><strong>IDE-based</strong> (Integrated Development Environment)</span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <span className="text-muted-foreground">⚠️</span>
-                                <span className="text-muted-foreground">Has a <strong>learning curve</strong></span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <span className="text-muted-foreground">⚠️</span>
-                                <span className="text-muted-foreground">Requires <strong>some setup</strong></span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
-                                <span><strong>Natural language + more</strong></span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
-                                <span><strong>AI embedded in context</strong></span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
-                                <span><strong>Autonomous actions:</strong> read/edit files, search web, run scripts</span>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
 
-                      {/* Key Insight */}
-                      <Alert className="border-l-4 border-accent">
-                        <Lightbulb className="h-5 w-5 text-accent" />
-                        <AlertDescription className="ml-2">
-                          <p className="font-semibold text-lg mb-2">Key Insight</p>
-                          <p className="text-foreground">
-                            Large Language Models do not just produce human-like texts or simulate text-based behaviors. 
-                            <strong> They can now take actions on our files and folders</strong>, fundamentally changing how we interact with AI.
-                          </p>
-                        </AlertDescription>
-                      </Alert>
-                    </CardContent>
-                  </Card>
+                            {/* AI Agent Card */}
+                            <div className="relative overflow-hidden rounded-lg border-4 border-accent bg-gradient-to-br from-accent/10 to-background p-6 shadow-lg">
+                              <div className="absolute top-0 right-0 w-32 h-32 bg-accent/20 rounded-full -mr-16 -mt-16" />
+                              <div className="relative z-10">
+                                <div className="flex items-center gap-3 mb-4">
+                                  <div className="p-3 rounded-lg bg-accent/20">
+                                    <Laptop className="h-6 w-6 text-accent" />
+                                  </div>
+                                  <h3 className="text-2xl font-bold">AI Agent</h3>
+                                </div>
+                                <ul className="space-y-3">
+                                  <li className="flex items-start gap-2">
+                                    <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                                    <span><strong>IDE-based</strong> (Integrated Development Environment)</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-muted-foreground">⚠️</span>
+                                    <span className="text-muted-foreground">Has a <strong>learning curve</strong></span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-muted-foreground">⚠️</span>
+                                    <span className="text-muted-foreground">Requires <strong>some setup</strong></span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                                    <span><strong>Natural language + more</strong></span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                                    <span><strong>AI embedded in context</strong></span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                                    <span><strong>Autonomous actions:</strong> read/edit files, search web, run scripts</span>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Key Insight */}
+                          <Alert className="border-l-4 border-accent">
+                            <Lightbulb className="h-5 w-5 text-accent" />
+                            <AlertDescription className="ml-2">
+                              <p className="font-semibold text-lg mb-2">Key Insight</p>
+                              <p className="text-foreground">
+                                Large Language Models do not just produce human-like texts or simulate text-based behaviors. 
+                                <strong> They can now take actions on our files and folders</strong>, fundamentally changing how we interact with AI.
+                              </p>
+                            </AlertDescription>
+                          </Alert>
+                        </CardContent>
+                      </CollapsibleContent>
+                    </Card>
+                  </Collapsible>
 
                   {/* Workshop Presentation */}
                   <Card>
