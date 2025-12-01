@@ -589,6 +589,239 @@ const WorkshopAIAgentDelivery = () => {
                     </Card>
                   </Collapsible>
 
+                  {/* Transitional Task: Clone Workshop Repository */}
+                  <Collapsible defaultOpen={false}>
+                    <Card className="border-2 border-amber-200 dark:border-amber-800">
+                      <CardHeader>
+                        <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80 transition-opacity">
+                          <div className="flex items-center gap-2">
+                            <Terminal className="h-5 w-5 text-amber-600" />
+                            <CardTitle>First Hands-On Task: Clone the Workshop Repository</CardTitle>
+                          </div>
+                          <ChevronDown className="h-5 w-5 transition-transform duration-200 data-[state=open]:rotate-180" />
+                        </CollapsibleTrigger>
+                        <p className="text-lg text-muted-foreground mt-2">
+                          Let Builder handle Git commands for you
+                        </p>
+                      </CardHeader>
+                      <CollapsibleContent>
+                        <CardContent className="space-y-6">
+                          {/* Introduction */}
+                          <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 p-6 rounded-xl border-2">
+                            <h4 className="text-xl font-bold text-foreground mb-4">🎯 Your First Builder Task</h4>
+                            <p className="text-foreground mb-4">
+                              Before diving into Lab 1, let's practice asking Builder to do something practical: cloning the workshop repository. 
+                              This task demonstrates how AI agents can handle technical operations (like Git commands) that traditionally required 
+                              learning command-line syntax.
+                            </p>
+                            <div className="bg-background p-4 rounded-lg border">
+                              <p className="text-sm text-foreground">
+                                <strong>What you'll learn:</strong> How to delegate technical tasks to Builder without needing to know the underlying commands
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Step-by-Step Instructions */}
+                          <div className="space-y-4">
+                            <h4 className="text-lg font-bold text-foreground">📝 Step-by-Step Instructions</h4>
+
+                            {/* Step 1: Create a New Folder */}
+                            <div className="bg-background p-5 rounded-lg border-l-4 border-amber-600">
+                              <h5 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                                <span className="bg-amber-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">1</span>
+                                Create a New Folder for Your Work
+                              </h5>
+                              <ul className="space-y-2 text-sm text-foreground list-none ml-8">
+                                <li className="flex items-start gap-2">
+                                  <span className="text-amber-600">•</span>
+                                  <span>In the <strong>Left Panel (File Explorer)</strong>, right-click in an empty area</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <span className="text-amber-600">•</span>
+                                  <span>Select <strong>"New Folder"</strong> from the context menu</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <span className="text-amber-600">•</span>
+                                  <span>Name it something like <code className="bg-muted px-2 py-1 rounded">WorkshopMaterials</code> or <code className="bg-muted px-2 py-1 rounded">Agent3Dec25</code></span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <span className="text-amber-600">•</span>
+                                  <span>Click on the folder to open/select it</span>
+                                </li>
+                              </ul>
+                            </div>
+
+                            {/* Step 2: Ask Builder to Clone */}
+                            <div className="bg-background p-5 rounded-lg border-l-4 border-blue-600">
+                              <h5 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                                <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">2</span>
+                                Ask Builder to Clone the Repository
+                              </h5>
+                              <p className="text-sm text-foreground mb-3 ml-8">
+                                In the <strong>Right Panel (AI Agent Chat)</strong>, type a natural language instruction to Builder:
+                              </p>
+                              <div className="bg-muted p-4 rounded-lg ml-8">
+                                <p className="text-sm font-semibold text-foreground mb-2">Example Message to Builder:</p>
+                                <div className="bg-background p-3 rounded border">
+                                  <p className="text-sm italic text-foreground">
+                                    "Please clone the workshop repository to this folder. Use this URL:<br/>
+                                    <strong className="text-primary">
+                                      [Choose based on your location]
+                                    </strong>"
+                                  </p>
+                                  <div className="mt-3 space-y-2 text-xs">
+                                    <div className="p-2 bg-muted rounded">
+                                      <strong>🇨🇳 Mainland China:</strong><br/>
+                                      <code className="text-primary">https://gitee.com/simonwanghk/agent3Dec25</code>
+                                    </div>
+                                    <div className="p-2 bg-muted rounded">
+                                      <strong>🌍 Outside Mainland China:</strong><br/>
+                                      <code className="text-primary">https://github.com/tesolchina/Agent3Dec25</code>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Step 3: Watch Builder Work */}
+                            <div className="bg-background p-5 rounded-lg border-l-4 border-green-600">
+                              <h5 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                                <span className="bg-green-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">3</span>
+                                Watch Builder Execute Git Commands
+                              </h5>
+                              <p className="text-sm text-foreground mb-3 ml-8">
+                                After you send the instruction, Builder will:
+                              </p>
+                              <ul className="space-y-2 text-sm text-foreground list-none ml-8">
+                                <li className="flex items-start gap-2">
+                                  <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
+                                  <span>Understand that it needs to use Git to clone a repository</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
+                                  <span>Execute the appropriate <code className="bg-muted px-2 py-1 rounded text-xs">git clone</code> command</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
+                                  <span>Display the output in the <strong>Bottom Middle Area (Terminal/Console)</strong></span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
+                                  <span>Confirm when the repository has been successfully cloned</span>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+
+                          {/* The Power of AI Agents: No CLI Knowledge Required */}
+                          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 p-6 rounded-xl border-2">
+                            <h4 className="text-xl font-bold text-foreground mb-4">💡 The Power of AI Agents: No CLI Knowledge Required</h4>
+                            
+                            <div className="space-y-4">
+                              <p className="text-foreground">
+                                In the past, cloning a Git repository required you to:
+                              </p>
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="text-sm font-semibold text-foreground mb-2">❌ Traditional Approach (Without AI Agents):</p>
+                                <ul className="space-y-2 text-sm text-muted-foreground list-none">
+                                  <li className="flex items-start gap-2">
+                                    <span>1.</span>
+                                    <span>Learn what Git is and how it works</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span>2.</span>
+                                    <span>Install Git on your computer</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span>3.</span>
+                                    <span>Learn command-line interface (CLI) syntax</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span>4.</span>
+                                    <span>Remember the exact syntax: <code className="bg-muted px-2 py-1 rounded">git clone [URL]</code></span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span>5.</span>
+                                    <span>Navigate to the correct directory using <code className="bg-muted px-2 py-1 rounded">cd</code> commands</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span>6.</span>
+                                    <span>Troubleshoot any errors that occur</span>
+                                  </li>
+                                </ul>
+                              </div>
+
+                              <div className="bg-primary/5 p-4 rounded-lg border-2 border-primary/20">
+                                <p className="text-sm font-semibold text-foreground mb-2">✅ AI Agent Approach (With Builder):</p>
+                                <ul className="space-y-2 text-sm text-foreground list-none">
+                                  <li className="flex items-start gap-2">
+                                    <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                                    <span><strong>Just ask in natural language</strong> - no syntax to memorize</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                                    <span><strong>Builder handles the technical details</strong> - executes the correct commands</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                                    <span><strong>Automatic error handling</strong> - Builder can troubleshoot and retry if needed</span>
+                                  </li>
+                                </ul>
+                              </div>
+
+                              <blockquote className="border-l-4 border-primary pl-4 italic text-foreground my-4">
+                                "You don't need to learn CLI syntax anymore. Just tell Builder what you want, and it will figure out the commands."
+                              </blockquote>
+                            </div>
+                          </div>
+
+                          {/* Behind the Scenes: What Builder Actually Does */}
+                          <div className="bg-gradient-to-r from-slate-50 to-gray-50 dark:from-slate-900/20 dark:to-gray-900/20 p-6 rounded-xl border-2">
+                            <h4 className="text-xl font-bold text-foreground mb-4">🔍 Behind the Scenes: What Builder Actually Does</h4>
+                            <p className="text-foreground mb-4">
+                              When you ask Builder to clone the repository, here's what happens behind the scenes:
+                            </p>
+                            <div className="bg-background p-4 rounded-lg border font-mono text-xs">
+                              <div className="text-muted-foreground mb-1"># Builder interprets your request and executes:</div>
+                              <div className="text-foreground">$ git clone https://github.com/tesolchina/Agent3Dec25</div>
+                              <div className="text-green-600 mt-2">Cloning into 'Agent3Dec25'...</div>
+                              <div className="text-green-600">remote: Enumerating objects: 150, done.</div>
+                              <div className="text-green-600">remote: Counting objects: 100% (150/150), done.</div>
+                              <div className="text-green-600">Receiving objects: 100% (150/150), done.</div>
+                            </div>
+                            <p className="text-sm text-muted-foreground mt-3">
+                              You can see this output in the <strong>Bottom Middle Area (Terminal/Console)</strong> in Trae. 
+                              Builder is using command-line tools, but you didn't need to know the syntax!
+                            </p>
+                          </div>
+
+                          {/* Verification */}
+                          <Alert className="border-l-4 border-primary bg-primary/5">
+                            <CheckCircle2 className="h-5 w-5 text-primary" />
+                            <AlertDescription className="ml-2">
+                              <p className="font-semibold mb-2">✅ Verify Success</p>
+                              <p className="text-sm text-foreground">
+                                After Builder finishes, check the <strong>Left Panel (File Explorer)</strong>. You should see a new folder 
+                                with the workshop materials inside (Lab1_Explore_BAWE, Data folder, etc.). This confirms the repository 
+                                was successfully cloned!
+                              </p>
+                            </AlertDescription>
+                          </Alert>
+
+                          {/* Key Takeaway */}
+                          <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg border-l-4 border-amber-500">
+                            <p className="font-semibold text-foreground mb-2">🎯 Key Takeaway</p>
+                            <p className="text-sm text-foreground">
+                              This simple task demonstrates the core value of AI agents: <strong>you can accomplish technical tasks 
+                              using natural language, without needing to learn specialized syntax or commands.</strong> Builder translates 
+                              your intent into the appropriate technical operations.
+                            </p>
+                          </div>
+                        </CardContent>
+                      </CollapsibleContent>
+                    </Card>
+                  </Collapsible>
+
                   {/* Module 3: The Input-Process-Output Model */}
                   <Collapsible defaultOpen={false}>
                     <Card>
