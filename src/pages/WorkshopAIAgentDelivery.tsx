@@ -429,6 +429,114 @@ const WorkshopAIAgentDelivery = () => {
                     </Card>
                   </Collapsible>
 
+                  {/* Module 2: Get Familiar with IDE */}
+                  <Collapsible defaultOpen>
+                    <Card>
+                      <CardHeader>
+                        <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80 transition-opacity">
+                          <div className="flex items-center gap-2">
+                            <Laptop className="h-5 w-5" />
+                            <CardTitle>Module 2: Get Familiar with IDE</CardTitle>
+                          </div>
+                          <ChevronDown className="h-5 w-5 transition-transform duration-200 data-[state=open]:rotate-180" />
+                        </CollapsibleTrigger>
+                        <p className="text-lg text-muted-foreground mt-2">
+                          Understanding the IDE Interface
+                        </p>
+                      </CardHeader>
+                      <CollapsibleContent>
+                        <CardContent className="space-y-6">
+                          {/* IDE Structure Explanation */}
+                          <div className="p-6 bg-muted/30 rounded-lg border-2 border-muted">
+                            <h3 className="text-xl font-semibold mb-4">A Typical IDE Has Three Main Parts:</h3>
+                            
+                            <div className="grid md:grid-cols-3 gap-4">
+                              {/* Left Panel */}
+                              <div className="p-4 bg-background rounded-lg border-2 border-primary">
+                                <div className="flex items-center gap-2 mb-3">
+                                  <div className="w-3 h-3 rounded-full bg-primary" />
+                                  <h4 className="font-semibold text-primary">Left Panel</h4>
+                                </div>
+                                <p className="text-sm text-muted-foreground mb-2">File Navigator</p>
+                                <ul className="space-y-1 text-sm">
+                                  <li>📁 Folders</li>
+                                  <li>📂 Sub-folders</li>
+                                  <li>📄 Files</li>
+                                </ul>
+                              </div>
+
+                              {/* Middle Panel */}
+                              <div className="p-4 bg-background rounded-lg border-2 border-accent">
+                                <div className="flex items-center gap-2 mb-3">
+                                  <div className="w-3 h-3 rounded-full bg-accent" />
+                                  <h4 className="font-semibold text-accent">Middle Panel</h4>
+                                </div>
+                                <p className="text-sm text-muted-foreground mb-2">Editor Area</p>
+                                <ul className="space-y-1 text-sm">
+                                  <li>✏️ Read files</li>
+                                  <li>📝 Edit files</li>
+                                  <li>💾 Save changes</li>
+                                </ul>
+                              </div>
+
+                              {/* Right Panel */}
+                              <div className="p-4 bg-background rounded-lg border-2 border-secondary">
+                                <div className="flex items-center gap-2 mb-3">
+                                  <div className="w-3 h-3 rounded-full bg-secondary" />
+                                  <h4 className="font-semibold text-secondary">Right Panel</h4>
+                                </div>
+                                <p className="text-sm text-muted-foreground mb-2">AI Agent Chat</p>
+                                <ul className="space-y-1 text-sm">
+                                  <li>💬 Chat interface</li>
+                                  <li>🤖 AI agent ("Builder")</li>
+                                  <li>⚡ Commands & prompts</li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Hands-on Activity */}
+                          <Alert className="border-l-4 border-primary bg-primary/5">
+                            <Laptop className="h-5 w-5 text-primary" />
+                            <AlertDescription className="ml-2">
+                              <p className="font-semibold text-lg mb-3">👉 Hands-on Activity</p>
+                              <div className="space-y-3 text-foreground">
+                                <div className="flex items-start gap-3">
+                                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold">1</span>
+                                  <div>
+                                    <p className="font-semibold">Open Trae IDE</p>
+                                    <p className="text-sm text-muted-foreground">Launch the Trae application on your computer</p>
+                                  </div>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold">2</span>
+                                  <div>
+                                    <p className="font-semibold">Locate the Three Parts</p>
+                                    <p className="text-sm text-muted-foreground">Identify the left panel (files), middle panel (editor), and right panel (AI chat)</p>
+                                  </div>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold">3</span>
+                                  <div>
+                                    <p className="font-semibold">Talk with Builder</p>
+                                    <p className="text-sm text-muted-foreground">Start a conversation with the AI agent in the right panel. Try asking "Hello, can you help me understand this IDE?"</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </AlertDescription>
+                          </Alert>
+
+                          {/* Reminder */}
+                          <div className="p-4 bg-accent/10 rounded-lg border-l-4 border-accent">
+                            <p className="text-sm">
+                              <strong>💡 Reminder:</strong> The AI agent in Trae is called <strong>"Builder"</strong>. Don't hesitate to ask Builder questions as you explore the interface!
+                            </p>
+                          </div>
+                        </CardContent>
+                      </CollapsibleContent>
+                    </Card>
+                  </Collapsible>
+
                   {/* Workshop Presentation */}
                   <Card>
                     <CardHeader>
