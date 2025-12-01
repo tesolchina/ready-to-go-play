@@ -1807,194 +1807,413 @@ graph LR
                   </Collapsible>
 
                   {/* Break & Reflect */}
-                  <Card className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border-2 border-amber-200 dark:border-amber-800">
-                    <CardContent className="pt-6">
-                      <div className="text-center space-y-4">
-                        <div className="inline-block p-3 bg-background rounded-full">
-                          <Sparkles className="h-8 w-8 text-amber-600" />
-                        </div>
-                        <h3 className="text-2xl font-bold text-foreground">☕ Take a Break & Reflect</h3>
-                        <p className="text-foreground max-w-2xl mx-auto">
-                          Great progress! You've learned how to set up API keys and automate batch processing with AI agents. 
-                          Let's pause here to catch up, ask questions, and think about what we've accomplished so far.
-                        </p>
-                        <div className="pt-4 space-y-3">
-                          <p className="font-semibold text-foreground">What have we learned?</p>
-                          <div className="grid md:grid-cols-2 gap-4 text-left max-w-3xl mx-auto">
-                            <div className="bg-background p-4 rounded-lg border">
-                              <p className="font-semibold text-primary mb-2">✓ API Keys Enable Automation</p>
-                              <p className="text-sm text-muted-foreground">
-                                API keys allow your code (or AI agents) to communicate directly with AI services programmatically
-                              </p>
-                            </div>
-                            <div className="bg-background p-4 rounded-lg border">
-                              <p className="font-semibold text-primary mb-2">✓ Batch Processing Saves Time</p>
-                              <p className="text-sm text-muted-foreground">
-                                Process multiple files automatically instead of manual copy-paste for each one
-                              </p>
-                            </div>
-                            <div className="bg-background p-4 rounded-lg border">
-                              <p className="font-semibold text-primary mb-2">✓ No Context Switching</p>
-                              <p className="text-sm text-muted-foreground">
-                                AI agents handle file operations, API calls, and result storage - all from one place
-                              </p>
-                            </div>
-                            <div className="bg-background p-4 rounded-lg border">
-                              <p className="font-semibold text-primary mb-2">✓ Scalability</p>
-                              <p className="text-sm text-muted-foreground">
-                                The same workflow works for 5 files or 500 files - just adjust the instruction
-                              </p>
+                  <Collapsible defaultOpen={true}>
+                    <Card className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border-2 border-amber-200 dark:border-amber-800">
+                      <CollapsibleTrigger className="w-full hover:opacity-80 transition-opacity">
+                        <CardContent className="pt-6 pb-3">
+                          <div className="text-center">
+                            <div className="flex items-center justify-center gap-3">
+                              <div className="inline-block p-3 bg-background rounded-full">
+                                <Sparkles className="h-8 w-8 text-amber-600" />
+                              </div>
+                              <h3 className="text-2xl font-bold text-foreground">☕ Take a Break & Reflect</h3>
+                              <ChevronDown className="h-5 w-5 transition-transform duration-200 ui-state-open:rotate-180" />
                             </div>
                           </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                        </CardContent>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <CardContent className="pt-0 pb-6">
+                          <p className="text-foreground max-w-2xl mx-auto text-center mb-6">
+                            Great progress! You've learned how to set up API keys and automate batch processing with AI agents. 
+                            Let's pause here to catch up, ask questions, and think about what we've accomplished so far.
+                          </p>
+                          <div className="pt-4 space-y-3">
+                            <p className="font-semibold text-foreground text-center">What have we learned?</p>
+                            <div className="grid md:grid-cols-2 gap-4 text-left max-w-3xl mx-auto">
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="font-semibold text-primary mb-2">✓ API Keys Enable Automation</p>
+                                <p className="text-sm text-muted-foreground">
+                                  API keys allow your code (or AI agents) to communicate directly with AI services programmatically
+                                </p>
+                              </div>
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="font-semibold text-primary mb-2">✓ Batch Processing Saves Time</p>
+                                <p className="text-sm text-muted-foreground">
+                                  Process multiple files automatically instead of manual copy-paste for each one
+                                </p>
+                              </div>
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="font-semibold text-primary mb-2">✓ No Context Switching</p>
+                                <p className="text-sm text-muted-foreground">
+                                  AI agents handle file operations, API calls, and result storage - all from one place
+                                </p>
+                              </div>
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="font-semibold text-primary mb-2">✓ Scalability</p>
+                                <p className="text-sm text-muted-foreground">
+                                  The same workflow works for 5 files or 500 files - just adjust the instruction
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </CollapsibleContent>
+                    </Card>
+                  </Collapsible>
 
                   {/* Real-World Use Cases */}
-                  <Card className="mt-6">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Lightbulb className="h-5 w-5" />
-                        Real-World Use Cases: File + Prompt + LLM Response Pattern
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-foreground mb-6">
-                        Now that you understand the power of automating "send file to LLM with prompt and collect response" workflows, 
-                        let's explore how this pattern applies to real academic scenarios:
-                      </p>
+                  <Collapsible defaultOpen={true} className="mt-6">
+                    <Card>
+                      <CollapsibleTrigger className="w-full hover:opacity-80 transition-opacity">
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2 justify-between">
+                            <span className="flex items-center gap-2">
+                              <Lightbulb className="h-5 w-5" />
+                              Real-World Use Cases: File + Prompt + LLM Response Pattern
+                            </span>
+                            <ChevronDown className="h-5 w-5 transition-transform duration-200 ui-state-open:rotate-180" />
+                          </CardTitle>
+                        </CardHeader>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <CardContent>
+                          <p className="text-foreground mb-6">
+                            Now that you understand the power of automating "send file to LLM with prompt and collect response" workflows, 
+                            let's explore how this pattern applies to real academic scenarios:
+                          </p>
 
-                      <div className="grid md:grid-cols-2 gap-6">
-                        {/* Grading and Feedback */}
-                        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-6 rounded-xl border-2 border-blue-200 dark:border-blue-800">
-                          <div className="flex items-center gap-3 mb-4">
-                            <div className="p-2 bg-blue-600 text-white rounded-lg">
-                              <GraduationCap className="h-6 w-6" />
+                          <div className="grid md:grid-cols-2 gap-6">
+                            {/* Grading and Feedback */}
+                            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-6 rounded-xl border-2 border-blue-200 dark:border-blue-800">
+                              <div className="flex items-center gap-3 mb-4">
+                                <div className="p-2 bg-blue-600 text-white rounded-lg">
+                                  <GraduationCap className="h-6 w-6" />
+                                </div>
+                                <h4 className="text-xl font-bold text-foreground">Grading & Feedback</h4>
+                              </div>
+                              <p className="text-sm text-foreground mb-3">
+                                <strong>Scenario:</strong> You have 50 student essays to grade and provide feedback on.
+                              </p>
+                              <div className="bg-background p-4 rounded-lg border space-y-2 text-sm">
+                                <p><strong className="text-blue-600">Input:</strong> Folder with 50 essay files</p>
+                                <p><strong className="text-blue-600">Prompt:</strong> "Evaluate this essay based on argument clarity, evidence quality, and writing structure. Provide constructive feedback and a grade."</p>
+                                <p><strong className="text-blue-600">Output:</strong> CSV with filename, grade, strengths, areas for improvement</p>
+                                <p className="text-muted-foreground italic pt-2">
+                                  ⏱️ Manual grading: ~15 hours | With AI agent: ~20 minutes
+                                </p>
+                              </div>
                             </div>
-                            <h4 className="text-xl font-bold text-foreground">Grading & Feedback</h4>
-                          </div>
-                          <p className="text-sm text-foreground mb-3">
-                            <strong>Scenario:</strong> You have 50 student essays to grade and provide feedback on.
-                          </p>
-                          <div className="bg-background p-4 rounded-lg border space-y-2 text-sm">
-                            <p><strong className="text-blue-600">Input:</strong> Folder with 50 essay files</p>
-                            <p><strong className="text-blue-600">Prompt:</strong> "Evaluate this essay based on argument clarity, evidence quality, and writing structure. Provide constructive feedback and a grade."</p>
-                            <p><strong className="text-blue-600">Output:</strong> CSV with filename, grade, strengths, areas for improvement</p>
-                            <p className="text-muted-foreground italic pt-2">
-                              ⏱️ Manual grading: ~15 hours | With AI agent: ~20 minutes
-                            </p>
-                          </div>
-                        </div>
 
-                        {/* Generate Course Materials */}
-                        <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-6 rounded-xl border-2 border-purple-200 dark:border-purple-800">
-                          <div className="flex items-center gap-3 mb-4">
-                            <div className="p-2 bg-purple-600 text-white rounded-lg">
-                              <BookOpen className="h-6 w-6" />
+                            {/* Generate Course Materials */}
+                            <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-6 rounded-xl border-2 border-purple-200 dark:border-purple-800">
+                              <div className="flex items-center gap-3 mb-4">
+                                <div className="p-2 bg-purple-600 text-white rounded-lg">
+                                  <BookOpen className="h-6 w-6" />
+                                </div>
+                                <h4 className="text-xl font-bold text-foreground">Generate Course Materials</h4>
+                              </div>
+                              <p className="text-sm text-foreground mb-3">
+                                <strong>Scenario:</strong> Create study guides from lecture transcripts for 12 weeks of classes.
+                              </p>
+                              <div className="bg-background p-4 rounded-lg border space-y-2 text-sm">
+                                <p><strong className="text-purple-600">Input:</strong> 12 lecture transcript files</p>
+                                <p><strong className="text-purple-600">Prompt:</strong> "Create a student-friendly study guide with key concepts, definitions, and practice questions from this lecture."</p>
+                                <p><strong className="text-purple-600">Output:</strong> 12 formatted study guide documents (Markdown or PDF)</p>
+                                <p className="text-muted-foreground italic pt-2">
+                                  ⏱️ Manual creation: ~24 hours | With AI agent: ~30 minutes
+                                </p>
+                              </div>
                             </div>
-                            <h4 className="text-xl font-bold text-foreground">Generate Course Materials</h4>
-                          </div>
-                          <p className="text-sm text-foreground mb-3">
-                            <strong>Scenario:</strong> Create study guides from lecture transcripts for 12 weeks of classes.
-                          </p>
-                          <div className="bg-background p-4 rounded-lg border space-y-2 text-sm">
-                            <p><strong className="text-purple-600">Input:</strong> 12 lecture transcript files</p>
-                            <p><strong className="text-purple-600">Prompt:</strong> "Create a student-friendly study guide with key concepts, definitions, and practice questions from this lecture."</p>
-                            <p><strong className="text-purple-600">Output:</strong> 12 formatted study guide documents (Markdown or PDF)</p>
-                            <p className="text-muted-foreground italic pt-2">
-                              ⏱️ Manual creation: ~24 hours | With AI agent: ~30 minutes
-                            </p>
-                          </div>
-                        </div>
 
-                        {/* Edit Academic Manuscripts */}
-                        <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 p-6 rounded-xl border-2 border-green-200 dark:border-green-800">
-                          <div className="flex items-center gap-3 mb-4">
-                            <div className="p-2 bg-green-600 text-white rounded-lg">
-                              <PenTool className="h-6 w-6" />
+                            {/* Edit Academic Manuscripts */}
+                            <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 p-6 rounded-xl border-2 border-green-200 dark:border-green-800">
+                              <div className="flex items-center gap-3 mb-4">
+                                <div className="p-2 bg-green-600 text-white rounded-lg">
+                                  <PenTool className="h-6 w-6" />
+                                </div>
+                                <h4 className="text-xl font-bold text-foreground">Edit Academic Manuscripts</h4>
+                              </div>
+                              <p className="text-sm text-foreground mb-3">
+                                <strong>Scenario:</strong> Review and improve language quality across multiple paper sections.
+                              </p>
+                              <div className="bg-background p-4 rounded-lg border space-y-2 text-sm">
+                                <p><strong className="text-green-600">Input:</strong> Paper sections (Introduction, Methods, Results, Discussion)</p>
+                                <p><strong className="text-green-600">Prompt:</strong> "Improve academic writing quality: enhance clarity, fix grammar, suggest better transitions, maintain scholarly tone."</p>
+                                <p><strong className="text-green-600">Output:</strong> Edited versions + change logs for each section</p>
+                                <p className="text-muted-foreground italic pt-2">
+                                  ⏱️ Manual editing: ~8 hours | With AI agent: ~15 minutes
+                                </p>
+                              </div>
                             </div>
-                            <h4 className="text-xl font-bold text-foreground">Edit Academic Manuscripts</h4>
-                          </div>
-                          <p className="text-sm text-foreground mb-3">
-                            <strong>Scenario:</strong> Review and improve language quality across multiple paper sections.
-                          </p>
-                          <div className="bg-background p-4 rounded-lg border space-y-2 text-sm">
-                            <p><strong className="text-green-600">Input:</strong> Paper sections (Introduction, Methods, Results, Discussion)</p>
-                            <p><strong className="text-green-600">Prompt:</strong> "Improve academic writing quality: enhance clarity, fix grammar, suggest better transitions, maintain scholarly tone."</p>
-                            <p><strong className="text-green-600">Output:</strong> Edited versions + change logs for each section</p>
-                            <p className="text-muted-foreground italic pt-2">
-                              ⏱️ Manual editing: ~8 hours | With AI agent: ~15 minutes
-                            </p>
-                          </div>
-                        </div>
 
-                        {/* Qualitative Data Analysis */}
-                        <div className="bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 p-6 rounded-xl border-2 border-amber-200 dark:border-amber-800">
-                          <div className="flex items-center gap-3 mb-4">
-                            <div className="p-2 bg-amber-600 text-white rounded-lg">
-                              <Microscope className="h-6 w-6" />
+                            {/* Qualitative Data Analysis */}
+                            <div className="bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 p-6 rounded-xl border-2 border-amber-200 dark:border-amber-800">
+                              <div className="flex items-center gap-3 mb-4">
+                                <div className="p-2 bg-amber-600 text-white rounded-lg">
+                                  <Microscope className="h-6 w-6" />
+                                </div>
+                                <h4 className="text-xl font-bold text-foreground">Qualitative Data Analysis</h4>
+                              </div>
+                              <p className="text-sm text-foreground mb-3">
+                                <strong>Scenario:</strong> Analyze 30 interview transcripts to identify themes and patterns.
+                              </p>
+                              <div className="bg-background p-4 rounded-lg border space-y-2 text-sm">
+                                <p><strong className="text-amber-600">Input:</strong> 30 interview transcript files</p>
+                                <p><strong className="text-amber-600">Prompt:</strong> "Identify key themes, recurring concepts, and emotional tones. Extract significant quotes that represent each theme."</p>
+                                <p><strong className="text-amber-600">Output:</strong> CSV with interview ID, identified themes, sentiment, key quotes</p>
+                                <p className="text-muted-foreground italic pt-2">
+                                  ⏱️ Manual coding: ~40 hours | With AI agent: ~45 minutes
+                                </p>
+                              </div>
                             </div>
-                            <h4 className="text-xl font-bold text-foreground">Qualitative Data Analysis</h4>
                           </div>
-                          <p className="text-sm text-foreground mb-3">
-                            <strong>Scenario:</strong> Analyze 30 interview transcripts to identify themes and patterns.
-                          </p>
-                          <div className="bg-background p-4 rounded-lg border space-y-2 text-sm">
-                            <p><strong className="text-amber-600">Input:</strong> 30 interview transcript files</p>
-                            <p><strong className="text-amber-600">Prompt:</strong> "Identify key themes, recurring concepts, and emotional tones. Extract significant quotes that represent each theme."</p>
-                            <p><strong className="text-amber-600">Output:</strong> CSV with interview ID, identified themes, sentiment, key quotes</p>
-                            <p className="text-muted-foreground italic pt-2">
-                              ⏱️ Manual coding: ~40 hours | With AI agent: ~45 minutes
+
+                          <Alert className="mt-6 border-l-4 border-primary bg-primary/5">
+                            <Info className="h-5 w-5" />
+                            <AlertDescription className="ml-2">
+                              <p className="font-semibold mb-2">💡 The Common Pattern</p>
+                              <p className="text-sm text-foreground">
+                                All these use cases follow the same workflow you practiced in Lab 2:
+                              </p>
+                              <ul className="text-sm text-foreground space-y-1 list-none ml-4 mt-2">
+                                <li><strong>1.</strong> You have multiple files to process</li>
+                                <li><strong>2.</strong> You have a clear prompt/instruction for the AI</li>
+                                <li><strong>3.</strong> You want structured output (CSV, documents, reports)</li>
+                                <li><strong>4.</strong> AI agents automate the entire workflow with one instruction</li>
+                              </ul>
+                            </AlertDescription>
+                          </Alert>
+
+                          <div className="mt-6 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-lg border-2 border-indigo-200 dark:border-indigo-800">
+                            <h5 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                              <Zap className="h-5 w-5 text-indigo-600" />
+                              Your Turn: Think of Your Use Case
+                            </h5>
+                            <p className="text-sm text-foreground mb-4">
+                              What repetitive task in your teaching or research could benefit from this automation pattern?
                             </p>
+                            <div className="bg-background p-4 rounded-lg border space-y-3">
+                              <div>
+                                <p className="text-sm font-semibold text-foreground mb-1">Think about:</p>
+                                <ul className="text-sm text-muted-foreground space-y-1 list-disc ml-6">
+                                  <li>Tasks where you process multiple similar files</li>
+                                  <li>Repetitive analysis or writing work</li>
+                                  <li>Time-consuming manual operations that follow a pattern</li>
+                                  <li>Places where you currently copy-paste between tools</li>
+                                </ul>
+                              </div>
+                              <p className="text-sm text-foreground italic">
+                                Share your ideas during our discussion, and we can explore how to implement them!
+                              </p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </CollapsibleContent>
+                    </Card>
+                  </Collapsible>
+
+                  {/* Module 6: Lab 3 - Literature Review Screening */}
+                  <Collapsible defaultOpen={true} className="mt-6">
+                    <Card className="border-2 border-primary">
+                      <CollapsibleTrigger asChild>
+                        <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
+                          <h3 className="font-semibold text-left flex items-center gap-2 text-xl">
+                            <FileText className="h-6 w-6" />
+                            Module 6: Lab 3 - Literature Review Screening
+                          </h3>
+                          <ChevronDown className="h-5 w-5 flex-shrink-0 transition-transform duration-300 ui-state-open:rotate-180" />
+                        </button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="p-5 bg-card">
+                        <div className="space-y-6">
+                          <div className="bg-gradient-to-r from-cyan-50 to-teal-50 dark:from-cyan-900/20 dark:to-teal-900/20 p-6 rounded-xl border-2">
+                            <h4 className="text-2xl font-bold text-foreground mb-4">🔍 Screen Studies from CSV Data</h4>
+                            <p className="text-foreground mb-4">
+                              In this lab, you'll learn how to automate literature review screening - a critical but time-consuming task in academic research. 
+                              You'll process a CSV file containing study titles and abstracts, using AI to categorize and analyze each study systematically.
+                            </p>
+                            
+                            <Alert className="mb-6 border-l-4 border-cyan-500 bg-cyan-50 dark:bg-cyan-900/20">
+                              <Info className="h-5 w-5 text-cyan-600" />
+                              <AlertDescription className="ml-2">
+                                <p className="font-semibold mb-2">📚 Real-World Context</p>
+                                <p className="text-sm text-foreground">
+                                  The CSV file for this lab contains ~200 studies on BAWE (British Academic Written English) and data-driven learning, 
+                                  obtained from <a href="https://erpp.hkbu.me/search" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-semibold">erpp.hkbu.me/search</a> 
+                                  {" "}(a GUI search engine using Semantic Search and Scopus APIs).
+                                </p>
+                                <p className="text-sm text-foreground mt-2">
+                                  Note: Some abstracts may be missing in the data.
+                                </p>
+                              </AlertDescription>
+                            </Alert>
+
+                            <div className="space-y-6">
+                              <div className="bg-background p-6 rounded-lg border-2">
+                                <h5 className="text-xl font-bold text-foreground mb-4">📋 Lab Task Overview</h5>
+                                
+                                {/* Input Section */}
+                                <div className="bg-cyan-50 dark:bg-cyan-900/20 p-4 rounded-lg border-l-4 border-cyan-600 mb-4">
+                                  <h6 className="font-bold text-foreground mb-2">📥 Input</h6>
+                                  <p className="text-sm text-foreground mb-2">
+                                    CSV file containing study metadata:
+                                  </p>
+                                  <code className="bg-background px-3 py-2 rounded block text-sm">
+                                    Data/Literature/bawe_ddl_studies.csv
+                                  </code>
+                                  <p className="text-xs text-muted-foreground mt-2">
+                                    Contains: Title, Abstract, Authors, Year, Journal (some abstracts may be missing)
+                                  </p>
+                                </div>
+
+                                {/* Process Section */}
+                                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border-l-4 border-blue-600 mb-4">
+                                  <h6 className="font-bold text-foreground mb-2">⚙️ Process</h6>
+                                  <p className="text-sm text-foreground mb-3">
+                                    For the <strong>first 10 studies</strong> in the CSV, ask Builder to:
+                                  </p>
+                                  <ul className="space-y-2 text-sm text-foreground list-none ml-4">
+                                    <li className="flex items-start gap-2">
+                                      <span className="text-blue-600 font-bold">1.</span>
+                                      <span>Read the CSV file and extract the first 10 entries (titles + abstracts)</span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                      <span className="text-blue-600 font-bold">2.</span>
+                                      <span>For each study, send title + abstract to an LLM via API with categorization prompt</span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                      <span className="text-blue-600 font-bold">3.</span>
+                                      <span>Categorize each study based on:</span>
+                                    </li>
+                                    <ul className="ml-6 mt-1 space-y-1 text-xs text-muted-foreground list-disc">
+                                      <li>Study context (educational setting, participants, location)</li>
+                                      <li>Research objective (what question/problem is being addressed)</li>
+                                      <li>Data analyzed (corpus type, data sources)</li>
+                                      <li>Main findings (key results and discoveries)</li>
+                                      <li>Implications (practical applications, recommendations)</li>
+                                    </ul>
+                                    <li className="flex items-start gap-2 mt-2">
+                                      <span className="text-blue-600 font-bold">4.</span>
+                                      <span>Maintain a process log file showing progress (which study is being processed)</span>
+                                    </li>
+                                  </ul>
+                                  <div className="mt-3 p-3 bg-background rounded border">
+                                    <p className="text-xs text-muted-foreground italic">
+                                      <strong>Note:</strong> We're limiting to 10 studies for learning purposes. The same workflow 
+                                      can scale to all 200 studies - just adjust the instruction!
+                                    </p>
+                                  </div>
+                                </div>
+
+                                {/* Output Section */}
+                                <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border-l-4 border-green-600">
+                                  <h6 className="font-bold text-foreground mb-2">📤 Output</h6>
+                                  <div className="space-y-3 text-sm">
+                                    <div>
+                                      <p className="text-foreground font-semibold mb-1">Categorized Results CSV:</p>
+                                      <code className="bg-background px-3 py-2 rounded block text-sm">
+                                        Lab3_Results/screening_results.csv
+                                      </code>
+                                      <p className="text-xs text-muted-foreground mt-1">
+                                        Columns: Title, Authors, Year, Study_Context, Research_Objective, Data_Analyzed, Main_Findings, Implications
+                                      </p>
+                                    </div>
+                                    <div>
+                                      <p className="text-foreground font-semibold mb-1">Process Log:</p>
+                                      <code className="bg-background px-3 py-2 rounded block text-sm">
+                                        Lab3_Results/process_log.txt
+                                      </code>
+                                      <p className="text-xs text-muted-foreground mt-1">
+                                        Tracks progress: "Processing study 1 of 10: [Title]", timestamps, completion status
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="bg-background p-6 rounded-lg border-2">
+                                <h5 className="text-xl font-bold text-foreground mb-4">🎯 Why This Matters</h5>
+                                <div className="grid md:grid-cols-2 gap-4">
+                                  <div className="bg-primary/5 p-4 rounded-lg border">
+                                    <p className="font-semibold text-primary mb-2">⏱️ Time Savings</p>
+                                    <p className="text-sm text-muted-foreground">
+                                      Manual screening: ~30 minutes per study × 200 = <strong>100 hours</strong><br/>
+                                      With AI agent: <strong>~1 hour</strong> for all 200 studies
+                                    </p>
+                                  </div>
+                                  <div className="bg-primary/5 p-4 rounded-lg border">
+                                    <p className="font-semibold text-primary mb-2">🎯 Consistency</p>
+                                    <p className="text-sm text-muted-foreground">
+                                      Same prompt ensures consistent categorization criteria across all studies
+                                    </p>
+                                  </div>
+                                  <div className="bg-primary/5 p-4 rounded-lg border">
+                                    <p className="font-semibold text-primary mb-2">📊 Structured Output</p>
+                                    <p className="text-sm text-muted-foreground">
+                                      CSV format enables easy sorting, filtering, and further analysis in Excel or R
+                                    </p>
+                                  </div>
+                                  <div className="bg-primary/5 p-4 rounded-lg border">
+                                    <p className="font-semibold text-primary mb-2">🔄 Scalability</p>
+                                    <p className="text-sm text-muted-foreground">
+                                      Test with 10, then scale to 200+ studies with the same instruction
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <Alert className="border-l-4 border-amber-500 bg-amber-50 dark:bg-amber-900/20">
+                                <AlertCircle className="h-5 w-5 text-amber-600" />
+                                <AlertDescription className="ml-2">
+                                  <p className="font-semibold mb-2">💡 Handling Missing Data</p>
+                                  <p className="text-sm text-foreground">
+                                    Some studies may have missing abstracts. Instruct Builder to:
+                                  </p>
+                                  <ul className="text-sm text-foreground space-y-1 list-disc ml-6 mt-2">
+                                    <li>Use only the title for categorization when abstract is missing</li>
+                                    <li>Flag studies with missing abstracts in the output</li>
+                                    <li>Note "Abstract not available" in the relevant columns</li>
+                                  </ul>
+                                </AlertDescription>
+                              </Alert>
+
+                              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 p-6 rounded-lg border-2">
+                                <h5 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                                  <Terminal className="h-5 w-5 text-indigo-600" />
+                                  Getting Started
+                                </h5>
+                                <p className="text-sm text-foreground mb-4">
+                                  Reference files have been prepared in your workshop repository:
+                                </p>
+                                <div className="space-y-2 text-sm">
+                                  <div className="bg-background p-3 rounded border">
+                                    <code className="text-xs">Data/lab3_instructions.md</code>
+                                    <p className="text-xs text-muted-foreground mt-1">Complete step-by-step instructions for Builder</p>
+                                  </div>
+                                  <div className="bg-background p-3 rounded border">
+                                    <code className="text-xs">Data/Prompts/lab3_prompt.md</code>
+                                    <p className="text-xs text-muted-foreground mt-1">Categorization prompt to send with each study</p>
+                                  </div>
+                                  <div className="bg-background p-3 rounded border">
+                                    <code className="text-xs">Data/Literature/bawe_ddl_studies.csv</code>
+                                    <p className="text-xs text-muted-foreground mt-1">Sample CSV with ~200 studies (10 will be processed)</p>
+                                  </div>
+                                </div>
+                                <p className="text-sm text-foreground mt-4 italic">
+                                  Open <code className="bg-background px-2 py-1 rounded text-xs">Data/lab3_instructions.md</code> in Trae, 
+                                  then send the file path to Builder to begin!
+                                </p>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-
-                      <Alert className="mt-6 border-l-4 border-primary bg-primary/5">
-                        <Info className="h-5 w-5" />
-                        <AlertDescription className="ml-2">
-                          <p className="font-semibold mb-2">💡 The Common Pattern</p>
-                          <p className="text-sm text-foreground">
-                            All these use cases follow the same workflow you practiced in Lab 2:
-                          </p>
-                          <ul className="text-sm text-foreground space-y-1 list-none ml-4 mt-2">
-                            <li><strong>1.</strong> You have multiple files to process</li>
-                            <li><strong>2.</strong> You have a clear prompt/instruction for the AI</li>
-                            <li><strong>3.</strong> You want structured output (CSV, documents, reports)</li>
-                            <li><strong>4.</strong> AI agents automate the entire workflow with one instruction</li>
-                          </ul>
-                        </AlertDescription>
-                      </Alert>
-
-                      <div className="mt-6 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-lg border-2 border-indigo-200 dark:border-indigo-800">
-                        <h5 className="font-bold text-foreground mb-3 flex items-center gap-2">
-                          <Zap className="h-5 w-5 text-indigo-600" />
-                          Your Turn: Think of Your Use Case
-                        </h5>
-                        <p className="text-sm text-foreground mb-4">
-                          What repetitive task in your teaching or research could benefit from this automation pattern?
-                        </p>
-                        <div className="bg-background p-4 rounded-lg border space-y-3">
-                          <div>
-                            <p className="text-sm font-semibold text-foreground mb-1">Think about:</p>
-                            <ul className="text-sm text-muted-foreground space-y-1 list-disc ml-6">
-                              <li>Tasks where you process multiple similar files</li>
-                              <li>Repetitive analysis or writing work</li>
-                              <li>Time-consuming manual operations that follow a pattern</li>
-                              <li>Places where you currently copy-paste between tools</li>
-                            </ul>
-                          </div>
-                          <p className="text-sm text-foreground italic">
-                            Share your ideas during our discussion, and we can explore how to implement them!
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                      </CollapsibleContent>
+                    </Card>
+                  </Collapsible>
 
                   {/* Workshop Presentation */}
-                  <Card>
+                  <Card className="mt-6">
                     <CardHeader>
                       <CardTitle className="flex items-center justify-between">
                         <span className="flex items-center gap-2">
