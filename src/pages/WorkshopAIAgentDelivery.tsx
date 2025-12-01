@@ -4,10 +4,42 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useEffect, useState } from "react";
 
 const WorkshopAIAgentDelivery = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  const getTabFromHash = (hash: string) => {
+    switch (hash) {
+      case "#prep":
+        return "preparation";
+      case "#act":
+        return "activities";
+      case "#ref":
+        return "reflection";
+      default:
+        return "preparation";
+    }
+  };
+
+  const [activeTab, setActiveTab] = useState(getTabFromHash(location.hash));
+
+  useEffect(() => {
+    setActiveTab(getTabFromHash(location.hash));
+  }, [location.hash]);
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    const hashMap: Record<string, string> = {
+      preparation: "#prep",
+      activities: "#act",
+      reflection: "#ref",
+    };
+    navigate(`${location.pathname}${hashMap[value]}`, { replace: true });
+  };
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
@@ -44,7 +76,7 @@ const WorkshopAIAgentDelivery = () => {
                 </AlertDescription>
               </Alert>
 
-              <Tabs defaultValue="preparation" className="w-full">
+              <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
                 <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger value="preparation">Preparation</TabsTrigger>
                   <TabsTrigger value="activities">Workshop Activities</TabsTrigger>
