@@ -178,14 +178,14 @@ const WorkshopAIAgentDelivery = () => {
                             <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                             <div>
                               <strong>DeepSeek</strong> - <a href="https://platform.deepseek.com/api_keys" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">platform.deepseek.com/api_keys</a>
-                              <p className="text-sm text-muted-foreground mt-1">May require payment</p>
+                              <p className="text-sm text-muted-foreground mt-1">Free credits not available; may require adding funds (USD 5 max)</p>
                             </div>
                           </li>
                           <li className="flex gap-3">
                             <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                             <div>
                               <strong>OpenRouter</strong> - <a href="https://openrouter.ai/settings/keys" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">openrouter.ai/settings/keys</a>
-                              <p className="text-sm text-muted-foreground mt-1">May require payment</p>
+                              <p className="text-sm text-muted-foreground mt-1">Free credits not available; may require adding funds (USD 5 max)</p>
                             </div>
                           </li>
                         </ul>
@@ -1395,7 +1395,8 @@ graph TD
                                 <AlertDescription className="ml-2">
                                   <p className="font-semibold mb-2">💡 Practical Tip</p>
                                   <p className="text-sm text-foreground">
-                                    For this workshop, the free API credits from providers like Kimi (CNY 15) or DeepSeek are more than enough. 
+                                    For this workshop, Kimi provides CNY ¥15 free credits which should be enough for initial practice. 
+                                    DeepSeek and OpenRouter may require adding funds (no more than USD 5). 
                                     You'll typically spend only a few cents per request for most tasks.
                                   </p>
                                 </AlertDescription>
@@ -1511,7 +1512,7 @@ graph TD
                                   <li>Create an account or sign in</li>
                                   <li>Go to API Keys management</li>
                                   <li>Generate a new API key</li>
-                                  <li>Copy the key (Free credits available)</li>
+                                  <li className="text-amber-600 dark:text-amber-400">⚠️ Free credits not available; may need to add funds (no more than USD 5 for experimentation)</li>
                                 </ul>
                               </div>
 
@@ -1522,7 +1523,7 @@ graph TD
                                   <li>Sign up with your account</li>
                                   <li>Navigate to Keys section</li>
                                   <li>Create a new API key</li>
-                                  <li>Copy the key (Approximately RMB/HKD 20 recommended)</li>
+                                  <li className="text-amber-600 dark:text-amber-400">⚠️ Free credits not available; may need to add funds (no more than USD 5 for experimentation)</li>
                                 </ul>
                               </div>
 
@@ -1532,8 +1533,8 @@ graph TD
                                   Cost Estimate:
                                 </p>
                                 <p className="text-sm text-foreground">
-                                  For this workshop, approximately CNY/HKD 20-30 total across all providers should be sufficient 
-                                  for experimentation and practice. Kimi and DeepSeek offer free starting credits.
+                                  For this workshop, you will need approximately USD 5-10 total for experimentation. 
+                                  Kimi offers CNY ¥15 free starting credits. DeepSeek and OpenRouter may require adding funds.
                                 </p>
                               </div>
                             </div>
