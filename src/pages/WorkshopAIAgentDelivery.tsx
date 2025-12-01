@@ -225,6 +225,59 @@ const WorkshopAIAgentDelivery = () => {
                     </CardContent>
                   </Card>
 
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Laptop className="h-5 w-5" />
+                        Clone Workshop Repository
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div>
+                        <h3 className="font-semibold mb-2">Get the Workshop Materials</h3>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          Clone the workshop repository using Trae IDE. Choose the appropriate repository based on your location:
+                        </p>
+                        <ul className="space-y-3 text-foreground">
+                          <li className="flex gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                            <div>
+                              <strong>Mainland China:</strong> <a href="https://gitee.com/simonwanghk/agent3Dec25" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-mono text-sm">https://gitee.com/simonwanghk/agent3Dec25</a>
+                            </div>
+                          </li>
+                          <li className="flex gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                            <div>
+                              <strong>Outside Mainland China:</strong> <a href="https://github.com/tesolchina/Agent3Dec25" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-mono text-sm">https://github.com/tesolchina/Agent3Dec25</a>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div className="p-4 bg-primary/5 rounded-lg border-l-4 border-primary">
+                        <h4 className="font-semibold mb-2">How to Clone in Trae</h4>
+                        <ol className="space-y-2 text-sm">
+                          <li className="flex gap-2">
+                            <span className="font-semibold">1.</span>
+                            <span>Open Trae IDE and log in to your account</span>
+                          </li>
+                          <li className="flex gap-2">
+                            <span className="font-semibold">2.</span>
+                            <span>Use the Git clone feature in Trae</span>
+                          </li>
+                          <li className="flex gap-2">
+                            <span className="font-semibold">3.</span>
+                            <span>Paste the appropriate repository URL (Gitee or GitHub)</span>
+                          </li>
+                          <li className="flex gap-2">
+                            <span className="font-semibold">4.</span>
+                            <span>Wait for the repository to clone and open the project in Trae</span>
+                          </li>
+                        </ol>
+                      </div>
+                    </CardContent>
+                  </Card>
+
                 </TabsContent>
 
                 {/* ACTIVITIES TAB */}
