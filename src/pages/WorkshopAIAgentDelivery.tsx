@@ -1117,6 +1117,308 @@ graph TD
                     </Card>
                   </Collapsible>
 
+                  {/* Break & Reflection Section */}
+                  <Card className="border-2 border-amber-500 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2 text-amber-900 dark:text-amber-100">
+                        <ChevronUp className="h-5 w-5" />
+                        Take a Break - Let's Reflect
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <Alert className="border-l-4 border-amber-500 bg-amber-100 dark:bg-amber-900/30">
+                        <CheckCircle2 className="h-5 w-5 text-amber-600" />
+                        <AlertDescription className="ml-2">
+                          <p className="font-semibold mb-2">⏸️ Pause and Catch Up</p>
+                          <p className="text-sm text-foreground">
+                            This is a good moment to take a short break. Try completing the Lab 1 exercise if you haven't already. 
+                            Ask questions, help others, and make sure everyone is following along.
+                          </p>
+                        </AlertDescription>
+                      </Alert>
+
+                      <div className="bg-background p-6 rounded-lg border-2">
+                        <h4 className="text-xl font-bold text-foreground mb-4">🎯 What We've Learned So Far</h4>
+                        <p className="text-foreground mb-4">
+                          Let's reiterate the key differences between chatbots and AI agents:
+                        </p>
+
+                        <div className="grid md:grid-cols-2 gap-4">
+                          {/* Chatbot Column */}
+                          <div className="bg-muted/50 p-4 rounded-lg border">
+                            <h5 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                              <MessageSquare className="h-5 w-5 text-blue-600" />
+                              Chatbot (Browser-Based)
+                            </h5>
+                            <ul className="space-y-2 text-sm text-foreground list-none">
+                              <li className="flex items-start gap-2">
+                                <span className="text-muted-foreground">•</span>
+                                <span>Intuitive, natural language interface</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <span className="text-muted-foreground">•</span>
+                                <span>Context switching between browser and work environment</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <span className="text-muted-foreground">•</span>
+                                <span>Produces multimodal <strong>textual responses</strong> only</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <span className="text-muted-foreground">•</span>
+                                <span>You copy-paste code and results manually</span>
+                              </li>
+                            </ul>
+                          </div>
+
+                          {/* AI Agent Column */}
+                          <div className="bg-primary/10 p-4 rounded-lg border-2 border-primary">
+                            <h5 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                              <Zap className="h-5 w-5 text-primary" />
+                              AI Agent (IDE-Based)
+                            </h5>
+                            <ul className="space-y-2 text-sm text-foreground list-none">
+                              <li className="flex items-start gap-2">
+                                <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                                <span>Natural language <strong>plus more</strong> - embedded in context</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                                <span>AI is part of your workflow, no context switching</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                                <span><strong>Can autonomously take actions:</strong> read/edit files, search web, run scripts</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                                <span>Handles technical operations without you learning CLI</span>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+
+                        <blockquote className="border-l-4 border-primary pl-4 italic text-foreground mt-4">
+                          "The key insight: Large Language Models can now <strong>take actions on files and folders</strong>, not just produce text."
+                        </blockquote>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Module 4: API Keys and Multiple Files */}
+                  <Collapsible defaultOpen={false}>
+                    <Card>
+                      <CardHeader>
+                        <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80 transition-opacity">
+                          <div className="flex items-center gap-2">
+                            <Terminal className="h-5 w-5" />
+                            <CardTitle>Module 4: Setting Up API Keys & Sending Multiple Files</CardTitle>
+                          </div>
+                          <ChevronDown className="h-5 w-5 transition-transform duration-200 data-[state=open]:rotate-180" />
+                        </CollapsibleTrigger>
+                        <p className="text-lg text-muted-foreground mt-2">
+                          Connect to LLM services and scale up your AI agent capabilities
+                        </p>
+                      </CardHeader>
+                      <CollapsibleContent>
+                        <CardContent className="space-y-6">
+                          {/* Introduction to APIs */}
+                          <div className="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 p-6 rounded-xl border-2">
+                            <h4 className="text-xl font-bold text-foreground mb-4">🔌 Understanding APIs: The Bridge Between Programs</h4>
+                            
+                            <div className="space-y-4">
+                              <div className="bg-background p-4 rounded-lg border">
+                                <h5 className="font-bold text-foreground mb-2">What is an API?</h5>
+                                <p className="text-sm text-foreground mb-3">
+                                  <strong>API (Application Programming Interface)</strong> is a way for computer programs to communicate with services, 
+                                  like servers that run Large Language Models (LLMs).
+                                </p>
+                                <p className="text-sm text-foreground">
+                                  Think of it as a <strong>messenger</strong> that takes requests from your program (Builder in Trae) and delivers 
+                                  them to the AI service provider, then brings back the response.
+                                </p>
+                              </div>
+
+                              <div className="grid md:grid-cols-2 gap-4">
+                                {/* GUI vs API */}
+                                <div className="bg-background p-4 rounded-lg border">
+                                  <h5 className="font-bold text-foreground mb-2 flex items-center gap-2">
+                                    <span className="text-blue-600">🖱️</span>
+                                    GUI (Graphical User Interface)
+                                  </h5>
+                                  <ul className="space-y-1 text-sm text-foreground list-none">
+                                    <li className="flex items-start gap-2">
+                                      <span className="text-muted-foreground">•</span>
+                                      <span>Visual interface with buttons and menus</span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                      <span className="text-muted-foreground">•</span>
+                                      <span>Designed for <strong>human interaction</strong></span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                      <span className="text-muted-foreground">•</span>
+                                      <span>You click, type, and navigate manually</span>
+                                    </li>
+                                  </ul>
+                                </div>
+
+                                <div className="bg-primary/10 p-4 rounded-lg border-2 border-primary">
+                                  <h5 className="font-bold text-foreground mb-2 flex items-center gap-2">
+                                    <span className="text-primary">⚡</span>
+                                    API (Application Programming Interface)
+                                  </h5>
+                                  <ul className="space-y-1 text-sm text-foreground list-none">
+                                    <li className="flex items-start gap-2">
+                                      <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                                      <span>Code-based interface</span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                      <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                                      <span>Designed for <strong>program-to-program communication</strong></span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                      <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                                      <span>Enables automation and scaling</span>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* API Keys Explained */}
+                          <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-6 rounded-xl border-2">
+                            <h4 className="text-xl font-bold text-foreground mb-4">🔑 What is an API Key?</h4>
+                            
+                            <div className="space-y-4">
+                              <p className="text-foreground">
+                                An <strong>API key</strong> is like a password that allows your program (or Builder) to access an AI service provider's servers. 
+                                It tells the service "this request is authorized and should be processed."
+                              </p>
+
+                              <div className="bg-background p-4 rounded-lg border">
+                                <h5 className="font-bold text-foreground mb-2">Why Do We Need API Keys?</h5>
+                                <ul className="space-y-2 text-sm text-foreground list-none">
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-purple-600 font-bold">1.</span>
+                                    <span><strong>Authentication:</strong> Proves that you're an authorized user of the service</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-purple-600 font-bold">2.</span>
+                                    <span><strong>Usage Tracking:</strong> The service knows how much you've used and can bill accordingly</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-purple-600 font-bold">3.</span>
+                                    <span><strong>Rate Limiting:</strong> Prevents abuse by limiting how many requests you can make</span>
+                                  </li>
+                                </ul>
+                              </div>
+
+                              <Alert className="border-l-4 border-purple-500 bg-purple-50 dark:bg-purple-900/20">
+                                <Terminal className="h-5 w-5 text-purple-600" />
+                                <AlertDescription className="ml-2">
+                                  <p className="font-semibold mb-2">🔐 Keep Your API Keys Secure!</p>
+                                  <p className="text-sm text-foreground">
+                                    API keys are like passwords - never share them publicly or commit them to public repositories. 
+                                    Treat them as sensitive credentials.
+                                  </p>
+                                </AlertDescription>
+                              </Alert>
+                            </div>
+                          </div>
+
+                          {/* Tokens and Computing Power */}
+                          <div className="bg-gradient-to-r from-green-50 to-teal-50 dark:from-green-900/20 dark:to-teal-900/20 p-6 rounded-xl border-2">
+                            <h4 className="text-xl font-bold text-foreground mb-4">🪙 Understanding Tokens and Computing Power</h4>
+                            
+                            <div className="space-y-4">
+                              <div className="bg-background p-4 rounded-lg border">
+                                <h5 className="font-bold text-foreground mb-2">What are Tokens?</h5>
+                                <p className="text-sm text-foreground mb-3">
+                                  <strong>Tokens</strong> are the basic units that LLMs use to process text. Think of them as "chunks" of text:
+                                </p>
+                                <ul className="space-y-2 text-sm text-foreground list-none ml-4">
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-green-600">•</span>
+                                    <span>1 token ≈ 4 characters or ≈ 0.75 words in English</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-green-600">•</span>
+                                    <span>"Hello, world!" ≈ 3-4 tokens</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-green-600">•</span>
+                                    <span>A typical paragraph ≈ 100-150 tokens</span>
+                                  </li>
+                                </ul>
+                              </div>
+
+                              <div className="bg-background p-4 rounded-lg border">
+                                <h5 className="font-bold text-foreground mb-2">Why Do Tokens Matter?</h5>
+                                <p className="text-sm text-foreground mb-3">
+                                  AI service providers charge based on the number of tokens processed:
+                                </p>
+                                <div className="grid md:grid-cols-2 gap-3">
+                                  <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded border">
+                                    <p className="text-xs font-bold text-foreground mb-1">Input Tokens</p>
+                                    <p className="text-xs text-foreground">What you send to the AI (your prompt + context)</p>
+                                  </div>
+                                  <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded border">
+                                    <p className="text-xs font-bold text-foreground mb-1">Output Tokens</p>
+                                    <p className="text-xs text-foreground">What the AI generates and sends back</p>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="bg-background p-4 rounded-lg border">
+                                <h5 className="font-bold text-foreground mb-2">Computing Power and Cost</h5>
+                                <p className="text-sm text-foreground mb-2">
+                                  Running Large Language Models requires significant computing resources:
+                                </p>
+                                <ul className="space-y-2 text-sm text-foreground list-none ml-4">
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-green-600">•</span>
+                                    <span><strong>More tokens = More computation = Higher cost</strong></span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-green-600">•</span>
+                                    <span>More powerful models (like GPT-5 or Claude) cost more per token</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-green-600">•</span>
+                                    <span>Most providers offer free credits to get started (~$5-20 worth)</span>
+                                  </li>
+                                </ul>
+                              </div>
+
+                              <Alert className="border-l-4 border-green-600 bg-green-50 dark:bg-green-900/20">
+                                <CheckCircle2 className="h-5 w-5 text-green-600" />
+                                <AlertDescription className="ml-2">
+                                  <p className="font-semibold mb-2">💡 Practical Tip</p>
+                                  <p className="text-sm text-foreground">
+                                    For this workshop, the free API credits from providers like Kimi (CNY 15) or DeepSeek are more than enough. 
+                                    You'll typically spend only a few cents per request for most tasks.
+                                  </p>
+                                </AlertDescription>
+                              </Alert>
+                            </div>
+                          </div>
+
+                          {/* Setting Up API Keys - Coming in hands-on activity */}
+                          <Alert className="border-l-4 border-primary bg-primary/5">
+                            <Terminal className="h-5 w-5 text-primary" />
+                            <AlertDescription className="ml-2">
+                              <p className="font-semibold mb-2">⏭️ Next Steps</p>
+                              <p className="text-sm text-foreground">
+                                In the next hands-on activity, we'll guide you through setting up your API keys in Trae and 
+                                using Builder to work with multiple files simultaneously. This will unlock more powerful workflows!
+                              </p>
+                            </AlertDescription>
+                          </Alert>
+                        </CardContent>
+                      </CollapsibleContent>
+                    </Card>
+                  </Collapsible>
+
                   {/* Workshop Presentation */}
                   <Card>
                     <CardHeader>
