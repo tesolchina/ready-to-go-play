@@ -197,12 +197,38 @@ const WorkshopAIAgentDelivery = () => {
 
                 {/* ACTIVITIES TAB */}
                 <TabsContent value="activities" className="space-y-6">
-                  <Alert>
-                    <Lightbulb className="h-4 w-4" />
-                    <AlertDescription>
-                      <strong>Work in Progress:</strong> Workshop activities are being finalized. Please check back soon for updates!
-                    </AlertDescription>
-                  </Alert>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center justify-between">
+                        <span className="flex items-center gap-2">
+                          <Lightbulb className="h-5 w-5" />
+                          Workshop Activities
+                        </span>
+                        <Button variant="outline" size="sm" asChild>
+                          <a 
+                            href="https://www.canva.cn/design/DAG5alUXgk8/H473seyr_viIf66Rs_vyUg/edit?utm_content=DAG5alUXgk8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                          >
+                            Edit (Workshop Leader)
+                          </a>
+                        </Button>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="aspect-video w-full">
+                        <iframe
+                          loading="lazy"
+                          className="w-full h-full border-0 rounded-lg"
+                          src="https://www.canva.cn/design/DAG5alUXgk8/E5fFCmHYMgZd3mbNyKAUbg/view?embed"
+                          allow="fullscreen"
+                        />
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-4">
+                        Follow along with the presentation during the workshop. Use the navigation controls to move through the slides.
+                      </p>
+                    </CardContent>
+                  </Card>
                 </TabsContent>
 
                 {/* REFLECTION TAB */}
