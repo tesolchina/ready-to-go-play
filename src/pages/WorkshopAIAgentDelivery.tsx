@@ -1736,52 +1736,115 @@ graph LR
 
                             {/* Lab Instructions */}
                             <div className="space-y-6">
+                              {/* Step 1: Create the Prompt File */}
                               <div className="bg-background p-6 rounded-lg border-2">
-                                <h5 className="text-xl font-bold text-foreground mb-4">📋 Lab Task Overview</h5>
+                                <h5 className="text-xl font-bold text-foreground mb-4">📝 Step 1: Create Your Prompt File</h5>
                                 <p className="text-foreground mb-4">
-                                  You'll use the Input-Process-Output model to instruct Builder to analyze 5 text files from the BAWE corpus using an LLM API.
+                                  First, update the file <code className="bg-muted px-2 py-1 rounded">Lab2 Analyze BAWE in batches/prompt.md</code> with your analysis instructions.
+                                </p>
+                                
+                                <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg border-l-4 border-amber-500 mb-4">
+                                  <h6 className="font-bold text-foreground mb-2">💡 Example Prompts</h6>
+                                  <div className="space-y-3">
+                                    <div className="bg-background p-3 rounded border">
+                                      <p className="text-xs text-muted-foreground mb-1">Summary task:</p>
+                                      <code className="text-sm text-foreground block">
+                                        You are an experienced reader of academic texts. Please write a summary of no more than 50 words for the essay provided.
+                                      </code>
+                                    </div>
+                                    <div className="bg-background p-3 rounded border">
+                                      <p className="text-xs text-muted-foreground mb-1">Structure analysis:</p>
+                                      <code className="text-sm text-foreground block">
+                                        Identify the main argument, supporting evidence, and conclusion of this academic essay.
+                                      </code>
+                                    </div>
+                                    <div className="bg-background p-3 rounded border">
+                                      <p className="text-xs text-muted-foreground mb-1">Vocabulary extraction:</p>
+                                      <code className="text-sm text-foreground block">
+                                        List the key academic vocabulary used in this essay with their definitions.
+                                      </code>
+                                    </div>
+                                  </div>
+                                  <p className="text-xs text-muted-foreground mt-3 italic">
+                                    You can use any analysis task you find interesting!
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Step 2: Update Instructions File */}
+                              <div className="bg-background p-6 rounded-lg border-2">
+                                <h5 className="text-xl font-bold text-foreground mb-4">📋 Step 2: Update the Instructions File</h5>
+                                <p className="text-foreground mb-4">
+                                  Edit <code className="bg-muted px-2 py-1 rounded">Lab2 Analyze BAWE in batches/instructions.md</code> with the Input-Process-Output structure:
                                 </p>
 
                                 {/* Input Section */}
                                 <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg border-l-4 border-purple-600 mb-4">
                                   <h6 className="font-bold text-foreground mb-2">📥 Input</h6>
-                                  <p className="text-sm text-foreground mb-2">
-                                    Folder path containing the text files to analyze:
-                                  </p>
-                                  <code className="bg-background px-3 py-2 rounded block text-sm">
-                                    Data/BAWE/CORPUS_ByDiscipline
-                                  </code>
+                                  <p className="text-sm text-foreground mb-3">Include these three file paths:</p>
+                                  <ul className="space-y-2 text-sm text-foreground list-none">
+                                    <li className="flex items-start gap-2">
+                                      <span className="text-purple-600 font-bold">1.</span>
+                                      <div>
+                                        <span className="font-semibold">Prompt file:</span>
+                                        <code className="bg-background px-2 py-1 rounded block mt-1 text-xs">
+                                          Lab2 Analyze BAWE in batches/prompt.md
+                                        </code>
+                                      </div>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                      <span className="text-purple-600 font-bold">2.</span>
+                                      <div>
+                                        <span className="font-semibold">Data folder</span> (pick ONE subfolder):
+                                        <code className="bg-background px-2 py-1 rounded block mt-1 text-xs">
+                                          Data/BAWE/CORPUS_ByDiscipline/[subfolder name]
+                                        </code>
+                                      </div>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                      <span className="text-purple-600 font-bold">3.</span>
+                                      <div>
+                                        <span className="font-semibold">API key file</span> (pick ONE):
+                                        <code className="bg-background px-2 py-1 rounded block mt-1 text-xs">
+                                          Data/APIkeys/Kimi.md OR Data/APIkeys/DeepSeek.md OR Data/APIkeys/openrouter.md
+                                        </code>
+                                      </div>
+                                    </li>
+                                  </ul>
                                 </div>
 
                                 {/* Process Section */}
                                 <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border-l-4 border-blue-600 mb-4">
                                   <h6 className="font-bold text-foreground mb-2">⚙️ Process</h6>
                                   <p className="text-sm text-foreground mb-3">
-                                    Ask Builder to:
+                                    Ask the AI agent to:
                                   </p>
                                   <ul className="space-y-2 text-sm text-foreground list-none ml-4">
                                     <li className="flex items-start gap-2">
                                       <span className="text-blue-600 font-bold">1.</span>
-                                      <span>Select 5 text files from the CORPUS_ByDiscipline folder</span>
+                                      <span>Pick the <strong>first 5 files</strong> from the specified subfolder (or randomly select 5 files)</span>
                                     </li>
                                     <li className="flex items-start gap-2">
                                       <span className="text-blue-600 font-bold">2.</span>
-                                      <span>Send each file <strong>one at a time</strong> to an LLM (using your API key)</span>
+                                      <span>Send each file <strong>one at a time</strong> together with the prompt to the LLM via API</span>
                                     </li>
                                     <li className="flex items-start gap-2">
                                       <span className="text-blue-600 font-bold">3.</span>
-                                      <span>Include a prompt file (to be created separately) that asks the LLM to analyze the text</span>
+                                      <span>Collect the LLM response for each file</span>
                                     </li>
                                     <li className="flex items-start gap-2">
                                       <span className="text-blue-600 font-bold">4.</span>
-                                      <span>Collect the responses from the LLM for each file</span>
+                                      <span>Save the metadata, original essay text, and AI response to a CSV file</span>
                                     </li>
                                   </ul>
-                                  <div className="mt-3 p-3 bg-background rounded border">
-                                    <p className="text-xs text-muted-foreground italic">
-                                      <strong>Tip:</strong> Create a prompt.md file that contains your analysis instructions 
-                                      (e.g., "Summarize the main argument of this academic text in 2-3 sentences and identify the discipline.")
-                                    </p>
+                                  
+                                  <div className="mt-4 p-3 bg-background rounded border">
+                                    <p className="text-xs font-semibold text-foreground mb-2">🔧 API-Specific Notes:</p>
+                                    <ul className="text-xs text-muted-foreground space-y-1">
+                                      <li>• <strong>Kimi / DeepSeek:</strong> No need to specify model name</li>
+                                      <li>• <strong>OpenRouter:</strong> Specify a model, e.g., <code className="bg-muted px-1 rounded">z-ai/glm-4.6</code></li>
+                                      <li>• Find OpenRouter models at: <a href="https://openrouter.ai/models" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">openrouter.ai/models</a></li>
+                                    </ul>
                                   </div>
                                 </div>
 
@@ -1789,14 +1852,19 @@ graph LR
                                 <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border-l-4 border-green-600">
                                   <h6 className="font-bold text-foreground mb-2">📤 Output</h6>
                                   <p className="text-sm text-foreground mb-2">
-                                    Save all LLM responses to a CSV file:
+                                    Specify the folder path where the CSV should be saved:
                                   </p>
                                   <code className="bg-background px-3 py-2 rounded block text-sm">
-                                    Lab2_Results/analysis_results.csv
+                                    Lab2_Results/
                                   </code>
-                                  <p className="text-xs text-muted-foreground mt-2">
-                                    The CSV should include columns: File Name, Original Text (excerpt), LLM Analysis
+                                  <p className="text-xs text-muted-foreground mt-3">
+                                    <strong>CSV should include:</strong>
                                   </p>
+                                  <ul className="text-xs text-muted-foreground mt-1 space-y-1 list-disc list-inside ml-2">
+                                    <li>File metadata (filename, discipline, etc.)</li>
+                                    <li>Original essay text</li>
+                                    <li>AI summary/response</li>
+                                  </ul>
                                 </div>
                               </div>
 
