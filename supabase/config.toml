@@ -69,7 +69,6 @@ verify_jwt = false
 [functions.send-confirmation-email]
 verify_jwt = false
 
-
 [functions.extract-text-from-image]
 verify_jwt = false
 
@@ -85,3 +84,5 @@ verify_jwt = false
 [functions.reset-password]
 verify_jwt = false
 
+[functions.workshop-use-case-chat]
+verify_jwt = false
