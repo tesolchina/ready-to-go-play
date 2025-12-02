@@ -2792,13 +2792,13 @@ graph LR
                             <div className="bg-background p-4 rounded-lg border-2 mb-4">
                               <h6 className="font-bold text-foreground mb-3 flex items-center gap-2">
                                 <span className="bg-cyan-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">A</span>
-                                Clone the Repository with Trae
+                                Clone the Repository to Lab4 Folder
                               </h6>
                               <p className="text-sm text-foreground mb-3">
-                                Open Trae and ask the AI agent (Builder) to clone the OpenRouter Hub repository:
+                                Open Trae and ask the AI agent (Builder) to clone the OpenRouter Hub repository into a Lab4 folder:
                               </p>
                               <div className="bg-muted p-3 rounded border font-mono text-sm mb-3">
-                                <p className="text-foreground">Clone this repository: https://github.com/tesolchina/openrouter-hub</p>
+                                <p className="text-foreground">Clone https://github.com/tesolchina/openrouter-hub into a folder called Lab4</p>
                               </div>
                               <p className="text-xs text-muted-foreground">
                                 This gives you the full source code to explore and understand the project structure.
@@ -2809,14 +2809,14 @@ graph LR
                             <div className="bg-background p-4 rounded-lg border-2 mb-4">
                               <h6 className="font-bold text-foreground mb-3 flex items-center gap-2">
                                 <span className="bg-cyan-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">B</span>
-                                Ask for More Info & Brainstorming
+                                Provide Folder Path & Ask for Info
                               </h6>
                               <p className="text-sm text-foreground mb-3">
-                                Once cloned, ask the AI agent to help you understand and brainstorm:
+                                Once cloned, provide the folder path and ask the AI agent to help you understand and brainstorm:
                               </p>
                               <div className="space-y-2">
                                 <div className="bg-muted p-3 rounded border font-mono text-xs">
-                                  <p className="text-foreground">"Explain the structure of this project. What are the main components and how do they work together?"</p>
+                                  <p className="text-foreground">"Look at the project in [paste your Lab4 folder path]. Explain the structure and how the components work together."</p>
                                 </div>
                                 <div className="bg-muted p-3 rounded border font-mono text-xs">
                                   <p className="text-foreground">"What are some creative ways I could modify this app for educational purposes?"</p>
@@ -2827,20 +2827,51 @@ graph LR
                               </div>
                             </div>
 
-                            {/* Step C: Remix and Implement */}
+                            {/* Step C: Two Development Paths */}
                             <div className="bg-background p-4 rounded-lg border-2">
                               <h6 className="font-bold text-foreground mb-3 flex items-center gap-2">
                                 <span className="bg-cyan-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">C</span>
-                                Remix in Lovable & Implement Ideas
+                                Two Ways to Further Develop
                               </h6>
-                              <p className="text-sm text-foreground mb-3">
-                                Now that you understand the project, go back to Lovable and remix it. Use your brainstormed ideas to customize:
+                              <p className="text-sm text-foreground mb-4">
+                                Choose your preferred development approach:
                               </p>
-                              <ul className="text-sm text-foreground space-y-1 list-disc ml-6">
-                                <li>Add specific model presets for your teaching context</li>
-                                <li>Customize prompts for your students' needs</li>
-                                <li>Add new UI elements based on your brainstorming</li>
-                              </ul>
+                              
+                              <div className="grid md:grid-cols-2 gap-4">
+                                {/* Option 1: Lovable Direct */}
+                                <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg border-2 border-purple-300 dark:border-purple-700">
+                                  <h6 className="font-bold text-foreground mb-2 flex items-center gap-2">
+                                    <Monitor className="h-5 w-5 text-purple-600" />
+                                    Option 1: Talk to Lovable
+                                  </h6>
+                                  <p className="text-sm text-foreground mb-2">
+                                    Work directly in the Lovable interface:
+                                  </p>
+                                  <ul className="text-xs text-foreground space-y-1 list-disc ml-4">
+                                    <li>Remix the project on Lovable</li>
+                                    <li>Describe changes in natural language</li>
+                                    <li>Lovable writes and deploys code for you</li>
+                                    <li>Instant preview and iteration</li>
+                                  </ul>
+                                </div>
+
+                                {/* Option 2: GitHub + IDE */}
+                                <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border-2 border-green-300 dark:border-green-700">
+                                  <h6 className="font-bold text-foreground mb-2 flex items-center gap-2">
+                                    <GitBranch className="h-5 w-5 text-green-600" />
+                                    Option 2: GitHub + AI Agent in IDE
+                                  </h6>
+                                  <p className="text-sm text-foreground mb-2">
+                                    Clone your Lovable project via GitHub:
+                                  </p>
+                                  <ul className="text-xs text-foreground space-y-1 list-disc ml-4">
+                                    <li>Clone your remixed repo from GitHub</li>
+                                    <li>Ask AI agent in Trae to write code</li>
+                                    <li><strong>Commit and push</strong> your changes</li>
+                                    <li>Lovable auto-syncs with GitHub!</li>
+                                  </ul>
+                                </div>
+                              </div>
                             </div>
 
                             <Alert className="mt-4 border-l-4 border-cyan-500 bg-cyan-50 dark:bg-cyan-900/20">
@@ -2848,7 +2879,7 @@ graph LR
                               <AlertDescription className="ml-2">
                                 <p className="font-semibold mb-1">The Vibe Coding Workflow</p>
                                 <p className="text-sm text-foreground">
-                                  Use Trae to understand and explore code → Use Lovable to quickly implement and deploy changes → Iterate between both tools!
+                                  Use Trae to understand and explore code → Choose your development path → Changes sync automatically between GitHub and Lovable!
                                 </p>
                               </AlertDescription>
                             </Alert>
