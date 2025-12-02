@@ -827,6 +827,36 @@ export type Database = {
           },
         ]
       }
+      workshop_interest_submissions: {
+        Row: {
+          additional_notes: string | null
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          institution: string | null
+          interests: Json
+        }
+        Insert: {
+          additional_notes?: string | null
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          institution?: string | null
+          interests?: Json
+        }
+        Update: {
+          additional_notes?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          institution?: string | null
+          interests?: Json
+        }
+        Relationships: []
+      }
       workshop_registration_clicks: {
         Row: {
           clicked_at: string
