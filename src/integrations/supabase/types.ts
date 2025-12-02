@@ -851,6 +851,30 @@ export type Database = {
         }
         Relationships: []
       }
+      workshop_shared_conversations: {
+        Row: {
+          chat_history: Json
+          created_at: string
+          id: string
+          nickname: string
+          use_case_summary: string
+        }
+        Insert: {
+          chat_history: Json
+          created_at?: string
+          id?: string
+          nickname: string
+          use_case_summary: string
+        }
+        Update: {
+          chat_history?: Json
+          created_at?: string
+          id?: string
+          nickname?: string
+          use_case_summary?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
