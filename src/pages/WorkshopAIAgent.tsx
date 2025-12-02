@@ -41,9 +41,9 @@ const WorkshopAIAgent = () => {
       <div className="flex min-h-screen w-full">
         <AppSidebar />
         <main className="flex-1 bg-background">
-          <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4 lg:hidden">
+          <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4">
             <SidebarTrigger />
-            <h2 className="text-lg font-semibold">Workshop</h2>
+            <h2 className="text-lg font-semibold lg:hidden">Workshop</h2>
           </header>
           <div className="p-8">
             <div className="max-w-4xl mx-auto space-y-8">
