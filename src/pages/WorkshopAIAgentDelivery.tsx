@@ -2711,6 +2711,118 @@ graph LR
 
                 {/* REFLECTION TAB */}
                 <TabsContent value="reflection" className="space-y-6">
+                  {/* Platform Vision Diagram */}
+                  <Card className="border-2 border-indigo-300 dark:border-indigo-700 overflow-hidden">
+                    <CardHeader className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+                      <CardTitle className="flex items-center gap-2 text-xl">
+                        <Cpu className="h-6 w-6" />
+                        Integrated Platform for Teaching & Research
+                      </CardTitle>
+                      <p className="text-sm text-indigo-100">
+                        One platform powered by LLMs to support your academic work
+                      </p>
+                    </CardHeader>
+                    <CardContent className="p-6">
+                      {/* Central LLM Core */}
+                      <div className="text-center mb-6">
+                        <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-full shadow-lg">
+                          <Sparkles className="h-5 w-5" />
+                          <span className="font-bold">LLM-Powered Core</span>
+                          <Sparkles className="h-5 w-5" />
+                        </div>
+                      </div>
+
+                      {/* Two Module Toggles */}
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {/* Teaching Module */}
+                        <Collapsible defaultOpen className="group">
+                          <CollapsibleTrigger className="w-full">
+                            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-100 to-cyan-100 dark:from-blue-900/30 dark:to-cyan-900/30 rounded-lg border-2 border-blue-300 dark:border-blue-700 hover:shadow-md transition-all">
+                              <div className="flex items-center gap-3">
+                                <div className="p-2 bg-blue-500 text-white rounded-lg">
+                                  <GraduationCap className="h-6 w-6" />
+                                </div>
+                                <div className="text-left">
+                                  <h4 className="font-bold text-foreground">Teaching Module</h4>
+                                  <p className="text-xs text-muted-foreground">Student engagement & analytics</p>
+                                </div>
+                              </div>
+                              <ChevronDown className="h-5 w-5 text-blue-600 transition-transform group-data-[state=open]:rotate-180" />
+                            </div>
+                          </CollapsibleTrigger>
+                          <CollapsibleContent>
+                            <div className="mt-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 space-y-3">
+                              <div className="flex items-start gap-3">
+                                <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">1</div>
+                                <div>
+                                  <p className="font-semibold text-sm text-foreground">Develop Learning Apps</p>
+                                  <p className="text-xs text-muted-foreground">Create custom AI-powered learning experiences for your students</p>
+                                </div>
+                              </div>
+                              <div className="flex items-start gap-3">
+                                <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">2</div>
+                                <div>
+                                  <p className="font-semibold text-sm text-foreground">Student Engagement</p>
+                                  <p className="text-xs text-muted-foreground">Interactive content, quizzes, and personalized feedback</p>
+                                </div>
+                              </div>
+                              <div className="flex items-start gap-3">
+                                <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">3</div>
+                                <div>
+                                  <p className="font-semibold text-sm text-foreground">Learning Analytics</p>
+                                  <p className="text-xs text-muted-foreground">Access chat history, track progress, and analyze student data</p>
+                                </div>
+                              </div>
+                            </div>
+                          </CollapsibleContent>
+                        </Collapsible>
+
+                        {/* Research Module */}
+                        <Collapsible defaultOpen className="group">
+                          <CollapsibleTrigger className="w-full">
+                            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-lg border-2 border-purple-300 dark:border-purple-700 hover:shadow-md transition-all">
+                              <div className="flex items-center gap-3">
+                                <div className="p-2 bg-purple-500 text-white rounded-lg">
+                                  <Microscope className="h-6 w-6" />
+                                </div>
+                                <div className="text-left">
+                                  <h4 className="font-bold text-foreground">Research Module</h4>
+                                  <p className="text-xs text-muted-foreground">Literature & paper assistance</p>
+                                </div>
+                              </div>
+                              <ChevronDown className="h-5 w-5 text-purple-600 transition-transform group-data-[state=open]:rotate-180" />
+                            </div>
+                          </CollapsibleTrigger>
+                          <CollapsibleContent>
+                            <div className="mt-3 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800 space-y-3">
+                              <div className="flex items-start gap-3">
+                                <div className="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">1</div>
+                                <div>
+                                  <p className="font-semibold text-sm text-foreground">Literature Management</p>
+                                  <p className="text-xs text-muted-foreground">Upload, organize, and search your research papers</p>
+                                </div>
+                              </div>
+                              <div className="flex items-start gap-3">
+                                <div className="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">2</div>
+                                <div>
+                                  <p className="font-semibold text-sm text-foreground">Draft Paper Assistance</p>
+                                  <p className="text-xs text-muted-foreground">AI-powered writing support for manuscripts</p>
+                                </div>
+                              </div>
+                              <div className="flex items-start gap-3">
+                                <div className="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">3</div>
+                                <div>
+                                  <p className="font-semibold text-sm text-foreground">Pedagogical Research</p>
+                                  <p className="text-xs text-muted-foreground">Use student data for educational research studies</p>
+                                </div>
+                              </div>
+                            </div>
+                          </CollapsibleContent>
+                        </Collapsible>
+                      </div>
+                    </CardContent>
+                  </Card>
+
                   {/* Platform Interest Form */}
                   <div className="grid lg:grid-cols-2 gap-6">
                     <WorkshopInterestForm />
