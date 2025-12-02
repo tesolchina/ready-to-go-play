@@ -2712,19 +2712,42 @@ graph LR
                 {/* REFLECTION TAB */}
                 <TabsContent value="reflection" className="space-y-4">
                   {/* Workshop Summary - At the top */}
-                  <Alert className="border-l-4 border-primary">
-                    <Lightbulb className="h-4 w-4" />
-                    <AlertDescription>
-                      <p className="font-semibold mb-2">What We Covered Today</p>
-                      <ul className="text-sm space-y-1 list-disc ml-4">
-                        <li>AI Agents vs Chatbots: Understanding the difference</li>
-                        <li>Setting up Trae IDE and API keys</li>
-                        <li>Input-Process-Output framework for batch processing</li>
-                        <li>Lab exercises: BAWE corpus analysis and literature screening</li>
-                        <li>Real-world applications for teaching and research</li>
+                  <Card className="overflow-hidden">
+                    <div className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4">
+                      <h3 className="font-semibold text-lg flex items-center gap-2">
+                        <Lightbulb className="h-5 w-5" />
+                        What We Covered Today
+                      </h3>
+                    </div>
+                    <CardContent className="p-4">
+                      <ul className="space-y-2">
+                        <li className="flex items-start gap-2">
+                          <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                          <span>AI Agents vs Chatbots: Understanding the difference</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                          <span>Setting up Trae IDE and API keys</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                          <span>Input-Process-Output framework for batch processing</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                          <span>Lab exercises: BAWE corpus analysis and literature screening</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                          <span>Vibe Coding: Building apps with natural language</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                          <span>Real-world applications for teaching and research</span>
+                        </li>
                       </ul>
-                    </AlertDescription>
-                  </Alert>
+                    </CardContent>
+                  </Card>
 
                   {/* Platform Vision Diagram */}
                   <Card className="border-2 border-indigo-300 dark:border-indigo-700 overflow-hidden">
