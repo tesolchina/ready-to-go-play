@@ -29,6 +29,7 @@ const WorkshopAIAgentDelivery = () => {
   };
 
   const [activeTab, setActiveTab] = useState(getTabFromHash(location.hash));
+  const [allCollapsed, setAllCollapsed] = useState(false);
 
   useEffect(() => {
     setActiveTab(getTabFromHash(location.hash));
@@ -79,7 +80,11 @@ const WorkshopAIAgentDelivery = () => {
                 </AlertDescription>
               </Alert>
 
-              <div className="flex justify-center">
+              <div className="flex flex-col items-center gap-4">
+                <div className="text-center space-y-1">
+                  <p className="text-lg font-semibold text-foreground">Date: 3 Dec 2025</p>
+                  <p className="text-lg font-semibold text-foreground">Time: 10:30am to 1:30pm</p>
+                </div>
                 <Button size="lg" className="gap-2" asChild>
                   <a 
                     href="https://teams.microsoft.com/l/meetup-join/19%3ameeting_ZGEwMGEyNzUtNThhMi00NDg3LThlODktNzg3ZWU2MmMyMTg1%40thread.v2/0?context=%7b%22Tid%22%3a%226e261eb4-83bf-4585-8cc2-130d0188e081%22%2c%22Oid%22%3a%2250114aa0-76a5-4a5c-bab5-8aba1f464994%22%7d"
@@ -330,8 +335,28 @@ const WorkshopAIAgentDelivery = () => {
 
                 {/* ACTIVITIES TAB */}
                 <TabsContent value="activities" className="space-y-6">
+                  <div className="flex justify-end mb-4">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setAllCollapsed(!allCollapsed)}
+                      className="gap-2"
+                    >
+                      {allCollapsed ? (
+                        <>
+                          <ChevronDown className="h-4 w-4" />
+                          Expand All
+                        </>
+                      ) : (
+                        <>
+                          <ChevronUp className="h-4 w-4" />
+                          Collapse All
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                  
                   {/* Module 1: Conceptual Understanding */}
-                  <Collapsible defaultOpen>
+                  <Collapsible open={!allCollapsed} onOpenChange={() => {}}>
                     <Card className="border-2 border-primary">
                       <CollapsibleTrigger asChild>
                         <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
@@ -442,7 +467,7 @@ const WorkshopAIAgentDelivery = () => {
                   </Collapsible>
 
                   {/* Module 2: Get Familiar with IDE */}
-                  <Collapsible defaultOpen>
+                  <Collapsible open={!allCollapsed} onOpenChange={() => {}}>
                     <Card className="border-2 border-primary">
                       <CollapsibleTrigger asChild>
                         <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
@@ -597,7 +622,7 @@ const WorkshopAIAgentDelivery = () => {
                   </Collapsible>
 
                   {/* Workshop Notes: Clone Workshop Repository */}
-                  <Collapsible defaultOpen={false}>
+                  <Collapsible open={!allCollapsed} onOpenChange={() => {}}>
                     <Card className="border-2 border-amber-500 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20">
                       <CollapsibleTrigger asChild>
                         <button className="w-full bg-gradient-to-r from-amber-600 to-amber-500 text-white p-4 flex items-center justify-between hover:from-amber-700 hover:to-amber-600 transition-all">
@@ -827,7 +852,7 @@ const WorkshopAIAgentDelivery = () => {
                   </Collapsible>
 
                   {/* Module 3: The Input-Process-Output Model */}
-                  <Collapsible defaultOpen={false}>
+                  <Collapsible open={!allCollapsed} onOpenChange={() => {}}>
                     <Card className="border-2 border-primary">
                       <CollapsibleTrigger asChild>
                         <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
@@ -1119,7 +1144,7 @@ graph TD
                   </Collapsible>
 
                   {/* Break & Reflection Section */}
-                  <Collapsible defaultOpen={false}>
+                  <Collapsible open={!allCollapsed} onOpenChange={() => {}}>
                     <Card className="border-2 border-amber-500 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20">
                       <CardHeader>
                         <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80 transition-opacity">
@@ -1213,7 +1238,7 @@ graph TD
                   </Collapsible>
 
                   {/* Module 4: Understanding API */}
-                  <Collapsible defaultOpen={false}>
+                  <Collapsible open={!allCollapsed} onOpenChange={() => {}}>
                     <Card className="border-2 border-primary">
                       <CollapsibleTrigger asChild>
                         <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
@@ -1437,7 +1462,7 @@ graph TD
                   </Collapsible>
 
                   {/* Module 5: Hands-On API Key Setup */}
-                  <Collapsible defaultOpen={false}>
+                  <Collapsible open={!allCollapsed} onOpenChange={() => {}}>
                     <Card className="border-2 border-primary">
                       <CollapsibleTrigger asChild>
                         <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
@@ -1809,7 +1834,7 @@ graph LR
                   </Collapsible>
 
                   {/* Break & Reflect */}
-                  <Collapsible defaultOpen={true}>
+                  <Collapsible open={!allCollapsed} onOpenChange={() => {}}>
                     <Card className="border-2 border-amber-500 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20">
                       <CardHeader>
                         <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80 transition-opacity">
@@ -1861,21 +1886,19 @@ graph LR
                   </Collapsible>
 
                   {/* Real-World Use Cases */}
-                  <Collapsible defaultOpen={true} className="mt-6">
-                    <Card>
-                      <CollapsibleTrigger className="w-full hover:opacity-80 transition-opacity">
-                        <CardHeader>
-                          <CardTitle className="flex items-center gap-2 justify-between">
-                            <span className="flex items-center gap-2">
-                              <Lightbulb className="h-5 w-5" />
-                              Real-World Use Cases: File + Prompt + LLM Response Pattern
-                            </span>
-                            <ChevronDown className="h-5 w-5 transition-transform duration-200 ui-state-open:rotate-180" />
-                          </CardTitle>
-                        </CardHeader>
+                  <Collapsible open={!allCollapsed} onOpenChange={() => {}} className="mt-6">
+                    <Card className="border-2 border-amber-500 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20">
+                      <CollapsibleTrigger asChild>
+                        <button className="w-full bg-gradient-to-r from-amber-600 to-amber-500 text-white p-4 flex items-center justify-between hover:from-amber-700 hover:to-amber-600 transition-all">
+                          <h3 className="font-semibold text-left flex items-center gap-2 text-xl">
+                            <Lightbulb className="h-6 w-6" />
+                            Real-World Use Cases: File + Prompt + LLM Response Pattern
+                          </h3>
+                          <ChevronDown className="h-5 w-5 flex-shrink-0 transition-transform duration-300 ui-state-open:rotate-180" />
+                        </button>
                       </CollapsibleTrigger>
-                      <CollapsibleContent>
-                        <CardContent>
+                      <CollapsibleContent className="p-5 bg-card">
+                        <div className="space-y-6">
                           <p className="text-foreground mb-6">
                             Now that you understand the power of automating "send file to LLM with prompt and collect response" workflows, 
                             let's explore how this pattern applies to real academic scenarios:
@@ -2006,13 +2029,13 @@ graph LR
                               </p>
                             </div>
                           </div>
-                        </CardContent>
+                        </div>
                       </CollapsibleContent>
                     </Card>
                   </Collapsible>
 
                   {/* Module 6: Lab 3 - Literature Review Screening */}
-                  <Collapsible defaultOpen={true} className="mt-6">
+                  <Collapsible open={!allCollapsed} onOpenChange={() => {}} className="mt-6">
                     <Card className="border-2 border-primary">
                       <CollapsibleTrigger asChild>
                         <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
@@ -2211,7 +2234,7 @@ graph LR
                   </Collapsible>
 
                   {/* Module 7: Learning to Build a GUI using Lovable */}
-                  <Collapsible defaultOpen={true} className="mt-6">
+                  <Collapsible open={!allCollapsed} onOpenChange={() => {}} className="mt-6">
                     <Card className="border-2 border-primary">
                       <CollapsibleTrigger asChild>
                         <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
@@ -2476,7 +2499,7 @@ graph LR
                   </Collapsible>
 
                   {/* Workshop Ad Hoc Notes */}
-                  <Collapsible defaultOpen={false} className="mt-6">
+                  <Collapsible open={!allCollapsed} onOpenChange={() => {}} className="mt-6">
                     <Card className="border-2 border-amber-500 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20">
                       <CollapsibleTrigger asChild>
                         <button className="w-full bg-gradient-to-r from-amber-600 to-amber-500 text-white p-4 flex items-center justify-between hover:from-amber-700 hover:to-amber-600 transition-all">
