@@ -79,6 +79,19 @@ const WorkshopAIAgentDelivery = () => {
                 </AlertDescription>
               </Alert>
 
+              <div className="flex justify-center">
+                <Button size="lg" className="gap-2" asChild>
+                  <a 
+                    href="https://teams.microsoft.com/l/meetup-join/19%3ameeting_ZGEwMGEyNzUtNThhMi00NDg3LThlODktNzg3ZWU2MmMyMTg1%40thread.v2/0?context=%7b%22Tid%22%3a%226e261eb4-83bf-4585-8cc2-130d0188e081%22%2c%22Oid%22%3a%2250114aa0-76a5-4a5c-bab5-8aba1f464994%22%7d"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <ExternalLink className="h-5 w-5" />
+                    Join Teams Meeting
+                  </a>
+                </Button>
+              </div>
+
               <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
                 <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger value="preparation">Preparation</TabsTrigger>
@@ -1118,91 +1131,98 @@ graph TD
                   </Collapsible>
 
                   {/* Break & Reflection Section */}
-                  <Card className="border-2 border-amber-500 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2 text-amber-900 dark:text-amber-100">
-                        <ChevronUp className="h-5 w-5" />
-                        Take a Break - Let's Reflect
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <Alert className="border-l-4 border-amber-500 bg-amber-100 dark:bg-amber-900/30">
-                        <CheckCircle2 className="h-5 w-5 text-amber-600" />
-                        <AlertDescription className="ml-2">
-                          <p className="font-semibold mb-2">⏸️ Pause and Catch Up</p>
-                          <p className="text-sm text-foreground">
-                            This is a good moment to take a short break. Try completing the Lab 1 exercise if you haven't already. 
-                            Ask questions, help others, and make sure everyone is following along.
-                          </p>
-                        </AlertDescription>
-                      </Alert>
-
-                      <div className="bg-background p-6 rounded-lg border-2">
-                        <h4 className="text-xl font-bold text-foreground mb-4">🎯 What We've Learned So Far</h4>
-                        <p className="text-foreground mb-4">
-                          Let's reiterate the key differences between chatbots and AI agents:
-                        </p>
-
-                        <div className="grid md:grid-cols-2 gap-4">
-                          {/* Chatbot Column */}
-                          <div className="bg-muted/50 p-4 rounded-lg border">
-                            <h5 className="font-bold text-foreground mb-3 flex items-center gap-2">
-                              <MessageSquare className="h-5 w-5 text-blue-600" />
-                              Chatbot (Browser-Based)
-                            </h5>
-                            <ul className="space-y-2 text-sm text-foreground list-none">
-                              <li className="flex items-start gap-2">
-                                <span className="text-muted-foreground">•</span>
-                                <span>Intuitive, natural language interface</span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <span className="text-muted-foreground">•</span>
-                                <span>Context switching between browser and work environment</span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <span className="text-muted-foreground">•</span>
-                                <span>Produces multimodal <strong>textual responses</strong> only</span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <span className="text-muted-foreground">•</span>
-                                <span>You copy-paste code and results manually</span>
-                              </li>
-                            </ul>
+                  <Collapsible defaultOpen={false}>
+                    <Card className="border-2 border-amber-500 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20">
+                      <CardHeader>
+                        <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80 transition-opacity">
+                          <div className="flex items-center gap-2">
+                            <ChevronUp className="h-5 w-5" />
+                            <CardTitle className="text-amber-900 dark:text-amber-100">Take a Break - Let's Reflect</CardTitle>
                           </div>
+                          <ChevronDown className="h-5 w-5 transition-transform duration-200 data-[state=open]:rotate-180 text-amber-900 dark:text-amber-100" />
+                        </CollapsibleTrigger>
+                      </CardHeader>
+                      <CollapsibleContent>
+                        <CardContent className="space-y-4">
+                          <Alert className="border-l-4 border-amber-500 bg-amber-100 dark:bg-amber-900/30">
+                            <CheckCircle2 className="h-5 w-5 text-amber-600" />
+                            <AlertDescription className="ml-2">
+                              <p className="font-semibold mb-2">⏸️ Pause and Catch Up</p>
+                              <p className="text-sm text-foreground">
+                                This is a good moment to take a short break. Try completing the Lab 1 exercise if you haven't already. 
+                                Ask questions, help others, and make sure everyone is following along.
+                              </p>
+                            </AlertDescription>
+                          </Alert>
 
-                          {/* AI Agent Column */}
-                          <div className="bg-primary/10 p-4 rounded-lg border-2 border-primary">
-                            <h5 className="font-bold text-foreground mb-3 flex items-center gap-2">
-                              <Zap className="h-5 w-5 text-primary" />
-                              AI Agent (IDE-Based)
-                            </h5>
-                            <ul className="space-y-2 text-sm text-foreground list-none">
-                              <li className="flex items-start gap-2">
-                                <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-                                <span>Natural language <strong>plus more</strong> - embedded in context</span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-                                <span>AI is part of your workflow, no context switching</span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-                                <span><strong>Can autonomously take actions:</strong> read/edit files, search web, run scripts</span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-                                <span>Handles technical operations without you learning CLI</span>
-                              </li>
-                            </ul>
+                          <div className="bg-background p-6 rounded-lg border-2">
+                            <h4 className="text-xl font-bold text-foreground mb-4">🎯 What We've Learned So Far</h4>
+                            <p className="text-foreground mb-4">
+                              Let's reiterate the key differences between chatbots and AI agents:
+                            </p>
+
+                            <div className="grid md:grid-cols-2 gap-4">
+                              {/* Chatbot Column */}
+                              <div className="bg-muted/50 p-4 rounded-lg border">
+                                <h5 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                                  <MessageSquare className="h-5 w-5 text-blue-600" />
+                                  Chatbot (Browser-Based)
+                                </h5>
+                                <ul className="space-y-2 text-sm text-foreground list-none">
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-muted-foreground">•</span>
+                                    <span>Intuitive, natural language interface</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-muted-foreground">•</span>
+                                    <span>Context switching between browser and work environment</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-muted-foreground">•</span>
+                                    <span>Produces multimodal <strong>textual responses</strong> only</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-muted-foreground">•</span>
+                                    <span>You copy-paste code and results manually</span>
+                                  </li>
+                                </ul>
+                              </div>
+
+                              {/* AI Agent Column */}
+                              <div className="bg-primary/10 p-4 rounded-lg border-2 border-primary">
+                                <h5 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                                  <Zap className="h-5 w-5 text-primary" />
+                                  AI Agent (IDE-Based)
+                                </h5>
+                                <ul className="space-y-2 text-sm text-foreground list-none">
+                                  <li className="flex items-start gap-2">
+                                    <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                                    <span>Natural language <strong>plus more</strong> - embedded in context</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                                    <span>AI is part of your workflow, no context switching</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                                    <span><strong>Can autonomously take actions:</strong> read/edit files, search web, run scripts</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                                    <span>Handles technical operations without you learning CLI</span>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+
+                            <blockquote className="border-l-4 border-primary pl-4 italic text-foreground mt-4">
+                              "The key insight: Large Language Models can now <strong>take actions on files and folders</strong>, not just produce text."
+                            </blockquote>
                           </div>
-                        </div>
-
-                        <blockquote className="border-l-4 border-primary pl-4 italic text-foreground mt-4">
-                          "The key insight: Large Language Models can now <strong>take actions on files and folders</strong>, not just produce text."
-                        </blockquote>
-                      </div>
-                    </CardContent>
-                  </Card>
+                        </CardContent>
+                      </CollapsibleContent>
+                    </Card>
+                  </Collapsible>
 
                   {/* Module 4: Understanding API */}
                   <Collapsible defaultOpen={false}>
