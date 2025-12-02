@@ -2350,13 +2350,8 @@ graph LR
                                 <AlertDescription className="ml-2">
                                   <p className="font-semibold mb-2">💡 Handling Missing Data</p>
                                   <p className="text-sm text-foreground">
-                                    Some studies may have missing abstracts. Instruct Builder to:
+                                    Some studies may have missing abstracts. Instruct Builder to skip the studies without abstract.
                                   </p>
-                                  <ul className="text-sm text-foreground space-y-1 list-disc ml-6 mt-2">
-                                    <li>Use only the title for categorization when abstract is missing</li>
-                                    <li>Flag studies with missing abstracts in the output</li>
-                                    <li>Note "Abstract not available" in the relevant columns</li>
-                                  </ul>
                                 </AlertDescription>
                               </Alert>
 
