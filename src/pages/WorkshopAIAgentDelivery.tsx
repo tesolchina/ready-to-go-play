@@ -2475,39 +2475,46 @@ graph LR
                     </Card>
                   </Collapsible>
 
-                  {/* Workshop Presentation */}
-                  <Card className="mt-6">
-                    <CardHeader>
-                      <CardTitle className="flex items-center justify-between">
-                        <span className="flex items-center gap-2">
-                          <Lightbulb className="h-5 w-5" />
-                          Workshop Presentation
-                        </span>
-                        <Button variant="outline" size="sm" asChild>
-                          <a 
-                            href="https://www.canva.cn/design/DAG5alUXgk8/H473seyr_viIf66Rs_vyUg/edit?utm_content=DAG5alUXgk8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                          >
-                            Edit (Workshop Leader)
-                          </a>
-                        </Button>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="aspect-video w-full">
-                        <iframe
-                          loading="lazy"
-                          className="w-full h-full border-0 rounded-lg"
-                          src="https://www.canva.cn/design/DAG5alUXgk8/E5fFCmHYMgZd3mbNyKAUbg/view?embed"
-                          allow="fullscreen"
-                        />
-                      </div>
-                      <p className="text-sm text-muted-foreground mt-4">
-                        Follow along with the presentation during the workshop. Use the navigation controls to move through the slides.
-                      </p>
-                    </CardContent>
-                  </Card>
+                  {/* Workshop Ad Hoc Notes */}
+                  <Collapsible defaultOpen={false} className="mt-6">
+                    <Card className="border-2 border-amber-500 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20">
+                      <CollapsibleTrigger asChild>
+                        <button className="w-full bg-gradient-to-r from-amber-600 to-amber-500 text-white p-4 flex items-center justify-between hover:from-amber-700 hover:to-amber-600 transition-all">
+                          <h3 className="font-semibold text-left flex items-center gap-2 text-xl">
+                            <Lightbulb className="h-6 w-6" />
+                            Workshop Ad Hoc Notes
+                          </h3>
+                          <ChevronDown className="h-5 w-5 flex-shrink-0 transition-transform duration-300 ui-state-open:rotate-180" />
+                        </button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="p-5 bg-card">
+                        <div className="space-y-4">
+                          <div className="flex justify-end">
+                            <Button variant="outline" size="sm" asChild>
+                              <a 
+                                href="https://www.canva.cn/design/DAG5alUXgk8/H473seyr_viIf66Rs_vyUg/edit?utm_content=DAG5alUXgk8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                              >
+                                Edit Presentation (Workshop Leader)
+                              </a>
+                            </Button>
+                          </div>
+                          <div className="aspect-video w-full">
+                            <iframe
+                              loading="lazy"
+                              className="w-full h-full border-0 rounded-lg"
+                              src="https://www.canva.cn/design/DAG5alUXgk8/E5fFCmHYMgZd3mbNyKAUbg/view?embed"
+                              allow="fullscreen"
+                            />
+                          </div>
+                          <p className="text-sm text-muted-foreground">
+                            Follow along with the presentation during the workshop. Use the navigation controls to move through the slides.
+                          </p>
+                        </div>
+                      </CollapsibleContent>
+                    </Card>
+                  </Collapsible>
                 </TabsContent>
 
                 {/* REFLECTION TAB */}
