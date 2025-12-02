@@ -107,7 +107,7 @@ const WorkshopAIAgentDelivery = () => {
             <h2 className="text-lg font-semibold lg:hidden">Workshop Delivery</h2>
           </header>
           <div className="p-8">
-            <div className="max-w-5xl mx-auto space-y-8">
+            <div className="max-w-7xl mx-auto space-y-8">
               <div className="flex items-center gap-4">
                 <Link to="/workshops/ai-agent-workshop">
                   <Button variant="ghost" size="sm">
