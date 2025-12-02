@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail, ChevronDown, Terminal, Zap, ChevronUp, FileText, BookOpen, Key, AlertCircle, Info, Cpu, FolderOpen, GraduationCap, FileEdit, Microscope, PenTool, Sparkles, Monitor, ExternalLink, Play, MessagesSquare } from "lucide-react";
 import { WorkshopUseCaseChat } from "@/components/WorkshopUseCaseChat";
+import { WorkshopUseCaseBBS } from "@/components/WorkshopUseCaseBBS";
 import traeIdeInterface from "@/assets/trae-ide-interface.png";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -30,6 +31,7 @@ const WorkshopAIAgentDelivery = () => {
   };
 
   const [activeTab, setActiveTab] = useState(getTabFromHash(location.hash));
+  const [bbsRefresh, setBbsRefresh] = useState(0);
   const [moduleStates, setModuleStates] = useState({
     module1: true,
     module2: true,
@@ -2176,7 +2178,10 @@ graph LR
                                 </p>
                               </div>
                             </div>
-                            <WorkshopUseCaseChat />
+                            <div className="grid lg:grid-cols-2 gap-4">
+                              <WorkshopUseCaseChat onConversationShared={() => setBbsRefresh(prev => prev + 1)} />
+                              <WorkshopUseCaseBBS refreshTrigger={bbsRefresh} />
+                            </div>
                           </div>
                         </div>
                       </CollapsibleContent>
