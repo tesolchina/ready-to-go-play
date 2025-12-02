@@ -2710,10 +2710,25 @@ graph LR
                 </TabsContent>
 
                 {/* REFLECTION TAB */}
-                <TabsContent value="reflection" className="space-y-6">
+                <TabsContent value="reflection" className="space-y-4">
+                  {/* Workshop Summary - At the top */}
+                  <Alert className="border-l-4 border-primary">
+                    <Lightbulb className="h-4 w-4" />
+                    <AlertDescription>
+                      <p className="font-semibold mb-2">What We Covered Today</p>
+                      <ul className="text-sm space-y-1 list-disc ml-4">
+                        <li>AI Agents vs Chatbots: Understanding the difference</li>
+                        <li>Setting up Trae IDE and API keys</li>
+                        <li>Input-Process-Output framework for batch processing</li>
+                        <li>Lab exercises: BAWE corpus analysis and literature screening</li>
+                        <li>Real-world applications for teaching and research</li>
+                      </ul>
+                    </AlertDescription>
+                  </Alert>
+
                   {/* Platform Vision Diagram */}
                   <Card className="border-2 border-indigo-300 dark:border-indigo-700 overflow-hidden">
-                    <CardHeader className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+                    <CardHeader className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4">
                       <CardTitle className="flex items-center gap-2 text-xl">
                         <Cpu className="h-6 w-6" />
                         Integrated Platform for Teaching & Research
@@ -2823,69 +2838,83 @@ graph LR
                     </CardContent>
                   </Card>
 
-                  {/* Platform Interest Form */}
-                  <div className="grid lg:grid-cols-2 gap-6">
-                    <WorkshopInterestForm />
-                    
-                    {/* WeChat Connect Section */}
-                    <Card className="border-2 border-green-300 dark:border-green-700">
-                      <CardHeader className="bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-t-lg">
-                        <CardTitle className="flex items-center gap-2">
-                          <MessageSquare className="h-5 w-5" />
-                          Connect via WeChat
-                        </CardTitle>
-                        <p className="text-sm text-green-100">
-                          Join our community or connect directly with Simon
-                        </p>
-                      </CardHeader>
-                      <CardContent className="p-6">
-                        <div className="grid sm:grid-cols-2 gap-6">
-                          {/* Group QR */}
-                          <div className="text-center">
-                            <h4 className="font-semibold text-foreground mb-3">Join WeChat Group</h4>
-                            <div className="bg-white p-2 rounded-lg inline-block shadow-sm">
-                              <img 
-                                src={wechatGroupQR} 
-                                alt="Gen AI CoP 2 WeChat Group QR Code" 
-                                className="w-40 h-40 object-contain"
-                              />
-                            </div>
-                            <p className="text-sm text-muted-foreground mt-2">Gen AI CoP 2</p>
-                            <p className="text-xs text-amber-600 mt-1">Valid until 12/9</p>
+                  {/* Express Your Interest - Full Width Toggle */}
+                  <Collapsible defaultOpen className="group">
+                    <Card className="border-2 border-primary/50 overflow-hidden">
+                      <CollapsibleTrigger className="w-full">
+                        <CardHeader className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground cursor-pointer hover:opacity-90 transition-opacity">
+                          <div className="flex items-center justify-between">
+                            <CardTitle className="flex items-center gap-2">
+                              <Sparkles className="h-5 w-5" />
+                              Express Your Interest
+                            </CardTitle>
+                            <ChevronDown className="h-5 w-5 transition-transform group-data-[state=open]:rotate-180" />
                           </div>
-                          
-                          {/* Simon's QR */}
-                          <div className="text-center">
-                            <h4 className="font-semibold text-foreground mb-3">Add Simon on WeChat</h4>
-                            <div className="bg-white p-2 rounded-lg inline-block shadow-sm">
-                              <img 
-                                src={wechatSimonQR} 
-                                alt="Simon WANG WeChat QR Code" 
-                                className="w-40 h-40 object-contain"
-                              />
-                            </div>
-                            <p className="text-sm text-muted-foreground mt-2">Simon WANG</p>
-                            <p className="text-xs text-muted-foreground">Tai Po, Hong Kong</p>
-                          </div>
-                        </div>
-                      </CardContent>
+                          <p className="text-sm text-primary-foreground/90 text-left">
+                            Join our platform for AI-powered teaching and research
+                          </p>
+                        </CardHeader>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <CardContent className="p-6">
+                          <WorkshopInterestForm />
+                        </CardContent>
+                      </CollapsibleContent>
                     </Card>
-                  </div>
+                  </Collapsible>
 
-                  {/* Workshop Summary */}
-                  <Alert className="border-l-4 border-primary">
-                    <Lightbulb className="h-4 w-4" />
-                    <AlertDescription>
-                      <p className="font-semibold mb-2">What We Covered Today</p>
-                      <ul className="text-sm space-y-1 list-disc ml-4">
-                        <li>AI Agents vs Chatbots: Understanding the difference</li>
-                        <li>Setting up Trae IDE and API keys</li>
-                        <li>Input-Process-Output framework for batch processing</li>
-                        <li>Lab exercises: BAWE corpus analysis and literature screening</li>
-                        <li>Real-world applications for teaching and research</li>
-                      </ul>
-                    </AlertDescription>
-                  </Alert>
+                  {/* Connect via WeChat - Full Width Toggle */}
+                  <Collapsible defaultOpen className="group">
+                    <Card className="border-2 border-green-300 dark:border-green-700 overflow-hidden">
+                      <CollapsibleTrigger className="w-full">
+                        <CardHeader className="bg-gradient-to-r from-green-500 to-emerald-500 text-white cursor-pointer hover:opacity-90 transition-opacity">
+                          <div className="flex items-center justify-between">
+                            <CardTitle className="flex items-center gap-2">
+                              <MessageSquare className="h-5 w-5" />
+                              Connect via WeChat
+                            </CardTitle>
+                            <ChevronDown className="h-5 w-5 transition-transform group-data-[state=open]:rotate-180" />
+                          </div>
+                          <p className="text-sm text-green-100 text-left">
+                            Join our community or connect directly with Simon
+                          </p>
+                        </CardHeader>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <CardContent className="p-6">
+                          <div className="grid sm:grid-cols-2 gap-6">
+                            {/* Group QR */}
+                            <div className="text-center">
+                              <h4 className="font-semibold text-foreground mb-3">Join WeChat Group</h4>
+                              <div className="bg-white p-2 rounded-lg inline-block shadow-sm">
+                                <img 
+                                  src={wechatGroupQR} 
+                                  alt="Gen AI CoP 2 WeChat Group QR Code" 
+                                  className="w-40 h-40 object-contain"
+                                />
+                              </div>
+                              <p className="text-sm text-muted-foreground mt-2">Gen AI CoP 2</p>
+                              <p className="text-xs text-amber-600 mt-1">Valid until 12/9</p>
+                            </div>
+                            
+                            {/* Simon's QR */}
+                            <div className="text-center">
+                              <h4 className="font-semibold text-foreground mb-3">Add Simon on WeChat</h4>
+                              <div className="bg-white p-2 rounded-lg inline-block shadow-sm">
+                                <img 
+                                  src={wechatSimonQR} 
+                                  alt="Simon WANG WeChat QR Code" 
+                                  className="w-40 h-40 object-contain"
+                                />
+                              </div>
+                              <p className="text-sm text-muted-foreground mt-2">Simon WANG</p>
+                              <p className="text-xs text-muted-foreground">Tai Po, Hong Kong</p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </CollapsibleContent>
+                    </Card>
+                  </Collapsible>
                 </TabsContent>
               </Tabs>
             </div>
