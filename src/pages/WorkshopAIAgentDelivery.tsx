@@ -2882,34 +2882,44 @@ graph LR
                       </CollapsibleTrigger>
                       <CollapsibleContent>
                         <CardContent className="p-6">
-                          <div className="grid sm:grid-cols-2 gap-6">
-                            {/* Group QR */}
+                          <div className="flex flex-col items-center gap-6">
+                            {/* Group QR - Primary */}
                             <div className="text-center">
-                              <h4 className="font-semibold text-foreground mb-3">Join WeChat Group</h4>
-                              <div className="bg-white p-2 rounded-lg inline-block shadow-sm">
+                              <h4 className="font-semibold text-foreground mb-3 text-lg">Join WeChat Group</h4>
+                              <div className="bg-white p-3 rounded-lg inline-block shadow-md">
                                 <img 
                                   src={wechatGroupQR} 
                                   alt="Gen AI CoP 2 WeChat Group QR Code" 
-                                  className="w-40 h-40 object-contain"
+                                  className="w-56 h-56 object-contain"
                                 />
                               </div>
-                              <p className="text-sm text-muted-foreground mt-2">Gen AI CoP 2</p>
+                              <p className="text-sm text-muted-foreground mt-3">Gen AI CoP 2</p>
                               <p className="text-xs text-amber-600 mt-1">Valid until 12/9</p>
                             </div>
                             
-                            {/* Simon's QR */}
-                            <div className="text-center">
-                              <h4 className="font-semibold text-foreground mb-3">Add Simon on WeChat</h4>
-                              <div className="bg-white p-2 rounded-lg inline-block shadow-sm">
-                                <img 
-                                  src={wechatSimonQR} 
-                                  alt="Simon WANG WeChat QR Code" 
-                                  className="w-40 h-40 object-contain"
-                                />
-                              </div>
-                              <p className="text-sm text-muted-foreground mt-2">Simon WANG</p>
-                              <p className="text-xs text-muted-foreground">Tai Po, Hong Kong</p>
-                            </div>
+                            {/* Simon's QR - Hidden by default */}
+                            <Collapsible>
+                              <CollapsibleTrigger asChild>
+                                <Button variant="outline" size="sm" className="gap-2">
+                                  <ChevronDown className="h-4 w-4 transition-transform ui-state-open:rotate-180" />
+                                  Can't scan? Add Simon directly
+                                </Button>
+                              </CollapsibleTrigger>
+                              <CollapsibleContent className="mt-4">
+                                <div className="text-center">
+                                  <h4 className="font-semibold text-foreground mb-3">Add Simon on WeChat</h4>
+                                  <div className="bg-white p-3 rounded-lg inline-block shadow-md">
+                                    <img 
+                                      src={wechatSimonQR} 
+                                      alt="Simon WANG WeChat QR Code" 
+                                      className="w-48 h-48 object-contain"
+                                    />
+                                  </div>
+                                  <p className="text-sm text-muted-foreground mt-3">Simon WANG</p>
+                                  <p className="text-xs text-muted-foreground">Tai Po, Hong Kong</p>
+                                </div>
+                              </CollapsibleContent>
+                            </Collapsible>
                           </div>
                         </CardContent>
                       </CollapsibleContent>
