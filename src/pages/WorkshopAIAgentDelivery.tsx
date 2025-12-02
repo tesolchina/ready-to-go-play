@@ -2,7 +2,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail, ChevronDown, Terminal, Zap, ChevronUp, FileText, BookOpen, Key, AlertCircle, Info, Cpu, FolderOpen, GraduationCap, FileEdit, Microscope, PenTool, Sparkles, Monitor, ExternalLink, Play, MessagesSquare } from "lucide-react";
+import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail, ChevronDown, Terminal, Zap, ChevronUp, FileText, BookOpen, Key, AlertCircle, Info, Cpu, FolderOpen, GraduationCap, FileEdit, Microscope, PenTool, Sparkles, Monitor, ExternalLink, Play, MessagesSquare, GitBranch } from "lucide-react";
 import { WorkshopUseCaseChat } from "@/components/WorkshopUseCaseChat";
 import { WorkshopUseCaseBBS } from "@/components/WorkshopUseCaseBBS";
 import { WorkshopInterestForm } from "@/components/WorkshopInterestForm";
@@ -47,6 +47,7 @@ const WorkshopAIAgentDelivery = () => {
     realWorld: true,
     module6: true,
     module7: true,
+    module8: true,
     adhocNotes: false,
   });
 
@@ -67,6 +68,7 @@ const WorkshopAIAgentDelivery = () => {
       realWorld: false,
       module6: false,
       module7: false,
+      module8: false,
       adhocNotes: false,
     });
   };
@@ -84,6 +86,7 @@ const WorkshopAIAgentDelivery = () => {
       realWorld: true,
       module6: true,
       module7: true,
+      module8: true,
       adhocNotes: false,
     });
   };
@@ -2651,6 +2654,126 @@ graph LR
                               <p className="text-sm text-foreground mt-4 italic">
                                 In the next module, we'll explore how to use Lovable to turn these ideas into reality!
                               </p>
+                            </div>
+                          </div>
+                        </div>
+                      </CollapsibleContent>
+                    </Card>
+                  </Collapsible>
+
+                  {/* Module 8: Remix a Lovable Project */}
+                  <Collapsible 
+                    open={moduleStates.module8} 
+                    onOpenChange={(open) => setModuleStates({...moduleStates, module8: open})}
+                    className="mt-6"
+                  >
+                    <Card className="border-2 border-primary">
+                      <CollapsibleTrigger asChild>
+                        <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
+                          <h3 className="font-semibold text-left flex items-center gap-2 text-xl">
+                            <GitBranch className="h-6 w-6" />
+                            Module 8: Remix a Lovable Project
+                          </h3>
+                          <ChevronDown className="h-5 w-5 flex-shrink-0 transition-transform duration-300 ui-state-open:rotate-180" />
+                        </button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="p-5 bg-card">
+                        <div className="space-y-6">
+                          <div className="bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-900/20 dark:to-purple-900/20 p-6 rounded-xl border-2">
+                            <h4 className="text-2xl font-bold text-foreground mb-4">🔀 Hands-On: Remix and Customize</h4>
+                            <p className="text-foreground mb-4">
+                              Now it's your turn! You'll remix an existing project and customize it to explore different AI models.
+                            </p>
+                          </div>
+
+                          {/* Step 1: Sign Up */}
+                          <div className="bg-background p-6 rounded-lg border-2">
+                            <h5 className="text-xl font-bold text-foreground mb-4">📝 Step 1: Sign Up for Lovable</h5>
+                            
+                            <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border-l-4 border-green-600 mb-4">
+                              <p className="text-sm text-foreground mb-3">
+                                Sign up using your <strong>educational email address</strong> to get <strong>10 extra credits</strong>!
+                              </p>
+                              <Button asChild variant="default" size="sm">
+                                <a 
+                                  href="https://lovable.dev/invite/C2CWJG8" 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-2"
+                                >
+                                  <ExternalLink className="h-4 w-4" />
+                                  Sign Up with Bonus Credits
+                                </a>
+                              </Button>
+                            </div>
+                          </div>
+
+                          {/* Step 2: Visit Project */}
+                          <div className="bg-background p-6 rounded-lg border-2">
+                            <h5 className="text-xl font-bold text-foreground mb-4">🔗 Step 2: Visit the Test Models Project</h5>
+                            
+                            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border-l-4 border-blue-600 mb-4">
+                              <p className="text-sm text-foreground mb-3">
+                                Once logged in, visit this project page:
+                              </p>
+                              <Button asChild variant="default" size="sm">
+                                <a 
+                                  href="https://lovable.dev/projects/6b74967a-bc71-434d-a398-74a0e8c7d669" 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-2"
+                                >
+                                  <ExternalLink className="h-4 w-4" />
+                                  Open Test Models Project
+                                </a>
+                              </Button>
+                            </div>
+                          </div>
+
+                          {/* Step 3: Remix */}
+                          <div className="bg-background p-6 rounded-lg border-2">
+                            <h5 className="text-xl font-bold text-foreground mb-4">🎨 Step 3: Remix the Project</h5>
+                            
+                            <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg border-l-4 border-purple-600 mb-4">
+                              <p className="text-sm text-foreground mb-3">
+                                Look for the <strong>"Remix"</strong> button at the <strong>top right corner</strong> of the page. 
+                                Click it to create your own copy of the project.
+                              </p>
+                              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                <GitBranch className="h-4 w-4" />
+                                <span>Remixing creates a personal copy you can modify freely</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Step 4: Customize */}
+                          <div className="bg-background p-6 rounded-lg border-2">
+                            <h5 className="text-xl font-bold text-foreground mb-4">✨ Step 4: Start Customizing!</h5>
+                            
+                            <div className="space-y-4">
+                              <p className="text-foreground">
+                                Once remixed, ask Lovable to modify the project. Here are some ideas:
+                              </p>
+                              
+                              <div className="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 p-4 rounded-lg border">
+                                <h6 className="font-bold text-foreground mb-3">💡 Suggested Modifications</h6>
+                                <ul className="text-sm text-foreground space-y-2 list-disc ml-6">
+                                  <li><strong>Test DeepSeek models:</strong> DeepSeek has multiple models - try testing deepseek-chat vs deepseek-coder</li>
+                                  <li><strong>Test Kimi models:</strong> Explore Kimi's different model variants</li>
+                                  <li><strong>Engage different models on different tasks:</strong> Use one model for creative writing, another for coding, etc.</li>
+                                  <li><strong>Customize the UI:</strong> Change colors, add new sections, or modify the layout</li>
+                                </ul>
+                              </div>
+
+                              <Alert className="border-l-4 border-accent bg-accent/10">
+                                <Lightbulb className="h-5 w-5 text-accent" />
+                                <AlertDescription className="ml-2">
+                                  <p className="font-semibold mb-1">Pro Tip</p>
+                                  <p className="text-sm text-foreground">
+                                    Simply describe what you want in natural language, and Lovable will make the changes for you!
+                                  </p>
+                                </AlertDescription>
+                              </Alert>
                             </div>
                           </div>
                         </div>
