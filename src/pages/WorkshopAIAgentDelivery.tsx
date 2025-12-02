@@ -332,21 +332,18 @@ const WorkshopAIAgentDelivery = () => {
                 <TabsContent value="activities" className="space-y-6">
                   {/* Module 1: Conceptual Understanding */}
                   <Collapsible defaultOpen>
-                    <Card>
-                      <CardHeader>
-                        <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80 transition-opacity">
-                          <div className="flex items-center gap-2">
-                            <Lightbulb className="h-5 w-5" />
-                            <CardTitle>Module 1: Conceptual Understanding</CardTitle>
-                          </div>
-                          <ChevronDown className="h-5 w-5 transition-transform duration-200 data-[state=open]:rotate-180" />
-                        </CollapsibleTrigger>
-                        <p className="text-lg text-muted-foreground mt-2">
-                          Two Ways to Communicate with AI
-                        </p>
-                      </CardHeader>
-                      <CollapsibleContent>
-                        <CardContent className="space-y-6">
+                    <Card className="border-2 border-primary">
+                      <CollapsibleTrigger asChild>
+                        <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
+                          <h3 className="font-semibold text-left flex items-center gap-2 text-xl">
+                            <Lightbulb className="h-6 w-6" />
+                            Module 1: Conceptual Understanding - Two Ways to Communicate with AI
+                          </h3>
+                          <ChevronDown className="h-5 w-5 flex-shrink-0 transition-transform duration-300 ui-state-open:rotate-180" />
+                        </button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="p-5 bg-card">
+                        <div className="space-y-6">
                           {/* Comparison Grid */}
                           <div className="grid md:grid-cols-2 gap-6">
                             {/* Chatbot Card */}
@@ -439,28 +436,25 @@ const WorkshopAIAgentDelivery = () => {
                               </p>
                             </AlertDescription>
                           </Alert>
-                        </CardContent>
+                        </div>
                       </CollapsibleContent>
                     </Card>
                   </Collapsible>
 
                   {/* Module 2: Get Familiar with IDE */}
                   <Collapsible defaultOpen>
-                    <Card>
-                      <CardHeader>
-                        <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80 transition-opacity">
-                          <div className="flex items-center gap-2">
-                            <Laptop className="h-5 w-5" />
-                            <CardTitle>Module 2: Get Familiar with IDE</CardTitle>
-                          </div>
-                          <ChevronDown className="h-5 w-5 transition-transform duration-200 data-[state=open]:rotate-180" />
-                        </CollapsibleTrigger>
-                        <p className="text-lg text-muted-foreground mt-2">
-                          Understanding the IDE Interface
-                        </p>
-                      </CardHeader>
-                      <CollapsibleContent>
-                        <CardContent className="space-y-6">
+                    <Card className="border-2 border-primary">
+                      <CollapsibleTrigger asChild>
+                        <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
+                          <h3 className="font-semibold text-left flex items-center gap-2 text-xl">
+                            <Laptop className="h-6 w-6" />
+                            Module 2: Get Familiar with IDE - Navigating the Trae Interface
+                          </h3>
+                          <ChevronDown className="h-5 w-5 flex-shrink-0 transition-transform duration-300 ui-state-open:rotate-180" />
+                        </button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="p-5 bg-card">
+                        <div className="space-y-6">
                           {/* IDE Structure Explanation */}
                           <div className="p-6 bg-muted/30 rounded-lg border-2 border-muted">
                             <h3 className="text-xl font-semibold mb-4">A Typical IDE Has Four Main Areas:</h3>
@@ -597,28 +591,25 @@ const WorkshopAIAgentDelivery = () => {
                               </p>
                             </AlertDescription>
                           </Alert>
-                        </CardContent>
+                        </div>
                       </CollapsibleContent>
                     </Card>
                   </Collapsible>
 
-                  {/* Transitional Task: Clone Workshop Repository */}
+                  {/* Workshop Notes: Clone Workshop Repository */}
                   <Collapsible defaultOpen={false}>
-                    <Card className="border-2 border-amber-200 dark:border-amber-800">
-                      <CardHeader>
-                        <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80 transition-opacity">
-                          <div className="flex items-center gap-2">
-                            <Terminal className="h-5 w-5 text-amber-600" />
-                            <CardTitle>First Hands-On Task: Clone the Workshop Repository</CardTitle>
-                          </div>
-                          <ChevronDown className="h-5 w-5 transition-transform duration-200 data-[state=open]:rotate-180" />
-                        </CollapsibleTrigger>
-                        <p className="text-lg text-muted-foreground mt-2">
-                          Let Builder handle Git commands for you
-                        </p>
-                      </CardHeader>
-                      <CollapsibleContent>
-                        <CardContent className="space-y-6">
+                    <Card className="border-2 border-amber-500 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20">
+                      <CollapsibleTrigger asChild>
+                        <button className="w-full bg-gradient-to-r from-amber-600 to-amber-500 text-white p-4 flex items-center justify-between hover:from-amber-700 hover:to-amber-600 transition-all">
+                          <h3 className="font-semibold text-left flex items-center gap-2 text-xl">
+                            <Terminal className="h-6 w-6" />
+                            Workshop Notes: First Hands-On Task - Clone the Workshop Repository
+                          </h3>
+                          <ChevronDown className="h-5 w-5 flex-shrink-0 transition-transform duration-300 ui-state-open:rotate-180" />
+                        </button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="p-5 bg-card">
+                        <div className="space-y-6">
                           {/* Introduction */}
                           <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 p-6 rounded-xl border-2">
                             <h4 className="text-xl font-bold text-foreground mb-4">🎯 Your First Builder Task</h4>
@@ -830,28 +821,25 @@ const WorkshopAIAgentDelivery = () => {
                               your intent into the appropriate technical operations.
                             </p>
                           </div>
-                        </CardContent>
+                        </div>
                       </CollapsibleContent>
                     </Card>
                   </Collapsible>
 
                   {/* Module 3: The Input-Process-Output Model */}
                   <Collapsible defaultOpen={false}>
-                    <Card>
-                      <CardHeader>
-                        <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80 transition-opacity">
-                          <div className="flex items-center gap-2">
-                            <Zap className="h-5 w-5" />
-                            <CardTitle>Module 3: Hands-On Lab - The Input-Process-Output Model</CardTitle>
-                          </div>
-                          <ChevronDown className="h-5 w-5 transition-transform duration-200 data-[state=open]:rotate-180" />
-                        </CollapsibleTrigger>
-                        <p className="text-lg text-muted-foreground mt-2">
-                          Apply the Input-Process-Output model with real data
-                        </p>
-                      </CardHeader>
-                      <CollapsibleContent>
-                        <CardContent className="space-y-6">
+                    <Card className="border-2 border-primary">
+                      <CollapsibleTrigger asChild>
+                        <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
+                          <h3 className="font-semibold text-left flex items-center gap-2 text-xl">
+                            <Zap className="h-6 w-6" />
+                            Module 3: Hands-On Lab - The Input-Process-Output Model
+                          </h3>
+                          <ChevronDown className="h-5 w-5 flex-shrink-0 transition-transform duration-300 ui-state-open:rotate-180" />
+                        </button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="p-5 bg-card">
+                        <div className="space-y-6">
                           {/* Introduction to the Model */}
                           <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 p-6 rounded-xl border-2">
                             <h4 className="text-xl font-bold text-foreground mb-4">Understanding the Basic Model</h4>
@@ -1125,7 +1113,7 @@ graph TD
                               </Button>
                             </AlertDescription>
                           </Alert>
-                        </CardContent>
+                        </div>
                       </CollapsibleContent>
                     </Card>
                   </Collapsible>
@@ -1226,21 +1214,18 @@ graph TD
 
                   {/* Module 4: Understanding API */}
                   <Collapsible defaultOpen={false}>
-                    <Card>
-                      <CardHeader>
-                        <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80 transition-opacity">
-                          <div className="flex items-center gap-2">
-                            <Info className="h-5 w-5" />
-                            <CardTitle>Module 4: Understanding API - A Powerful Way to Automate Human-AI Communication</CardTitle>
-                          </div>
-                          <ChevronDown className="h-5 w-5 transition-transform duration-200 data-[state=open]:rotate-180" />
-                        </CollapsibleTrigger>
-                        <p className="text-lg text-muted-foreground mt-2">
-                          Learn the conceptual foundation of APIs and how they enable automation
-                        </p>
-                      </CardHeader>
-                      <CollapsibleContent>
-                        <CardContent className="space-y-6">
+                    <Card className="border-2 border-primary">
+                      <CollapsibleTrigger asChild>
+                        <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
+                          <h3 className="font-semibold text-left flex items-center gap-2 text-xl">
+                            <Info className="h-6 w-6" />
+                            Module 4: Understanding API - A Powerful Way to Automate Human-AI Communication
+                          </h3>
+                          <ChevronDown className="h-5 w-5 flex-shrink-0 transition-transform duration-300 ui-state-open:rotate-180" />
+                        </button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="p-5 bg-card">
+                        <div className="space-y-6">
                           {/* Introduction to APIs */}
                           <div className="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 p-6 rounded-xl border-2">
                             <h4 className="text-xl font-bold text-foreground mb-4">🔌 Understanding APIs: The Bridge Between Programs</h4>
@@ -1446,28 +1431,25 @@ graph TD
                               </p>
                             </AlertDescription>
                           </Alert>
-                        </CardContent>
+                        </div>
                       </CollapsibleContent>
                     </Card>
                   </Collapsible>
 
                   {/* Module 5: Hands-On API Key Setup */}
                   <Collapsible defaultOpen={false}>
-                    <Card>
-                      <CardHeader>
-                        <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80 transition-opacity">
-                          <div className="flex items-center gap-2">
-                            <Key className="h-5 w-5" />
-                            <CardTitle>Module 5: Hands-On - Setting Up Your API Keys</CardTitle>
-                          </div>
-                          <ChevronDown className="h-5 w-5 transition-transform duration-200 data-[state=open]:rotate-180" />
-                        </CollapsibleTrigger>
-                        <p className="text-lg text-muted-foreground mt-2">
-                          Get your API keys and store them securely
-                        </p>
-                      </CardHeader>
-                      <CollapsibleContent>
-                        <CardContent className="space-y-6">
+                    <Card className="border-2 border-primary">
+                      <CollapsibleTrigger asChild>
+                        <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
+                          <h3 className="font-semibold text-left flex items-center gap-2 text-xl">
+                            <Key className="h-6 w-6" />
+                            Module 5: Hands-On - Setting Up Your API Keys
+                          </h3>
+                          <ChevronDown className="h-5 w-5 flex-shrink-0 transition-transform duration-300 ui-state-open:rotate-180" />
+                        </button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="p-5 bg-card">
+                        <div className="space-y-6">
                           <Alert>
                             <AlertCircle className="h-4 w-4" />
                             <AlertDescription>
@@ -1821,7 +1803,7 @@ graph LR
                               </div>
                             </div>
                           </div>
-                        </CardContent>
+                        </div>
                       </CollapsibleContent>
                     </Card>
                   </Collapsible>
