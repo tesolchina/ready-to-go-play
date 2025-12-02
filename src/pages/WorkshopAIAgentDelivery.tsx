@@ -1122,43 +1122,28 @@ const WorkshopAIAgentDelivery = () => {
                               This flowchart shows the complete process from setting up your instructions to getting results from Builder.
                             </p>
                             <MermaidDiagram chart={`
-graph TD
-    A[📁 Locate Lab1_Explore_BAWE Folder] --> B[📝 Open instructions.md File]
-    B --> C[📥 Define Input: Right-click CORPUS_ByDiscipline folder]
-    C --> D[📋 Copy Folder Path]
-    D --> E[✏️ Paste Path in Input Section]
-    E --> F[⚙️ Write Process Instructions in Natural Language]
-    F --> G[📤 Define Output Destination]
-    G --> H[💾 Save instructions.md File]
-    H --> I[📄 Right-click instructions.md File]
-    I --> J[📋 Copy File Path]
-    J --> K[💬 Open Right Panel - AI Agent Chat]
-    K --> L["🤖 Type: 'Please follow the instructions in [file path]'"]
-    L --> M[⏎ Send Message to Builder]
-    M --> N[🔍 Builder Reads Instructions]
-    N --> O[📊 Builder Accesses Input Data]
-    O --> P[⚡ Builder Processes & Analyzes]
-    P --> Q[✅ Builder Creates Output Folder & Files]
-    Q --> R[🎉 View Results in Lab1_Results Folder]
+graph LR
+    subgraph SETUP["📝 Setup"]
+        A[Open instructions.md] --> B[Fill Input/Process/Output sections]
+    end
+    
+    subgraph SEND["💬 Send to Builder"]
+        C[Copy instructions.md path] --> D[Paste in AI chat]
+    end
+    
+    subgraph EXECUTE["🤖 Builder Executes"]
+        E[Reads & processes] --> F[Creates output files]
+    end
+    
+    SETUP --> SEND --> EXECUTE --> G[🎉 View Results]
     
     style A fill:#e3f2fd
-    style B fill:#e3f2fd
-    style C fill:#f3e5f5
-    style D fill:#f3e5f5
-    style E fill:#f3e5f5
-    style F fill:#e1f5fe
-    style G fill:#e8f5e9
-    style H fill:#fff3e0
-    style I fill:#fff3e0
-    style J fill:#fff3e0
-    style K fill:#fce4ec
-    style L fill:#fce4ec
-    style M fill:#fce4ec
-    style N fill:#e0f2f1
-    style O fill:#e0f2f1
-    style P fill:#e0f2f1
-    style Q fill:#f1f8e9
-    style R fill:#c8e6c9
+    style B fill:#f3e5f5
+    style C fill:#fff3e0
+    style D fill:#fce4ec
+    style E fill:#e0f2f1
+    style F fill:#f1f8e9
+    style G fill:#c8e6c9
             `} />
                           </div>
 
