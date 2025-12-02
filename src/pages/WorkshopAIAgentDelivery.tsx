@@ -1584,7 +1584,7 @@ graph LR
                               <div className="border-l-4 border-primary pl-4">
                                 <h5 className="font-semibold mb-2">Kimi (Moonshot AI)</h5>
                                 <ul className="list-disc list-inside space-y-2 text-foreground ml-4 text-sm">
-                                  <li>Visit: <code className="bg-background px-2 py-1 rounded">https://platform.moonshot.cn</code></li>
+                                  <li>Visit: <a href="https://platform.moonshot.cn" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://platform.moonshot.cn</a></li>
                                   <li>Sign up or log in to your account</li>
                                   <li>Navigate to API Keys section</li>
                                   <li>Create a new API key</li>
@@ -1595,7 +1595,7 @@ graph LR
                               <div className="border-l-4 border-primary pl-4">
                                 <h5 className="font-semibold mb-2">DeepSeek</h5>
                                 <ul className="list-disc list-inside space-y-2 text-foreground ml-4 text-sm">
-                                  <li>Visit: <code className="bg-background px-2 py-1 rounded">https://platform.deepseek.com</code></li>
+                                  <li>Visit: <a href="https://platform.deepseek.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://platform.deepseek.com</a></li>
                                   <li>Create an account or sign in</li>
                                   <li>Go to API Keys management</li>
                                   <li>Generate a new API key</li>
@@ -1606,7 +1606,7 @@ graph LR
                               <div className="border-l-4 border-primary pl-4">
                                 <h5 className="font-semibold mb-2">OpenRouter</h5>
                                 <ul className="list-disc list-inside space-y-2 text-foreground ml-4 text-sm">
-                                  <li>Visit: <code className="bg-background px-2 py-1 rounded">https://openrouter.ai</code></li>
+                                  <li>Visit: <a href="https://openrouter.ai" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://openrouter.ai</a></li>
                                   <li>Sign up with your account</li>
                                   <li>Navigate to Keys section</li>
                                   <li>Create a new API key</li>
