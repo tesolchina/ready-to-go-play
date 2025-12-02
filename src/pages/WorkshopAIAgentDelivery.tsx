@@ -2776,6 +2776,83 @@ graph LR
                               </Alert>
                             </div>
                           </div>
+
+                          {/* Lab 4: Vibe Coding */}
+                          <div className="bg-gradient-to-r from-cyan-50 to-teal-50 dark:from-cyan-900/20 dark:to-teal-900/20 p-6 rounded-xl border-2 border-cyan-300 dark:border-cyan-700">
+                            <h5 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+                              <Sparkles className="h-6 w-6 text-cyan-600" />
+                              Lab 4: Vibe Coding with Lovable and Trae
+                            </h5>
+                            
+                            <p className="text-foreground mb-4">
+                              Let's combine the power of Trae (AI agent in IDE) with Lovable (AI-powered web app builder) for a complete vibe coding experience!
+                            </p>
+
+                            {/* Step A: Clone Repository */}
+                            <div className="bg-background p-4 rounded-lg border-2 mb-4">
+                              <h6 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                                <span className="bg-cyan-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">A</span>
+                                Clone the Repository with Trae
+                              </h6>
+                              <p className="text-sm text-foreground mb-3">
+                                Open Trae and ask the AI agent (Builder) to clone the OpenRouter Hub repository:
+                              </p>
+                              <div className="bg-muted p-3 rounded border font-mono text-sm mb-3">
+                                <p className="text-foreground">Clone this repository: https://github.com/tesolchina/openrouter-hub</p>
+                              </div>
+                              <p className="text-xs text-muted-foreground">
+                                This gives you the full source code to explore and understand the project structure.
+                              </p>
+                            </div>
+
+                            {/* Step B: Ask for Info */}
+                            <div className="bg-background p-4 rounded-lg border-2 mb-4">
+                              <h6 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                                <span className="bg-cyan-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">B</span>
+                                Ask for More Info & Brainstorming
+                              </h6>
+                              <p className="text-sm text-foreground mb-3">
+                                Once cloned, ask the AI agent to help you understand and brainstorm:
+                              </p>
+                              <div className="space-y-2">
+                                <div className="bg-muted p-3 rounded border font-mono text-xs">
+                                  <p className="text-foreground">"Explain the structure of this project. What are the main components and how do they work together?"</p>
+                                </div>
+                                <div className="bg-muted p-3 rounded border font-mono text-xs">
+                                  <p className="text-foreground">"What are some creative ways I could modify this app for educational purposes?"</p>
+                                </div>
+                                <div className="bg-muted p-3 rounded border font-mono text-xs">
+                                  <p className="text-foreground">"Generate a list of features I could add to make this useful for language learning or academic writing."</p>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Step C: Remix and Implement */}
+                            <div className="bg-background p-4 rounded-lg border-2">
+                              <h6 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                                <span className="bg-cyan-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">C</span>
+                                Remix in Lovable & Implement Ideas
+                              </h6>
+                              <p className="text-sm text-foreground mb-3">
+                                Now that you understand the project, go back to Lovable and remix it. Use your brainstormed ideas to customize:
+                              </p>
+                              <ul className="text-sm text-foreground space-y-1 list-disc ml-6">
+                                <li>Add specific model presets for your teaching context</li>
+                                <li>Customize prompts for your students' needs</li>
+                                <li>Add new UI elements based on your brainstorming</li>
+                              </ul>
+                            </div>
+
+                            <Alert className="mt-4 border-l-4 border-cyan-500 bg-cyan-50 dark:bg-cyan-900/20">
+                              <Zap className="h-5 w-5 text-cyan-600" />
+                              <AlertDescription className="ml-2">
+                                <p className="font-semibold mb-1">The Vibe Coding Workflow</p>
+                                <p className="text-sm text-foreground">
+                                  Use Trae to understand and explore code → Use Lovable to quickly implement and deploy changes → Iterate between both tools!
+                                </p>
+                              </AlertDescription>
+                            </Alert>
+                          </div>
                         </div>
                       </CollapsibleContent>
                     </Card>
