@@ -1132,12 +1132,12 @@ graph TD
 
                   {/* Break & Reflection Section */}
                   <Collapsible defaultOpen={false}>
-                    <Card className="border-2 border-amber-500 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20">
+                    <Card className="border-2 border-amber-500 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20">
                       <CardHeader>
                         <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80 transition-opacity">
                           <div className="flex items-center gap-2">
-                            <ChevronUp className="h-5 w-5" />
-                            <CardTitle className="text-amber-900 dark:text-amber-100">Take a Break - Let's Reflect</CardTitle>
+                            <Sparkles className="h-5 w-5 text-amber-600" />
+                            <CardTitle className="text-amber-900 dark:text-amber-100">☕ Take a Break & Reflect</CardTitle>
                           </div>
                           <ChevronDown className="h-5 w-5 transition-transform duration-200 data-[state=open]:rotate-180 text-amber-900 dark:text-amber-100" />
                         </CollapsibleTrigger>
@@ -1828,27 +1828,23 @@ graph LR
 
                   {/* Break & Reflect */}
                   <Collapsible defaultOpen={true}>
-                    <Card className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border-2 border-amber-200 dark:border-amber-800">
-                      <CollapsibleTrigger className="w-full hover:opacity-80 transition-opacity">
-                        <CardContent className="pt-6 pb-3">
-                          <div className="text-center">
-                            <div className="flex items-center justify-center gap-3">
-                              <div className="inline-block p-3 bg-background rounded-full">
-                                <Sparkles className="h-8 w-8 text-amber-600" />
-                              </div>
-                              <h3 className="text-2xl font-bold text-foreground">☕ Take a Break & Reflect</h3>
-                              <ChevronDown className="h-5 w-5 transition-transform duration-200 ui-state-open:rotate-180" />
-                            </div>
+                    <Card className="border-2 border-amber-500 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20">
+                      <CardHeader>
+                        <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80 transition-opacity">
+                          <div className="flex items-center gap-2">
+                            <Sparkles className="h-5 w-5 text-amber-600" />
+                            <CardTitle className="text-amber-900 dark:text-amber-100">☕ Take a Break & Reflect</CardTitle>
                           </div>
-                        </CardContent>
-                      </CollapsibleTrigger>
+                          <ChevronDown className="h-5 w-5 transition-transform duration-200 data-[state=open]:rotate-180 text-amber-900 dark:text-amber-100" />
+                        </CollapsibleTrigger>
+                      </CardHeader>
                       <CollapsibleContent>
-                        <CardContent className="pt-0 pb-6">
-                          <p className="text-foreground max-w-2xl mx-auto text-center mb-6">
+                        <CardContent className="space-y-4">
+                          <p className="text-foreground mb-4">
                             Great progress! You've learned how to set up API keys and automate batch processing with AI agents. 
                             Let's pause here to catch up, ask questions, and think about what we've accomplished so far.
                           </p>
-                          <div className="pt-4 space-y-3">
+                          <div className="space-y-3">
                             <p className="font-semibold text-foreground text-center">What have we learned?</p>
                             <div className="grid md:grid-cols-2 gap-4 text-left max-w-3xl mx-auto">
                               <div className="bg-background p-4 rounded-lg border">
