@@ -29,11 +29,58 @@ const WorkshopAIAgentDelivery = () => {
   };
 
   const [activeTab, setActiveTab] = useState(getTabFromHash(location.hash));
-  const [allCollapsed, setAllCollapsed] = useState(false);
+  const [moduleStates, setModuleStates] = useState({
+    module1: true,
+    module2: true,
+    workshopNotes1: false,
+    module3: false,
+    break1: false,
+    module4: false,
+    module5: false,
+    break2: true,
+    realWorld: true,
+    module6: true,
+    module7: true,
+    adhocNotes: false,
+  });
 
   useEffect(() => {
     setActiveTab(getTabFromHash(location.hash));
   }, [location.hash]);
+
+  const collapseAll = () => {
+    setModuleStates({
+      module1: false,
+      module2: false,
+      workshopNotes1: false,
+      module3: false,
+      break1: false,
+      module4: false,
+      module5: false,
+      break2: false,
+      realWorld: false,
+      module6: false,
+      module7: false,
+      adhocNotes: false,
+    });
+  };
+
+  const expandAll = () => {
+    setModuleStates({
+      module1: true,
+      module2: true,
+      workshopNotes1: false,
+      module3: false,
+      break1: false,
+      module4: false,
+      module5: false,
+      break2: true,
+      realWorld: true,
+      module6: true,
+      module7: true,
+      adhocNotes: false,
+    });
+  };
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
@@ -338,10 +385,17 @@ const WorkshopAIAgentDelivery = () => {
                   <div className="flex justify-end mb-4">
                     <Button 
                       variant="outline" 
-                      onClick={() => setAllCollapsed(!allCollapsed)}
+                      onClick={() => {
+                        const allClosed = Object.values(moduleStates).every(v => !v);
+                        if (allClosed) {
+                          expandAll();
+                        } else {
+                          collapseAll();
+                        }
+                      }}
                       className="gap-2"
                     >
-                      {allCollapsed ? (
+                      {Object.values(moduleStates).every(v => !v) ? (
                         <>
                           <ChevronDown className="h-4 w-4" />
                           Expand All
@@ -356,7 +410,10 @@ const WorkshopAIAgentDelivery = () => {
                   </div>
                   
                   {/* Module 1: Conceptual Understanding */}
-                  <Collapsible open={!allCollapsed} onOpenChange={() => {}}>
+                  <Collapsible 
+                    open={moduleStates.module1} 
+                    onOpenChange={(open) => setModuleStates({...moduleStates, module1: open})}
+                  >
                     <Card className="border-2 border-primary">
                       <CollapsibleTrigger asChild>
                         <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
@@ -467,7 +524,10 @@ const WorkshopAIAgentDelivery = () => {
                   </Collapsible>
 
                   {/* Module 2: Get Familiar with IDE */}
-                  <Collapsible open={!allCollapsed} onOpenChange={() => {}}>
+                  <Collapsible 
+                    open={moduleStates.module2} 
+                    onOpenChange={(open) => setModuleStates({...moduleStates, module2: open})}
+                  >
                     <Card className="border-2 border-primary">
                       <CollapsibleTrigger asChild>
                         <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
@@ -622,7 +682,10 @@ const WorkshopAIAgentDelivery = () => {
                   </Collapsible>
 
                   {/* Workshop Notes: Clone Workshop Repository */}
-                  <Collapsible open={!allCollapsed} onOpenChange={() => {}}>
+                  <Collapsible 
+                    open={moduleStates.workshopNotes1} 
+                    onOpenChange={(open) => setModuleStates({...moduleStates, workshopNotes1: open})}
+                  >
                     <Card className="border-2 border-amber-500 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20">
                       <CollapsibleTrigger asChild>
                         <button className="w-full bg-gradient-to-r from-amber-600 to-amber-500 text-white p-4 flex items-center justify-between hover:from-amber-700 hover:to-amber-600 transition-all">
@@ -852,7 +915,10 @@ const WorkshopAIAgentDelivery = () => {
                   </Collapsible>
 
                   {/* Module 3: The Input-Process-Output Model */}
-                  <Collapsible open={!allCollapsed} onOpenChange={() => {}}>
+                  <Collapsible 
+                    open={moduleStates.module3} 
+                    onOpenChange={(open) => setModuleStates({...moduleStates, module3: open})}
+                  >
                     <Card className="border-2 border-primary">
                       <CollapsibleTrigger asChild>
                         <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
@@ -1144,7 +1210,10 @@ graph TD
                   </Collapsible>
 
                   {/* Break & Reflection Section */}
-                  <Collapsible open={!allCollapsed} onOpenChange={() => {}}>
+                  <Collapsible 
+                    open={moduleStates.break1} 
+                    onOpenChange={(open) => setModuleStates({...moduleStates, break1: open})}
+                  >
                     <Card className="border-2 border-amber-500 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20">
                       <CardHeader>
                         <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80 transition-opacity">
@@ -1238,7 +1307,10 @@ graph TD
                   </Collapsible>
 
                   {/* Module 4: Understanding API */}
-                  <Collapsible open={!allCollapsed} onOpenChange={() => {}}>
+                  <Collapsible 
+                    open={moduleStates.module4} 
+                    onOpenChange={(open) => setModuleStates({...moduleStates, module4: open})}
+                  >
                     <Card className="border-2 border-primary">
                       <CollapsibleTrigger asChild>
                         <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
@@ -1462,7 +1534,10 @@ graph TD
                   </Collapsible>
 
                   {/* Module 5: Hands-On API Key Setup */}
-                  <Collapsible open={!allCollapsed} onOpenChange={() => {}}>
+                  <Collapsible 
+                    open={moduleStates.module5} 
+                    onOpenChange={(open) => setModuleStates({...moduleStates, module5: open})}
+                  >
                     <Card className="border-2 border-primary">
                       <CollapsibleTrigger asChild>
                         <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
@@ -1834,7 +1909,10 @@ graph LR
                   </Collapsible>
 
                   {/* Break & Reflect */}
-                  <Collapsible open={!allCollapsed} onOpenChange={() => {}}>
+                  <Collapsible 
+                    open={moduleStates.break2} 
+                    onOpenChange={(open) => setModuleStates({...moduleStates, break2: open})}
+                  >
                     <Card className="border-2 border-amber-500 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20">
                       <CardHeader>
                         <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80 transition-opacity">
@@ -1886,7 +1964,11 @@ graph LR
                   </Collapsible>
 
                   {/* Real-World Use Cases */}
-                  <Collapsible open={!allCollapsed} onOpenChange={() => {}} className="mt-6">
+                  <Collapsible 
+                    open={moduleStates.realWorld} 
+                    onOpenChange={(open) => setModuleStates({...moduleStates, realWorld: open})}
+                    className="mt-6"
+                  >
                     <Card className="border-2 border-amber-500 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20">
                       <CollapsibleTrigger asChild>
                         <button className="w-full bg-gradient-to-r from-amber-600 to-amber-500 text-white p-4 flex items-center justify-between hover:from-amber-700 hover:to-amber-600 transition-all">
@@ -2035,7 +2117,11 @@ graph LR
                   </Collapsible>
 
                   {/* Module 6: Lab 3 - Literature Review Screening */}
-                  <Collapsible open={!allCollapsed} onOpenChange={() => {}} className="mt-6">
+                  <Collapsible 
+                    open={moduleStates.module6} 
+                    onOpenChange={(open) => setModuleStates({...moduleStates, module6: open})}
+                    className="mt-6"
+                  >
                     <Card className="border-2 border-primary">
                       <CollapsibleTrigger asChild>
                         <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
@@ -2234,7 +2320,11 @@ graph LR
                   </Collapsible>
 
                   {/* Module 7: Learning to Build a GUI using Lovable */}
-                  <Collapsible open={!allCollapsed} onOpenChange={() => {}} className="mt-6">
+                  <Collapsible 
+                    open={moduleStates.module7} 
+                    onOpenChange={(open) => setModuleStates({...moduleStates, module7: open})}
+                    className="mt-6"
+                  >
                     <Card className="border-2 border-primary">
                       <CollapsibleTrigger asChild>
                         <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
@@ -2499,7 +2589,11 @@ graph LR
                   </Collapsible>
 
                   {/* Workshop Ad Hoc Notes */}
-                  <Collapsible open={!allCollapsed} onOpenChange={() => {}} className="mt-6">
+                  <Collapsible 
+                    open={moduleStates.adhocNotes} 
+                    onOpenChange={(open) => setModuleStates({...moduleStates, adhocNotes: open})}
+                    className="mt-6"
+                  >
                     <Card className="border-2 border-amber-500 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20">
                       <CollapsibleTrigger asChild>
                         <button className="w-full bg-gradient-to-r from-amber-600 to-amber-500 text-white p-4 flex items-center justify-between hover:from-amber-700 hover:to-amber-600 transition-all">
