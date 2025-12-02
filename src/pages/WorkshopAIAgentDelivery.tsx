@@ -154,10 +154,16 @@ const WorkshopAIAgentDelivery = () => {
               </div>
 
               <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="preparation">Preparation</TabsTrigger>
-                  <TabsTrigger value="activities">Workshop Activities</TabsTrigger>
-                  <TabsTrigger value="reflection">Reflection & Follow-up</TabsTrigger>
+                <TabsList className="w-full h-auto md:h-10 flex flex-col gap-2 md:grid md:grid-cols-3">
+                  <TabsTrigger value="preparation" className="w-full justify-start md:justify-center text-xs md:text-sm px-3 py-2">
+                    Preparation
+                  </TabsTrigger>
+                  <TabsTrigger value="activities" className="w-full justify-start md:justify-center text-xs md:text-sm px-3 py-2">
+                    Workshop Activities
+                  </TabsTrigger>
+                  <TabsTrigger value="reflection" className="w-full justify-start md:justify-center text-xs md:text-sm px-3 py-2">
+                    Reflection & Follow-up
+                  </TabsTrigger>
                 </TabsList>
 
                 {/* PREPARATION TAB */}
