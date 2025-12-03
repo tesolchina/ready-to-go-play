@@ -15,6 +15,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useEffect, useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { MermaidDiagram } from "@/components/MermaidDiagram";
+import { CollapsibleSection } from "@/components/CollapsibleSection";
 
 const WorkshopAIAgentDelivery = () => {
   const location = useLocation();
@@ -2981,7 +2982,27 @@ graph LR
                     </CardContent>
                   </Card>
 
+                  <CollapsibleSection
+                    title="Workshop Reflection Form (Microsoft Forms)"
+                    icon="📝"
+                    defaultOpen={false}
+                  >
+                    <p className="text-sm text-muted-foreground mb-3">
+                      Please take 2-3 minutes to complete this reflection form about today's workshop.
+                    </p>
+                    <div className="aspect-video w-full">
+                      <iframe
+                        title="AI Agent Workshop Reflection Form"
+                        src="https://forms.office.com/pages/responsepage.aspx?id=tB4mbr-DhUWMwhMNAYjggaBKEVCldlxKurWKuh9GSZRUN0tMTjZRU1pOMVpXVDcxQ0w5NDhKRVBQQy4u&route=shorturl&embed=true"
+                        className="w-full h-full border-0 rounded-lg"
+                        loading="lazy"
+                        allowFullScreen
+                      />
+                    </div>
+                  </CollapsibleSection>
+
                   {/* Platform Vision Diagram */}
+
                   <Card className="border-2 border-indigo-300 dark:border-indigo-700 overflow-hidden">
                     <CardHeader className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4">
                       <CardTitle className="flex items-center gap-2 text-xl">
