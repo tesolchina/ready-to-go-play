@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { getAIProviderConfig, hasAIProvider, callAIProvider } from "../_shared/ai-providers.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -44,24 +45,9 @@ serve(async (req) => {
       );
     }
 
-    // Get API keys from environment variables (platform keys)
-    let KIMI_API_KEY = Deno.env.get('KIMI_API_KEY');
-    let DEEPSEEK_API_KEY = Deno.env.get('DEEPSEEK_API_KEY');
+    const config = getAIProviderConfig(req);
 
-    // Check for platform session in headers
-    const platformSession = req.headers.get("x-platform-session");
-    const hasPlatformAccess = !!platformSession;
-
-    // If no platform access, use user-provided keys from headers
-    if (!hasPlatformAccess) {
-      const userKimiKey = req.headers.get("x-user-kimi-key");
-      const userDeepseekKey = req.headers.get("x-user-deepseek-key");
-      
-      if (userKimiKey) KIMI_API_KEY = userKimiKey;
-      if (userDeepseekKey) DEEPSEEK_API_KEY = userDeepseekKey;
-    }
-
-    if (!KIMI_API_KEY && !DEEPSEEK_API_KEY) {
+    if (!hasAIProvider(config)) {
       return new Response(
         JSON.stringify({ 
           error: "AI services not configured. Please configure your API key in the Lessons page.",
@@ -156,83 +142,30 @@ Return using the analyze_academic_paragraph function.`;
       }
     }];
 
-    // Try Kimi first
-    let response;
-    let responseData;
-    let apiUsed = 'Kimi';
+    const result = await callAIProvider(config, {
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: `Analyze this academic paragraph:\n\n${paragraph}` }
+      ],
+      tools: toolDefinition,
+      toolChoice: { type: "function", function: { name: "analyze_academic_paragraph" } },
+    });
 
-    try {
-      console.log("Attempting analysis with Kimi API");
-      response = await fetch('https://api.moonshot.cn/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${KIMI_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'moonshot-v1-32k',
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: `Analyze this academic paragraph:\n\n${paragraph}` }
-          ],
-          tools: toolDefinition,
-          tool_choice: { type: "function", function: { name: "analyze_academic_paragraph" } },
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Kimi API failed: ${response.status}`);
-      }
-
-      responseData = await response.json();
-      console.log('Successfully analyzed with Kimi API');
-    } catch (kimiError) {
-      console.error('Kimi API failed, falling back to DeepSeek:', kimiError);
-      apiUsed = 'DeepSeek';
-
-      response = await fetch('https://api.deepseek.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${DEEPSEEK_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'deepseek-chat',
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: `Analyze this academic paragraph:\n\n${paragraph}` }
-          ],
-          tools: toolDefinition,
-          tool_choice: { type: "function", function: { name: "analyze_academic_paragraph" } },
-        }),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('DeepSeek API error:', errorText);
-        throw new Error(`Both APIs failed. DeepSeek status: ${response.status}`);
-      }
-
-      responseData = await response.json();
-      console.log('Successfully analyzed with DeepSeek API');
-    }
-
-    console.log(`API response from ${apiUsed}:`, JSON.stringify(responseData));
+    console.log(`Analysis completed using ${result.provider}`);
 
     // Extract the tool call result
-    const toolCall = responseData.choices?.[0]?.message?.tool_calls?.[0];
-    if (!toolCall) {
-      throw new Error('No tool call in response');
+    if (result.toolCalls && result.toolCalls.length > 0) {
+      const toolCall = result.toolCalls[0];
+      const analysisResult = JSON.parse(toolCall.function.arguments);
+      console.log('Analysis complete, found', analysisResult.patterns?.length || 0, 'patterns');
+
+      return new Response(
+        JSON.stringify(analysisResult),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
-    const analysisResult = JSON.parse(toolCall.function.arguments);
-    
-    console.log('Analysis complete, found', analysisResult.patterns?.length || 0, 'patterns');
-
-    return new Response(
-      JSON.stringify(analysisResult),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    throw new Error('No tool call in response');
 
   } catch (error) {
     console.error('Error in analyze-paragraph function:', error);

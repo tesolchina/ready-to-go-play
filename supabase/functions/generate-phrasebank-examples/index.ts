@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { getAIProviderConfig, hasAIProvider, callAIProvider } from "../_shared/ai-providers.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -20,24 +21,9 @@ serve(async (req) => {
       );
     }
 
-    // Get API keys from environment variables (platform keys)
-    let KIMI_API_KEY = Deno.env.get('KIMI_API_KEY');
-    let DEEPSEEK_API_KEY = Deno.env.get('DEEPSEEK_API_KEY');
+    const config = getAIProviderConfig(req);
 
-    // Check for platform session in headers
-    const platformSession = req.headers.get("x-platform-session");
-    const hasPlatformAccess = !!platformSession;
-
-    // If no platform access, use user-provided keys from headers
-    if (!hasPlatformAccess) {
-      const userKimiKey = req.headers.get("x-user-kimi-key");
-      const userDeepseekKey = req.headers.get("x-user-deepseek-key");
-      
-      if (userKimiKey) KIMI_API_KEY = userKimiKey;
-      if (userDeepseekKey) DEEPSEEK_API_KEY = userDeepseekKey;
-    }
-
-    if (!KIMI_API_KEY && !DEEPSEEK_API_KEY) {
+    if (!hasAIProvider(config)) {
       return new Response(
         JSON.stringify({ 
           error: "AI services not configured. Please configure your API key in the Lessons page.",
@@ -86,93 +72,42 @@ Return ONLY a JSON object with this exact structure:
 
     console.log('Generating examples with prompt:', userPrompt);
 
-    let content: string;
-    let usedModel = "Kimi";
+    const result = await callAIProvider(config, {
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ],
+      temperature: 0.7,
+    });
 
-    try {
-      console.log("Attempting to use Kimi API");
-      const kimiResponse = await fetch("https://api.moonshot.cn/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${KIMI_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "moonshot-v1-8k",
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: userPrompt }
-          ],
-          temperature: 0.7,
-        }),
-      });
-
-      if (!kimiResponse.ok) {
-        const errorText = await kimiResponse.text();
-        console.error("Kimi API error:", errorText);
-        throw new Error(`Kimi API failed: ${kimiResponse.status}`);
-      }
-
-      const kimiData = await kimiResponse.json();
-      content = kimiData.choices?.[0]?.message?.content;
-      console.log("Successfully used Kimi API");
-    } catch (kimiError) {
-      console.error("Kimi API failed, falling back to DeepSeek:", kimiError);
-      usedModel = "DeepSeek";
-
-      const deepseekResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "deepseek-chat",
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: userPrompt }
-          ],
-          temperature: 0.7,
-        }),
-      });
-
-      if (!deepseekResponse.ok) {
-        const errorText = await deepseekResponse.text();
-        console.error("DeepSeek API error:", errorText);
-        throw new Error(`Both Kimi and DeepSeek APIs failed`);
-      }
-
-      const deepseekData = await deepseekResponse.json();
-      content = deepseekData.choices?.[0]?.message?.content;
-      console.log("Successfully used DeepSeek API");
-    }
+    const content = result.content;
 
     if (!content) {
       throw new Error('No content in AI response');
     }
 
-    console.log(`AI response generated using ${usedModel}:`, content);
+    console.log(`AI response generated using ${result.provider}:`, content);
 
     // Parse the JSON response
-    let result;
+    let parsedResult;
     try {
       // Try to extract JSON if it's wrapped in markdown
       const jsonMatch = content.match(/```json\n([\s\S]*?)\n```/) || content.match(/```\n([\s\S]*?)\n```/);
       const jsonStr = jsonMatch ? jsonMatch[1] : content;
-      result = JSON.parse(jsonStr);
+      parsedResult = JSON.parse(jsonStr);
     } catch (parseError) {
       console.error('Failed to parse AI response as JSON:', parseError);
       // Fallback: try to extract sentences
       const sentences = content.split('\n').filter((line: string) => line.trim().length > 0);
-      result = { examples: sentences.slice(0, 5) };
+      parsedResult = { examples: sentences.slice(0, 5) };
     }
 
-    if (!result.examples || !Array.isArray(result.examples)) {
+    if (!parsedResult.examples || !Array.isArray(parsedResult.examples)) {
       throw new Error('Invalid response format from AI');
     }
 
     return new Response(
-      JSON.stringify({ examples: result.examples.slice(0, 5) }),
+      JSON.stringify({ examples: parsedResult.examples.slice(0, 5) }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
