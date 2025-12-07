@@ -2,58 +2,13 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { BringYourOwnKey } from "@/components/BringYourOwnKey";
-import { CollapsibleSection } from "@/components/CollapsibleSection";
-import { BookOpen, Target, GraduationCap, FileCheck, Lightbulb, Sparkles, Code } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { useAIService } from "@/contexts/AIServiceContext";
+import { BookOpen, Target, GraduationCap, FileCheck, Lightbulb, Sparkles, Code, Key, CheckCircle2, AlertCircle, Settings } from "lucide-react";
 
 const Lessons = () => {
-  const lessons = [
-    { 
-      id: 1, 
-      title: "Prompt Engineering Basics", 
-      url: "/lesson/1", 
-      icon: BookOpen,
-      description: "Learn the fundamentals of effective prompt engineering",
-      duration: "45 minutes",
-      level: "Beginner"
-    },
-    { 
-      id: 2, 
-      title: "Advanced Techniques", 
-      url: "/lesson/2", 
-      icon: Target,
-      description: "Master complex prompting strategies and techniques",
-      duration: "60 minutes",
-      level: "Advanced"
-    },
-    { 
-      id: 3, 
-      title: "Subject-Specific Strategies", 
-      url: "/lesson/3", 
-      icon: GraduationCap,
-      description: "Apply AI prompting to your specific academic field",
-      duration: "50 minutes",
-      level: "Intermediate"
-    },
-    { 
-      id: 4, 
-      title: "Assessment Creation", 
-      url: "/lesson/4", 
-      icon: FileCheck,
-      description: "Build effective assessments using AI tools",
-      duration: "55 minutes",
-      level: "Intermediate"
-    },
-    { 
-      id: 5, 
-      title: "Content Adaptation", 
-      url: "/lesson/5", 
-      icon: Lightbulb,
-      description: "Customize content for different student levels",
-      duration: "40 minutes",
-      level: "Intermediate"
-    },
-  ];
+  const { isActivated, hasPlatformAccess, hasUserKey } = useAIService();
 
   return (
     <SidebarProvider>
@@ -74,24 +29,39 @@ const Lessons = () => {
             </div>
 
           <div className="space-y-8">
-            {/* Bring Your Own Key Module */}
+            {/* AI Configuration Status Card */}
             <div className="max-w-4xl mx-auto">
-              <CollapsibleSection 
-                title="API Key Configuration" 
-                icon="🔑"
-                defaultOpen={true}
-              >
-                <div className="space-y-4 mb-6">
-                  <p className="text-muted-foreground">
-                    This page includes AI features that consume computing power from Large Language Models (LLMs). 
-                    Users are expected to pay for such computing power by obtaining an API key from either Kimi or DeepSeek.
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    Please configure your API key below to enable AI-powered interactive features in the lessons.
-                  </p>
-                </div>
-                <BringYourOwnKey />
-              </CollapsibleSection>
+              <Card className={`border-2 ${isActivated ? 'border-green-500/50 bg-green-50/30' : 'border-amber-500/50 bg-amber-50/30'}`}>
+                <CardContent className="pt-6">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2 rounded-full ${isActivated ? 'bg-green-100' : 'bg-amber-100'}`}>
+                        {isActivated ? (
+                          <CheckCircle2 className="h-5 w-5 text-green-600" />
+                        ) : (
+                          <AlertCircle className="h-5 w-5 text-amber-600" />
+                        )}
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">
+                          {isActivated ? 'AI Services Active' : 'Configure AI to Enable Features'}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          {isActivated 
+                            ? `Using ${hasPlatformAccess ? 'Platform Access (Poe)' : hasUserKey ? 'Personal API Key' : 'AI Services'}`
+                            : 'Some lessons require AI features. Configure your API key to get started.'}
+                        </p>
+                      </div>
+                    </div>
+                    <Link to="/configure-ai">
+                      <Button variant={isActivated ? "outline" : "default"} className="gap-2">
+                        <Settings className="h-4 w-4" />
+                        {isActivated ? 'Manage' : 'Configure AI'}
+                      </Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
             {/* Lessons Grid */}

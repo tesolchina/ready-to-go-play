@@ -245,7 +245,7 @@ The letter '${letterInput}' appears ${count} times in '${wordInput}'`);
                     <AlertCircle className="h-4 w-4" />
                     <AlertDescription>
                       AI services are not configured. Please{" "}
-                      <Link to="/lessons" className="underline font-semibold">
+                      <Link to="/configure-ai" className="underline font-semibold">
                         configure your API key
                       </Link>{" "}
                       to use diagram generation features.

@@ -149,7 +149,7 @@ Your comments on the student's response should be critical and constructive.  Yo
             <span>
               <strong>AI services not configured.</strong> Please configure your API key to use this feature.
             </span>
-            <Link to="/lessons">
+            <Link to="/configure-ai">
               <Button variant="destructive" size="sm" className="ml-4">
                 Configure Now
               </Button>
