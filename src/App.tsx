@@ -10,6 +10,7 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import Lessons from "./pages/Lessons";
 import LearningApps from "./pages/LearningApps";
+import ConfigureAI from "./pages/ConfigureAI";
 import Lesson1 from "./pages/lessons/Lesson1";
 import Lesson6 from "./pages/lessons/Lesson6";
 import DynamicLesson from "./pages/lessons/DynamicLesson";
@@ -49,6 +50,7 @@ const App = () => (
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/lessons" element={<Lessons />} />
+          <Route path="/configure-ai" element={<ConfigureAI />} />
           <Route path="/lessons/interactive-learning-reflection" element={<InteractiveLearningReflection />} />
           <Route path="/lessons/leverage-educational-resources" element={<LeverageEducationalResources />} />
           <Route path="/lessons/vibe-coding" element={<VibeCoding />} />

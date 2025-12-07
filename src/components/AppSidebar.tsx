@@ -1,4 +1,4 @@
-import { BookOpen, GraduationCap, Target, FileCheck, Lightbulb, MessageSquare, Plus, CheckSquare, Info, Newspaper, Library, Zap, Users, Calendar, ChevronDown } from "lucide-react";
+import { BookOpen, GraduationCap, Target, FileCheck, Lightbulb, MessageSquare, Plus, CheckSquare, Info, Newspaper, Library, Zap, Users, Calendar, ChevronDown, Settings } from "lucide-react";
 import { NavLink, Link } from "react-router-dom";
 
 import {
@@ -43,6 +43,12 @@ const navigation = [
     url: "/learning-apps",
     icon: Zap,
     description: "AI-powered tools"
+  },
+  {
+    title: "Configure AI",
+    url: "/configure-ai",
+    icon: Settings,
+    description: "API key settings"
   },
   {
     title: "Teacher Dashboard",

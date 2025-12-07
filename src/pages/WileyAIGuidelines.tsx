@@ -586,7 +586,7 @@ Use AI Technology in a manner that aligns with privacy, confidentiality, and com
                     <AlertCircle className="w-4 h-4 text-yellow-600" />
                     <p className="text-sm text-yellow-800 dark:text-yellow-200">
                       AI services not configured. Please{" "}
-                      <Link to="/lessons" className="underline font-medium">
+                      <Link to="/configure-ai" className="underline font-medium">
                         configure your API key
                       </Link>{" "}
                       to use the chatbot.

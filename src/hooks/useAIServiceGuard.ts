@@ -15,7 +15,7 @@ export const useAIServiceGuard = () => {
         variant: "destructive",
         action: {
           label: "Configure Now",
-          onClick: () => navigate("/lessons"),
+          onClick: () => navigate("/configure-ai"),
         } as any,
       });
       return false;

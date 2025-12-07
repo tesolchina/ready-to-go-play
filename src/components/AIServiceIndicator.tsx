@@ -8,17 +8,19 @@ export const AIServiceIndicator = () => {
 
   if (isActivated) {
     return (
-      <Badge variant="default" className="gap-1.5">
-        <CheckCircle2 className="h-3.5 w-3.5" />
-        AI Active
-        {hasPlatformAccess && <Shield className="h-3 w-3 ml-0.5" />}
-        {hasUserKey && <Key className="h-3 w-3 ml-0.5" />}
-      </Badge>
+      <Link to="/configure-ai">
+        <Badge variant="default" className="gap-1.5 cursor-pointer hover:bg-primary/80">
+          <CheckCircle2 className="h-3.5 w-3.5" />
+          AI Active
+          {hasPlatformAccess && <Shield className="h-3 w-3 ml-0.5" />}
+          {hasUserKey && <Key className="h-3 w-3 ml-0.5" />}
+        </Badge>
+      </Link>
     );
   }
 
   return (
-    <Link to="/lessons">
+    <Link to="/configure-ai">
       <Badge variant="secondary" className="gap-1.5 cursor-pointer hover:bg-destructive/20">
         <XCircle className="h-3.5 w-3.5" />
         Configure AI

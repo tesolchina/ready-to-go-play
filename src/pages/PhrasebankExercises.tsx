@@ -564,7 +564,7 @@ const PhrasebankExercises = () => {
                           <AlertCircle className="h-4 w-4" />
                           <AlertDescription>
                             AI services not configured. Please{" "}
-                            <Link to="/lessons" className="font-medium underline">
+                            <Link to="/configure-ai" className="font-medium underline">
                               configure your API key
                             </Link>{" "}
                             to use AI-powered features.
