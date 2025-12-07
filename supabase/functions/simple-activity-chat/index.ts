@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { getAIProviderConfig, hasAIProvider, callAIProvider } from "../_shared/ai-providers.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -22,24 +23,9 @@ serve(async (req) => {
       );
     }
 
-    // Get API keys from environment variables (platform keys)
-    let KIMI_API_KEY = Deno.env.get("KIMI_API_KEY");
-    let DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
+    const config = getAIProviderConfig(req);
 
-    // Check for platform session in headers
-    const platformSession = req.headers.get("x-platform-session");
-    const hasPlatformAccess = !!platformSession; // In production, you'd validate the session token
-
-    // If no platform access, use user-provided keys from headers
-    if (!hasPlatformAccess) {
-      const userKimiKey = req.headers.get("x-user-kimi-key");
-      const userDeepseekKey = req.headers.get("x-user-deepseek-key");
-      
-      if (userKimiKey) KIMI_API_KEY = userKimiKey;
-      if (userDeepseekKey) DEEPSEEK_API_KEY = userDeepseekKey;
-    }
-
-    if (!KIMI_API_KEY && !DEEPSEEK_API_KEY) {
+    if (!hasAIProvider(config)) {
       return new Response(
         JSON.stringify({ 
           error: "AI services not configured. Please configure your API key in the Lessons page.",
@@ -51,73 +37,23 @@ serve(async (req) => {
 
     // Build messages array with chat history
     const messages = [
-      { role: "system", content: systemPrompt },
+      { role: "system" as const, content: systemPrompt },
       ...chatHistory.map((msg: any) => ({
-        role: msg.role,
+        role: msg.role as "user" | "assistant",
         content: msg.content,
       })),
-      { role: "user", content: userMessage },
+      { role: "user" as const, content: userMessage },
     ];
 
-    let feedback: string;
-    let usedModel = "Kimi";
+    const result = await callAIProvider(config, {
+      messages,
+      temperature: 0.7,
+    });
 
-    try {
-      console.log("Attempting to use Kimi API");
-      const kimiResponse = await fetch("https://api.moonshot.cn/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${KIMI_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "moonshot-v1-8k",
-          messages,
-          temperature: 0.7,
-        }),
-      });
-
-      if (!kimiResponse.ok) {
-        const errorText = await kimiResponse.text();
-        console.error("Kimi API error:", errorText);
-        throw new Error(`Kimi API failed: ${kimiResponse.status}`);
-      }
-
-      const kimiData = await kimiResponse.json();
-      feedback = kimiData.choices[0].message.content;
-      console.log("Successfully used Kimi API");
-    } catch (kimiError) {
-      console.error("Kimi API failed, falling back to DeepSeek:", kimiError);
-      usedModel = "DeepSeek";
-
-      const deepseekResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "deepseek-chat",
-          messages,
-          temperature: 0.7,
-        }),
-      });
-
-      if (!deepseekResponse.ok) {
-        const errorText = await deepseekResponse.text();
-        console.error("DeepSeek API error:", errorText);
-        throw new Error(`Both Kimi and DeepSeek APIs failed`);
-      }
-
-      const deepseekData = await deepseekResponse.json();
-      feedback = deepseekData.choices[0].message.content;
-      console.log("Successfully used DeepSeek API");
-    }
-
-    console.log(`Chat response received using ${usedModel}`);
+    console.log(`Chat response received using ${result.provider}`);
 
     return new Response(
-      JSON.stringify({ feedback }),
+      JSON.stringify({ feedback: result.content }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       }

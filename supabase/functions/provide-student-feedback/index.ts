@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { getAIProviderConfig, hasAIProvider, callAIProvider } from "../_shared/ai-providers.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -13,24 +14,9 @@ serve(async (req) => {
   try {
     const { selectedExample, studentSentence, discipline, category } = await req.json();
     
-    // Get API keys from environment variables (platform keys)
-    let KIMI_API_KEY = Deno.env.get('KIMI_API_KEY');
-    let DEEPSEEK_API_KEY = Deno.env.get('DEEPSEEK_API_KEY');
+    const config = getAIProviderConfig(req);
 
-    // Check for platform session in headers
-    const platformSession = req.headers.get("x-platform-session");
-    const hasPlatformAccess = !!platformSession;
-
-    // If no platform access, use user-provided keys from headers
-    if (!hasPlatformAccess) {
-      const userKimiKey = req.headers.get("x-user-kimi-key");
-      const userDeepseekKey = req.headers.get("x-user-deepseek-key");
-      
-      if (userKimiKey) KIMI_API_KEY = userKimiKey;
-      if (userDeepseekKey) DEEPSEEK_API_KEY = userDeepseekKey;
-    }
-
-    if (!KIMI_API_KEY && !DEEPSEEK_API_KEY) {
+    if (!hasAIProvider(config)) {
       return new Response(
         JSON.stringify({ 
           error: "AI services not configured. Please configure your API key in the Lessons page.",
@@ -76,102 +62,25 @@ Format response as JSON:
   "registerComment": "comment on academic tone"
 }`;
 
-    let content: string;
-    let usedModel = "Kimi";
-
-    // Helper function to fetch with timeout
-    const fetchWithTimeout = async (url: string, options: any, timeout = 25000) => {
-      const controller = new AbortController();
-      const id = setTimeout(() => controller.abort(), timeout);
-      
-      try {
-        const response = await fetch(url, {
-          ...options,
-          signal: controller.signal
-        });
-        clearTimeout(id);
-        return response;
-      } catch (error) {
-        clearTimeout(id);
-        throw error;
-      }
-    };
-
-    try {
-      console.log("Attempting to use Kimi API");
-      const kimiResponse = await fetchWithTimeout("https://api.moonshot.cn/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${KIMI_API_KEY}`,
+    const result = await callAIProvider(config, {
+      messages: [
+        {
+          role: 'system',
+          content: 'You are an expert academic writing instructor. Provide constructive, specific feedback in valid JSON format only.'
         },
-        body: JSON.stringify({
-          model: "moonshot-v1-8k",
-          messages: [
-            {
-              role: 'system',
-              content: 'You are an expert academic writing instructor. Provide constructive, specific feedback in valid JSON format only.'
-            },
-            {
-              role: 'user',
-              content: feedbackPrompt
-            }
-          ],
-          temperature: 0.7,
-        }),
-      }, 25000);
+        {
+          role: 'user',
+          content: feedbackPrompt
+        }
+      ],
+      temperature: 0.7,
+    });
 
-      if (!kimiResponse.ok) {
-        const errorText = await kimiResponse.text();
-        console.error("Kimi API error:", errorText);
-        throw new Error(`Kimi API failed: ${kimiResponse.status}`);
-      }
-
-      const kimiData = await kimiResponse.json();
-      content = kimiData.choices[0].message.content;
-      console.log("Successfully used Kimi API");
-    } catch (kimiError) {
-      console.error("Kimi API failed, falling back to DeepSeek:", kimiError);
-      usedModel = "DeepSeek";
-
-      const deepseekResponse = await fetchWithTimeout("https://api.deepseek.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "deepseek-chat",
-          messages: [
-            {
-              role: 'system',
-              content: 'You are an expert academic writing instructor. Provide constructive, specific feedback in valid JSON format only.'
-            },
-            {
-              role: 'user',
-              content: feedbackPrompt
-            }
-          ],
-          temperature: 0.7,
-        }),
-      }, 25000);
-
-      if (!deepseekResponse.ok) {
-        const errorText = await deepseekResponse.text();
-        console.error("DeepSeek API error:", errorText);
-        throw new Error(`Both Kimi and DeepSeek APIs failed`);
-      }
-
-      const deepseekData = await deepseekResponse.json();
-      content = deepseekData.choices[0].message.content;
-      console.log("Successfully used DeepSeek API");
-    }
-
-    console.log(`AI feedback response received using ${usedModel}, parsing...`);
+    console.log(`AI feedback response received using ${result.provider}, parsing...`);
     
     // Extract JSON from markdown code blocks if present
-    let jsonContent = content;
-    const jsonMatch = content.match(/```json\n([\s\S]*?)\n```/) || content.match(/```\n([\s\S]*?)\n```/);
+    let jsonContent = result.content;
+    const jsonMatch = result.content.match(/```json\n([\s\S]*?)\n```/) || result.content.match(/```\n([\s\S]*?)\n```/);
     if (jsonMatch) {
       jsonContent = jsonMatch[1];
     }

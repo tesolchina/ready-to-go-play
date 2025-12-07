@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { getAIProviderConfig, hasAIProvider, callAIProvider } from "../_shared/ai-providers.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -13,24 +14,9 @@ serve(async (req) => {
   try {
     const { text } = await req.json();
     
-    // Get API keys from environment variables (platform keys)
-    let KIMI_API_KEY = Deno.env.get("KIMI_API_KEY");
-    let DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
+    const config = getAIProviderConfig(req);
 
-    // Check for platform session in headers
-    const platformSession = req.headers.get("x-platform-session");
-    const hasPlatformAccess = !!platformSession;
-
-    // If no platform access, use user-provided keys from headers
-    if (!hasPlatformAccess) {
-      const userKimiKey = req.headers.get("x-user-kimi-key");
-      const userDeepseekKey = req.headers.get("x-user-deepseek-key");
-      
-      if (userKimiKey) KIMI_API_KEY = userKimiKey;
-      if (userDeepseekKey) DEEPSEEK_API_KEY = userDeepseekKey;
-    }
-
-    if (!KIMI_API_KEY && !DEEPSEEK_API_KEY) {
+    if (!hasAIProvider(config)) {
       return new Response(
         JSON.stringify({ 
           error: "AI services not configured. Please configure your API key in the Lessons page.",
@@ -76,77 +62,29 @@ serve(async (req) => {
 
     const systemPrompt = "You are a semantic analysis expert. Analyze the given text and extract: 1) sentiment (positive/negative/neutral), 2) up to 5 key themes as an array, 3) word count. Return ONLY valid JSON with these exact fields: sentiment, key_themes (array of strings), word_count (number).";
 
-    // Try Kimi first
-    let response;
-    let data;
-    let apiUsed = 'Kimi';
+    const result = await callAIProvider(config, {
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: `Analyze this text:\n\n${text}` }
+      ],
+      tools: toolDefinition,
+      toolChoice: { type: "function", function: { name: "semantic_analysis" } }
+    });
 
-    try {
-      console.log("Attempting analysis with Kimi API");
-      response = await fetch("https://api.moonshot.cn/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${KIMI_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "moonshot-v1-32k",
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: `Analyze this text:\n\n${text}` }
-          ],
-          tools: toolDefinition,
-          tool_choice: { type: "function", function: { name: "semantic_analysis" } }
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Kimi API failed: ${response.status}`);
-      }
-
-      data = await response.json();
-      console.log("Successfully analyzed with Kimi API");
-    } catch (kimiError) {
-      console.error("Kimi API failed, falling back to DeepSeek:", kimiError);
-      apiUsed = 'DeepSeek';
-
-      response = await fetch("https://api.deepseek.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "deepseek-chat",
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: `Analyze this text:\n\n${text}` }
-          ],
-          tools: toolDefinition,
-          tool_choice: { type: "function", function: { name: "semantic_analysis" } }
-        }),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("DeepSeek API error:", response.status, errorText);
-        throw new Error(`Both APIs failed. DeepSeek status: ${response.status}`);
-      }
-
-      data = await response.json();
-      console.log("Successfully analyzed with DeepSeek API");
-    }
-
-    console.log(`AI response from ${apiUsed}:`, JSON.stringify(data));
+    console.log(`Analysis completed using ${result.provider}`);
 
     // Extract the tool call result
-    const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
-    if (!toolCall) {
-      throw new Error("No tool call in response");
+    if (result.toolCalls && result.toolCalls.length > 0) {
+      const toolCall = result.toolCalls[0];
+      const analysis = JSON.parse(toolCall.function.arguments);
+      return new Response(
+        JSON.stringify(analysis),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
-    const analysis = JSON.parse(toolCall.function.arguments);
-
+    // Fallback: try to parse content as JSON
+    const analysis = JSON.parse(result.content);
     return new Response(
       JSON.stringify(analysis),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

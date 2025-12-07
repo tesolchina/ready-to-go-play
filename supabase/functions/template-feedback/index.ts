@@ -2,6 +2,7 @@ import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1';
 import { schemas, validateRequest } from "../_shared/validation.ts";
+import { getAIProviderConfig, hasAIProvider, callAIProvider } from "../_shared/ai-providers.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -33,24 +34,9 @@ serve(async (req) => {
       userAnswer 
     } = validation.data;
 
-    // Get API keys from environment variables (platform keys)
-    let KIMI_API_KEY = Deno.env.get('KIMI_API_KEY');
-    let DEEPSEEK_API_KEY = Deno.env.get('DEEPSEEK_API_KEY');
+    const config = getAIProviderConfig(req);
 
-    // Check for platform session in headers
-    const platformSession = req.headers.get("x-platform-session");
-    const hasPlatformAccess = !!platformSession;
-
-    // If no platform access, use user-provided keys from headers
-    if (!hasPlatformAccess) {
-      const userKimiKey = req.headers.get("x-user-kimi-key");
-      const userDeepseekKey = req.headers.get("x-user-deepseek-key");
-      
-      if (userKimiKey) KIMI_API_KEY = userKimiKey;
-      if (userDeepseekKey) DEEPSEEK_API_KEY = userDeepseekKey;
-    }
-
-    if (!KIMI_API_KEY && !DEEPSEEK_API_KEY) {
+    if (!hasAIProvider(config)) {
       return new Response(
         JSON.stringify({ 
           error: "AI services not configured. Please configure your API key in the Lessons page.",
@@ -85,75 +71,29 @@ Focus on:
 3. Clarity and coherence
 4. Grammar and mechanics`;
 
-    let responseData: any;
-    let usedModel = "Kimi";
+    const result = await callAIProvider(config, {
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: 'Please provide feedback on my answer.' }
+      ],
+      maxTokens: 2000,
+    });
 
-    try {
-      console.log("Attempting to use Kimi API");
-      const kimiResponse = await fetch('https://api.moonshot.cn/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${KIMI_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'moonshot-v1-8k',
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: 'Please provide feedback on my answer.' }
-          ],
-          response_format: { type: "json_object" },
-          max_tokens: 2000
-        }),
-      });
+    console.log(`Feedback generated using ${result.provider}`);
 
-      if (!kimiResponse.ok) {
-        const errorText = await kimiResponse.text();
-        console.error('Kimi API error:', errorText);
-        throw new Error(`Kimi API failed: ${kimiResponse.status}`);
-      }
-
-      responseData = await kimiResponse.json();
-      console.log('Successfully used Kimi API');
-    } catch (kimiError) {
-      console.error('Kimi API failed, falling back to DeepSeek:', kimiError);
-      usedModel = "DeepSeek";
-
-      const deepseekResponse = await fetch('https://api.deepseek.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${DEEPSEEK_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'deepseek-chat',
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: 'Please provide feedback on my answer.' }
-          ],
-          response_format: { type: "json_object" },
-          max_tokens: 2000
-        }),
-      });
-
-      if (!deepseekResponse.ok) {
-        const errorText = await deepseekResponse.text();
-        console.error('DeepSeek API error:', errorText);
-        throw new Error('Both Kimi and DeepSeek APIs failed');
-      }
-
-      responseData = await deepseekResponse.json();
-      console.log('Successfully used DeepSeek API');
-    }
-
-    console.log(`Feedback generated using ${usedModel}`);
-
-    const feedbackContent = responseData.choices?.[0]?.message?.content;
+    const feedbackContent = result.content;
     if (!feedbackContent) {
       throw new Error('No feedback content in response');
     }
 
-    const feedback = JSON.parse(feedbackContent);
+    // Parse JSON, handling markdown code blocks
+    let jsonContent = feedbackContent;
+    const jsonMatch = feedbackContent.match(/```json\n([\s\S]*?)\n```/) || feedbackContent.match(/```\n([\s\S]*?)\n```/);
+    if (jsonMatch) {
+      jsonContent = jsonMatch[1];
+    }
+
+    const feedback = JSON.parse(jsonContent);
 
     // Store in database
     const supabaseClient = createClient(
