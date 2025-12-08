@@ -142,7 +142,7 @@ export function AppSidebar() {
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
                           <NavLink
-                            to="/bnbuworkshop"
+                            to="/workshops/bnbuworkshop"
                             className={({ isActive }) =>
                               `block rounded-lg px-3 py-2 ml-8 transition-all duration-200 ${
                                 isActive

@@ -46,7 +46,7 @@ const WorkshopBNBU = () => {
     lab3: true,
   });
 
-  const WORKSHOP_PAGE_URL = "https://eapteacher.smartutor.me/bnbuworkshop";
+  const WORKSHOP_PAGE_URL = "https://eapteacher.smartutor.me/workshops/bnbuworkshop";
 
   useEffect(() => {
     setActiveTab(getTabFromHash(location.hash));
@@ -112,7 +112,7 @@ const WorkshopBNBU = () => {
                   <span className="inline-block px-4 py-2 bg-primary/10 text-primary rounded-lg font-semibold">
                     北师港浸大 | BNBU Zhuhai
                   </span>
-                  <span className="inline-block px-4 py-2 bg-accent/10 text-accent rounded-lg font-semibold">
+                  <span className="inline-block px-4 py-2 bg-primary text-primary-foreground rounded-lg font-semibold">
                     研究生专场 | Graduate Students
                   </span>
                 </div>
@@ -697,7 +697,7 @@ const WorkshopBNBU = () => {
                   <CardTitle>主讲人 | Speaker</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <h3 className="text-xl font-semibold mb-2">王晓明博士 | Dr. Simon Wang</h3>
+                  <h3 className="text-xl font-semibold mb-2">王浩博士 | Dr. Simon Wang</h3>
                   <p className="text-muted-foreground">
                     香港浸会大学语言中心讲师及创新主任 | Lecturer and Innovation Officer, Language Centre, HKBU
                   </p>
