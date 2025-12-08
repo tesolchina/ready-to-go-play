@@ -33,6 +33,8 @@ import VocabularyBuilder from "./pages/VocabularyBuilder";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import WorkshopAIAgent from "./pages/WorkshopAIAgent";
 import WorkshopAIAgentDelivery from "./pages/WorkshopAIAgentDelivery";
+import WorkshopAIAgent11Dec from "./pages/WorkshopAIAgent11Dec";
+import WorkshopAIAgentArchive3Dec from "./pages/WorkshopAIAgentArchive3Dec";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -75,6 +77,10 @@ const App = () => (
           <Route path="/teacher-dashboard" element={<TeacherDashboard />} />
           <Route path="/workshops/ai-agent-workshop" element={<WorkshopAIAgent />} />
           <Route path="/workshops/ai-agent-workshop/delivery" element={<WorkshopAIAgentDelivery />} />
+          <Route path="/workshops/ai-agent-workshop-11dec" element={<WorkshopAIAgent11Dec />} />
+          <Route path="/workshops/ai-agent-workshop-11dec/delivery" element={<WorkshopAIAgentDelivery />} />
+          <Route path="/workshops/ai-agent-workshop/archive/3dec" element={<WorkshopAIAgentArchive3Dec />} />
+          <Route path="/workshops/ai-agent-workshop/archive/3dec/delivery" element={<WorkshopAIAgentDelivery />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
