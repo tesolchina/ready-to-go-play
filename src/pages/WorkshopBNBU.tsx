@@ -248,11 +248,7 @@ const WorkshopBNBU = () => {
                           <li className="flex gap-3">
                             <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                             <div>
-                              <strong>Trae IDE</strong> - 下载安装:
-                              <ul className="mt-2 ml-4 space-y-1">
-                                <li>• <strong>中国大陆:</strong> <a href="https://trae.cn" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">trae.cn</a></li>
-                                <li>• <strong>其他地区:</strong> <a href="https://trae.ai" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">trae.ai</a></li>
-                              </ul>
+                              <strong>Trae IDE</strong> - 下载安装: <a href="https://trae.cn" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">trae.cn</a>
                             </div>
                           </li>
                           <li className="flex gap-3">
