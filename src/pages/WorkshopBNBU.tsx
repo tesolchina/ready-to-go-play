@@ -663,25 +663,6 @@ const WorkshopBNBU = () => {
                     </CardContent>
                   </Card>
 
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>后续联系 | Follow-up Contact</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      <WorkshopInterestForm />
-                      
-                      <div className="grid md:grid-cols-2 gap-6 pt-6 border-t">
-                        <div className="text-center">
-                          <p className="font-semibold mb-3">微信群 | WeChat Group</p>
-                          <img src={wechatGroupQR} alt="WeChat Group QR" className="w-48 h-48 mx-auto rounded-lg border" />
-                        </div>
-                        <div className="text-center">
-                          <p className="font-semibold mb-3">联系讲者 | Contact Speaker</p>
-                          <img src={wechatSimonQR} alt="WeChat Simon QR" className="w-48 h-48 mx-auto rounded-lg border" />
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
                 </TabsContent>
               </Tabs>
 
