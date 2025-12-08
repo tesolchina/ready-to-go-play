@@ -133,7 +133,8 @@ const WorkshopBNBU = () => {
                       <Clock className="h-5 w-5 text-primary" />
                       <div>
                         <p className="font-semibold">时间 Time</p>
-                        <p className="text-muted-foreground">下午 Afternoon</p>
+                        <p className="text-muted-foreground">15:00-16:30 讲座</p>
+                        <p className="text-muted-foreground text-sm">16:30-17:30 练习与答疑</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
@@ -309,15 +310,8 @@ const WorkshopBNBU = () => {
                         <li className="flex gap-3">
                           <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                           <div>
-                            <strong>Gitee (中国大陆):</strong> 
-                            <code className="ml-2 bg-muted px-2 py-1 rounded text-sm">https://gitee.com/simonwanghk/agent3Dec25</code>
-                          </div>
-                        </li>
-                        <li className="flex gap-3">
-                          <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                          <div>
-                            <strong>GitHub:</strong> 
-                            <code className="ml-2 bg-muted px-2 py-1 rounded text-sm">https://github.com/tesolchina/Agent3Dec25</code>
+                            <strong>Gitee:</strong> 
+                            <code className="ml-2 bg-muted px-2 py-1 rounded text-sm">TBA (待定)</code>
                           </div>
                         </li>
                       </ul>
