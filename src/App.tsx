@@ -35,6 +35,7 @@ import WorkshopAIAgent from "./pages/WorkshopAIAgent";
 import WorkshopAIAgentDelivery from "./pages/WorkshopAIAgentDelivery";
 import WorkshopAIAgent11Dec from "./pages/WorkshopAIAgent11Dec";
 import WorkshopAIAgentArchive3Dec from "./pages/WorkshopAIAgentArchive3Dec";
+import WorkshopBNBU from "./pages/WorkshopBNBU";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -81,6 +82,7 @@ const App = () => (
           <Route path="/workshops/ai-agent-workshop-11dec/delivery" element={<WorkshopAIAgentDelivery />} />
           <Route path="/workshops/ai-agent-workshop/archive/3dec" element={<WorkshopAIAgentArchive3Dec />} />
           <Route path="/workshops/ai-agent-workshop/archive/3dec/delivery" element={<WorkshopAIAgentDelivery />} />
+          <Route path="/bnbuworkshop" element={<WorkshopBNBU />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
