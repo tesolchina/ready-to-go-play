@@ -142,7 +142,7 @@ export function AppSidebar() {
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
                           <NavLink
-                            to="/workshops/ai-agent-workshop-11dec"
+                            to="/bnbuworkshop"
                             className={({ isActive }) =>
                               `block rounded-lg px-3 py-2 ml-8 transition-all duration-200 ${
                                 isActive
@@ -152,22 +152,6 @@ export function AppSidebar() {
                             }
                           >
                             <span className="text-sm">11 Dec - BNBU珠海</span>
-                          </NavLink>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                      <SidebarMenuSubItem>
-                        <SidebarMenuSubButton asChild>
-                          <NavLink
-                            to="/workshops/ai-agent-workshop-11dec/delivery"
-                            className={({ isActive }) =>
-                              `block rounded-lg px-3 py-2 ml-8 transition-all duration-200 ${
-                                isActive
-                                  ? "bg-sidebar-accent text-white"
-                                  : "text-white/70 hover:bg-white/10 hover:text-white"
-                              }`
-                            }
-                          >
-                            <span className="text-sm">Workshop Materials</span>
                           </NavLink>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
