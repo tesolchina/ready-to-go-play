@@ -277,22 +277,6 @@ const WorkshopXie = () => {
                         </ol>
                       </div>
 
-                      <div>
-                        <h3 className="font-semibold mb-2">Lovable Account Setup</h3>
-                        <ul className="space-y-2 text-foreground">
-                          <li className="flex gap-3">
-                            <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                            <div>
-                              <strong>Create Lovable Account</strong> - Sign up with your university email at: <a href="https://lovable.dev/invite/C2CWJG8" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-semibold">lovable.dev/invite/C2CWJG8</a>
-                            </div>
-                          </li>
-                        </ul>
-                        <div className="mt-3 p-4 bg-primary/5 rounded-lg border-l-4 border-primary">
-                          <p className="text-sm">
-                            <strong>Bonus:</strong> You will receive <strong>10 extra credits</strong> when you sign up through this invitation link with your university email!
-                          </p>
-                        </div>
-                      </div>
 
                       <div>
                         <h3 className="font-semibold mb-2">AI Platform API Keys</h3>
@@ -353,7 +337,7 @@ const WorkshopXie = () => {
                           <li className="flex gap-3">
                             <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                             <div>
-                              <strong>GitHub:</strong> <a href="https://github.com/tesolchina/Agent3Dec25" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-mono text-sm">https://github.com/tesolchina/Agent3Dec25</a>
+                              <strong>GitHub:</strong> <span className="text-muted-foreground">TBA</span>
                             </div>
                           </li>
                         </ul>
@@ -372,7 +356,7 @@ const WorkshopXie = () => {
                           </li>
                           <li className="flex gap-2">
                             <span className="font-semibold">3.</span>
-                            <span>Ask the Builder AI to clone the repository by typing: "Clone https://github.com/tesolchina/Agent3Dec25"</span>
+                            <span>Ask the Builder AI to clone the repository (link will be provided)</span>
                           </li>
                           <li className="flex gap-2">
                             <span className="font-semibold">4.</span>
@@ -629,57 +613,6 @@ const WorkshopXie = () => {
                     </div>
                   </CollapsibleSection>
 
-                  {/* Module 6: Vibe Coding */}
-                  <CollapsibleSection
-                    title="Lab 4: Vibe Coding with Lovable"
-                    icon="✨"
-                    isOpen={moduleStates.module6}
-                    onToggle={() => setModuleStates(prev => ({ ...prev, module6: !prev.module6 }))}
-                  >
-                    <div className="space-y-4">
-                      <Alert>
-                        <Lightbulb className="h-4 w-4" />
-                        <AlertDescription>
-                          <strong>Objective:</strong> Experience "vibe coding" - building web applications through natural language conversation.
-                        </AlertDescription>
-                      </Alert>
-
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div className="p-4 bg-muted rounded-lg">
-                          <h5 className="font-semibold text-primary mb-2">Path 1: Direct Lovable</h5>
-                          <ul className="text-sm space-y-1">
-                            <li>• Talk directly to Lovable</li>
-                            <li>• Modify project in-browser</li>
-                            <li>• Instant visual feedback</li>
-                          </ul>
-                        </div>
-                        <div className="p-4 bg-muted rounded-lg">
-                          <h5 className="font-semibold text-primary mb-2">Path 2: Trae + GitHub</h5>
-                          <ul className="text-sm space-y-1">
-                            <li>• Clone via GitHub</li>
-                            <li>• Use Trae AI to write code</li>
-                            <li>• Commit and push changes</li>
-                            <li>• Lovable auto-syncs</li>
-                          </ul>
-                        </div>
-                      </div>
-
-                      <div className="p-4 bg-primary/5 rounded-lg border-l-4 border-primary">
-                        <h4 className="font-semibold mb-2">Project: OpenRouter Hub</h4>
-                        <p className="text-sm mb-2">
-                          Clone and extend the OpenRouter Hub project:
-                        </p>
-                        <a 
-                          href="https://github.com/tesolchina/openrouter-hub" 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="text-primary hover:underline font-mono text-sm"
-                        >
-                          github.com/tesolchina/openrouter-hub
-                        </a>
-                      </div>
-                    </div>
-                  </CollapsibleSection>
 
                   {/* Module 7: Use Case Discussion */}
                   <CollapsibleSection
@@ -764,15 +697,6 @@ const WorkshopXie = () => {
                         >
                           <h4 className="font-semibold mb-1">Trae IDE</h4>
                           <p className="text-sm text-muted-foreground">AI-powered development environment</p>
-                        </a>
-                        <a 
-                          href="https://lovable.dev" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="p-4 border rounded-lg hover:bg-muted transition-colors"
-                        >
-                          <h4 className="font-semibold mb-1">Lovable</h4>
-                          <p className="text-sm text-muted-foreground">Build web apps with AI</p>
                         </a>
                         <a 
                           href="https://openrouter.ai" 
