@@ -137,7 +137,7 @@ const WorkshopXie = () => {
                             <Calendar className="h-5 w-5 mt-1 text-muted-foreground flex-shrink-0" />
                             <div>
                               <p className="font-medium">Date</p>
-                              <p className="text-muted-foreground">TBD</p>
+                              <p className="text-muted-foreground">December 10-15, 2025</p>
                             </div>
                           </div>
 
