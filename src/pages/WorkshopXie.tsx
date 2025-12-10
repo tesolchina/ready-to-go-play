@@ -337,7 +337,7 @@ const WorkshopXie = () => {
                           <li className="flex gap-3">
                             <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                             <div>
-                              <strong>GitHub:</strong> <span className="text-muted-foreground">TBA</span>
+                              <strong>GitHub:</strong> <a href="https://github.com/tesolchina/xiegroup.git" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://github.com/tesolchina/xiegroup.git</a>
                             </div>
                           </li>
                         </ul>
