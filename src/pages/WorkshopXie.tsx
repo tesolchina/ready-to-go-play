@@ -348,19 +348,23 @@ const WorkshopXie = () => {
                         <ol className="space-y-2 text-sm">
                           <li className="flex gap-2">
                             <span className="font-semibold">1.</span>
-                            <span>Open Trae IDE</span>
+                            <span>Open Trae IDE and create a new folder for the workshop (e.g., "XieWorkshop")</span>
                           </li>
                           <li className="flex gap-2">
                             <span className="font-semibold">2.</span>
-                            <span>Create a new folder or open an existing workspace</span>
+                            <span>Open the Builder panel (AI agent) in Trae</span>
                           </li>
                           <li className="flex gap-2">
                             <span className="font-semibold">3.</span>
-                            <span>Ask the Builder AI to clone the repository (link will be provided)</span>
+                            <span>Type: "Clone the repository https://github.com/tesolchina/xiegroup.git into this folder"</span>
                           </li>
                           <li className="flex gap-2">
                             <span className="font-semibold">4.</span>
-                            <span>The AI will handle the Git commands automatically</span>
+                            <span>The AI agent will execute the Git clone command automatically - no command-line knowledge required</span>
+                          </li>
+                          <li className="flex gap-2">
+                            <span className="font-semibold">5.</span>
+                            <span>Once complete, you'll see the workshop files in your folder explorer</span>
                           </li>
                         </ol>
                       </div>
