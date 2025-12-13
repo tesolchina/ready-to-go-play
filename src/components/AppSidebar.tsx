@@ -151,7 +151,7 @@ export function AppSidebar() {
                               }`
                             }
                           >
-                            <span className="text-sm">19 Dec - 数学硕士</span>
+                            <span className="text-sm">19 Dec - Math Masters</span>
                           </NavLink>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>

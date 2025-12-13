@@ -112,18 +112,9 @@ const WorkshopAIAgentDelivery = () => {
           </header>
           <div className="p-8">
             <div className="max-w-7xl mx-auto space-y-8">
-              <div className="flex items-center gap-4">
-                <Link to="/workshops/ai-agent-workshop">
-                  <Button variant="ghost" size="sm">
-                    <ArrowLeft className="h-4 w-4 mr-2" />
-                    Back to Workshop Info
-                  </Button>
-                </Link>
-              </div>
-
               <div className="space-y-4">
                 <h1 className="text-4xl font-bold tracking-tight">
-                  Workshop: Leveraging AI Agents in IDEs
+                  Leveraging Generative AI to Prepare for Master's Dissertation Writing
                 </h1>
                 <p className="text-xl text-muted-foreground">
                   Complete guide for participants - preparation, activities, and follow-up
@@ -133,25 +124,16 @@ const WorkshopAIAgentDelivery = () => {
               <Alert>
                 <CheckCircle2 className="h-4 w-4" />
                 <AlertDescription>
-                  Welcome to the workshop! This page contains all materials and activities for registered participants.
+                  Welcome to the workshop! This page contains all materials and activities for participants.
                 </AlertDescription>
               </Alert>
 
               <div className="flex flex-col items-center gap-4">
                 <div className="text-center space-y-1">
-                  <p className="text-lg font-semibold text-foreground">Date: 3 Dec 2025</p>
-                  <p className="text-lg font-semibold text-foreground">Time: 10:30am to 1:30pm</p>
+                  <p className="text-lg font-semibold text-foreground">Date: 19 Dec 2025 (Fri)</p>
+                  <p className="text-lg font-semibold text-foreground">Time: 18:30</p>
+                  <p className="text-lg font-semibold text-foreground">Venue: SCT501</p>
                 </div>
-                <Button size="lg" className="gap-2" asChild>
-                  <a 
-                    href="https://teams.microsoft.com/l/meetup-join/19%3ameeting_ZGEwMGEyNzUtNThhMi00NDg3LThlODktNzg3ZWU2MmMyMTg1%40thread.v2/0?context=%7b%22Tid%22%3a%226e261eb4-83bf-4585-8cc2-130d0188e081%22%2c%22Oid%22%3a%2250114aa0-76a5-4a5c-bab5-8aba1f464994%22%7d"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <ExternalLink className="h-5 w-5" />
-                    Join Teams Meeting
-                  </a>
-                </Button>
               </div>
 
               <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
