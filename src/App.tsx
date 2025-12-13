@@ -33,8 +33,9 @@ import VocabularyBuilder from "./pages/VocabularyBuilder";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import WorkshopAIAgent from "./pages/WorkshopAIAgent";
 import WorkshopAIAgentDelivery from "./pages/WorkshopAIAgentDelivery";
-import WorkshopAIAgent11Dec from "./pages/WorkshopAIAgent11Dec";
+import WorkshopAIAgentArchive11Dec from "./pages/WorkshopAIAgentArchive11Dec";
 import WorkshopAIAgentArchive3Dec from "./pages/WorkshopAIAgentArchive3Dec";
+import WorkshopMath19Dec from "./pages/WorkshopMath19Dec";
 import WorkshopBNBU from "./pages/WorkshopBNBU";
 import WorkshopXie from "./pages/WorkshopXie";
 import NotFound from "./pages/NotFound";
@@ -79,8 +80,10 @@ const App = () => (
           <Route path="/teacher-dashboard" element={<TeacherDashboard />} />
           <Route path="/workshops/ai-agent-workshop" element={<WorkshopAIAgent />} />
           <Route path="/workshops/ai-agent-workshop/delivery" element={<WorkshopAIAgentDelivery />} />
-          <Route path="/workshops/ai-agent-workshop-11dec" element={<WorkshopAIAgent11Dec />} />
-          <Route path="/workshops/ai-agent-workshop-11dec/delivery" element={<WorkshopAIAgentDelivery />} />
+          <Route path="/workshops/math-19dec" element={<WorkshopMath19Dec />} />
+          <Route path="/workshops/math-19dec/delivery" element={<WorkshopAIAgentDelivery />} />
+          <Route path="/workshops/ai-agent-workshop/archive/11dec" element={<WorkshopAIAgentArchive11Dec />} />
+          <Route path="/workshops/ai-agent-workshop/archive/11dec/delivery" element={<WorkshopAIAgentDelivery />} />
           <Route path="/workshops/ai-agent-workshop/archive/3dec" element={<WorkshopAIAgentArchive3Dec />} />
           <Route path="/workshops/ai-agent-workshop/archive/3dec/delivery" element={<WorkshopAIAgentDelivery />} />
           <Route path="/bnbuworkshop" element={<WorkshopBNBU />} />

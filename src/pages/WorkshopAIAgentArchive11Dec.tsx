@@ -8,7 +8,7 @@ import { useState } from "react";
 import QRCode from "react-qr-code";
 import { Link } from "react-router-dom";
 
-const WorkshopAIAgent11Dec = () => {
+const WorkshopAIAgentArchive11Dec = () => {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [qrCodeVisible, setQrCodeVisible] = useState(false);
 
@@ -343,4 +343,4 @@ const WorkshopAIAgent11Dec = () => {
   );
 };
 
-export default WorkshopAIAgent11Dec;
+export default WorkshopAIAgentArchive11Dec;
