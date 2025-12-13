@@ -6,7 +6,7 @@ import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail, Chevro
 import { WorkshopUseCaseChat } from "@/components/WorkshopUseCaseChat";
 import { WorkshopUseCaseBBS } from "@/components/WorkshopUseCaseBBS";
 import { WorkshopInterestForm } from "@/components/WorkshopInterestForm";
-import wechatGroupQR from "@/assets/wechat-group-qr.jpg";
+import genaiCop2QR from "@/assets/genai-cop2-qr.jpg";
 import wechatSimonQR from "@/assets/wechat-simon-qr.jpg";
 import traeIdeInterface from "@/assets/trae-ide-interface.png";
 import { Button } from "@/components/ui/button";
@@ -3007,13 +3007,13 @@ graph LR
                               <h4 className="font-semibold text-foreground mb-3 text-lg">Join WeChat Group</h4>
                               <div className="bg-white p-3 rounded-lg inline-block shadow-md">
                                 <img 
-                                  src={wechatGroupQR} 
+                                  src={genaiCop2QR} 
                                   alt="Gen AI CoP 2 WeChat Group QR Code" 
                                   className="w-56 h-56 object-contain"
                                 />
                               </div>
                               <p className="text-sm text-muted-foreground mt-3">Gen AI CoP 2</p>
-                              <p className="text-xs text-amber-600 mt-1">Valid until 12/9</p>
+                              <p className="text-xs text-amber-600 mt-1">Valid until 12/20</p>
                             </div>
                             
                             {/* Simon's QR - Hidden by default */}
