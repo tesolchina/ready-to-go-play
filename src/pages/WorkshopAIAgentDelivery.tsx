@@ -165,128 +165,37 @@ const WorkshopAIAgentDelivery = () => {
                           <li className="flex gap-3">
                             <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                             <div>
-                              <strong>Trae IDE</strong> (Required) - Download and install from:
-                              <ul className="mt-2 ml-4 space-y-1">
-                                <li>• <strong>Mainland China:</strong> <a href="https://trae.cn" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">trae.cn</a></li>
-                                <li>• <strong>Outside Mainland China:</strong> <a href="https://trae.ai" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">trae.ai</a></li>
-                              </ul>
+                              <strong>VS Code</strong> (Required) - You should already have VS Code installed on your computer
                             </div>
                           </li>
                           <li className="flex gap-3">
                             <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                             <div>
-                              <strong>Trae Account</strong> - Sign up for a free account at the website above, then log in from your local computer
+                              <strong>GitHub Copilot</strong> (Required) - You should already have GitHub Copilot extension installed and configured in VS Code
                             </div>
                           </li>
                         </ul>
                       </div>
 
-                      <div className="p-4 bg-primary/5 rounded-lg border-l-4 border-primary">
-                        <h4 className="font-semibold mb-2">Installation Steps</h4>
-                        <ol className="space-y-2 text-sm">
-                          <li className="flex gap-2">
-                            <span className="font-semibold">1.</span>
-                            <span>Visit the appropriate Trae website for your location</span>
-                          </li>
-                          <li className="flex gap-2">
-                            <span className="font-semibold">2.</span>
-                            <span>Download the installer for your operating system (Windows/Mac/Linux)</span>
-                          </li>
-                          <li className="flex gap-2">
-                            <span className="font-semibold">3.</span>
-                            <span>Run the installer and follow the setup instructions</span>
-                          </li>
-                          <li className="flex gap-2">
-                            <span className="font-semibold">4.</span>
-                            <span>Create a Trae account or log in with your existing account</span>
-                          </li>
-                          <li className="flex gap-2">
-                            <span className="font-semibold">5.</span>
-                            <span>Complete the initial setup and familiarize yourself with the interface</span>
-                          </li>
-                        </ol>
-                      </div>
-
                       <div>
-                        <h3 className="font-semibold mb-2">Lovable Account Setup</h3>
-                        <ul className="space-y-2 text-foreground">
-                          <li className="flex gap-3">
-                            <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                            <div>
-                              <strong>Create Lovable Account</strong> - Sign up with your university email at: <a href="https://lovable.dev/invite/C2CWJG8" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-semibold">lovable.dev/invite/C2CWJG8</a>
-                            </div>
-                          </li>
-                        </ul>
-                        <div className="mt-3 p-4 bg-primary/5 rounded-lg border-l-4 border-primary">
-                          <p className="text-sm">
-                            <strong>Bonus:</strong> You will receive <strong>10 extra credits</strong> when you sign up through this invitation link with your university email!
-                          </p>
-                        </div>
-                      </div>
-
-                      <div>
-                        <h3 className="font-semibold mb-2">AI Platform API Keys</h3>
+                        <h3 className="font-semibold mb-2">AI Platform API Key</h3>
                         <p className="text-sm text-muted-foreground mb-3">
-                          Choose one of the following platforms to obtain an API key for accessing AI language models:
+                          Obtain an API key from HKBU GenAI Platform:
                         </p>
                         <ul className="space-y-3 text-foreground">
                           <li className="flex gap-3">
                             <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                             <div>
-                              <strong>Kimi (Moonshot AI)</strong> - <a href="https://platform.moonshot.cn/console/api-keys" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">platform.moonshot.cn/console/api-keys</a>
-                              <p className="text-sm text-muted-foreground mt-1">Offers CNY ¥15 in free credits</p>
-                            </div>
-                          </li>
-                          <li className="flex gap-3">
-                            <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                            <div>
-                              <strong>DeepSeek</strong> - <a href="https://platform.deepseek.com/api_keys" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">platform.deepseek.com/api_keys</a>
-                              <p className="text-sm text-muted-foreground mt-1">Free credits not available; may require adding funds (USD 5 max)</p>
-                            </div>
-                          </li>
-                          <li className="flex gap-3">
-                            <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                            <div>
-                              <strong>OpenRouter</strong> - <a href="https://openrouter.ai/settings/keys" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">openrouter.ai/settings/keys</a>
-                              <p className="text-sm text-muted-foreground mt-1">Free credits not available; may require adding funds (USD 5 max)</p>
+                              <strong>HKBU GenAI Platform</strong> - <a href="https://genai.hkbu.edu.hk/settings/api-docs" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">genai.hkbu.edu.hk/settings/api-docs</a>
+                              <p className="text-sm text-muted-foreground mt-1">Log in with your HKBU credentials to access the API documentation and obtain your API key</p>
                             </div>
                           </li>
                         </ul>
-                        <div className="mt-3 p-4 bg-muted rounded-lg">
-                          <p className="text-sm">
-                            <strong>Budget Estimate:</strong> RMB/HKD 20 should be sufficient for workshop activities and experimentation with API-based language models.
-                          </p>
-                        </div>
                         <div className="mt-3 p-4 bg-destructive/10 rounded-lg border-l-4 border-destructive">
                           <p className="text-sm font-semibold text-destructive">
                             ⚠️ Important: Save your API key immediately after generation! You will not be able to view it again. Store it in a secure location such as a password manager.
                           </p>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Laptop className="h-5 w-5" />
-                        Important Notice for Mainland China Users
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <Alert>
-                        <CheckCircle2 className="h-4 w-4" />
-                        <AlertDescription>
-                          <p className="font-semibold mb-2">VPN Access Required</p>
-                          <p className="text-sm">
-                            Accessing <strong>Lovable</strong> and <strong>OpenRouter</strong> from Mainland China may require a VPN connection.
-                          </p>
-                        </AlertDescription>
-                      </Alert>
-                      <div className="p-4 bg-muted rounded-lg border-l-4 border-muted-foreground">
-                        <p className="text-sm text-muted-foreground">
-                          <strong>Important:</strong> Always respect and comply with local laws and regulations on Internet use. Limit legitimate use of VPN for teaching and research purposes only.
-                        </p>
                       </div>
                     </CardContent>
                   </Card>
@@ -302,76 +211,42 @@ const WorkshopAIAgentDelivery = () => {
                       <div>
                         <h3 className="font-semibold mb-2">Get the Workshop Materials</h3>
                         <p className="text-sm text-muted-foreground mb-3">
-                          Clone the workshop repository using Trae IDE. Choose the appropriate repository based on your location:
+                          Clone the workshop repository using VS Code:
                         </p>
                         <ul className="space-y-3 text-foreground">
                           <li className="flex gap-3">
                             <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                             <div>
-                              <strong>Mainland China:</strong> <a href="https://gitee.com/simonwanghk/agent3Dec25" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-mono text-sm">https://gitee.com/simonwanghk/agent3Dec25</a>
-                            </div>
-                          </li>
-                          <li className="flex gap-3">
-                            <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                            <div>
-                              <strong>Outside Mainland China:</strong> <a href="https://github.com/tesolchina/Agent3Dec25" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-mono text-sm">https://github.com/tesolchina/Agent3Dec25</a>
+                              <strong>GitHub Repository:</strong> <a href="https://github.com/tesolchina/math19Dec.git" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-mono text-sm">https://github.com/tesolchina/math19Dec.git</a>
                             </div>
                           </li>
                         </ul>
                       </div>
 
                       <div className="p-4 bg-primary/5 rounded-lg border-l-4 border-primary">
-                        <h4 className="font-semibold mb-2">How to Clone in Trae</h4>
+                        <h4 className="font-semibold mb-2">How to Clone in VS Code</h4>
                         <ol className="space-y-2 text-sm">
                           <li className="flex gap-2">
                             <span className="font-semibold">1.</span>
-                            <span>Open Trae IDE and log in to your account</span>
+                            <span>Open VS Code</span>
                           </li>
                           <li className="flex gap-2">
                             <span className="font-semibold">2.</span>
-                            <span>Use the Git clone feature in Trae</span>
+                            <span>Press <code className="bg-muted px-2 py-1 rounded">Ctrl+Shift+P</code> (Windows) or <code className="bg-muted px-2 py-1 rounded">Cmd+Shift+P</code> (Mac) to open Command Palette</span>
                           </li>
                           <li className="flex gap-2">
                             <span className="font-semibold">3.</span>
-                            <span>Paste the appropriate repository URL (Gitee or GitHub)</span>
+                            <span>Type "Git: Clone" and select the option</span>
                           </li>
                           <li className="flex gap-2">
                             <span className="font-semibold">4.</span>
-                            <span>Wait for the repository to clone and open the project in Trae</span>
+                            <span>Paste the repository URL: <code className="bg-muted px-2 py-1 rounded text-xs">https://github.com/tesolchina/math19Dec.git</code></span>
+                          </li>
+                          <li className="flex gap-2">
+                            <span className="font-semibold">5.</span>
+                            <span>Choose a local folder to save the project and open it in VS Code</span>
                           </li>
                         </ol>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Laptop className="h-5 w-5" />
-                        Remix Lovable Project
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <h3 className="font-semibold mb-2">Get Started with Lovable</h3>
-                        <p className="text-sm text-muted-foreground mb-3">
-                          Visit the workshop project on Lovable and create your own remix to experiment with:
-                        </p>
-                        <ul className="space-y-3 text-foreground">
-                          <li className="flex gap-3">
-                            <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                            <div>
-                              <strong>Workshop Project:</strong> <a href="https://lovable.dev/projects/6b74967a-bc71-434d-a398-74a0e8c7d669?remixed=true" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-mono text-sm">Visit and Remix</a>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-
-                      <div className="p-4 bg-primary/5 rounded-lg border-l-4 border-primary">
-                        <h4 className="font-semibold mb-2">What is Remixing?</h4>
-                        <p className="text-sm">
-                          Remixing creates your own copy of the project that you can modify and experiment with. This allows you to follow along with workshop activities in your own Lovable workspace without affecting the original project.
-                        </p>
                       </div>
                     </CardContent>
                   </Card>
@@ -531,7 +406,7 @@ const WorkshopAIAgentDelivery = () => {
                         <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
                           <h3 className="font-semibold text-left flex items-center gap-2 text-xl">
                             <Laptop className="h-6 w-6" />
-                            Module 2: Get Familiar with IDE - Navigating the Trae Interface
+                            Module 2: Get Familiar with IDE - Navigating the VS Code Interface
                           </h3>
                           <ChevronDown className="h-5 w-5 flex-shrink-0 transition-transform duration-300 ui-state-open:rotate-180" />
                         </button>
@@ -580,7 +455,7 @@ const WorkshopAIAgentDelivery = () => {
                                 <p className="text-base font-bold mb-2 text-foreground">AI Agent Chat</p>
                                 <ul className="space-y-1 text-sm font-semibold text-foreground">
                                   <li>💬 Chat interface</li>
-                                  <li>🤖 AI agent ("Builder")</li>
+                                  <li>🤖 AI agent (GitHub Copilot)</li>
                                   <li>⚡ Commands & prompts</li>
                                 </ul>
                               </div>
@@ -607,7 +482,7 @@ const WorkshopAIAgentDelivery = () => {
                             <div className="relative rounded-lg overflow-hidden border-2 border-muted">
                               <img 
                                 src={traeIdeInterface} 
-                                alt="Trae IDE interface showing left panel with file explorer, middle panel with code editor, right panel with AI chat, and terminal at the bottom"
+                                alt="VS Code interface showing left panel with file explorer, middle panel with code editor, right panel with AI chat, and terminal at the bottom"
                                 className="w-full"
                               />
                               {/* Labels overlay */}
@@ -635,8 +510,8 @@ const WorkshopAIAgentDelivery = () => {
                                 <div className="flex items-start gap-3">
                                   <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold">1</span>
                                   <div>
-                                    <p className="font-semibold">Open Trae IDE</p>
-                                    <p className="text-sm text-muted-foreground">Launch the Trae application on your computer</p>
+                                    <p className="font-semibold">Open VS Code</p>
+                                    <p className="text-sm text-muted-foreground">Launch VS Code on your computer</p>
                                   </div>
                                 </div>
                                 <div className="flex items-start gap-3">
@@ -649,8 +524,8 @@ const WorkshopAIAgentDelivery = () => {
                                 <div className="flex items-start gap-3">
                                   <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold">3</span>
                                   <div>
-                                    <p className="font-semibold">Talk with Builder</p>
-                                    <p className="text-sm text-muted-foreground">Start a conversation with the AI agent in the right panel. Try asking "Hello, can you help me understand this IDE?"</p>
+                                    <p className="font-semibold">Talk with GitHub Copilot</p>
+                                    <p className="text-sm text-muted-foreground">Start a conversation with the AI agent in the chat panel. Try asking "Hello, can you help me understand this IDE?"</p>
                                   </div>
                                 </div>
                               </div>
@@ -660,7 +535,7 @@ const WorkshopAIAgentDelivery = () => {
                           {/* Reminder */}
                           <div className="p-4 bg-accent/10 rounded-lg border-l-4 border-accent">
                             <p className="text-sm">
-                              <strong>💡 Reminder:</strong> The AI agent in Trae is called <strong>"Builder"</strong>. Don't hesitate to ask Builder questions as you explore the interface!
+                              <strong>💡 Reminder:</strong> The AI agent in VS Code is <strong>GitHub Copilot</strong>. Don't hesitate to ask it questions as you explore the interface!
                             </p>
                           </div>
 
@@ -670,7 +545,7 @@ const WorkshopAIAgentDelivery = () => {
                             <AlertDescription className="ml-2">
                               <p className="font-semibold mb-2">💾 Important Tip: Turn On Auto-Save</p>
                               <p className="text-sm text-foreground">
-                                Enable auto-save in Trae to automatically save your changes. This prevents losing work and ensures Builder always has access to your latest code. Look for the auto-save setting in Trae's preferences or settings menu.
+                                Enable auto-save in VS Code to automatically save your changes. This prevents losing work and ensures GitHub Copilot always has access to your latest code. Go to File &gt; Auto Save or set it in VS Code preferences.
                               </p>
                             </AlertDescription>
                           </Alert>
@@ -698,15 +573,15 @@ const WorkshopAIAgentDelivery = () => {
                         <div className="space-y-6">
                           {/* Introduction */}
                           <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 p-6 rounded-xl border-2">
-                            <h4 className="text-xl font-bold text-foreground mb-4">🎯 Your First Builder Task</h4>
+                            <h4 className="text-xl font-bold text-foreground mb-4">🎯 Your First GitHub Copilot Task</h4>
                             <p className="text-foreground mb-4">
-                              Before diving into Lab 1, let's practice asking Builder to do something practical: cloning the workshop repository. 
+                              Before diving into Lab 1, let's practice asking GitHub Copilot to do something practical: cloning the workshop repository. 
                               This task demonstrates how AI agents can handle technical operations (like Git commands) that traditionally required 
                               learning command-line syntax.
                             </p>
                             <div className="bg-background p-4 rounded-lg border">
                               <p className="text-sm text-foreground">
-                                <strong>What you'll learn:</strong> How to delegate technical tasks to Builder without needing to know the underlying commands
+                                <strong>What you'll learn:</strong> How to delegate technical tasks to GitHub Copilot without needing to know the underlying commands
                               </p>
                             </div>
                           </div>
@@ -732,7 +607,7 @@ const WorkshopAIAgentDelivery = () => {
                                 </li>
                                 <li className="flex items-start gap-2">
                                   <span className="text-amber-600">•</span>
-                                  <span>Name it something like <code className="bg-muted px-2 py-1 rounded">WorkshopMaterials</code> or <code className="bg-muted px-2 py-1 rounded">Agent3Dec25</code></span>
+                                  <span>Name it something like <code className="bg-muted px-2 py-1 rounded">WorkshopMaterials</code> or <code className="bg-muted px-2 py-1 rounded">math19Dec</code></span>
                                 </li>
                                 <li className="flex items-start gap-2">
                                   <span className="text-amber-600">•</span>
@@ -741,46 +616,33 @@ const WorkshopAIAgentDelivery = () => {
                               </ul>
                             </div>
 
-                            {/* Step 2: Ask Builder to Clone */}
+                            {/* Step 2: Ask GitHub Copilot to Clone */}
                             <div className="bg-background p-5 rounded-lg border-l-4 border-blue-600">
                               <h5 className="font-bold text-foreground mb-3 flex items-center gap-2">
                                 <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">2</span>
-                                Ask Builder to Clone the Repository
+                                Ask GitHub Copilot to Clone the Repository
                               </h5>
                               <p className="text-sm text-foreground mb-3 ml-8">
-                                In the <strong>Right Panel (AI Agent Chat)</strong>, type a natural language instruction to Builder:
+                                In the <strong>GitHub Copilot Chat panel</strong>, type a natural language instruction:
                               </p>
                               <div className="bg-muted p-4 rounded-lg ml-8">
-                                <p className="text-sm font-semibold text-foreground mb-2">Example Message to Builder:</p>
+                                <p className="text-sm font-semibold text-foreground mb-2">Example Message to GitHub Copilot:</p>
                                 <div className="bg-background p-3 rounded border">
                                   <p className="text-sm italic text-foreground">
                                     "Please clone the workshop repository to this folder. Use this URL:<br/>
-                                    <strong className="text-primary">
-                                      [Choose based on your location]
-                                    </strong>"
+                                    <strong className="text-primary">https://github.com/tesolchina/math19Dec.git</strong>"
                                   </p>
-                                  <div className="mt-3 space-y-2 text-xs">
-                                    <div className="p-2 bg-muted rounded">
-                                      <strong>🇨🇳 Mainland China:</strong><br/>
-                                      <code className="text-primary">https://gitee.com/simonwanghk/agent3Dec25</code>
-                                    </div>
-                                    <div className="p-2 bg-muted rounded">
-                                      <strong>🌍 Outside Mainland China:</strong><br/>
-                                      <code className="text-primary">https://github.com/tesolchina/Agent3Dec25</code>
-                                    </div>
-                                  </div>
                                 </div>
                               </div>
                             </div>
 
-                            {/* Step 3: Watch Builder Work */}
                             <div className="bg-background p-5 rounded-lg border-l-4 border-green-600">
                               <h5 className="font-bold text-foreground mb-3 flex items-center gap-2">
                                 <span className="bg-green-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">3</span>
-                                Watch Builder Execute Git Commands
+                                Watch GitHub Copilot Execute Git Commands
                               </h5>
                               <p className="text-sm text-foreground mb-3 ml-8">
-                                After you send the instruction, Builder will:
+                                After you send the instruction, GitHub Copilot will:
                               </p>
                               <ul className="space-y-2 text-sm text-foreground list-none ml-8">
                                 <li className="flex items-start gap-2">
@@ -842,7 +704,7 @@ const WorkshopAIAgentDelivery = () => {
                               </div>
 
                               <div className="bg-primary/5 p-4 rounded-lg border-2 border-primary/20">
-                                <p className="text-sm font-semibold text-foreground mb-2">✅ AI Agent Approach (With Builder):</p>
+                                <p className="text-sm font-semibold text-foreground mb-2">✅ AI Agent Approach (With GitHub Copilot):</p>
                                 <ul className="space-y-2 text-sm text-foreground list-none">
                                   <li className="flex items-start gap-2">
                                     <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
@@ -850,38 +712,38 @@ const WorkshopAIAgentDelivery = () => {
                                   </li>
                                   <li className="flex items-start gap-2">
                                     <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-                                    <span><strong>Builder handles the technical details</strong> - executes the correct commands</span>
+                                    <span><strong>GitHub Copilot handles the technical details</strong> - executes the correct commands</span>
                                   </li>
                                   <li className="flex items-start gap-2">
                                     <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-                                    <span><strong>Automatic error handling</strong> - Builder can troubleshoot and retry if needed</span>
+                                    <span><strong>Automatic error handling</strong> - GitHub Copilot can troubleshoot and retry if needed</span>
                                   </li>
                                 </ul>
                               </div>
 
                               <blockquote className="border-l-4 border-primary pl-4 italic text-foreground my-4">
-                                "You don't need to learn CLI syntax anymore. Just tell Builder what you want, and it will figure out the commands."
+                                "You don't need to learn CLI syntax anymore. Just tell GitHub Copilot what you want, and it will figure out the commands."
                               </blockquote>
                             </div>
                           </div>
 
-                          {/* Behind the Scenes: What Builder Actually Does */}
+                          {/* Behind the Scenes: What GitHub Copilot Actually Does */}
                           <div className="bg-gradient-to-r from-slate-50 to-gray-50 dark:from-slate-900/20 dark:to-gray-900/20 p-6 rounded-xl border-2">
-                            <h4 className="text-xl font-bold text-foreground mb-4">🔍 Behind the Scenes: What Builder Actually Does</h4>
+                            <h4 className="text-xl font-bold text-foreground mb-4">🔍 Behind the Scenes: What GitHub Copilot Actually Does</h4>
                             <p className="text-foreground mb-4">
-                              When you ask Builder to clone the repository, here's what happens behind the scenes:
+                              When you ask GitHub Copilot to clone the repository, here's what happens behind the scenes:
                             </p>
                             <div className="bg-background p-4 rounded-lg border font-mono text-xs">
-                              <div className="text-muted-foreground mb-1"># Builder interprets your request and executes:</div>
-                              <div className="text-foreground">$ git clone https://github.com/tesolchina/Agent3Dec25</div>
-                              <div className="text-green-600 mt-2">Cloning into 'Agent3Dec25'...</div>
+                              <div className="text-muted-foreground mb-1"># GitHub Copilot interprets your request and executes:</div>
+                              <div className="text-foreground">$ git clone https://github.com/tesolchina/math19Dec.git</div>
+                              <div className="text-green-600 mt-2">Cloning into 'math19Dec'...</div>
                               <div className="text-green-600">remote: Enumerating objects: 150, done.</div>
                               <div className="text-green-600">remote: Counting objects: 100% (150/150), done.</div>
                               <div className="text-green-600">Receiving objects: 100% (150/150), done.</div>
                             </div>
                             <p className="text-sm text-muted-foreground mt-3">
-                              You can see this output in the <strong>Bottom Middle Area (Terminal/Console)</strong> in Trae. 
-                              Builder is using command-line tools, but you didn't need to know the syntax!
+                              You can see this output in the <strong>Terminal panel</strong> in VS Code. 
+                              GitHub Copilot is using command-line tools, but you didn't need to know the syntax!
                             </p>
                           </div>
 
@@ -891,9 +753,8 @@ const WorkshopAIAgentDelivery = () => {
                             <AlertDescription className="ml-2">
                               <p className="font-semibold mb-2">✅ Verify Success</p>
                               <p className="text-sm text-foreground">
-                                After Builder finishes, check the <strong>Left Panel (File Explorer)</strong>. You should see a new folder 
-                                with the workshop materials inside (Lab1_Explore_BAWE, Data folder, etc.). This confirms the repository 
-                                was successfully cloned!
+                                After GitHub Copilot finishes, check the <strong>Explorer panel (left side)</strong>. You should see a new folder 
+                                with the workshop materials inside. This confirms the repository was successfully cloned!
                               </p>
                             </AlertDescription>
                           </Alert>
@@ -903,7 +764,7 @@ const WorkshopAIAgentDelivery = () => {
                             <p className="font-semibold text-foreground mb-2">🎯 Key Takeaway</p>
                             <p className="text-sm text-foreground">
                               This simple task demonstrates the core value of AI agents: <strong>you can accomplish technical tasks 
-                              using natural language, without needing to learn specialized syntax or commands.</strong> Builder translates 
+                              using natural language, without needing to learn specialized syntax or commands.</strong> GitHub Copilot translates 
                               your intent into the appropriate technical operations.
                             </p>
                           </div>
@@ -933,7 +794,7 @@ const WorkshopAIAgentDelivery = () => {
                           <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 p-6 rounded-xl border-2">
                             <h4 className="text-xl font-bold text-foreground mb-4">Understanding the Basic Model</h4>
                             <p className="text-foreground mb-4">
-                              Every AI Agent task follows a simple three-step model. Understanding this model helps you communicate effectively with Builder and structure your requests clearly.
+                              Every AI Agent task follows a simple three-step model. Understanding this model helps you communicate effectively with GitHub Copilot and structure your requests clearly.
                             </p>
                             
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -986,7 +847,7 @@ const WorkshopAIAgentDelivery = () => {
                             <h4 className="text-xl font-bold text-foreground mb-4">🔬 Lab 1: Explore BAWE (British Academic Written English Corpus)</h4>
                             
                             <p className="text-foreground mb-4">
-                              In this hands-on lab, you'll use Builder to explore a learner corpus, generate insights, and create visualizations.
+                              In this hands-on lab, you'll use GitHub Copilot to explore a learner corpus, generate insights, and create visualizations.
                             </p>
 
                             <Alert className="mb-4 border-l-4 border-amber-500 bg-amber-50 dark:bg-amber-900/20">
@@ -994,7 +855,7 @@ const WorkshopAIAgentDelivery = () => {
                               <AlertDescription className="ml-2">
                                 <p className="font-semibold text-foreground">📁 Locate Your Lab Files</p>
                                 <p className="text-sm text-foreground mt-1">
-                                  In your Trae workspace, navigate to <code className="bg-muted px-2 py-1 rounded text-xs">Lab1_Explore_BAWE</code> folder. You'll find an <code className="bg-muted px-2 py-1 rounded text-xs">instructions.md</code> file that contains the basic template structure.
+                                  In your VS Code workspace, navigate to <code className="bg-muted px-2 py-1 rounded text-xs">Lab1_Explore_BAWE</code> folder. You'll find an <code className="bg-muted px-2 py-1 rounded text-xs">instructions.md</code> file that contains the basic template structure.
                                 </p>
                               </AlertDescription>
                             </Alert>
@@ -1006,7 +867,7 @@ const WorkshopAIAgentDelivery = () => {
                               <div className="bg-background p-4 rounded-lg border-l-4 border-purple-600">
                                 <h6 className="font-bold text-foreground mb-2">Step 1: Open and Edit instructions.md</h6>
                                 <p className="text-sm text-foreground mb-2">
-                                  Open <code className="bg-muted px-2 py-1 rounded text-xs">Lab1_Explore_BAWE/instructions.md</code> in Trae. You'll see a simple template:
+                                  Open <code className="bg-muted px-2 py-1 rounded text-xs">Lab1_Explore_BAWE/instructions.md</code> in VS Code. You'll see a simple template:
                                 </p>
                                 <div className="bg-muted p-3 rounded text-xs font-mono mt-2">
                                   <div>Input:</div>
