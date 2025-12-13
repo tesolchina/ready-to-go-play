@@ -2796,52 +2796,16 @@ graph LR
                       </h3>
                     </div>
                     <CardContent className="p-4">
-                      <ul className="space-y-2">
-                        <li className="flex items-start gap-2">
-                          <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                          <span>AI Agents vs Chatbots: Understanding the difference</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                          <span>Setting up Trae IDE and API keys</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                          <span>Input-Process-Output framework for batch processing</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                          <span>Lab exercises: BAWE corpus analysis and literature screening</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                          <span>Vibe Coding: Building apps with natural language</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                          <span>Real-world applications for teaching and research</span>
-                        </li>
-                      </ul>
+                      <p className="text-muted-foreground italic">To be updated</p>
                     </CardContent>
                   </Card>
 
                   <CollapsibleSection
-                    title="Workshop Reflection Form (Microsoft Forms)"
+                    title="Workshop Reflection Form"
                     icon="📝"
                     defaultOpen={false}
                   >
-                    <p className="text-sm text-muted-foreground mb-3">
-                      Please take 2-3 minutes to complete this reflection form about today's workshop.
-                    </p>
-                    <div className="aspect-video w-full">
-                      <iframe
-                        title="AI Agent Workshop Reflection Form"
-                        src="https://forms.office.com/pages/responsepage.aspx?id=tB4mbr-DhUWMwhMNAYjggaBKEVCldlxKurWKuh9GSZRUN0tMTjZRU1pOMVpXVDcxQ0w5NDhKRVBQQy4u&route=shorturl&embed=true"
-                        className="w-full h-full border-0 rounded-lg"
-                        loading="lazy"
-                        allowFullScreen
-                      />
-                    </div>
+                    <p className="text-muted-foreground italic">To be updated</p>
                   </CollapsibleSection>
 
                   {/* Platform Vision Diagram */}
@@ -2957,30 +2921,6 @@ graph LR
                     </CardContent>
                   </Card>
 
-                  {/* Express Your Interest - Full Width Toggle */}
-                  <Collapsible defaultOpen className="group">
-                    <Card className="border-2 border-primary/50 overflow-hidden">
-                      <CollapsibleTrigger className="w-full">
-                        <CardHeader className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground cursor-pointer hover:opacity-90 transition-opacity">
-                          <div className="flex items-center justify-between">
-                            <CardTitle className="flex items-center gap-2">
-                              <Sparkles className="h-5 w-5" />
-                              Express Your Interest
-                            </CardTitle>
-                            <ChevronDown className="h-5 w-5 transition-transform group-data-[state=open]:rotate-180" />
-                          </div>
-                          <p className="text-sm text-primary-foreground/90 text-left">
-                            Join our platform for AI-powered teaching and research
-                          </p>
-                        </CardHeader>
-                      </CollapsibleTrigger>
-                      <CollapsibleContent>
-                        <CardContent className="p-6">
-                          <WorkshopInterestForm />
-                        </CardContent>
-                      </CollapsibleContent>
-                    </Card>
-                  </Collapsible>
 
                   {/* Connect via WeChat - Full Width Toggle */}
                   <Collapsible defaultOpen className="group">
