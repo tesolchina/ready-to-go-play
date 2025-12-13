@@ -35,7 +35,7 @@ import WorkshopAIAgent from "./pages/WorkshopAIAgent";
 import WorkshopAIAgentDelivery from "./pages/WorkshopAIAgentDelivery";
 import WorkshopAIAgentArchive11Dec from "./pages/WorkshopAIAgentArchive11Dec";
 import WorkshopAIAgentArchive3Dec from "./pages/WorkshopAIAgentArchive3Dec";
-import WorkshopMath19Dec from "./pages/WorkshopMath19Dec";
+
 import WorkshopBNBU from "./pages/WorkshopBNBU";
 import WorkshopXie from "./pages/WorkshopXie";
 import NotFound from "./pages/NotFound";
@@ -80,7 +80,7 @@ const App = () => (
           <Route path="/teacher-dashboard" element={<TeacherDashboard />} />
           <Route path="/workshops/ai-agent-workshop" element={<WorkshopAIAgent />} />
           <Route path="/workshops/ai-agent-workshop/delivery" element={<WorkshopAIAgentDelivery />} />
-          <Route path="/workshops/math-19dec" element={<WorkshopMath19Dec />} />
+          <Route path="/workshops/math-19dec" element={<WorkshopAIAgentDelivery />} />
           <Route path="/workshops/math-19dec/delivery" element={<WorkshopAIAgentDelivery />} />
           <Route path="/workshops/ai-agent-workshop/archive/11dec" element={<WorkshopAIAgentArchive11Dec />} />
           <Route path="/workshops/ai-agent-workshop/archive/11dec/delivery" element={<WorkshopAIAgentDelivery />} />
