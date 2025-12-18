@@ -2,7 +2,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail, ChevronDown, Terminal, Zap, ChevronUp, FileText, BookOpen, Key, AlertCircle, Info, Cpu, FolderOpen, GraduationCap, FileEdit, Microscope, PenTool, Sparkles, Monitor, ExternalLink, Play, MessagesSquare, GitBranch } from "lucide-react";
+import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail, ChevronDown, Terminal, Zap, ChevronUp, FileText, BookOpen, Key, AlertCircle, Info, Cpu, FolderOpen, GraduationCap, FileEdit, Microscope, PenTool, Sparkles, Monitor, ExternalLink, Play, MessagesSquare, GitBranch, Database, BarChart3 } from "lucide-react";
 import { WorkshopUseCaseChat } from "@/components/WorkshopUseCaseChat";
 import { WorkshopUseCaseBBS } from "@/components/WorkshopUseCaseBBS";
 import { WorkshopInterestForm } from "@/components/WorkshopInterestForm";
@@ -1786,86 +1786,86 @@ graph LR
                           </p>
 
                           <div className="grid md:grid-cols-2 gap-6">
-                            {/* Grading and Feedback */}
+                            {/* Data Preprocessing & Cleaning */}
                             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-6 rounded-xl border-2 border-blue-200 dark:border-blue-800">
                               <div className="flex items-center gap-3 mb-4">
                                 <div className="p-2 bg-blue-600 text-white rounded-lg">
-                                  <GraduationCap className="h-6 w-6" />
+                                  <Database className="h-6 w-6" />
                                 </div>
-                                <h4 className="text-xl font-bold text-foreground">Grading & Feedback</h4>
+                                <h4 className="text-xl font-bold text-foreground">Data Preprocessing & Cleaning</h4>
                               </div>
                               <p className="text-sm text-foreground mb-3">
-                                <strong>Scenario:</strong> You have 50 student essays to grade and provide feedback on.
+                                <strong>Scenario:</strong> You have multiple raw datasets that need cleaning before analysis.
                               </p>
                               <div className="bg-background p-4 rounded-lg border space-y-2 text-sm">
-                                <p><strong className="text-blue-600">Input:</strong> Folder with 50 essay files</p>
-                                <p><strong className="text-blue-600">Prompt:</strong> "Evaluate this essay based on argument clarity, evidence quality, and writing structure. Provide constructive feedback and a grade."</p>
-                                <p><strong className="text-blue-600">Output:</strong> CSV with filename, grade, strengths, areas for improvement</p>
+                                <p><strong className="text-blue-600">Input:</strong> Folder with 20 CSV files (sales data, sensor readings, survey responses)</p>
+                                <p><strong className="text-blue-600">Prompt:</strong> "Clean each dataset: handle missing values, detect outliers using IQR method, standardize column names, and generate a data quality report."</p>
+                                <p><strong className="text-blue-600">Output:</strong> Cleaned CSVs + data quality summary with statistics per file</p>
                                 <p className="text-muted-foreground italic pt-2">
-                                  ⏱️ Manual grading: ~15 hours | With AI agent: ~20 minutes
+                                  ⏱️ Manual cleaning: ~10 hours | With AI agent: ~15 minutes
                                 </p>
                               </div>
                             </div>
 
-                            {/* Generate Course Materials */}
+                            {/* Statistical Analysis Automation */}
                             <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-6 rounded-xl border-2 border-purple-200 dark:border-purple-800">
                               <div className="flex items-center gap-3 mb-4">
                                 <div className="p-2 bg-purple-600 text-white rounded-lg">
-                                  <BookOpen className="h-6 w-6" />
+                                  <BarChart3 className="h-6 w-6" />
                                 </div>
-                                <h4 className="text-xl font-bold text-foreground">Generate Course Materials</h4>
+                                <h4 className="text-xl font-bold text-foreground">Statistical Analysis Automation</h4>
                               </div>
                               <p className="text-sm text-foreground mb-3">
-                                <strong>Scenario:</strong> Create study guides from lecture transcripts for 12 weeks of classes.
+                                <strong>Scenario:</strong> Run comparative statistical tests across multiple experimental conditions.
                               </p>
                               <div className="bg-background p-4 rounded-lg border space-y-2 text-sm">
-                                <p><strong className="text-purple-600">Input:</strong> 12 lecture transcript files</p>
-                                <p><strong className="text-purple-600">Prompt:</strong> "Create a student-friendly study guide with key concepts, definitions, and practice questions from this lecture."</p>
-                                <p><strong className="text-purple-600">Output:</strong> 12 formatted study guide documents (Markdown or PDF)</p>
+                                <p><strong className="text-purple-600">Input:</strong> Experiment results from 8 different algorithm configurations</p>
+                                <p><strong className="text-purple-600">Prompt:</strong> "Perform ANOVA, post-hoc Tukey tests, and effect size calculations. Generate visualizations comparing performance metrics."</p>
+                                <p><strong className="text-purple-600">Output:</strong> Statistical report with p-values, confidence intervals, and publication-ready plots</p>
                                 <p className="text-muted-foreground italic pt-2">
-                                  ⏱️ Manual creation: ~24 hours | With AI agent: ~30 minutes
+                                  ⏱️ Manual analysis: ~6 hours | With AI agent: ~20 minutes
                                 </p>
                               </div>
                             </div>
 
-                            {/* Edit Academic Manuscripts */}
+                            {/* Literature Review Synthesis */}
                             <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 p-6 rounded-xl border-2 border-green-200 dark:border-green-800">
                               <div className="flex items-center gap-3 mb-4">
                                 <div className="p-2 bg-green-600 text-white rounded-lg">
-                                  <PenTool className="h-6 w-6" />
+                                  <BookOpen className="h-6 w-6" />
                                 </div>
-                                <h4 className="text-xl font-bold text-foreground">Edit Academic Manuscripts</h4>
+                                <h4 className="text-xl font-bold text-foreground">Literature Review Synthesis</h4>
                               </div>
                               <p className="text-sm text-foreground mb-3">
-                                <strong>Scenario:</strong> Review and improve language quality across multiple paper sections.
+                                <strong>Scenario:</strong> Synthesize 50 papers on optimization algorithms for your dissertation lit review.
                               </p>
                               <div className="bg-background p-4 rounded-lg border space-y-2 text-sm">
-                                <p><strong className="text-green-600">Input:</strong> Paper sections (Introduction, Methods, Results, Discussion)</p>
-                                <p><strong className="text-green-600">Prompt:</strong> "Improve academic writing quality: enhance clarity, fix grammar, suggest better transitions, maintain scholarly tone."</p>
-                                <p><strong className="text-green-600">Output:</strong> Edited versions + change logs for each section</p>
+                                <p><strong className="text-green-600">Input:</strong> 50 PDF papers on operations research / optimization methods</p>
+                                <p><strong className="text-green-600">Prompt:</strong> "Extract: problem type addressed, algorithm used, dataset characteristics, reported performance metrics, and limitations mentioned."</p>
+                                <p><strong className="text-green-600">Output:</strong> Structured comparison table + gap analysis summary</p>
                                 <p className="text-muted-foreground italic pt-2">
-                                  ⏱️ Manual editing: ~8 hours | With AI agent: ~15 minutes
+                                  ⏱️ Manual review: ~25 hours | With AI agent: ~40 minutes
                                 </p>
                               </div>
                             </div>
 
-                            {/* Qualitative Data Analysis */}
+                            {/* Dissertation Writing Support */}
                             <div className="bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 p-6 rounded-xl border-2 border-amber-200 dark:border-amber-800">
                               <div className="flex items-center gap-3 mb-4">
                                 <div className="p-2 bg-amber-600 text-white rounded-lg">
-                                  <Microscope className="h-6 w-6" />
+                                  <PenTool className="h-6 w-6" />
                                 </div>
-                                <h4 className="text-xl font-bold text-foreground">Qualitative Data Analysis</h4>
+                                <h4 className="text-xl font-bold text-foreground">Dissertation Writing Support</h4>
                               </div>
                               <p className="text-sm text-foreground mb-3">
-                                <strong>Scenario:</strong> Analyze 30 interview transcripts to identify themes and patterns.
+                                <strong>Scenario:</strong> Polish your dissertation chapters for clarity and academic style.
                               </p>
                               <div className="bg-background p-4 rounded-lg border space-y-2 text-sm">
-                                <p><strong className="text-amber-600">Input:</strong> 30 interview transcript files</p>
-                                <p><strong className="text-amber-600">Prompt:</strong> "Identify key themes, recurring concepts, and emotional tones. Extract significant quotes that represent each theme."</p>
-                                <p><strong className="text-amber-600">Output:</strong> CSV with interview ID, identified themes, sentiment, key quotes</p>
+                                <p><strong className="text-amber-600">Input:</strong> Draft chapters (Methodology, Results, Discussion)</p>
+                                <p><strong className="text-amber-600">Prompt:</strong> "Review for: logical flow of arguments, clarity of mathematical notation explanations, consistency in terminology, and suggest transitions between sections."</p>
+                                <p><strong className="text-amber-600">Output:</strong> Annotated drafts with suggestions + revision checklist per chapter</p>
                                 <p className="text-muted-foreground italic pt-2">
-                                  ⏱️ Manual coding: ~40 hours | With AI agent: ~45 minutes
+                                  ⏱️ Manual editing: ~12 hours | With AI agent: ~25 minutes
                                 </p>
                               </div>
                             </div>
