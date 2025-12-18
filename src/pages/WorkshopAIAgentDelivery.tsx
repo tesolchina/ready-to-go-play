@@ -1446,14 +1446,14 @@ graph TD
                             </p>
                           </div>
 
-                          {/* Setting Up API Keys - Next Module Preview */}
+                          {/* Next Module Preview */}
                           <Alert className="border-l-4 border-primary bg-primary/5">
                             <Terminal className="h-5 w-5 text-primary" />
                             <AlertDescription className="ml-2">
-                              <p className="font-semibold mb-2">⏭️ Next: Hands-On Practice</p>
+                              <p className="font-semibold mb-2">⏭️ Next: Hands-On Practice with Data APIs</p>
                               <p className="text-sm text-foreground">
-                                Now that you understand what APIs are, in Module 5 we'll guide you through the practical steps 
-                                of obtaining API keys from LLM providers and setting them up securely in your local environment.
+                                Now that you understand what APIs are, in Lab 2 we'll put this knowledge into practice by 
+                                accessing real government data from data.gov.hk - no LLM required!
                               </p>
                             </AlertDescription>
                           </Alert>
@@ -1462,7 +1462,7 @@ graph TD
                     </Card>
                   </Collapsible>
 
-                  {/* Module 5: Hands-On API Key Setup */}
+                  {/* Module 5: Lab 2 - Access Government Data via API */}
                   <Collapsible 
                     open={moduleStates.module5} 
                     onOpenChange={(open) => setModuleStates({...moduleStates, module5: open})}
@@ -1471,435 +1471,192 @@ graph TD
                       <CollapsibleTrigger asChild>
                         <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
                           <h3 className="font-semibold text-left flex items-center gap-2 text-xl">
-                            <Key className="h-6 w-6" />
-                            Module 5: Hands-On - Setting Up Your API Keys
+                            <Microscope className="h-6 w-6" />
+                            Module 5: Lab 2 - Access Government Data via API
                           </h3>
                           <ChevronDown className="h-5 w-5 flex-shrink-0 transition-transform duration-300 ui-state-open:rotate-180" />
                         </button>
                       </CollapsibleTrigger>
                       <CollapsibleContent className="p-5 bg-card">
                         <div className="space-y-6">
-                          <Alert>
-                            <AlertCircle className="h-4 w-4" />
-                            <AlertDescription>
-                              <strong>Important Setup:</strong> In this module, you'll obtain API keys from LLM providers and store them securely in your local project folder.
-                            </AlertDescription>
-                          </Alert>
-
-                          {/* Step 1: Prepare Your API Keys Folder */}
-                          <div className="bg-muted/50 rounded-lg p-6">
-                            <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                              <FolderOpen className="h-5 w-5" />
-                              Step 1: Locate Your API Keys Folder
-                            </h4>
-                            <div className="space-y-4">
-                              <Alert className="border-l-4 border-green-600 bg-green-50 dark:bg-green-900/20">
-                                <CheckCircle2 className="h-5 w-5 text-green-600" />
-                                <AlertDescription className="ml-2">
-                                  <p className="font-semibold mb-2">✅ Good News!</p>
-                                  <p className="text-sm text-foreground">
-                                    The folder structure is already set up in the workshop repository. You don't need to create it manually!
-                                  </p>
-                                </AlertDescription>
-                              </Alert>
-                              <p className="text-foreground">
-                                In your cloned repository, you'll find the following folder structure ready to use:
-                              </p>
-                              <div className="bg-background rounded-lg p-4 border font-mono text-sm">
-                                <div>Data/</div>
-                                <div className="ml-4">└── APIkeys/</div>
-                                <div className="ml-8">├── Kimi.md</div>
-                                <div className="ml-8">├── DeepSeek.md</div>
-                                <div className="ml-8">└── openrouter.md</div>
-                              </div>
-                              <p className="text-sm text-muted-foreground">
-                                Navigate to this folder in Trae's File Explorer to verify it exists.
-                              </p>
-                            </div>
-                          </div>
-
-                          {/* Step 2: Obtain API Keys */}
-                          <div className="bg-muted/50 rounded-lg p-6">
-                            <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                              <Key className="h-5 w-5" />
-                              Step 2: Obtain API Keys from Providers
-                            </h4>
-                            <div className="space-y-6">
-                              <div className="border-l-4 border-primary pl-4">
-                                <h5 className="font-semibold mb-2">Kimi (Moonshot AI)</h5>
-                                <ul className="list-disc list-inside space-y-2 text-foreground ml-4 text-sm">
-                                  <li>Visit: <a href="https://platform.moonshot.cn" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://platform.moonshot.cn</a></li>
-                                  <li>Sign up or log in to your account</li>
-                                  <li>Navigate to API Keys section</li>
-                                  <li>Create a new API key</li>
-                                  <li>Copy the key (CNY ¥15 free credits available)</li>
-                                </ul>
-                              </div>
-
-                              <div className="border-l-4 border-primary pl-4">
-                                <h5 className="font-semibold mb-2">DeepSeek</h5>
-                                <ul className="list-disc list-inside space-y-2 text-foreground ml-4 text-sm">
-                                  <li>Visit: <a href="https://platform.deepseek.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://platform.deepseek.com</a></li>
-                                  <li>Create an account or sign in</li>
-                                  <li>Go to API Keys management</li>
-                                  <li>Generate a new API key</li>
-                                  <li className="text-amber-600 dark:text-amber-400">⚠️ Free credits not available; may need to add funds (no more than USD 5 for experimentation)</li>
-                                </ul>
-                              </div>
-
-                              <div className="border-l-4 border-primary pl-4">
-                                <h5 className="font-semibold mb-2">OpenRouter</h5>
-                                <ul className="list-disc list-inside space-y-2 text-foreground ml-4 text-sm">
-                                  <li>Visit: <a href="https://openrouter.ai" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://openrouter.ai</a></li>
-                                  <li>Sign up with your account</li>
-                                  <li>Navigate to Keys section</li>
-                                  <li>Create a new API key</li>
-                                  <li className="text-amber-600 dark:text-amber-400">⚠️ Free credits not available; may need to add funds (no more than USD 5 for experimentation)</li>
-                                </ul>
-                              </div>
-
-                              <div className="bg-background rounded-lg p-4 border">
-                                <p className="text-sm font-medium mb-2 flex items-center gap-2">
-                                  <AlertCircle className="h-4 w-4" />
-                                  Cost Estimate:
-                                </p>
-                                <p className="text-sm text-foreground">
-                                  For this workshop, you will need approximately USD 5-10 total for experimentation. 
-                                  Kimi offers CNY ¥15 free starting credits. DeepSeek and OpenRouter may require adding funds.
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Step 3: Store Your API Keys */}
-                          <div className="bg-muted/50 rounded-lg p-6">
-                            <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                              <FileText className="h-5 w-5" />
-                              Step 3: Store Your API Keys in Local Files
-                            </h4>
-                            <div className="space-y-4">
-                              <p className="text-foreground">
-                                Once you have obtained your API keys, update the corresponding files in your project:
-                              </p>
-                              
-                              <div className="bg-background rounded-lg p-4 border">
-                                <p className="text-sm font-medium mb-2">Data/APIkeys/Kimi.md</p>
-                                <pre className="text-xs bg-muted p-3 rounded overflow-x-auto">
-{`sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`}
-                                </pre>
-                              </div>
-
-                              <div className="bg-background rounded-lg p-4 border">
-                                <p className="text-sm font-medium mb-2">Data/APIkeys/DeepSeek.md</p>
-                                <pre className="text-xs bg-muted p-3 rounded overflow-x-auto">
-{`sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`}
-                                </pre>
-                              </div>
-
-                              <div className="bg-background rounded-lg p-4 border">
-                                <p className="text-sm font-medium mb-2">Data/APIkeys/openrouter.md</p>
-                                <pre className="text-xs bg-muted p-3 rounded overflow-x-auto">
-{`sk-or-v1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`}
-                                </pre>
-                              </div>
-
-                              <p className="text-sm text-muted-foreground">
-                                Simply open each file and paste your API key, replacing the placeholder text.
-                              </p>
-                            </div>
-                          </div>
-
-                          {/* Critical Security Warning */}
-                          <Alert variant="destructive">
-                            <AlertCircle className="h-4 w-4" />
-                            <AlertDescription className="space-y-3">
-                              <div>
-                                <p className="font-bold text-lg mb-2">🔐 Critical Security Warning</p>
-                                <p className="mb-2">
-                                  <strong>Never sync API keys to GitHub or Gitee!</strong> These keys are confidential and should never be shared publicly.
-                                </p>
-                              </div>
-                              <div className="bg-destructive/10 p-3 rounded">
-                                <p className="font-semibold mb-2">Protect Your API Keys:</p>
-                                <ul className="list-disc list-inside space-y-1 text-sm">
-                                  <li>Add <code className="bg-background/50 px-2 py-0.5 rounded">Data/APIkeys/</code> to your <code className="bg-background/50 px-2 py-0.5 rounded">.gitignore</code> file</li>
-                                  <li>Double-check before pushing to remote repositories</li>
-                                  <li>If accidentally exposed, regenerate your API keys immediately</li>
-                                  <li>Never commit files containing API keys to version control</li>
-                                </ul>
-                              </div>
-                              <p className="text-sm italic">
-                                When syncing your project folder with GitHub or Gitee, make sure these files are excluded from being pushed to the remote repository.
-                              </p>
-                            </AlertDescription>
-                          </Alert>
-
-                          {/* Verification */}
-                          <div className="bg-primary/10 rounded-lg p-6 border-l-4 border-primary">
-                            <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
-                              <CheckCircle2 className="h-5 w-5" />
-                              Verification
-                            </h4>
+                          {/* Introduction */}
+                          <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 p-6 rounded-xl border-2">
+                            <h4 className="text-xl font-bold text-foreground mb-4">📊 Lab 2: Access Government Data via API</h4>
                             <p className="text-foreground mb-4">
-                              After setting up your API keys, you can verify they work by asking Builder to:
+                              In this lab, you'll use AI agents to interact with <strong>real-world data APIs</strong> - no LLM required! 
+                              We'll fetch data from Hong Kong's Government Open Data Portal and let the AI agent write Python scripts to test and explore the data.
                             </p>
-                            <ul className="list-disc list-inside space-y-2 text-foreground ml-4">
-                              <li>Read the API key files to confirm they're properly stored</li>
-                              <li>Make a simple test request to one of the LLM providers</li>
-                              <li>Report back on the connection status</li>
-                            </ul>
-                          </div>
-
-                          {/* Lab 2: Analyze BAWE in Batches */}
-                          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 p-6 rounded-xl border-2 mt-8">
-                            <h4 className="text-2xl font-bold text-foreground mb-4">🧪 Lab 2: Analyze BAWE in Batches</h4>
-                            <p className="text-foreground mb-6">
-                              Now that you have your API keys set up, let's use them to automate a real analysis task! 
-                              In this lab, you'll see the power of API automation - sending multiple files to an LLM and collecting results automatically.
-                            </p>
-
-                            {/* The Power of API Automation */}
-                            <Alert className="mb-6 border-l-4 border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20">
-                              <Zap className="h-5 w-5 text-indigo-600" />
+                            
+                            <Alert className="border-l-4 border-amber-500 bg-amber-50 dark:bg-amber-900/20">
+                              <Lightbulb className="h-5 w-5 text-amber-600" />
                               <AlertDescription className="ml-2">
-                                <p className="font-semibold mb-2">💡 What Makes This Powerful?</p>
-                                <p className="text-sm text-foreground mb-2">
-                                  With a chatbot, you'd need to manually:
-                                </p>
-                                <ul className="text-sm text-foreground space-y-1 list-none ml-4">
-                                  <li>• Open each file, copy the text</li>
-                                  <li>• Switch to browser, paste into chatbot</li>
-                                  <li>• Copy the response, switch back</li>
-                                  <li>• Paste into a document, repeat 5 times</li>
-                                </ul>
-                                <p className="text-sm text-foreground mt-2 font-semibold">
-                                  With API and AI agents: <span className="text-indigo-600">One instruction, automatic processing!</span>
+                                <p className="font-semibold mb-2">💡 Why This Matters</p>
+                                <p className="text-sm text-foreground">
+                                  APIs aren't just for AI chat - they're used everywhere to access <strong>real-time data</strong>: 
+                                  weather forecasts, stock prices, government statistics, and more. AI agents can help you 
+                                  discover, access, and analyze this data automatically!
                                 </p>
                               </AlertDescription>
                             </Alert>
+                          </div>
 
-                            {/* Lab Instructions */}
-                            <div className="space-y-6">
-                              {/* Step 1: Create the Prompt File */}
-                              <div className="bg-background p-6 rounded-lg border-2">
-                                <h5 className="text-xl font-bold text-foreground mb-4">📝 Step 1: Create Your Prompt File</h5>
-                                <p className="text-foreground mb-4">
-                                  First, update the file <code className="bg-muted px-2 py-1 rounded">Lab2 Analyze BAWE in batches/prompt.md</code> with your analysis instructions.
-                                </p>
-                                
-                                <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg border-l-4 border-amber-500 mb-4">
-                                  <h6 className="font-bold text-foreground mb-2">💡 Example Prompts</h6>
-                                  <div className="space-y-3">
-                                    <div className="bg-background p-3 rounded border">
-                                      <p className="text-xs text-muted-foreground mb-1">Summary task:</p>
-                                      <code className="text-sm text-foreground block">
-                                        You are an experienced reader of academic texts. Please write a summary of no more than 50 words for the essay provided.
-                                      </code>
-                                    </div>
-                                    <div className="bg-background p-3 rounded border">
-                                      <p className="text-xs text-muted-foreground mb-1">Structure analysis:</p>
-                                      <code className="text-sm text-foreground block">
-                                        Identify the main argument, supporting evidence, and conclusion of this academic essay.
-                                      </code>
-                                    </div>
-                                    <div className="bg-background p-3 rounded border">
-                                      <p className="text-xs text-muted-foreground mb-1">Vocabulary extraction:</p>
-                                      <code className="text-sm text-foreground block">
-                                        List the key academic vocabulary used in this essay with their definitions.
-                                      </code>
-                                    </div>
-                                  </div>
-                                  <p className="text-xs text-muted-foreground mt-3 italic">
-                                    You can use any analysis task you find interesting!
-                                  </p>
-                                </div>
+                          {/* Example Data Source */}
+                          <div className="bg-background p-6 rounded-lg border-2">
+                            <h5 className="text-xl font-bold text-foreground mb-4">📋 Example: HK Property Market Statistics</h5>
+                            <p className="text-foreground mb-4">
+                              We'll use this government data portal as our example:
+                            </p>
+                            <div className="bg-muted/50 p-4 rounded-lg border mb-4">
+                              <p className="text-sm font-semibold text-foreground mb-2">Data Source:</p>
+                              <a 
+                                href="https://data.gov.hk/en-data/dataset/hk-rvd-tsinfo_rvd-property-market-statistics/resource/d8ecc5e6-3721-4d07-a0f2-163f08e39b89" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-primary hover:underline text-sm flex items-center gap-1 break-all"
+                              >
+                                data.gov.hk - Property Market Statistics <ExternalLink className="h-3 w-3 flex-shrink-0" />
+                              </a>
+                              <p className="text-xs text-muted-foreground mt-2">
+                                Rating and Valuation Department - Property market indices, prices, and transaction data
+                              </p>
+                            </div>
+                            <p className="text-sm text-muted-foreground">
+                              You can also explore other datasets at <a href="https://data.gov.hk" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">data.gov.hk</a> 
+                              {" "}to find data relevant to your research interests.
+                            </p>
+                          </div>
+
+                          {/* Instruction File */}
+                          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 p-6 rounded-xl border-2">
+                            <h5 className="text-xl font-bold text-foreground mb-4">📝 Create Instruction File: testAPI.md</h5>
+                            <p className="text-foreground mb-4">
+                              Create a file <code className="bg-muted px-2 py-1 rounded">Lab2_GovData/testAPI.md</code> with the Input-Process-Output structure:
+                            </p>
+
+                            {/* Input Section */}
+                            <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg border-l-4 border-purple-600 mb-4">
+                              <h6 className="font-bold text-foreground mb-2">📥 Input</h6>
+                              <p className="text-sm text-foreground mb-3">
+                                The web page link where data and API information can be found:
+                              </p>
+                              <div className="bg-background p-3 rounded border">
+                                <code className="text-xs text-foreground break-all">
+                                  https://data.gov.hk/en-data/dataset/hk-rvd-tsinfo_rvd-property-market-statistics/resource/d8ecc5e6-3721-4d07-a0f2-163f08e39b89
+                                </code>
                               </div>
+                              <p className="text-xs text-muted-foreground mt-2">
+                                Paste the full URL of the data.gov.hk page you want to explore
+                              </p>
+                            </div>
 
-                              {/* Step 2: Update Instructions File */}
-                              <div className="bg-background p-6 rounded-lg border-2">
-                                <h5 className="text-xl font-bold text-foreground mb-4">📋 Step 2: Update the Instructions File</h5>
-                                <p className="text-foreground mb-4">
-                                  Edit <code className="bg-muted px-2 py-1 rounded">Lab2 Analyze BAWE in batches/instructions.md</code> with the Input-Process-Output structure:
-                                </p>
+                            {/* Process Section */}
+                            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border-l-4 border-blue-600 mb-4">
+                              <h6 className="font-bold text-foreground mb-2">⚙️ Process</h6>
+                              <p className="text-sm text-foreground mb-3">
+                                Ask AI agent to:
+                              </p>
+                              <ul className="space-y-2 text-sm text-foreground list-none ml-4">
+                                <li className="flex items-start gap-2">
+                                  <span className="text-blue-600 font-bold">1.</span>
+                                  <span><strong>Fetch information</strong> from the provided web link (understand the data structure and API endpoints)</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <span className="text-blue-600 font-bold">2.</span>
+                                  <span><strong>Write a Python script</strong> to test if data can be obtained from the API</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <span className="text-blue-600 font-bold">3.</span>
+                                  <span><strong>Run the script</strong> to verify the API connection works</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <span className="text-blue-600 font-bold">4.</span>
+                                  <span><strong>Generate a markdown report</strong> documenting what data is available, data structure, and sample values</span>
+                                </li>
+                              </ul>
+                            </div>
 
-                                {/* Input Section */}
-                                <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg border-l-4 border-purple-600 mb-4">
-                                  <h6 className="font-bold text-foreground mb-2">📥 Input</h6>
-                                  <p className="text-sm text-foreground mb-3">Include these three file paths:</p>
-                                  <ul className="space-y-2 text-sm text-foreground list-none">
-                                    <li className="flex items-start gap-2">
-                                      <span className="text-purple-600 font-bold">1.</span>
-                                      <div>
-                                        <span className="font-semibold">Prompt file:</span>
-                                        <code className="bg-background px-2 py-1 rounded block mt-1 text-xs">
-                                          Lab2 Analyze BAWE in batches/prompt.md
-                                        </code>
-                                      </div>
-                                    </li>
-                                    <li className="flex items-start gap-2">
-                                      <span className="text-purple-600 font-bold">2.</span>
-                                      <div>
-                                        <span className="font-semibold">Data folder</span> (pick ONE subfolder):
-                                        <code className="bg-background px-2 py-1 rounded block mt-1 text-xs">
-                                          Data/BAWE/CORPUS_ByDiscipline/[subfolder name]
-                                        </code>
-                                      </div>
-                                    </li>
-                                    <li className="flex items-start gap-2">
-                                      <span className="text-purple-600 font-bold">3.</span>
-                                      <div>
-                                        <span className="font-semibold">API key file</span> (pick ONE):
-                                        <code className="bg-background px-2 py-1 rounded block mt-1 text-xs">
-                                          Data/APIkeys/Kimi.md OR Data/APIkeys/DeepSeek.md OR Data/APIkeys/openrouter.md
-                                        </code>
-                                      </div>
-                                    </li>
-                                  </ul>
-                                </div>
-
-                                {/* Process Section */}
-                                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border-l-4 border-blue-600 mb-4">
-                                  <h6 className="font-bold text-foreground mb-2">⚙️ Process</h6>
-                                  <p className="text-sm text-foreground mb-3">
-                                    Ask the AI agent to:
-                                  </p>
-                                  <ul className="space-y-2 text-sm text-foreground list-none ml-4">
-                                    <li className="flex items-start gap-2">
-                                      <span className="text-blue-600 font-bold">1.</span>
-                                      <span>Pick the <strong>first 5 files</strong> from the specified subfolder (or randomly select 5 files)</span>
-                                    </li>
-                                    <li className="flex items-start gap-2">
-                                      <span className="text-blue-600 font-bold">2.</span>
-                                      <span>Send each file <strong>one at a time</strong> together with the prompt to the LLM via API</span>
-                                    </li>
-                                    <li className="flex items-start gap-2">
-                                      <span className="text-blue-600 font-bold">3.</span>
-                                      <span>Collect the LLM response for each file</span>
-                                    </li>
-                                    <li className="flex items-start gap-2">
-                                      <span className="text-blue-600 font-bold">4.</span>
-                                      <span>Save the metadata, original essay text, and AI response to a CSV file</span>
-                                    </li>
-                                  </ul>
-                                  
-                                  <div className="mt-4 p-3 bg-background rounded border">
-                                    <p className="text-xs font-semibold text-foreground mb-2">🔧 API-Specific Notes:</p>
-                                    <ul className="text-xs text-muted-foreground space-y-1">
-                                      <li>• <strong>Kimi / DeepSeek:</strong> No need to specify model name</li>
-                                      <li>• <strong>OpenRouter:</strong> Specify a model, e.g., <code className="bg-muted px-1 rounded">z-ai/glm-4.6</code></li>
-                                      <li>• Find OpenRouter models at: <a href="https://openrouter.ai/models" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">openrouter.ai/models</a></li>
-                                    </ul>
-                                  </div>
-                                </div>
-
-                                {/* Output Section */}
-                                <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border-l-4 border-green-600">
-                                  <h6 className="font-bold text-foreground mb-2">📤 Output</h6>
-                                  <p className="text-sm text-foreground mb-2">
-                                    Specify the folder path where the CSV should be saved:
-                                  </p>
-                                  <code className="bg-background px-3 py-2 rounded block text-sm">
-                                    Lab2_Results/
-                                  </code>
-                                  <p className="text-xs text-muted-foreground mt-3">
-                                    <strong>CSV should include:</strong>
-                                  </p>
-                                  <ul className="text-xs text-muted-foreground mt-1 space-y-1 list-disc list-inside ml-2">
-                                    <li>File metadata (filename, discipline, etc.)</li>
-                                    <li>Original essay text</li>
-                                    <li>AI summary/response</li>
-                                  </ul>
-                                </div>
+                            {/* Output Section */}
+                            <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border-l-4 border-green-600">
+                              <h6 className="font-bold text-foreground mb-2">📤 Output</h6>
+                              <p className="text-sm text-foreground mb-2">
+                                Export the report to the <strong>same folder</strong> as the instruction file:
+                              </p>
+                              <div className="bg-background p-3 rounded border font-mono text-sm">
+                                <div>Lab2_GovData/</div>
+                                <div className="ml-4">├── testAPI.md <span className="text-muted-foreground">(your instruction)</span></div>
+                                <div className="ml-4">├── test_api.py <span className="text-muted-foreground">(Python test script)</span></div>
+                                <div className="ml-4">└── data_report.md <span className="text-muted-foreground">(generated report)</span></div>
                               </div>
+                            </div>
+                          </div>
 
-                              <div className="bg-background p-6 rounded-lg border-2">
-                                <h5 className="text-xl font-bold text-foreground mb-4">📊 Automation Workflow</h5>
-                                <p className="text-sm text-muted-foreground mb-4">
-                                  This flowchart shows how API enables automation and eliminates the manual copy-paste-switch cycle of chatbots:
-                                </p>
-                                <MermaidDiagram chart={`
+                          {/* Workflow Diagram */}
+                          <div className="bg-background p-6 rounded-lg border-2">
+                            <h5 className="text-xl font-bold text-foreground mb-4">🔄 Lab 2 Workflow</h5>
+                            <MermaidDiagram chart={`
 graph LR
-    A[📁 Input<br/>CORPUS_ByDiscipline<br/>5 files] --> B{🔄 For Each File}
-    B --> C[📖 Read]
-    C --> D[📤 API + Prompt]
-    D --> E[📥 Response]
-    E --> F[💾 Store]
-    F --> B
-    B --> G[📊 Compile Results]
-    G --> H[✅ CSV Output<br/>Lab2_Results]
+    A[📝 testAPI.md<br/>Instruction File] --> B[🌐 AI Agent<br/>Fetches Web Page]
+    B --> C[🐍 Writes Python<br/>API Test Script]
+    C --> D[▶️ Runs Script<br/>Tests Connection]
+    D --> E[📊 Generates<br/>Data Report]
+    E --> F[📁 Output<br/>data_report.md]
     
     style A fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
     style B fill:#fff3e0,stroke:#f57c00,stroke-width:2px
-    style G fill:#fff9c4,stroke:#fbc02d,stroke-width:2px
-    style H fill:#c8e6c9,stroke:#388e3c,stroke-width:3px
-    style C fill:#f3e5f5
-    style D fill:#ffebee
-    style E fill:#e8f5e9
-    style F fill:#fce4ec
-                                `} />
-                                
-                                <Alert className="mt-4 border-l-4 border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20">
-                                  <Zap className="h-5 w-5 text-indigo-600" />
-                                  <AlertDescription className="ml-2">
-                                    <p className="font-semibold mb-2">🚀 The Power of API Automation</p>
-                                    <div className="text-sm text-foreground space-y-2">
-                                      <p className="flex items-start gap-2">
-                                        <span className="text-indigo-600 font-bold">✓</span>
-                                        <span><strong>No context switching:</strong> AI agent handles all file operations and API calls automatically</span>
-                                      </p>
-                                      <p className="flex items-start gap-2">
-                                        <span className="text-indigo-600 font-bold">✓</span>
-                                        <span><strong>No manual copy-paste:</strong> Builder reads files, sends to LLM, and stores results - all programmatically</span>
-                                      </p>
-                                      <p className="flex items-start gap-2">
-                                        <span className="text-indigo-600 font-bold">✓</span>
-                                        <span><strong>Scalable:</strong> 5 files or 500 files - the same instruction works (just adjust the number)</span>
-                                      </p>
-                                      <p className="flex items-start gap-2">
-                                        <span className="text-indigo-600 font-bold">✓</span>
-                                        <span><strong>Repeatable:</strong> Save the instruction, run it anytime with different data</span>
-                                      </p>
-                                    </div>
-                                  </AlertDescription>
-                                </Alert>
-                              </div>
+    style C fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style D fill:#ffebee,stroke:#c62828,stroke-width:2px
+    style E fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    style F fill:#c8e6c9,stroke:#388e3c,stroke-width:3px
+                            `} />
+                          </div>
 
-                              {/* Implementation Steps */}
-                              <div className="bg-background p-6 rounded-lg border-2">
-                                <h5 className="text-xl font-bold text-foreground mb-4">🛠️ Implementation Steps</h5>
-                                <div className="space-y-4">
-                                  <div className="flex items-start gap-3">
-                                    <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">1</span>
-                                    <div>
-                                      <p className="font-semibold text-foreground">Create a prompt.md file</p>
-                                      <p className="text-sm text-muted-foreground">Write the analysis instructions for the LLM (e.g., "Summarize and identify discipline")</p>
-                                    </div>
-                                  </div>
-                                  <div className="flex items-start gap-3">
-                                    <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">2</span>
-                                    <div>
-                                      <p className="font-semibold text-foreground">Create Lab2_instructions.md</p>
-                                      <p className="text-sm text-muted-foreground">Use the Input-Process-Output structure to describe the batch analysis task</p>
-                                    </div>
-                                  </div>
-                                  <div className="flex items-start gap-3">
-                                    <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">3</span>
-                                    <div>
-                                      <p className="font-semibold text-foreground">Send to Builder</p>
-                                      <p className="text-sm text-muted-foreground">Right-click Lab2_instructions.md, copy path, and send to Builder</p>
-                                    </div>
-                                  </div>
-                                  <div className="flex items-start gap-3">
-                                    <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">4</span>
-                                    <div>
-                                      <p className="font-semibold text-foreground">Watch the magic happen!</p>
-                                      <p className="text-sm text-muted-foreground">Builder will read files, call the API multiple times, and generate your CSV automatically</p>
-                                    </div>
-                                  </div>
+                          {/* Implementation Steps */}
+                          <div className="bg-muted/50 p-6 rounded-lg">
+                            <h5 className="text-xl font-bold text-foreground mb-4">🛠️ Implementation Steps</h5>
+                            <div className="space-y-4">
+                              <div className="flex items-start gap-3">
+                                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">1</span>
+                                <div>
+                                  <p className="font-semibold text-foreground">Create the instruction file</p>
+                                  <p className="text-sm text-muted-foreground">Create <code className="bg-background px-1 rounded">Lab2_GovData/testAPI.md</code> with the Input-Process-Output structure above</p>
+                                </div>
+                              </div>
+                              <div className="flex items-start gap-3">
+                                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">2</span>
+                                <div>
+                                  <p className="font-semibold text-foreground">Copy the file path</p>
+                                  <p className="text-sm text-muted-foreground">Right-click on testAPI.md → Copy Path</p>
+                                </div>
+                              </div>
+                              <div className="flex items-start gap-3">
+                                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">3</span>
+                                <div>
+                                  <p className="font-semibold text-foreground">Send to AI Agent</p>
+                                  <p className="text-sm text-muted-foreground">In GitHub Copilot Chat, <strong>switch to Agent mode</strong>, then type: <em>"Please follow the instructions in [paste file path]"</em></p>
+                                </div>
+                              </div>
+                              <div className="flex items-start gap-3">
+                                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">4</span>
+                                <div>
+                                  <p className="font-semibold text-foreground">Review the output</p>
+                                  <p className="text-sm text-muted-foreground">Check the generated Python script and data report in your Lab2_GovData folder</p>
                                 </div>
                               </div>
                             </div>
                           </div>
+
+                          {/* Key Insight */}
+                          <Alert className="border-l-4 border-primary bg-primary/5">
+                            <Zap className="h-5 w-5 text-primary" />
+                            <AlertDescription className="ml-2">
+                              <p className="font-semibold mb-2">🎯 Key Insight: APIs Are Everywhere!</p>
+                              <p className="text-sm text-foreground">
+                                This lab demonstrates that AI agents can work with <strong>any API</strong>, not just LLM APIs. 
+                                Government data, weather services, financial APIs, transport data - the same Input-Process-Output 
+                                framework applies. The AI agent writes the code, you provide the direction!
+                              </p>
+                            </AlertDescription>
+                          </Alert>
                         </div>
                       </CollapsibleContent>
                     </Card>
