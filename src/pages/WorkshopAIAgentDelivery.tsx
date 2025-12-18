@@ -8,7 +8,7 @@ import { WorkshopUseCaseBBS } from "@/components/WorkshopUseCaseBBS";
 import { WorkshopInterestForm } from "@/components/WorkshopInterestForm";
 import genaiCop2QR from "@/assets/genai-cop2-qr.jpg";
 import wechatSimonQR from "@/assets/wechat-simon-qr.jpg";
-import traeIdeInterface from "@/assets/trae-ide-interface.png";
+import vscodeIdeInterface from "@/assets/vscode-ide-interface.png";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -475,7 +475,7 @@ const WorkshopAIAgentDelivery = () => {
                             <h3 className="text-lg font-semibold">IDE Interface Reference</h3>
                             <div className="relative rounded-lg overflow-hidden border-2 border-muted">
                               <img 
-                                src={traeIdeInterface} 
+                                src={vscodeIdeInterface} 
                                 alt="VS Code interface showing left panel with file explorer, middle panel with code editor, right panel with AI chat, and terminal at the bottom"
                                 className="w-full"
                               />
