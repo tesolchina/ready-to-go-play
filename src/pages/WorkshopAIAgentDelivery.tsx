@@ -836,167 +836,172 @@ const WorkshopAIAgentDelivery = () => {
                             </div>
                           </div>
 
-                          {/* Lab 1: Explore BAWE Corpus */}
+                          {/* Lab 1: Analyze Walmart Sales Data */}
                           <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 p-6 rounded-xl border-2">
-                            <h4 className="text-xl font-bold text-foreground mb-4">🔬 Lab 1: Explore BAWE (British Academic Written English Corpus)</h4>
+                            <h4 className="text-xl font-bold text-foreground mb-4">🔬 Lab 1: Analyze Walmart Sales Data with AI Agent</h4>
                             
                             <p className="text-foreground mb-4">
-                              In this hands-on lab, you'll use GitHub Copilot to explore a learner corpus, generate insights, and create visualizations.
+                              In this hands-on lab, you'll use GitHub Copilot to explore sales data, recommend analytical models, and generate Python-based visualizations through a series of instruction files.
                             </p>
 
                             <Alert className="mb-4 border-l-4 border-amber-500 bg-amber-50 dark:bg-amber-900/20">
                               <FileText className="h-5 w-5 text-amber-600" />
                               <AlertDescription className="ml-2">
-                                <p className="font-semibold text-foreground">📁 Locate Your Lab Files</p>
+                                <p className="font-semibold text-foreground">📁 Lab Files Location</p>
                                 <p className="text-sm text-foreground mt-1">
-                                  In your VS Code workspace, navigate to <code className="bg-muted px-2 py-1 rounded text-xs">Lab1_Explore_BAWE</code> folder. You'll find an <code className="bg-muted px-2 py-1 rounded text-xs">instructions.md</code> file that contains the basic template structure.
+                                  In your VS Code workspace, navigate to <code className="bg-muted px-2 py-1 rounded text-xs">Lab1_InputProcessOutput</code> folder. You'll create three instruction files to guide the AI agent through a complete data analysis workflow.
                                 </p>
                               </AlertDescription>
                             </Alert>
 
-                            <h5 className="font-bold text-foreground mb-3">Step-by-Step Instructions</h5>
-                            
-                            <div className="space-y-4">
-                              {/* Step 1: Set Up Instructions File */}
+                            {/* Task 1: Explore Data */}
+                            <div className="space-y-4 mb-6">
+                              <h5 className="font-bold text-foreground text-lg flex items-center gap-2">
+                                <span className="bg-purple-600 text-white w-7 h-7 rounded-full flex items-center justify-center text-sm">1</span>
+                                Task 1: Explore the Data (exploreData.md)
+                              </h5>
+                              
                               <div className="bg-background p-4 rounded-lg border-l-4 border-purple-600">
-                                <h6 className="font-bold text-foreground mb-2">Step 1: Open and Edit instructions.md</h6>
-                                <p className="text-sm text-foreground mb-2">
-                                  Open <code className="bg-muted px-2 py-1 rounded text-xs">Lab1_Explore_BAWE/instructions.md</code> in VS Code. You'll see a simple template:
+                                <p className="text-sm text-foreground mb-3">
+                                  Create a file called <code className="bg-muted px-2 py-1 rounded text-xs">exploreData.md</code> in the Lab1_InputProcessOutput folder with the following content:
                                 </p>
-                                <div className="bg-muted p-3 rounded text-xs font-mono mt-2">
-                                  <div>Input:</div>
-                                  <div className="text-muted-foreground">(empty for now)</div>
-                                  <div className="mt-2">Process:</div>
-                                  <div className="text-muted-foreground">(empty for now)</div>
-                                  <div className="mt-2">Output:</div>
-                                  <div className="text-muted-foreground">(empty for now)</div>
+                                <div className="bg-muted p-4 rounded text-sm font-mono">
+                                  <div className="text-purple-600 font-bold">Input:</div>
+                                  <div className="text-foreground ml-4">Data/Walmart2.csv</div>
+                                  <div className="text-blue-600 font-bold mt-3">Process:</div>
+                                  <div className="text-foreground ml-4">Take stock of what data is available in this CSV file. Analyze the columns, data types, and basic statistics. Generate a visual report that summarizes the dataset structure, including:</div>
+                                  <ul className="ml-8 mt-1 text-foreground list-disc">
+                                    <li>Column names and their data types</li>
+                                    <li>Number of records and missing values</li>
+                                    <li>Basic descriptive statistics</li>
+                                    <li>Sample data preview</li>
+                                  </ul>
+                                  <div className="text-green-600 font-bold mt-3">Output:</div>
+                                  <div className="text-foreground ml-4">Generate an HTML file in the visual folder:</div>
+                                  <div className="text-foreground ml-4 font-mono text-xs mt-1">Lab1_InputProcessOutput/visual/data_exploration.html</div>
                                 </div>
                               </div>
+                            </div>
 
-                              {/* Step 2: Define Input */}
-                              <div className="bg-background p-4 rounded-lg border-l-4 border-purple-600">
-                                <h6 className="font-bold text-foreground mb-2">Step 2: Define Your Input (Source Data)</h6>
-                                <ul className="space-y-2 text-sm text-foreground list-none">
-                                  <li className="flex items-start gap-2">
-                                    <span className="text-purple-600 font-bold">1.</span>
-                                    <span>In the Left Panel (File Explorer), navigate to <code className="bg-muted px-2 py-1 rounded text-xs">Data/BAWE/CORPUS_ByDiscipline</code></span>
-                                  </li>
-                                  <li className="flex items-start gap-2">
-                                    <span className="text-purple-600 font-bold">2.</span>
-                                    <span><strong>Right-click</strong> on the <code className="bg-muted px-2 py-1 rounded text-xs">CORPUS_ByDiscipline</code> folder</span>
-                                  </li>
-                                  <li className="flex items-start gap-2">
-                                    <span className="text-purple-600 font-bold">3.</span>
-                                    <span>Select <strong>"Copy Path"</strong> or <strong>"Copy Relative Path"</strong> from the context menu</span>
-                                  </li>
-                                  <li className="flex items-start gap-2">
-                                    <span className="text-purple-600 font-bold">4.</span>
-                                    <span>Paste the path into the <code className="bg-muted px-2 py-1 rounded text-xs">Input:</code> section of your instructions.md file</span>
-                                  </li>
-                                </ul>
-                                <div className="bg-muted p-3 rounded text-xs font-mono mt-3">
-                                  <div>Input:</div>
-                                  <div className="text-foreground">Data/BAWE/CORPUS_ByDiscipline</div>
-                                </div>
-                              </div>
-
-                              {/* Step 3: Write Process Instructions */}
+                            {/* Task 2: Explore Models */}
+                            <div className="space-y-4 mb-6">
+                              <h5 className="font-bold text-foreground text-lg flex items-center gap-2">
+                                <span className="bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center text-sm">2</span>
+                                Task 2: Recommend Analytical Models (exploreModels.md)
+                              </h5>
+                              
                               <div className="bg-background p-4 rounded-lg border-l-4 border-blue-600">
-                                <h6 className="font-bold text-foreground mb-2">Step 3: Write Process Instructions (What to Do)</h6>
-                                <p className="text-sm text-foreground mb-2">
-                                  In the <code className="bg-muted px-2 py-1 rounded text-xs">Process:</code> section, write natural language instructions describing what you want Builder to do:
+                                <p className="text-sm text-foreground mb-3">
+                                  Create a file called <code className="bg-muted px-2 py-1 rounded text-xs">exploreModels.md</code> with:
                                 </p>
-                                <div className="bg-muted p-3 rounded text-xs mt-2">
-                                  <div className="font-mono text-muted-foreground">Process:</div>
-                                  <div className="text-foreground mt-1 italic">
-                                    Explore the folders in the CORPUS_ByDiscipline directory and analyze the text files within each discipline folder. Generate:
-                                    <ul className="list-disc ml-6 mt-2 space-y-1">
-                                      <li>A summary report showing the number of documents per discipline</li>
-                                      <li>Basic statistics (word count, file count) for each discipline</li>
-                                      <li>A bar chart visualizing document distribution across disciplines</li>
-                                      <li>A simple analysis report highlighting the top 3 disciplines by document count</li>
-                                    </ul>
-                                  </div>
+                                <div className="bg-muted p-4 rounded text-sm font-mono">
+                                  <div className="text-purple-600 font-bold">Input:</div>
+                                  <div className="text-foreground ml-4">Data/Walmart2.csv</div>
+                                  <div className="text-foreground ml-4">Lab1_InputProcessOutput/visual/ (data exploration results)</div>
+                                  <div className="text-blue-600 font-bold mt-3">Process:</div>
+                                  <div className="text-foreground ml-4">Based on the available data, recommend analytical models that can be used to analyze this Walmart sales data with Python scripts. For each recommended model, explain:</div>
+                                  <ul className="ml-8 mt-1 text-foreground list-disc">
+                                    <li>What the model does</li>
+                                    <li>What insights could be gained</li>
+                                    <li>Required Python libraries</li>
+                                    <li>Expected output format</li>
+                                  </ul>
+                                  <div className="text-green-600 font-bold mt-3">Output:</div>
+                                  <div className="text-foreground ml-4">Generate a markdown file with tables in the report folder:</div>
+                                  <div className="text-foreground ml-4 font-mono text-xs mt-1">Lab1_InputProcessOutput/report/model_recommendations.md</div>
                                 </div>
                               </div>
+                            </div>
 
-                              {/* Step 4: Define Output */}
+                            {/* Task 3: Implement Analysis */}
+                            <div className="space-y-4 mb-6">
+                              <h5 className="font-bold text-foreground text-lg flex items-center gap-2">
+                                <span className="bg-green-600 text-white w-7 h-7 rounded-full flex items-center justify-center text-sm">3</span>
+                                Task 3: Implement the Analysis (implement.md)
+                              </h5>
+                              
                               <div className="bg-background p-4 rounded-lg border-l-4 border-green-600">
-                                <h6 className="font-bold text-foreground mb-2">Step 4: Define Your Output (Where to Save Results)</h6>
-                                <p className="text-sm text-foreground mb-2">
-                                  You can ask Builder to create a new folder for the results:
+                                <p className="text-sm text-foreground mb-3">
+                                  Create a file called <code className="bg-muted px-2 py-1 rounded text-xs">implement.md</code> with:
                                 </p>
-                                <div className="bg-muted p-3 rounded text-xs font-mono mt-2">
-                                  <div>Output:</div>
-                                  <div className="text-foreground mt-1">Create a new folder called "Lab1_Results" and save all reports, charts, and analysis files there.</div>
+                                <div className="bg-muted p-4 rounded text-sm font-mono">
+                                  <div className="text-purple-600 font-bold">Input:</div>
+                                  <div className="text-foreground ml-4">Data/Walmart2.csv</div>
+                                  <div className="text-foreground ml-4">Lab1_InputProcessOutput/report/model_recommendations.md (the plan)</div>
+                                  <div className="text-blue-600 font-bold mt-3">Process:</div>
+                                  <div className="text-foreground ml-4">Write Python scripts to analyze the Walmart sales data using the recommended models. Execute the scripts to generate:</div>
+                                  <ul className="ml-8 mt-1 text-foreground list-disc">
+                                    <li>Statistical analysis results</li>
+                                    <li>Charts and graphs (bar charts, line graphs, etc.)</li>
+                                    <li>Correlation diagrams</li>
+                                    <li>Trend visualizations</li>
+                                  </ul>
+                                  <div className="text-green-600 font-bold mt-3">Output:</div>
+                                  <div className="text-foreground ml-4">Generate all graphs, charts, and diagrams in the visual folder, then aggregate them into a comprehensive HTML report:</div>
+                                  <div className="text-foreground ml-4 font-mono text-xs mt-1">Lab1_InputProcessOutput/visual/analysis_dashboard.html</div>
                                 </div>
-                                <p className="text-xs text-muted-foreground mt-2">
-                                  <strong>Tip:</strong> You can also right-click an existing folder and copy its path if you want to save results to a specific location.
-                                </p>
                               </div>
+                            </div>
 
-                              {/* Step 5: Send to Builder */}
-                              <div className="bg-background p-4 rounded-lg border-l-4 border-primary">
-                                <h6 className="font-bold text-foreground mb-2">Step 5: Send Instructions to Builder</h6>
-                                <ul className="space-y-2 text-sm text-foreground list-none">
-                                  <li className="flex items-start gap-2">
-                                    <span className="text-primary font-bold">1.</span>
-                                    <span>Save your <code className="bg-muted px-2 py-1 rounded text-xs">instructions.md</code> file (auto-save should handle this)</span>
-                                  </li>
-                                  <li className="flex items-start gap-2">
-                                    <span className="text-primary font-bold">2.</span>
-                                    <span><strong>Right-click</strong> on the <code className="bg-muted px-2 py-1 rounded text-xs">instructions.md</code> file in the File Explorer</span>
-                                  </li>
-                                  <li className="flex items-start gap-2">
-                                    <span className="text-primary font-bold">3.</span>
-                                    <span>Select <strong>"Copy Path"</strong></span>
-                                  </li>
-                                  <li className="flex items-start gap-2">
-                                    <span className="text-primary font-bold">4.</span>
-                                    <span>In the Right Panel (AI Agent Chat), type: <em>"Please follow the instructions in [paste file path here]"</em></span>
-                                  </li>
-                                  <li className="flex items-start gap-2">
-                                    <span className="text-primary font-bold">5.</span>
-                                    <span>Press <strong>Enter</strong> to send the message to Builder</span>
-                                  </li>
-                                  <li className="flex items-start gap-2">
-                                    <span className="text-primary font-bold">6.</span>
-                                    <span>Watch as Builder reads your instructions, accesses the data, and generates the reports and visualizations!</span>
-                                  </li>
-                                </ul>
-                              </div>
+                            {/* How to Execute */}
+                            <div className="bg-background p-4 rounded-lg border-l-4 border-primary">
+                              <h6 className="font-bold text-foreground mb-2">📤 How to Execute Each Task</h6>
+                              <ul className="space-y-2 text-sm text-foreground list-none">
+                                <li className="flex items-start gap-2">
+                                  <span className="text-primary font-bold">1.</span>
+                                  <span>Create and save the instruction file (e.g., <code className="bg-muted px-2 py-1 rounded text-xs">exploreData.md</code>)</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <span className="text-primary font-bold">2.</span>
+                                  <span><strong>Right-click</strong> on the file and select <strong>"Copy Path"</strong></span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <span className="text-primary font-bold">3.</span>
+                                  <span>In GitHub Copilot Chat, type: <em>"Please follow the instructions in [paste file path]"</em></span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <span className="text-primary font-bold">4.</span>
+                                  <span>Wait for the task to complete before moving to the next instruction file</span>
+                                </li>
+                              </ul>
                             </div>
                           </div>
 
                           {/* Workflow Flowchart */}
                           <div className="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 p-6 rounded-xl border-2">
-                            <h4 className="text-xl font-bold text-foreground mb-4">📊 Complete Workflow Visualization</h4>
+                            <h4 className="text-xl font-bold text-foreground mb-4">📊 Lab 1 Workflow Visualization</h4>
                             <p className="text-sm text-muted-foreground mb-4">
-                              This flowchart shows the complete process from setting up your instructions to getting results from Builder.
+                              This flowchart shows the three-phase workflow for analyzing Walmart sales data.
                             </p>
                             <MermaidDiagram chart={`
-graph LR
-    subgraph SETUP["📝 Setup"]
-        A[Open instructions.md] --> B[Fill Input/Process/Output sections]
+graph TD
+    subgraph PHASE1["📊 Phase 1: Explore Data"]
+        A[Walmart2.csv] --> B[exploreData.md]
+        B --> C[data_exploration.html]
     end
     
-    subgraph SEND["💬 Send to Builder"]
-        C[Copy instructions.md path] --> D[Paste in AI chat]
+    subgraph PHASE2["🔍 Phase 2: Recommend Models"]
+        C --> D[exploreModels.md]
+        D --> E[model_recommendations.md]
     end
     
-    subgraph EXECUTE["🤖 Builder Executes"]
-        E[Reads & processes] --> F[Creates output files]
+    subgraph PHASE3["⚙️ Phase 3: Implement Analysis"]
+        E --> F[implement.md]
+        A --> F
+        F --> G[Python Scripts]
+        G --> H[Charts & Graphs]
+        H --> I[analysis_dashboard.html]
     end
     
-    SETUP --> SEND --> EXECUTE --> G[🎉 View Results]
-    
-    style A fill:#e3f2fd
-    style B fill:#f3e5f5
-    style C fill:#fff3e0
-    style D fill:#fce4ec
-    style E fill:#e0f2f1
-    style F fill:#f1f8e9
-    style G fill:#c8e6c9
+    style A fill:#f3e5f5
+    style B fill:#e3f2fd
+    style C fill:#e8f5e9
+    style D fill:#e3f2fd
+    style E fill:#fff3e0
+    style F fill:#e3f2fd
+    style G fill:#fce4ec
+    style H fill:#e0f7fa
+    style I fill:#c8e6c9
             `} />
                           </div>
 
@@ -1008,19 +1013,19 @@ graph LR
                               <ul className="space-y-1 text-sm text-foreground list-none">
                                 <li className="flex items-start gap-2">
                                   <span className="text-primary">✓</span>
-                                  <span><strong>Right-click is your friend:</strong> Use it to copy file and folder paths quickly</span>
+                                  <span><strong>Break complex tasks into phases:</strong> Explore → Plan → Implement</span>
                                 </li>
                                 <li className="flex items-start gap-2">
                                   <span className="text-primary">✓</span>
-                                  <span><strong>Structured instructions work best:</strong> The Input-Process-Output model helps organize your requests</span>
+                                  <span><strong>Chain outputs to inputs:</strong> Results from one task become inputs for the next</span>
                                 </li>
                                 <li className="flex items-start gap-2">
                                   <span className="text-primary">✓</span>
-                                  <span><strong>Natural language is powerful:</strong> You don't need to know code; just describe what you want clearly</span>
+                                  <span><strong>AI writes and runs code:</strong> GitHub Copilot generates Python scripts and executes them</span>
                                 </li>
                                 <li className="flex items-start gap-2">
                                   <span className="text-primary">✓</span>
-                                  <span><strong>Builder does the heavy lifting:</strong> The agent reads, analyzes, generates, and saves results automatically</span>
+                                  <span><strong>Visual outputs:</strong> HTML dashboards make results accessible and shareable</span>
                                 </li>
                               </ul>
                             </AlertDescription>
