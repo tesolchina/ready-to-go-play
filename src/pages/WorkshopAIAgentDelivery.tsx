@@ -1174,12 +1174,13 @@ graph TD
                               <div className="bg-background p-4 rounded-lg border">
                                 <h5 className="font-bold text-foreground mb-2">What is an API?</h5>
                                 <p className="text-sm text-foreground mb-3">
-                                  <strong>API (Application Programming Interface)</strong> is a way for computer programs to communicate with services, 
-                                  like servers that run Large Language Models (LLMs).
+                                  <strong>API (Application Programming Interface)</strong> is a way for computer programs to communicate with services 
+                                  over the internet. APIs are everywhere - not just for AI!
                                 </p>
                                 <p className="text-sm text-foreground">
-                                  Think of it as a <strong>messenger</strong> that takes requests from your program (Builder in Trae) and delivers 
-                                  them to the AI service provider, then brings back the response.
+                                  Think of it as a <strong>messenger</strong> that takes requests from your program and delivers 
+                                  them to a remote service, then brings back the response - whether that's AI-generated text, 
+                                  weather data, stock prices, or government statistics.
                                 </p>
                               </div>
 
@@ -1227,6 +1228,80 @@ graph TD
                                   </ul>
                                 </div>
                               </div>
+                            </div>
+                          </div>
+
+                          {/* Real-World API Example: Government Data */}
+                          <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 p-6 rounded-xl border-2">
+                            <h4 className="text-xl font-bold text-foreground mb-4">📊 Real-World Example: Government Open Data APIs</h4>
+                            
+                            <div className="space-y-4">
+                              <p className="text-foreground">
+                                APIs aren't just for AI - they're used to access <strong>all kinds of data</strong>. 
+                                Let's look at the Hong Kong Government's Open Data Portal as an example:
+                              </p>
+
+                              <div className="bg-background p-4 rounded-lg border">
+                                <h5 className="font-bold text-foreground mb-2 flex items-center gap-2">
+                                  <ExternalLink className="h-4 w-4 text-amber-600" />
+                                  HK Property Market Statistics API
+                                </h5>
+                                <p className="text-sm text-foreground mb-3">
+                                  The Rating and Valuation Department publishes property market data via API:
+                                </p>
+                                <a 
+                                  href="https://data.gov.hk/en-data/dataset/hk-rvd-tsinfo_rvd-property-market-statistics/resource/d8ecc5e6-3721-4d07-a0f2-163f08e39b89" 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="text-primary hover:underline text-sm flex items-center gap-1"
+                                >
+                                  View on data.gov.hk <ExternalLink className="h-3 w-3" />
+                                </a>
+                              </div>
+
+                              <div className="bg-background p-4 rounded-lg border">
+                                <h5 className="font-bold text-foreground mb-2">How This Works:</h5>
+                                <ol className="space-y-2 text-sm text-foreground list-none">
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-amber-600 font-bold">1.</span>
+                                    <span>Your program sends a <strong>request</strong> to the API endpoint (a URL)</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-amber-600 font-bold">2.</span>
+                                    <span>The server processes the request and returns <strong>structured data</strong> (usually JSON or CSV)</span>
+                                  </li>
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-amber-600 font-bold">3.</span>
+                                    <span>Your program can then <strong>process, analyze, or visualize</strong> this data</span>
+                                  </li>
+                                </ol>
+                              </div>
+
+                              <div className="grid md:grid-cols-3 gap-3">
+                                <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded border text-center">
+                                  <p className="text-xs font-bold text-foreground mb-1">🌤️ Weather Data</p>
+                                  <p className="text-xs text-muted-foreground">Real-time forecasts</p>
+                                </div>
+                                <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded border text-center">
+                                  <p className="text-xs font-bold text-foreground mb-1">📈 Financial Data</p>
+                                  <p className="text-xs text-muted-foreground">Stock prices, exchange rates</p>
+                                </div>
+                                <div className="bg-purple-50 dark:bg-purple-900/20 p-3 rounded border text-center">
+                                  <p className="text-xs font-bold text-foreground mb-1">🚌 Transport Data</p>
+                                  <p className="text-xs text-muted-foreground">Bus arrivals, traffic info</p>
+                                </div>
+                              </div>
+
+                              <Alert className="border-l-4 border-amber-500 bg-amber-50 dark:bg-amber-900/20">
+                                <Lightbulb className="h-5 w-5 text-amber-600" />
+                                <AlertDescription className="ml-2">
+                                  <p className="font-semibold mb-2">💡 Key Insight</p>
+                                  <p className="text-sm text-foreground">
+                                    APIs are the foundation of modern software. Later in this workshop, we'll demonstrate how to 
+                                    use AI agents to <strong>fetch and analyze data from government APIs</strong> - no LLM required!
+                                  </p>
+                                </AlertDescription>
+                              </Alert>
                             </div>
                           </div>
 
@@ -1352,11 +1427,22 @@ graph TD
                           {/* Why This Matters */}
                           <div className="bg-primary/10 rounded-lg p-6 border-l-4 border-primary">
                             <h4 className="font-semibold text-lg mb-3">🎯 Why This Matters for AI Agents</h4>
-                            <p className="text-foreground">
-                              Understanding APIs is crucial because AI agents like Trae's Builder use API keys to communicate 
-                              with LLM providers on your behalf. This automation is what makes AI agents powerful - they can 
-                              send multiple requests, process large amounts of data, and integrate AI capabilities into your 
-                              workflows without manual intervention.
+                            <p className="text-foreground mb-3">
+                              Understanding APIs is crucial because AI agents can leverage <strong>both types of APIs</strong>:
+                            </p>
+                            <ul className="space-y-2 text-foreground list-none">
+                              <li className="flex items-start gap-2">
+                                <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-1" />
+                                <span><strong>LLM APIs:</strong> Send text for AI analysis, get intelligent responses (requires API keys)</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-1" />
+                                <span><strong>Data APIs:</strong> Fetch real-time data from government portals, weather services, financial systems (often free, no key required)</span>
+                              </li>
+                            </ul>
+                            <p className="text-foreground mt-3">
+                              AI agents like GitHub Copilot can write scripts that call <em>any</em> API - combining data retrieval with AI analysis 
+                              to create powerful automated workflows.
                             </p>
                           </div>
 
