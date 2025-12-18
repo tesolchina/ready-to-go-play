@@ -1527,66 +1527,104 @@ graph TD
                           </div>
 
                           {/* Instruction File */}
+                          {/* Trial 1 */}
                           <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 p-6 rounded-xl border-2">
-                            <h5 className="text-xl font-bold text-foreground mb-4">📝 Create Instruction File: testAPI.md</h5>
+                            <h5 className="text-xl font-bold text-foreground mb-4">📝 Trial 1: Specific Resource Page</h5>
                             <p className="text-foreground mb-4">
-                              Create a file <code className="bg-muted px-2 py-1 rounded">Lab2_GovData/testAPI.md</code> with the Input-Process-Output structure:
+                              Create a file <code className="bg-muted px-2 py-1 rounded">Lab2_GovData/trial1.md</code> with the Input-Process-Output structure:
                             </p>
 
                             {/* Input Section */}
                             <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg border-l-4 border-purple-600 mb-4">
                               <h6 className="font-bold text-foreground mb-2">📥 Input</h6>
-                              <p className="text-sm text-foreground mb-3">
-                                The web page link where data and API information can be found:
-                              </p>
                               <div className="bg-background p-3 rounded border">
                                 <code className="text-xs text-foreground break-all">
                                   https://data.gov.hk/en-data/dataset/hk-rvd-tsinfo_rvd-property-market-statistics/resource/d8ecc5e6-3721-4d07-a0f2-163f08e39b89
                                 </code>
                               </div>
                               <p className="text-xs text-muted-foreground mt-2">
-                                Paste the full URL of the data.gov.hk page you want to explore
+                                This links to a <strong>specific resource</strong> within the dataset
                               </p>
                             </div>
 
                             {/* Process Section */}
                             <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border-l-4 border-blue-600 mb-4">
                               <h6 className="font-bold text-foreground mb-2">⚙️ Process</h6>
-                              <p className="text-sm text-foreground mb-3">
-                                Ask AI agent to:
+                              <p className="text-sm text-foreground">
+                                Fetch info from the link and write a Python script to test if data can be obtained; then generate an md report on what data is available
                               </p>
-                              <ul className="space-y-2 text-sm text-foreground list-none ml-4">
-                                <li className="flex items-start gap-2">
-                                  <span className="text-blue-600 font-bold">1.</span>
-                                  <span><strong>Fetch information</strong> from the provided web link (understand the data structure and API endpoints)</span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                  <span className="text-blue-600 font-bold">2.</span>
-                                  <span><strong>Write a Python script</strong> to test if data can be obtained from the API</span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                  <span className="text-blue-600 font-bold">3.</span>
-                                  <span><strong>Run the script</strong> to verify the API connection works</span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                  <span className="text-blue-600 font-bold">4.</span>
-                                  <span><strong>Generate a markdown report</strong> documenting what data is available, data structure, and sample values</span>
-                                </li>
-                              </ul>
                             </div>
 
                             {/* Output Section */}
                             <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border-l-4 border-green-600">
                               <h6 className="font-bold text-foreground mb-2">📤 Output</h6>
-                              <p className="text-sm text-foreground mb-2">
-                                Export the report to the <strong>same folder</strong> as the instruction file:
+                              <p className="text-sm text-foreground">
+                                Export the report to the <strong>same folder</strong> as the instruction file
                               </p>
-                              <div className="bg-background p-3 rounded border font-mono text-sm">
-                                <div>Lab2_GovData/</div>
-                                <div className="ml-4">├── testAPI.md <span className="text-muted-foreground">(your instruction)</span></div>
-                                <div className="ml-4">├── test_api.py <span className="text-muted-foreground">(Python test script)</span></div>
-                                <div className="ml-4">└── data_report.md <span className="text-muted-foreground">(generated report)</span></div>
+                            </div>
+                          </div>
+
+                          {/* Trial 2 */}
+                          <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 p-6 rounded-xl border-2">
+                            <h5 className="text-xl font-bold text-foreground mb-4">📝 Trial 2: Dataset Overview Page</h5>
+                            <p className="text-foreground mb-4">
+                              Create a file <code className="bg-muted px-2 py-1 rounded">Lab2_GovData/trial2.md</code> with the Input-Process-Output structure:
+                            </p>
+
+                            {/* Input Section */}
+                            <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg border-l-4 border-purple-600 mb-4">
+                              <h6 className="font-bold text-foreground mb-2">📥 Input</h6>
+                              <div className="bg-background p-3 rounded border">
+                                <code className="text-xs text-foreground break-all">
+                                  https://data.gov.hk/en-data/dataset/hk-rvd-tsinfo_rvd-property-market-statistics
+                                </code>
                               </div>
+                              <p className="text-xs text-muted-foreground mt-2">
+                                This links to the <strong>dataset overview</strong> with multiple resources
+                              </p>
+                            </div>
+
+                            {/* Process Section */}
+                            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border-l-4 border-blue-600 mb-4">
+                              <h6 className="font-bold text-foreground mb-2">⚙️ Process</h6>
+                              <p className="text-sm text-foreground">
+                                Fetch info from the link and write a Python script to test if data can be obtained; then generate an md report on what data is available
+                              </p>
+                            </div>
+
+                            {/* Output Section */}
+                            <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border-l-4 border-green-600">
+                              <h6 className="font-bold text-foreground mb-2">📤 Output</h6>
+                              <p className="text-sm text-foreground">
+                                Export the report to the <strong>same folder</strong> as the instruction file
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Agent Clarification Note */}
+                          <Alert className="border-l-4 border-amber-500 bg-amber-50 dark:bg-amber-900/20">
+                            <MessageSquare className="h-5 w-5 text-amber-600" />
+                            <AlertDescription className="ml-2">
+                              <p className="font-semibold mb-2">💬 Expect Agent Clarifications</p>
+                              <p className="text-sm text-foreground">
+                                The AI agent may <strong>ask for clarification</strong> before proceeding - this is normal and helpful! 
+                                For example, it might ask which specific data fields you're interested in, or confirm the output format. 
+                                Answer its questions, and it will then complete the task autonomously.
+                              </p>
+                            </AlertDescription>
+                          </Alert>
+
+                          {/* Expected Output Structure */}
+                          <div className="bg-muted/50 p-4 rounded-lg border">
+                            <h6 className="font-bold text-foreground mb-2">📁 Expected Output Structure</h6>
+                            <div className="bg-background p-3 rounded border font-mono text-sm">
+                              <div>Lab2_GovData/</div>
+                              <div className="ml-4">├── trial1.md <span className="text-muted-foreground">(instruction file)</span></div>
+                              <div className="ml-4">├── trial1_test.py <span className="text-muted-foreground">(Python test script)</span></div>
+                              <div className="ml-4">├── trial1_report.md <span className="text-muted-foreground">(generated report)</span></div>
+                              <div className="ml-4">├── trial2.md <span className="text-muted-foreground">(instruction file)</span></div>
+                              <div className="ml-4">├── trial2_test.py <span className="text-muted-foreground">(Python test script)</span></div>
+                              <div className="ml-4">└── trial2_report.md <span className="text-muted-foreground">(generated report)</span></div>
                             </div>
                           </div>
 
@@ -1617,15 +1655,15 @@ graph LR
                               <div className="flex items-start gap-3">
                                 <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">1</span>
                                 <div>
-                                  <p className="font-semibold text-foreground">Create the instruction file</p>
-                                  <p className="text-sm text-muted-foreground">Create <code className="bg-background px-1 rounded">Lab2_GovData/testAPI.md</code> with the Input-Process-Output structure above</p>
+                                  <p className="font-semibold text-foreground">Create the instruction files</p>
+                                  <p className="text-sm text-muted-foreground">Create <code className="bg-background px-1 rounded">Lab2_GovData/trial1.md</code> and <code className="bg-background px-1 rounded">Lab2_GovData/trial2.md</code> with the structures above</p>
                                 </div>
                               </div>
                               <div className="flex items-start gap-3">
                                 <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">2</span>
                                 <div>
                                   <p className="font-semibold text-foreground">Copy the file path</p>
-                                  <p className="text-sm text-muted-foreground">Right-click on testAPI.md → Copy Path</p>
+                                  <p className="text-sm text-muted-foreground">Right-click on trial1.md → Copy Path (start with Trial 1)</p>
                                 </div>
                               </div>
                               <div className="flex items-start gap-3">
@@ -1638,8 +1676,15 @@ graph LR
                               <div className="flex items-start gap-3">
                                 <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">4</span>
                                 <div>
-                                  <p className="font-semibold text-foreground">Review the output</p>
-                                  <p className="text-sm text-muted-foreground">Check the generated Python script and data report in your Lab2_GovData folder</p>
+                                  <p className="font-semibold text-foreground">Answer clarifications & review output</p>
+                                  <p className="text-sm text-muted-foreground">If the agent asks questions, answer them. Then check the generated scripts and reports in Lab2_GovData folder</p>
+                                </div>
+                              </div>
+                              <div className="flex items-start gap-3">
+                                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">5</span>
+                                <div>
+                                  <p className="font-semibold text-foreground">Repeat for Trial 2</p>
+                                  <p className="text-sm text-muted-foreground">Run trial2.md and compare how the agent handles the dataset overview page vs. specific resource page</p>
                                 </div>
                               </div>
                             </div>
