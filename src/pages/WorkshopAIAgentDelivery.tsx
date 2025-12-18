@@ -957,7 +957,7 @@ const WorkshopAIAgentDelivery = () => {
                                 </li>
                                 <li className="flex items-start gap-2">
                                   <span className="text-primary font-bold">3.</span>
-                                  <span>In GitHub Copilot Chat, type: <em>"Please follow the instructions in [paste file path]"</em></span>
+                                  <span>In GitHub Copilot Chat, <strong>switch to Agent mode</strong>, then type: <em>"Please follow the instructions in [paste file path]"</em></span>
                                 </li>
                                 <li className="flex items-start gap-2">
                                   <span className="text-primary font-bold">4.</span>
