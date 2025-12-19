@@ -118,6 +118,20 @@ const WorkshopAIAgentDelivery = () => {
                 <p className="text-xl text-muted-foreground">
                   Complete guide for participants - preparation, activities, and follow-up
                 </p>
+                
+                {/* Speaker Info */}
+                <div className="flex items-center gap-4 p-4 bg-card rounded-lg border shadow-sm">
+                  <img 
+                    src="https://lc.hkbu.edu.hk/main/wp-content/uploads/simon-1.jpg" 
+                    alt="Dr WANG Ho, Simon"
+                    className="w-16 h-16 rounded-full object-cover"
+                  />
+                  <div>
+                    <p className="font-semibold text-foreground">Dr WANG Ho, Simon</p>
+                    <p className="text-sm text-muted-foreground">Lecturer in English & Innovation Officer</p>
+                    <p className="text-sm text-muted-foreground">The Language Centre, HKBU</p>
+                  </div>
+                </div>
               </div>
 
               <Alert>
