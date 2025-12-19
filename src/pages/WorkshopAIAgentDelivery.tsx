@@ -2501,17 +2501,17 @@ Documentation file: \`./GitHubAnalysis/transformers-analysis.md\``}</code>
                       <div className="space-y-4">
                         <div className="grid gap-3">
                           <div className="flex items-start gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                            <Terminal className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                            <FileText className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
                             <div>
-                              <p className="font-semibold text-foreground">Lab 1: Install Cursor IDE</p>
-                              <p className="text-sm text-muted-foreground">Set up your AI-powered development environment with Cursor</p>
+                              <p className="font-semibold text-foreground">Lab 1: Input → Process → Output Model</p>
+                              <p className="text-sm text-muted-foreground">Learn the fundamental prompting structure for AI agents</p>
                             </div>
                           </div>
                           <div className="flex items-start gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                            <FileText className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                            <Database className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
                             <div>
-                              <p className="font-semibold text-foreground">Lab 2: Write Your First Prompt</p>
-                              <p className="text-sm text-muted-foreground">Learn effective prompting with input → process → output structure</p>
+                              <p className="font-semibold text-foreground">Lab 2: Access Government Data via API</p>
+                              <p className="text-sm text-muted-foreground">Connect to real-world data sources using APIs</p>
                             </div>
                           </div>
                           <div className="flex items-start gap-3 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
