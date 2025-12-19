@@ -2,7 +2,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail, ChevronDown, Terminal, Zap, ChevronUp, FileText, BookOpen, Key, AlertCircle, Info, Cpu, FolderOpen, GraduationCap, FileEdit, Microscope, PenTool, Sparkles, Monitor, ExternalLink, Play, MessagesSquare, GitBranch, Database, BarChart3 } from "lucide-react";
+import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail, ChevronDown, Terminal, Zap, ChevronUp, FileText, BookOpen, Key, AlertCircle, Info, Cpu, FolderOpen, GraduationCap, FileEdit, Microscope, PenTool, Sparkles, Monitor, ExternalLink, Play, MessagesSquare, GitBranch, Database, BarChart3, Users, Rocket } from "lucide-react";
 import { WorkshopUseCaseChat } from "@/components/WorkshopUseCaseChat";
 import { WorkshopUseCaseBBS } from "@/components/WorkshopUseCaseBBS";
 import { WorkshopInterestForm } from "@/components/WorkshopInterestForm";
@@ -1931,7 +1931,7 @@ graph LR
                     </Card>
                   </Collapsible>
 
-                  {/* Module 6: Lab 3 - Literature Review Screening */}
+                  {/* Module 6: Lab 3 - Set Up a Local Chatbot */}
                   <Collapsible 
                     open={moduleStates.module6} 
                     onOpenChange={(open) => setModuleStates({...moduleStates, module6: open})}
@@ -1941,187 +1941,195 @@ graph LR
                       <CollapsibleTrigger asChild>
                         <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-4 flex items-center justify-between hover:from-primary/90 hover:to-primary/70 transition-all">
                           <h3 className="font-semibold text-left flex items-center gap-2 text-xl">
-                            <FileText className="h-6 w-6" />
-                            Module 6: Lab 3 - Literature Review Screening
+                            <MessageSquare className="h-6 w-6" />
+                            Module 6: Lab 3 - Set Up a Local Chatbot
                           </h3>
                           <ChevronDown className="h-5 w-5 flex-shrink-0 transition-transform duration-300 ui-state-open:rotate-180" />
                         </button>
                       </CollapsibleTrigger>
                       <CollapsibleContent className="p-5 bg-card">
                         <div className="space-y-6">
-                          <div className="bg-gradient-to-r from-cyan-50 to-teal-50 dark:from-cyan-900/20 dark:to-teal-900/20 p-6 rounded-xl border-2">
-                            <h4 className="text-2xl font-bold text-foreground mb-4">🔍 Screen Studies from CSV Data</h4>
+                          <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 p-6 rounded-xl border-2">
+                            <h4 className="text-2xl font-bold text-foreground mb-4">💬 Local Chatbot - Quick Start Guide</h4>
                             <p className="text-foreground mb-4">
-                              In this lab, you'll learn how to automate literature review screening - a critical but time-consuming task in academic research. 
-                              You'll process a CSV file containing study titles and abstracts, using AI to categorize and analyze each study systematically.
+                              In this lab, you'll set up a local chatbot server using Python and Flask. 
+                              This gives you a customizable AI assistant that runs on your machine with your own API keys.
                             </p>
                             
-                            <Alert className="mb-6 border-l-4 border-cyan-500 bg-cyan-50 dark:bg-cyan-900/20">
-                              <Info className="h-5 w-5 text-cyan-600" />
+                            {/* For AI Agents: Starting the Server */}
+                            <div className="bg-background p-6 rounded-lg border-2 mb-6">
+                              <h5 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+                                <Terminal className="h-5 w-5 text-purple-600" />
+                                For AI Agents: Starting the Server
+                              </h5>
+                              
+                              <div className="space-y-4">
+                                <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg border-l-4 border-purple-600">
+                                  <h6 className="font-bold text-foreground mb-2">1. Navigate to Lab3 Directory</h6>
+                                  <pre className="bg-background p-3 rounded text-sm overflow-x-auto">
+                                    <code>cd "Lab3 set up a local chatbot"</code>
+                                  </pre>
+                                </div>
+
+                                <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg border-l-4 border-purple-600">
+                                  <h6 className="font-bold text-foreground mb-2">2. Start the Server</h6>
+                                  <pre className="bg-background p-3 rounded text-sm overflow-x-auto">
+                                    <code>python3 scripts/server.py</code>
+                                  </pre>
+                                </div>
+
+                                <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg border-l-4 border-purple-600">
+                                  <h6 className="font-bold text-foreground mb-2">3. Verify Server is Running</h6>
+                                  <ul className="text-sm text-foreground space-y-1 ml-4 list-disc">
+                                    <li>Server starts on: <code className="bg-background px-2 py-1 rounded">http://localhost:5000</code></li>
+                                    <li>Check status: <code className="bg-background px-2 py-1 rounded">curl http://localhost:5000/api/models</code></li>
+                                    <li>Expected: JSON response with available models</li>
+                                  </ul>
+                                </div>
+
+                                <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg border-l-4 border-purple-600">
+                                  <h6 className="font-bold text-foreground mb-2">4. Stop Server (if needed)</h6>
+                                  <pre className="bg-background p-3 rounded text-sm overflow-x-auto">
+                                    <code>pkill -f "scripts/server.py"</code>
+                                  </pre>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* For Users: Using the Chatbot */}
+                            <div className="bg-background p-6 rounded-lg border-2 mb-6">
+                              <h5 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+                                <Users className="h-5 w-5 text-indigo-600" />
+                                For Users: Using the Chatbot
+                              </h5>
+                              
+                              <div className="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-lg border-l-4 border-indigo-600 mb-4">
+                                <h6 className="font-bold text-foreground mb-2">Access the Chatbot</h6>
+                                <ol className="text-sm text-foreground space-y-1 ml-4 list-decimal">
+                                  <li>Open your web browser</li>
+                                  <li>Navigate to: <code className="bg-background px-2 py-1 rounded font-semibold">http://localhost:5000</code></li>
+                                  <li>You're ready to chat!</li>
+                                </ol>
+                              </div>
+
+                              <div className="space-y-4">
+                                <h6 className="font-bold text-foreground">How to Use:</h6>
+                                
+                                <div className="grid md:grid-cols-2 gap-4">
+                                  <div className="bg-primary/5 p-4 rounded-lg border">
+                                    <p className="font-semibold text-primary mb-2">1. Select a Model</p>
+                                    <p className="text-sm text-muted-foreground">
+                                      Choose from dropdown in the left sidebar. Available: moonshot-v1-8k, moonshot-v1-32k, moonshot-v1-128k, moonshot-v1-auto, kimi-latest
+                                    </p>
+                                  </div>
+                                  <div className="bg-primary/5 p-4 rounded-lg border">
+                                    <p className="font-semibold text-primary mb-2">2. Set System Prompt</p>
+                                    <p className="text-sm text-muted-foreground">
+                                      Define the AI's role. Example: "You are a helpful math tutor for MSc students."
+                                    </p>
+                                  </div>
+                                  <div className="bg-primary/5 p-4 rounded-lg border">
+                                    <p className="font-semibold text-primary mb-2">3. Add File Context</p>
+                                    <p className="text-sm text-muted-foreground">
+                                      Enter filename, paste content, click "📎 Add File". Files are included in every message.
+                                    </p>
+                                  </div>
+                                  <div className="bg-primary/5 p-4 rounded-lg border">
+                                    <p className="font-semibold text-primary mb-2">4. Start Chatting</p>
+                                    <p className="text-sm text-muted-foreground">
+                                      Type your message, press Enter or click Send, wait for AI response.
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border-l-4 border-green-600 mt-4">
+                                  <h6 className="font-bold text-foreground mb-2">5. Save/Load Conversations</h6>
+                                  <ul className="text-sm text-foreground space-y-1 ml-4 list-disc">
+                                    <li><strong>Save:</strong> Click "💾 Save" button, enter session name</li>
+                                    <li><strong>Load:</strong> Click "📂 Load" to view and restore saved chats</li>
+                                    <li><strong>Clear:</strong> Click "🗑️ Clear" to start fresh</li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Quick Troubleshooting */}
+                            <div className="bg-background p-6 rounded-lg border-2 mb-6">
+                              <h5 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+                                <AlertCircle className="h-5 w-5 text-amber-600" />
+                                Quick Troubleshooting
+                              </h5>
+                              
+                              <div className="space-y-4">
+                                <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg border-l-4 border-amber-500">
+                                  <h6 className="font-bold text-foreground mb-2">Server Won't Start?</h6>
+                                  <pre className="bg-background p-3 rounded text-sm overflow-x-auto mb-2">
+                                    <code># Install dependencies{"\n"}pip install flask flask-cors requests{"\n"}{"\n"}# Check if port 5000 is in use{"\n"}lsof -i :5000</code>
+                                  </pre>
+                                </div>
+
+                                <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg border-l-4 border-amber-500">
+                                  <h6 className="font-bold text-foreground mb-2">Can't Connect?</h6>
+                                  <ul className="text-sm text-foreground space-y-1 ml-4 list-disc">
+                                    <li>Ensure server is running (check terminal)</li>
+                                    <li>Try: <code className="bg-background px-2 py-1 rounded">http://127.0.0.1:5000</code> instead of localhost</li>
+                                    <li>Check firewall settings</li>
+                                  </ul>
+                                </div>
+
+                                <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg border-l-4 border-amber-500">
+                                  <h6 className="font-bold text-foreground mb-2">API Errors?</h6>
+                                  <ul className="text-sm text-foreground space-y-1 ml-4 list-disc">
+                                    <li>Verify API key exists: <code className="bg-background px-2 py-1 rounded">../Data/Kimi.md</code></li>
+                                    <li>Server uses Kimi API if <code className="bg-background px-2 py-1 rounded">Kimi.md</code> exists</li>
+                                    <li>Otherwise uses HKBU Gen AI from <code className="bg-background px-2 py-1 rounded">GenAIkey.md</code></li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* File Structure */}
+                            <div className="bg-background p-6 rounded-lg border-2 mb-6">
+                              <h5 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+                                <FolderOpen className="h-5 w-5 text-cyan-600" />
+                                File Structure
+                              </h5>
+                              <pre className="bg-muted p-4 rounded-lg text-sm overflow-x-auto">
+                                <code>{`Lab3 set up a local chatbot/
+├── README.md              # Quick start guide
+├── chatbot.html           # Main UI
+├── scripts/
+│   └── server.py         # Flask backend
+├── chatHistory/          # Saved conversations
+└── requirements.txt      # Python dependencies`}</code>
+                              </pre>
+                            </div>
+
+                            {/* API Configuration */}
+                            <Alert className="border-l-4 border-blue-500 bg-blue-50 dark:bg-blue-900/20">
+                              <Info className="h-5 w-5 text-blue-600" />
                               <AlertDescription className="ml-2">
-                                <p className="font-semibold mb-2">📚 Real-World Context</p>
-                                <p className="text-sm text-foreground">
-                                  The CSV file for this lab contains ~200 studies on BAWE (British Academic Written English) and data-driven learning, 
-                                  obtained from <a href="https://erpp.hkbu.me/search" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-semibold">erpp.hkbu.me/search</a> 
-                                  {" "}(a GUI search engine using Semantic Search and Scopus APIs).
-                                </p>
-                                <p className="text-sm text-foreground mt-2">
-                                  Note: Some abstracts may be missing in the data.
+                                <p className="font-semibold mb-2">🔑 API Configuration</p>
+                                <ul className="text-sm text-foreground space-y-1 list-disc ml-4">
+                                  <li><strong>Kimi API</strong> (if <code className="bg-background px-1 rounded">../Data/Kimi.md</code> exists): Moonshot AI models</li>
+                                  <li><strong>HKBU Gen AI</strong> (fallback): Uses <code className="bg-background px-1 rounded">../Data/GenAIkey.md</code></li>
+                                </ul>
+                                <p className="text-sm text-foreground mt-2 italic">
+                                  Server automatically detects and uses the available API key.
                                 </p>
                               </AlertDescription>
                             </Alert>
 
-                            <div className="space-y-6">
-                              <div className="bg-background p-6 rounded-lg border-2">
-                                <h5 className="text-xl font-bold text-foreground mb-4">📋 Lab Task Overview</h5>
-                                
-                                {/* Input Section */}
-                                <div className="bg-cyan-50 dark:bg-cyan-900/20 p-4 rounded-lg border-l-4 border-cyan-600 mb-4">
-                                  <h6 className="font-bold text-foreground mb-2">📥 Input</h6>
-                                  <p className="text-sm text-foreground mb-2">
-                                    CSV file containing study metadata:
-                                  </p>
-                                  <code className="bg-background px-3 py-2 rounded block text-sm">
-                                    Data/Literature/bawe_ddl_studies.csv
-                                  </code>
-                                  <p className="text-xs text-muted-foreground mt-2">
-                                    Contains: Title, Abstract, Authors, Year, Journal (some abstracts may be missing)
-                                  </p>
-                                </div>
-
-                                {/* Process Section */}
-                                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border-l-4 border-blue-600 mb-4">
-                                  <h6 className="font-bold text-foreground mb-2">⚙️ Process</h6>
-                                  <p className="text-sm text-foreground mb-3">
-                                    For the <strong>first 10 studies</strong> in the CSV, ask Builder to:
-                                  </p>
-                                  <ul className="space-y-2 text-sm text-foreground list-none ml-4">
-                                    <li className="flex items-start gap-2">
-                                      <span className="text-blue-600 font-bold">1.</span>
-                                      <span>Read the CSV file and extract the first 10 entries (titles + abstracts)</span>
-                                    </li>
-                                    <li className="flex items-start gap-2">
-                                      <span className="text-blue-600 font-bold">2.</span>
-                                      <span>For each study, send title + abstract to an LLM via API with categorization prompt</span>
-                                    </li>
-                                    <li className="flex items-start gap-2">
-                                      <span className="text-blue-600 font-bold">3.</span>
-                                      <span>Categorize each study based on:</span>
-                                    </li>
-                                    <ul className="ml-6 mt-1 space-y-1 text-xs text-muted-foreground list-disc">
-                                      <li>Study context (educational setting, participants, location)</li>
-                                      <li>Research objective (what question/problem is being addressed)</li>
-                                      <li>Data analyzed (corpus type, data sources)</li>
-                                      <li>Main findings (key results and discoveries)</li>
-                                      <li>Implications (practical applications, recommendations)</li>
-                                    </ul>
-                                    <li className="flex items-start gap-2 mt-2">
-                                      <span className="text-blue-600 font-bold">4.</span>
-                                      <span>Maintain a process log file showing progress (which study is being processed)</span>
-                                    </li>
-                                  </ul>
-                                  <div className="mt-3 p-3 bg-background rounded border">
-                                    <p className="text-xs text-muted-foreground italic">
-                                      <strong>Note:</strong> We're limiting to 10 studies for learning purposes. The same workflow 
-                                      can scale to all 200 studies - just adjust the instruction!
-                                    </p>
-                                  </div>
-                                </div>
-
-                                {/* Output Section */}
-                                <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border-l-4 border-green-600">
-                                  <h6 className="font-bold text-foreground mb-2">📤 Output</h6>
-                                  <div className="space-y-3 text-sm">
-                                    <div>
-                                      <p className="text-foreground font-semibold mb-1">Categorized Results CSV:</p>
-                                      <code className="bg-background px-3 py-2 rounded block text-sm">
-                                        Lab3_Results/screening_results.csv
-                                      </code>
-                                      <p className="text-xs text-muted-foreground mt-1">
-                                        Columns: Title, Authors, Year, Study_Context, Research_Objective, Data_Analyzed, Main_Findings, Implications
-                                      </p>
-                                    </div>
-                                    <div>
-                                      <p className="text-foreground font-semibold mb-1">Process Log:</p>
-                                      <code className="bg-background px-3 py-2 rounded block text-sm">
-                                        Lab3_Results/process_log.txt
-                                      </code>
-                                      <p className="text-xs text-muted-foreground mt-1">
-                                        Tracks progress: "Processing study 1 of 10: [Title]", timestamps, completion status
-                                      </p>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div className="bg-background p-6 rounded-lg border-2">
-                                <h5 className="text-xl font-bold text-foreground mb-4">🎯 Why This Matters</h5>
-                                <div className="grid md:grid-cols-2 gap-4">
-                                  <div className="bg-primary/5 p-4 rounded-lg border">
-                                    <p className="font-semibold text-primary mb-2">⏱️ Time Savings</p>
-                                    <p className="text-sm text-muted-foreground">
-                                      Manual screening: ~30 minutes per study × 200 = <strong>100 hours</strong><br/>
-                                      With AI agent: <strong>~1 hour</strong> for all 200 studies
-                                    </p>
-                                  </div>
-                                  <div className="bg-primary/5 p-4 rounded-lg border">
-                                    <p className="font-semibold text-primary mb-2">🎯 Consistency</p>
-                                    <p className="text-sm text-muted-foreground">
-                                      Same prompt ensures consistent categorization criteria across all studies
-                                    </p>
-                                  </div>
-                                  <div className="bg-primary/5 p-4 rounded-lg border">
-                                    <p className="font-semibold text-primary mb-2">📊 Structured Output</p>
-                                    <p className="text-sm text-muted-foreground">
-                                      CSV format enables easy sorting, filtering, and further analysis in Excel or R
-                                    </p>
-                                  </div>
-                                  <div className="bg-primary/5 p-4 rounded-lg border">
-                                    <p className="font-semibold text-primary mb-2">🔄 Scalability</p>
-                                    <p className="text-sm text-muted-foreground">
-                                      Test with 10, then scale to 200+ studies with the same instruction
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-
-                              <Alert className="border-l-4 border-amber-500 bg-amber-50 dark:bg-amber-900/20">
-                                <AlertCircle className="h-5 w-5 text-amber-600" />
-                                <AlertDescription className="ml-2">
-                                  <p className="font-semibold mb-2">💡 Handling Missing Data</p>
-                                  <p className="text-sm text-foreground">
-                                    Some studies may have missing abstracts. Instruct Builder to skip the studies without abstract.
-                                  </p>
-                                </AlertDescription>
-                              </Alert>
-
-                              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 p-6 rounded-lg border-2">
-                                <h5 className="font-bold text-foreground mb-3 flex items-center gap-2">
-                                  <Terminal className="h-5 w-5 text-indigo-600" />
-                                  Getting Started
-                                </h5>
-                                <p className="text-sm text-foreground mb-4">
-                                  Reference files have been prepared in your workshop repository:
-                                </p>
-                                <div className="space-y-2 text-sm">
-                                  <div className="bg-background p-3 rounded border">
-                                    <code className="text-xs">Data/lab3_instructions.md</code>
-                                    <p className="text-xs text-muted-foreground mt-1">Complete step-by-step instructions for Builder</p>
-                                  </div>
-                                  <div className="bg-background p-3 rounded border">
-                                    <code className="text-xs">Data/Prompts/lab3_prompt.md</code>
-                                    <p className="text-xs text-muted-foreground mt-1">Categorization prompt to send with each study</p>
-                                  </div>
-                                  <div className="bg-background p-3 rounded border">
-                                    <code className="text-xs">Data/Literature/bawe_ddl_studies.csv</code>
-                                    <p className="text-xs text-muted-foreground mt-1">Sample CSV with ~200 studies (10 will be processed)</p>
-                                  </div>
-                                </div>
-                                <p className="text-sm text-foreground mt-4 italic">
-                                  Open <code className="bg-background px-2 py-1 rounded text-xs">Data/lab3_instructions.md</code> in Trae, 
-                                  then send the file path to Builder to begin!
-                                </p>
-                              </div>
+                            {/* Ready to Start */}
+                            <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 p-6 rounded-lg border-2 mt-6">
+                              <h5 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                                <Rocket className="h-5 w-5 text-green-600" />
+                                Ready to Start?
+                              </h5>
+                              <p className="text-foreground">
+                                Run <code className="bg-background px-3 py-1 rounded font-mono text-sm">python3 scripts/server.py</code> and open{" "}
+                                <code className="bg-background px-3 py-1 rounded font-mono text-sm">http://localhost:5000</code> in your browser!
+                              </p>
                             </div>
                           </div>
                         </div>
