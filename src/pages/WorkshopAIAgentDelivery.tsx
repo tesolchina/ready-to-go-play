@@ -2,7 +2,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail, ChevronDown, Terminal, Zap, ChevronUp, FileText, BookOpen, Key, AlertCircle, Info, Cpu, FolderOpen, GraduationCap, FileEdit, Microscope, PenTool, Sparkles, Monitor, ExternalLink, Play, MessagesSquare, GitBranch, Database, BarChart3, Users, Rocket } from "lucide-react";
+import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail, ChevronDown, Terminal, Zap, ChevronUp, FileText, BookOpen, Key, AlertCircle, Info, Cpu, FolderOpen, GraduationCap, FileEdit, Microscope, PenTool, Sparkles, Monitor, ExternalLink, Play, MessagesSquare, GitBranch, Database, BarChart3, Users, Rocket, AlertTriangle } from "lucide-react";
 import { WorkshopUseCaseChat } from "@/components/WorkshopUseCaseChat";
 import { WorkshopUseCaseBBS } from "@/components/WorkshopUseCaseBBS";
 import { WorkshopInterestForm } from "@/components/WorkshopInterestForm";
@@ -1949,11 +1949,116 @@ graph LR
                       </CollapsibleTrigger>
                       <CollapsibleContent className="p-5 bg-card">
                         <div className="space-y-6">
-                          <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 p-6 rounded-xl border-2">
-                            <h4 className="text-2xl font-bold text-foreground mb-4">💬 Local Chatbot - Quick Start Guide</h4>
+                          {/* How We Built It Section */}
+                          <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 p-6 rounded-xl border-2 border-amber-300 dark:border-amber-700">
+                            <h4 className="text-2xl font-bold text-foreground mb-4">🛠️ How We Built This Chatbot</h4>
                             <p className="text-foreground mb-4">
-                              In this lab, you'll set up a local chatbot server using Python and Flask. 
-                              This gives you a customizable AI assistant that runs on your machine with your own API keys.
+                              Before we dive into using the chatbot, let's understand how we created it using an AI agent. Here's the prompt structure we used:
+                            </p>
+                            
+                            <div className="space-y-4">
+                              {/* Input Section */}
+                              <div className="bg-background p-4 rounded-lg border-2">
+                                <h5 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                                  <FileText className="h-5 w-5 text-amber-600" />
+                                  Input Files
+                                </h5>
+                                <ul className="text-sm text-muted-foreground space-y-2 ml-4 list-disc">
+                                  <li><code className="bg-muted px-2 py-1 rounded">Data/GenAIkey.md</code> - API key configuration</li>
+                                  <li><code className="bg-muted px-2 py-1 rounded">Data/howtoaccess.md</code> - API access instructions</li>
+                                </ul>
+                              </div>
+
+                              {/* Process Section */}
+                              <div className="bg-background p-4 rounded-lg border-2">
+                                <h5 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                                  <Zap className="h-5 w-5 text-amber-600" />
+                                  Process (Prompt to AI Agent)
+                                </h5>
+                                <div className="bg-muted p-4 rounded-lg text-sm">
+                                  <p className="text-foreground italic">
+                                    "Create a simple but effective UI in HTML that allows users to:
+                                  </p>
+                                  <ul className="text-muted-foreground space-y-1 ml-4 list-disc mt-2">
+                                    <li>Pick LLMs available via the API key</li>
+                                    <li>Write a system prompt (with a default example defining role, main job, interaction styles)</li>
+                                    <li>Copy and paste multiple files with names (add more files functionality)</li>
+                                    <li>Save and load chat history"</li>
+                                  </ul>
+                                </div>
+                              </div>
+
+                              {/* Output Section */}
+                              <div className="bg-background p-4 rounded-lg border-2">
+                                <h5 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                                  <FolderOpen className="h-5 w-5 text-amber-600" />
+                                  Output Structure
+                                </h5>
+                                <pre className="bg-muted p-3 rounded text-sm overflow-x-auto">
+{`Lab3 set up a local chatbot/
+├── chatbot.html          # Main UI file
+├── scripts/
+│   └── server.py         # Flask backend
+└── chatHistory/          # Saved conversations`}
+                                </pre>
+                              </div>
+
+                              {/* Important Note About API */}
+                              <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg border-2 border-red-300 dark:border-red-700">
+                                <h5 className="font-bold text-red-700 dark:text-red-400 mb-3 flex items-center gap-2">
+                                  <AlertTriangle className="h-5 w-5" />
+                                  Important: API Key Change
+                                </h5>
+                                <p className="text-foreground mb-3">
+                                  <strong>Note:</strong> The original HKBU Gen AI API key does not work for this use case. 
+                                  We need to use the <strong>Kimi API</strong> (Moonshot AI) to power the chatbot.
+                                </p>
+                                
+                                <div className="space-y-3">
+                                  <div className="bg-background p-3 rounded border">
+                                    <p className="font-semibold text-foreground mb-1">📍 Get Your Kimi API Key:</p>
+                                    <a 
+                                      href="https://platform.moonshot.cn/console/api-keys" 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="text-primary hover:underline text-sm"
+                                    >
+                                      https://platform.moonshot.cn/console/api-keys
+                                    </a>
+                                    <p className="text-sm text-muted-foreground mt-1">
+                                      New accounts get <strong>RMB 15 free credit</strong>!
+                                    </p>
+                                  </div>
+                                  
+                                  <div className="bg-background p-3 rounded border">
+                                    <p className="font-semibold text-foreground mb-1">📚 Kimi API Documentation:</p>
+                                    <a 
+                                      href="https://platform.moonshot.cn/docs/overview" 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="text-primary hover:underline text-sm"
+                                    >
+                                      https://platform.moonshot.cn/docs/overview
+                                    </a>
+                                  </div>
+                                  
+                                  <div className="bg-background p-3 rounded border">
+                                    <p className="font-semibold text-foreground mb-1">📁 Where to Place Your API Key:</p>
+                                    <code className="bg-muted px-2 py-1 rounded text-sm">Data/Kimi.md</code>
+                                    <p className="text-sm text-muted-foreground mt-1">
+                                      The server will automatically detect and use this key.
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Quick Start Guide Section */}
+                          <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 p-6 rounded-xl border-2">
+                            <h4 className="text-2xl font-bold text-foreground mb-4">💬 Quick Start Guide</h4>
+                            <p className="text-foreground mb-4">
+                              Now that you understand how the chatbot was built, let's set it up and use it!
                             </p>
                             
                             {/* For AI Agents: Starting the Server */}
