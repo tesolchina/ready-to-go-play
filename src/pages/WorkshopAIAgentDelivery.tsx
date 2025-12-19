@@ -2,7 +2,8 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail, ChevronDown, Terminal, Zap, ChevronUp, FileText, BookOpen, Key, AlertCircle, Info, Cpu, FolderOpen, GraduationCap, FileEdit, Microscope, PenTool, Sparkles, Monitor, ExternalLink, Play, MessagesSquare, GitBranch, Database, BarChart3, Users, Rocket, AlertTriangle } from "lucide-react"; 
+import { CheckCircle2, Laptop, Lightbulb, MessageSquare, ArrowLeft, Mail, ChevronDown, Terminal, Zap, ChevronUp, FileText, BookOpen, Key, AlertCircle, Info, Cpu, FolderOpen, GraduationCap, FileEdit, Microscope, PenTool, Sparkles, Monitor, ExternalLink, Play, MessagesSquare, GitBranch, Database, BarChart3, Users, Rocket, AlertTriangle, QrCode } from "lucide-react";
+import QRCode from "react-qr-code";
 import { WorkshopUseCaseChat } from "@/components/WorkshopUseCaseChat";
 import { WorkshopUseCaseBBS } from "@/components/WorkshopUseCaseBBS";
 import { WorkshopInterestForm } from "@/components/WorkshopInterestForm";
@@ -36,6 +37,7 @@ const WorkshopAIAgentDelivery = () => {
 
   const [activeTab, setActiveTab] = useState(getTabFromHash(location.hash));
   const [bbsRefresh, setBbsRefresh] = useState(0);
+  const [showQR, setShowQR] = useState(false);
   const [moduleStates, setModuleStates] = useState({
     module1: true,
     module2: true,
@@ -131,6 +133,28 @@ const WorkshopAIAgentDelivery = () => {
                   <p className="text-lg font-semibold text-foreground">Time: 18:30</p>
                   <p className="text-lg font-semibold text-foreground">Venue: SCT501</p>
                 </div>
+              </div>
+
+              {/* QR Code Toggle */}
+              <div className="flex flex-col items-center gap-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowQR(!showQR)}
+                  className="flex items-center gap-2"
+                >
+                  <QrCode className="h-4 w-4" />
+                  {showQR ? "Hide QR Code" : "Show QR Code"}
+                </Button>
+                {showQR && (
+                  <div className="p-4 bg-white rounded-lg shadow-md">
+                    <QRCode
+                      value="https://eapteacher.smartutor.me/workshops/math-19dec#act"
+                      size={160}
+                    />
+                    <p className="text-xs text-center mt-2 text-muted-foreground">Scan to access workshop</p>
+                  </div>
+                )}
               </div>
 
               <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
