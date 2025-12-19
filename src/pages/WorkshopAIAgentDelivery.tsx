@@ -121,13 +121,29 @@ const WorkshopAIAgentDelivery = () => {
                 
                 {/* Speaker Info */}
                 <div className="flex items-center gap-4 p-4 bg-card rounded-lg border shadow-sm">
-                  <img 
-                    src="https://lc.hkbu.edu.hk/main/wp-content/uploads/simon-1.jpg" 
-                    alt="Dr WANG Ho, Simon"
-                    className="w-16 h-16 rounded-full object-cover"
-                  />
-                  <div>
-                    <p className="font-semibold text-foreground">Dr WANG Ho, Simon</p>
+                  <a
+                    href="https://lc.hkbu.edu.hk/main/simonwang/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="shrink-0"
+                    aria-label="Open speaker page: Dr WANG Ho, Simon"
+                  >
+                    <img
+                      src="https://lc.hkbu.edu.hk/main/wp-content/uploads/simon-1.jpg"
+                      alt="Workshop speaker Dr WANG Ho, Simon"
+                      className="w-16 h-16 rounded-full object-cover"
+                      loading="lazy"
+                    />
+                  </a>
+                  <div className="min-w-0">
+                    <a
+                      href="https://lc.hkbu.edu.hk/main/simonwang/"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-semibold text-foreground hover:underline underline-offset-4"
+                    >
+                      Dr WANG Ho, Simon
+                    </a>
                     <p className="text-sm text-muted-foreground">Lecturer in English & Innovation Officer</p>
                     <p className="text-sm text-muted-foreground">The Language Centre, HKBU</p>
                   </div>
