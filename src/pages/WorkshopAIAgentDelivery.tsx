@@ -211,6 +211,13 @@ const WorkshopAIAgentDelivery = () => {
                               <p className="text-sm text-muted-foreground mt-1">Log in with your HKBU credentials to access the API documentation and obtain your API key</p>
                             </div>
                           </li>
+                          <li className="flex gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                            <div>
+                              <strong>Kimi AI (Moonshot)</strong> - <a href="https://platform.moonshot.cn/console/api-keys" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">platform.moonshot.cn/console/api-keys</a>
+                              <p className="text-sm text-muted-foreground mt-1">Register and obtain a Kimi AI API key for Lab 3 chatbot setup</p>
+                            </div>
+                          </li>
                         </ul>
                         <div className="mt-3 p-4 bg-destructive/10 rounded-lg border-l-4 border-destructive">
                           <p className="text-sm font-semibold text-destructive">
