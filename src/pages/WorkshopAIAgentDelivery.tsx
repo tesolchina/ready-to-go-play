@@ -47,6 +47,7 @@ const WorkshopAIAgentDelivery = () => {
     break2: true,
     realWorld: true,
     module6: true,
+    module7: true,
     adhocNotes: false,
   });
 
@@ -66,6 +67,7 @@ const WorkshopAIAgentDelivery = () => {
       break2: false,
       realWorld: false,
       module6: false,
+      module7: false,
       adhocNotes: false,
     });
   };
@@ -82,6 +84,7 @@ const WorkshopAIAgentDelivery = () => {
       break2: true,
       realWorld: true,
       module6: true,
+      module7: true,
       adhocNotes: false,
     });
   };
@@ -2235,6 +2238,247 @@ graph LR
                                 Run <code className="bg-background px-3 py-1 rounded font-mono text-sm">python3 scripts/server.py</code> and open{" "}
                                 <code className="bg-background px-3 py-1 rounded font-mono text-sm">http://localhost:5000</code> in your browser!
                               </p>
+                            </div>
+                          </div>
+                        </div>
+                      </CollapsibleContent>
+                    </Card>
+                  </Collapsible>
+
+                  {/* Module 7: Lab 4 - Explore GitHub Projects */}
+                  <Collapsible 
+                    open={moduleStates.module7} 
+                    onOpenChange={(open) => setModuleStates({...moduleStates, module7: open})}
+                    className="mt-6"
+                  >
+                    <Card className="border-2 border-purple-500 bg-gradient-to-r from-purple-50 to-fuchsia-50 dark:from-purple-900/20 dark:to-fuchsia-900/20">
+                      <CollapsibleTrigger asChild>
+                        <button className="w-full bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white p-4 flex items-center justify-between hover:from-purple-700 hover:to-fuchsia-700 transition-all rounded-t-lg">
+                          <h3 className="font-semibold text-left flex items-center gap-2 text-xl">
+                            <GitBranch className="h-6 w-6" />
+                            Module 7: Lab 4 - Explore GitHub Projects
+                          </h3>
+                          <ChevronDown className="h-5 w-5 flex-shrink-0 transition-transform duration-300 ui-state-open:rotate-180" />
+                        </button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="p-5 bg-card">
+                        <div className="space-y-6">
+                          {/* Learning Objectives */}
+                          <Alert className="border-l-4 border-purple-500 bg-purple-50 dark:bg-purple-900/20">
+                            <GraduationCap className="h-5 w-5 text-purple-600" />
+                            <AlertDescription className="ml-2">
+                              <p className="font-semibold mb-2">🎯 Learning Objectives</p>
+                              <ul className="text-sm text-foreground space-y-1 list-disc ml-4">
+                                <li>Use AI agents to discover relevant GitHub repositories</li>
+                                <li>Learn to evaluate and understand open-source projects</li>
+                                <li>Clone and explore repositories for your research/learning goals</li>
+                                <li>Document findings systematically using markdown</li>
+                              </ul>
+                            </AlertDescription>
+                          </Alert>
+
+                          {/* Part 1: ExploreGitHub.md */}
+                          <div className="bg-background p-6 rounded-lg border-2 border-purple-300">
+                            <h4 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+                              <Microscope className="h-6 w-6 text-purple-600" />
+                              Part 1: Discover GitHub Repositories
+                            </h4>
+                            
+                            <div className="bg-gradient-to-r from-purple-50 to-fuchsia-50 dark:from-purple-900/20 dark:to-fuchsia-900/20 p-4 rounded-lg border-l-4 border-purple-500 mb-4">
+                              <h5 className="font-bold text-foreground mb-2 flex items-center gap-2">
+                                <FileText className="h-4 w-4" />
+                                ExploreGitHub.md - Instruction File
+                              </h5>
+                              <p className="text-sm text-muted-foreground mb-3">
+                                Create this file to guide the AI agent in finding relevant repositories:
+                              </p>
+                            </div>
+
+                            <div className="space-y-4">
+                              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border-l-4 border-blue-500">
+                                <h6 className="font-bold text-blue-700 dark:text-blue-300 mb-2">📥 Input</h6>
+                                <p className="text-sm text-foreground">
+                                  Describe what you wish to learn or do. For example:
+                                </p>
+                                <div className="bg-background p-3 rounded mt-2 text-sm italic text-muted-foreground">
+                                  "Use Python to perform data analytics on financial time series data"
+                                </div>
+                              </div>
+
+                              <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border-l-4 border-green-500">
+                                <h6 className="font-bold text-green-700 dark:text-green-300 mb-2">⚙️ Process</h6>
+                                <ul className="text-sm text-foreground space-y-2 ml-4 list-disc">
+                                  <li>Visit GitHub and locate top 10 repos with most stars that can help meet the goals above</li>
+                                  <li>Create a markdown file to describe each repo with explanation of how it works and could help</li>
+                                </ul>
+                              </div>
+
+                              <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg border-l-4 border-amber-500">
+                                <h6 className="font-bold text-amber-700 dark:text-amber-300 mb-2">📤 Output</h6>
+                                <p className="text-sm text-foreground">
+                                  Designate a folder to place the markdown file with your findings, e.g.:
+                                </p>
+                                <code className="bg-background px-3 py-1 rounded text-sm block mt-2">
+                                  /path/to/your/project/GitHubExploration/
+                                </code>
+                              </div>
+                            </div>
+
+                            {/* Example Template */}
+                            <div className="mt-4 bg-muted p-4 rounded-lg">
+                              <h6 className="font-bold text-foreground mb-2">📝 Example ExploreGitHub.md Template</h6>
+                              <pre className="bg-background p-3 rounded text-sm overflow-x-auto">
+                                <code>{`# Explore GitHub Repositories
+
+## Input
+Describe your learning goal here:
+> Use Python to perform sentiment analysis on social media data
+
+## Process
+1. Search GitHub for top repositories with most stars
+2. Focus on repos that match the goal above
+3. Document each repo with:
+   - Repository name and URL
+   - Star count
+   - Brief description
+   - How it could help achieve the goal
+   - Key features/capabilities
+
+## Output Folder
+\`./GitHubExploration/sentiment-analysis-repos.md\``}</code>
+                              </pre>
+                            </div>
+                          </div>
+
+                          {/* Part 2: LeverageGitHub.md */}
+                          <div className="bg-background p-6 rounded-lg border-2 border-fuchsia-300">
+                            <h4 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+                              <Database className="h-6 w-6 text-fuchsia-600" />
+                              Part 2: Deep Dive into a Repository
+                            </h4>
+                            
+                            <div className="bg-gradient-to-r from-fuchsia-50 to-pink-50 dark:from-fuchsia-900/20 dark:to-pink-900/20 p-4 rounded-lg border-l-4 border-fuchsia-500 mb-4">
+                              <h5 className="font-bold text-foreground mb-2 flex items-center gap-2">
+                                <FileText className="h-4 w-4" />
+                                LeverageGitHub.md - Instruction File
+                              </h5>
+                              <p className="text-sm text-muted-foreground mb-3">
+                                Create this file to guide the AI agent in understanding and using a specific repository:
+                              </p>
+                            </div>
+
+                            <div className="space-y-4">
+                              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border-l-4 border-blue-500">
+                                <h6 className="font-bold text-blue-700 dark:text-blue-300 mb-2">📥 Input</h6>
+                                <p className="text-sm text-foreground mb-2">
+                                  The URL of the GitHub repository you want to explore:
+                                </p>
+                                <code className="bg-background px-3 py-1 rounded text-sm block">
+                                  https://github.com/username/repository-name
+                                </code>
+                              </div>
+
+                              <div className="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-lg border-l-4 border-indigo-500">
+                                <h6 className="font-bold text-indigo-700 dark:text-indigo-300 mb-2">🎯 Goals</h6>
+                                <p className="text-sm text-foreground">
+                                  Describe your goal here (write it after reading the README file):
+                                </p>
+                                <div className="bg-background p-3 rounded mt-2 text-sm italic text-muted-foreground">
+                                  "Understand how to use this library for training custom NLP models"
+                                </div>
+                              </div>
+
+                              <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg border-l-4 border-purple-500">
+                                <h6 className="font-bold text-purple-700 dark:text-purple-300 mb-2">❓ Questions You Have</h6>
+                                <ul className="text-sm text-foreground space-y-1 ml-4 list-disc">
+                                  <li>How do I install and set up this project?</li>
+                                  <li>What are the key dependencies?</li>
+                                  <li>Can it handle my specific use case?</li>
+                                  <li>What are the limitations?</li>
+                                </ul>
+                              </div>
+
+                              <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border-l-4 border-green-500">
+                                <h6 className="font-bold text-green-700 dark:text-green-300 mb-2">⚙️ Process</h6>
+                                <ul className="text-sm text-foreground space-y-2 ml-4 list-disc">
+                                  <li>Clone the repo to a designated folder</li>
+                                  <li>Create a markdown file to describe how this repo works</li>
+                                  <li>Answer any questions raised above</li>
+                                </ul>
+                              </div>
+
+                              <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg border-l-4 border-amber-500">
+                                <h6 className="font-bold text-amber-700 dark:text-amber-300 mb-2">📤 Output</h6>
+                                <p className="text-sm text-foreground">
+                                  Designate a folder for the markdown file, e.g.:
+                                </p>
+                                <code className="bg-background px-3 py-1 rounded text-sm block mt-2">
+                                  /path/to/your/project/GitHubAnalysis/
+                                </code>
+                              </div>
+                            </div>
+
+                            {/* Example Template */}
+                            <div className="mt-4 bg-muted p-4 rounded-lg">
+                              <h6 className="font-bold text-foreground mb-2">📝 Example LeverageGitHub.md Template</h6>
+                              <pre className="bg-background p-3 rounded text-sm overflow-x-auto">
+                                <code>{`# Leverage GitHub Repository
+
+## Input
+Repository URL: https://github.com/huggingface/transformers
+
+## Goals
+(After reading the README, describe your specific goals)
+> Learn how to fine-tune a BERT model for text classification
+
+## Questions
+1. What Python version is required?
+2. How do I install with GPU support?
+3. Is there a quick-start tutorial?
+4. How much memory do I need?
+
+## Process
+1. Clone repo to: \`./ClonedRepos/transformers/\`
+2. Analyze the repository structure
+3. Document findings and answer questions
+
+## Output
+Documentation file: \`./GitHubAnalysis/transformers-analysis.md\``}</code>
+                              </pre>
+                            </div>
+                          </div>
+
+                          {/* Tips for Success */}
+                          <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 p-6 rounded-lg border-2 border-green-500">
+                            <h5 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                              <Lightbulb className="h-5 w-5 text-green-600" />
+                              Tips for Success
+                            </h5>
+                            <div className="grid md:grid-cols-2 gap-4">
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="font-semibold text-primary mb-2">🌟 Look for Stars</p>
+                                <p className="text-sm text-muted-foreground">
+                                  High star counts often indicate well-maintained, popular projects with good documentation.
+                                </p>
+                              </div>
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="font-semibold text-primary mb-2">📖 Check README First</p>
+                                <p className="text-sm text-muted-foreground">
+                                  A good README is essential. It tells you what the project does and how to use it.
+                                </p>
+                              </div>
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="font-semibold text-primary mb-2">📅 Check Activity</p>
+                                <p className="text-sm text-muted-foreground">
+                                  Recent commits mean active maintenance. Abandoned projects may have unresolved issues.
+                                </p>
+                              </div>
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="font-semibold text-primary mb-2">🔍 Read Issues</p>
+                                <p className="text-sm text-muted-foreground">
+                                  Open issues can reveal limitations, bugs, or feature requests that might affect your use case.
+                                </p>
+                              </div>
                             </div>
                           </div>
                         </div>
